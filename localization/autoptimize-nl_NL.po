@@ -1,0 +1,314 @@
+# Copyright (C) 2013 Autoptimize
+# This file is distributed under the same license as the Autoptimize package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Autoptimize 1.8.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/autoptimize\n"
+"POT-Creation-Date: 2014-08-22 05:35:46+00:00\n"
+"PO-Revision-Date: 2014-08-29 07:12+0100\n"
+"Last-Translator: frank goossens (futtta) <futtta@gmail.com>\n"
+"Language-Team:  <futtta@gmail.com>\n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.8\n"
+
+#: autoptimize.php:124
+msgid ""
+"Thank you for installing and activating Autoptimize. Please configure it "
+"under \"Settings\" -> \"Autoptimize\" to start improving your site's "
+"performance."
+msgstr ""
+"Tof dat je Autoptimize geïnstalleerd hebt! Je kunt de plugin nu configureren "
+"onder \"Instellingen\" -> \"Autoptimize\"."
+
+#: autoptimize.php:130
+msgid ""
+"Autoptimize has just been updated. Please <strong>test your site now</"
+"strong> and adapt Autoptimize config if needed."
+msgstr ""
+"Autoptimize is juist geüpdate, <strong>test je site nu</strong> en wijzig de "
+"Autoptimize instellingen indien nodig."
+
+#: classes/autoptimizeConfig.php:48
+msgid "Autoptimize Settings"
+msgstr "Autoptimize Instellingen"
+
+#: classes/autoptimizeConfig.php:54 classes/autoptimizeConfig.php:60
+msgid "Show advanced settings"
+msgstr "Toon geadvanceerde instellingen"
+
+#: classes/autoptimizeConfig.php:55 classes/autoptimizeConfig.php:61
+msgid "Hide advanced settings"
+msgstr "Verberg geadvanceerde instellingen"
+
+#: classes/autoptimizeConfig.php:69
+msgid "HTML Options"
+msgstr "HTML Opties"
+
+#: classes/autoptimizeConfig.php:72
+msgid "Optimize HTML Code?"
+msgstr "Optimaliseer HTML Code?"
+
+#: classes/autoptimizeConfig.php:76
+msgid "Keep HTML comments?"
+msgstr "HTML commentaar bewaren?"
+
+#: classes/autoptimizeConfig.php:78
+msgid ""
+"Enable this if you want HTML comments to remain in the page, needed for e.g. "
+"AdSense to function properly."
+msgstr ""
+"Activeer deze optie om commentaar-blokken in de HTML te behouden, nodig voor "
+"onder andere bepaalde AdSense configuraties."
+
+#: classes/autoptimizeConfig.php:82
+msgid "JavaScript Options"
+msgstr "JavaScript Opties"
+
+#: classes/autoptimizeConfig.php:85
+msgid "Optimize JavaScript Code?"
+msgstr "Optimaliseer JavaScript Code?"
+
+#: classes/autoptimizeConfig.php:89
+msgid "Force JavaScript in &lt;head&gt;?"
+msgstr "Duw JavaScript in &lt;head&gt;?"
+
+#: classes/autoptimizeConfig.php:91
+msgid ""
+"For performance reasons it is better to include JavaScript at the bottom of "
+"HTML, but this sometimes breaks things. Especially useful for jQuery-based "
+"themes."
+msgstr ""
+"Voor rauwe performantie is het beter om JavaScript pas op het einde van de "
+"HTML binnen te halen, maar dit zorgt soms voor problemen, vooral bij jQuery-"
+"gebaseerde sites."
+
+#: classes/autoptimizeConfig.php:94
+msgid "Look for scripts only in &lt;head&gt;?"
+msgstr "Haal javascript enkel uit &lt;head&gt;?"
+
+#: classes/autoptimizeConfig.php:96
+msgid ""
+"Mostly usefull in combination with previous option when using jQuery-based "
+"templates, but might help keeping cache size under control."
+msgstr ""
+"Vooral nuttig in combinatie met de vorige optie voor jQuery-gebaseerde "
+"sites, maar kan ook helpen om de cache-size onder controle te houden."
+
+#: classes/autoptimizeConfig.php:99
+msgid "Exclude scripts from Autoptimize:"
+msgstr "Sluit deze scripts uit van optimalisering:"
+
+#: classes/autoptimizeConfig.php:101
+msgid ""
+"A comma-seperated list of scripts you want to exclude from being optimized, "
+"for example 'whatever.js, another.js' (without the quotes) to exclude those "
+"scripts from being aggregated and minimized by Autoptimize."
+msgstr ""
+"Lijst van scripts die je wilt uitsluiten van optimalisatie, gescheiden door "
+"komma's. Voorbeeld; 'whatever.js, another.js' (zonder de quotes)."
+
+#: classes/autoptimizeConfig.php:104
+msgid "Add try-catch wrapping?"
+msgstr "Voeg try-catch toe rond javascript?"
+
+#: classes/autoptimizeConfig.php:106
+msgid ""
+"If your scripts break because of an script error, you might want to try this."
+msgstr "Als je errors krijgt bij javascript-aggregatie, kun je dit proberen."
+
+#: classes/autoptimizeConfig.php:110
+msgid "CSS Options"
+msgstr "CSS Opties"
+
+#: classes/autoptimizeConfig.php:113
+msgid "Optimize CSS Code?"
+msgstr "Optimaliseer CSS Code?"
+
+#: classes/autoptimizeConfig.php:117
+msgid "Generate data: URIs for images?"
+msgstr "Vervang image-links in CSS door data: URIs?"
+
+#: classes/autoptimizeConfig.php:119
+msgid ""
+"Enable this to include small background-images in the CSS itself instead of "
+"as seperate downloads."
+msgstr ""
+"Acitveer deze optie om kleine background-images in de CSS te bewaren in "
+"plaats van aparte files."
+
+#: classes/autoptimizeConfig.php:122
+msgid "Look for styles only in &lt;head&gt;?"
+msgstr "Haal CSS enkel uit &lt;head&gt;?"
+
+#: classes/autoptimizeConfig.php:124
+msgid ""
+"Don't autoptimize CSS outside the head-section. If the cache gets big, you "
+"might want to enable this."
+msgstr ""
+"De CSS buiten de &lt;head&gt; niet mee optimaliseren. Kan helpen om de cache-"
+"omvang te beperken."
+
+#: classes/autoptimizeConfig.php:127
+msgid "Inline and Defer CSS?"
+msgstr "Basis CSS in HTML laden, de rest uitstellen?"
+
+#: classes/autoptimizeConfig.php:129
+msgid ""
+"Inline \"above the fold CSS\" while loading the main autoptimized CSS only "
+"after page load. <a href=\"http://wordpress.org/plugins/autoptimize/faq/\" "
+"target=\"_blank\">Check the FAQ</a> before activating this option!"
+msgstr ""
+"De \"above the fold CSS\" in de HTML  laden, de rest van de geoptimaliseerde "
+"CSS pas na de volledige pagina. <a href=\"http://wordpress.org/plugins/"
+"autoptimize/faq/\" target=\"_blank\">Bekijk de FAQ</a> voor je deze optie "
+"activeert!"
+
+#: classes/autoptimizeConfig.php:133
+msgid "Paste the above the fold CSS here."
+msgstr "Kopiëer de above the fold CSS hier."
+
+#: classes/autoptimizeConfig.php:136
+msgid "Inline all CSS?"
+msgstr "Alle CSS rechtstreeks in HTML laden?"
+
+#: classes/autoptimizeConfig.php:138
+msgid ""
+"Inlining all CSS can improve performance for sites with a low pageviews/ "
+"visitor-rate, but may slow down performance otherwise."
+msgstr ""
+"Alle CSS rechtstreeks in de HTML laden kan de gemiddelde performantie voor "
+"sites met een lage pageview/ bezoeker-ratio verbeteren, maar zal in andere "
+"gevallen de performantie verslechteren."
+
+#: classes/autoptimizeConfig.php:141
+msgid "Exclude CSS from Autoptimize:"
+msgstr "Sluit deze CSS uit van optimalisering:"
+
+#: classes/autoptimizeConfig.php:143
+msgid "A comma-seperated list of CSS you want to exclude from being optimized."
+msgstr ""
+"Lijst van CSS die je wilt uitsluiten van optimalisatie, gescheiden door "
+"komma's. Voorbeeld; 'whatever.css, style.css' (zonder de quotes)."
+
+#: classes/autoptimizeConfig.php:147
+msgid "CDN Options"
+msgstr "CDN Opties"
+
+#: classes/autoptimizeConfig.php:150
+msgid "CDN Base URL"
+msgstr "Basis CDN URL"
+
+#: classes/autoptimizeConfig.php:152
+msgid ""
+"Enter your CDN blog root directory URL if you want to enable CDN for images "
+"referenced in the CSS."
+msgstr ""
+"Vul hier je CDN blog root directory URL in om afbeeldingen in je CSS via je "
+"CDN te laden."
+
+#: classes/autoptimizeConfig.php:156
+msgid "Cache Info"
+msgstr "Cache Info"
+
+#: classes/autoptimizeConfig.php:159
+msgid "Cache folder"
+msgstr "Cache folder"
+
+#: classes/autoptimizeConfig.php:163
+msgid "Can we write?"
+msgstr "Kunnen we schrijven naar die folder?"
+
+#: classes/autoptimizeConfig.php:164
+msgid "Yes"
+msgstr "Ja"
+
+#: classes/autoptimizeConfig.php:164
+msgid "No"
+msgstr "Nee"
+
+#: classes/autoptimizeConfig.php:167
+msgid "Cached styles and scripts"
+msgstr "CSS en scripts in cache"
+
+#: classes/autoptimizeConfig.php:171
+msgid "Save aggregated script/css as static files?"
+msgstr "Bewaar geoptimaliseerde CSS en JS als statische bestanden?"
+
+#: classes/autoptimizeConfig.php:173
+msgid ""
+"By default files saved are static css/js, uncheck this option if your "
+"webserver doesn't properly handle the compression and expiry."
+msgstr ""
+"Standaard worden bestanden als statische css/js bewaard, deactiveer deze "
+"optie als je webserver compressie en cache-baarheid niet zelf kan afhandelen."
+
+#: classes/autoptimizeConfig.php:179
+msgid "Save Changes"
+msgstr "Bewaar wijzigingen"
+
+#: classes/autoptimizeConfig.php:180
+msgid "Save Changes and Empty Cache"
+msgstr "Bewaar en maak cache leeg."
+
+#: classes/autoptimizeConfig.php:188
+msgid "futtta about"
+msgstr "futtta over"
+
+#. Plugin Name of the plugin/theme
+#: classes/autoptimizeConfig.php:190
+msgid "Autoptimize"
+msgstr "Autoptimize"
+
+#: classes/autoptimizeConfig.php:191
+msgid "WordPress"
+msgstr "WordPress"
+
+#: classes/autoptimizeConfig.php:192
+msgid "Web Technology"
+msgstr "Web Technologie"
+
+#: classes/autoptimizeConfig.php:197
+msgid "Do not donate for this plugin!"
+msgstr "Geef geen geld voor deze plugin!"
+
+#: classes/autoptimizeConfig.php:313
+msgid "Autoptimize Options"
+msgstr "Autoptimize Opties"
+
+#: classes/autoptimizeConfig.php:358 classes/autoptimizeConfig.php:364
+msgid "Settings"
+msgstr "Instellingen"
+
+#. Plugin URI of the plugin/theme
+msgid "http://blog.futtta.be/autoptimize"
+msgstr "http://blog.futtta.be/autoptimize"
+
+#. Description of the plugin/theme
+msgid ""
+"Optimizes your website, concatenating the CSS and JavaScript code, and "
+"compressing it."
+msgstr ""
+"Optimaliseert je website door CSS en JavaScript te combineren en samen te "
+"drukken."
+
+#. Author of the plugin/theme
+msgid "Frank Goossens (futtta)"
+msgstr "Frank Goossens (futtta)"
+
+#. Author URI of the plugin/theme
+msgid "http://blog.futtta.be/"
+msgstr "http://blog.futtta.be/"
+
+#~ msgid "Defer CSS loading?"
+#~ msgstr "Stel inladen CSS uit tot na binnenhalen pagina?"
+
+#~ msgid ""
+#~ "Normally CSS is loaded in the &lt;head&gt;-section of the HTML, but for "
+#~ "mobile performance reasons having it deferred can be better."
+#~ msgstr ""
+#~ "Normaal wordt CSS in de &lt;head&gt;-sectie van de HTML geladen, maar "
+#~ "voor mobiele performantie kan het beter zijn om dat pas op het einde van "
+#~ "de HTML te doen."

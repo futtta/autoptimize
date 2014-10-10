@@ -1,0 +1,309 @@
+# Copyright (C) 2014 Autoptimize
+# This file is distributed under the same license as the Autoptimize package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Autoptimize 1.9.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/autoptimize\n"
+"POT-Creation-Date: 2014-08-22 05:35:46+00:00\n"
+"PO-Revision-Date: 2014-09-02 00:22+0200\n"
+"Last-Translator: Baris Unver <baris.unver@beyn.org>\n"
+"Language-Team: Barış Ünver <baris.unver@beyn.org>\n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.9\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: autoptimize.php:124
+msgid ""
+"Thank you for installing and activating Autoptimize. Please configure it "
+"under \"Settings\" -> \"Autoptimize\" to start improving your site's "
+"performance."
+msgstr ""
+"Autoptimize'ı kurup etkinleştirdiğiniz için teşekkür ederiz. \"Ayarlar\" -> "
+"\"Autoptimize\" sayfasına giderek ayarları yapabilir, sitenizin "
+"performansını artırmak için bir adım atabilirsiniz."
+
+#: autoptimize.php:130
+msgid ""
+"Autoptimize has just been updated. Please <strong>test your site now</"
+"strong> and adapt Autoptimize config if needed."
+msgstr ""
+"Autoptimize güncellendi. Lütfen <strong>hemen şimdi sitenizi test edin</"
+"strong> ve gerekiyorsa Autoptimize seçeneklerini güncelleyin."
+
+#: classes/autoptimizeConfig.php:48
+msgid "Autoptimize Settings"
+msgstr "Autoptimize Ayarları"
+
+#: classes/autoptimizeConfig.php:54 classes/autoptimizeConfig.php:60
+msgid "Show advanced settings"
+msgstr "Gelişmiş ayarları göster"
+
+#: classes/autoptimizeConfig.php:55 classes/autoptimizeConfig.php:61
+msgid "Hide advanced settings"
+msgstr "Gelişmiş ayarları gizle"
+
+#: classes/autoptimizeConfig.php:69
+msgid "HTML Options"
+msgstr "HTML Seçenekleri"
+
+#: classes/autoptimizeConfig.php:72
+msgid "Optimize HTML Code?"
+msgstr "HTML kodunu optimize et"
+
+#: classes/autoptimizeConfig.php:76
+msgid "Keep HTML comments?"
+msgstr "HTML yorumlarına dokunma"
+
+#: classes/autoptimizeConfig.php:78
+msgid ""
+"Enable this if you want HTML comments to remain in the page, needed for e.g. "
+"AdSense to function properly."
+msgstr ""
+"AdSense gibi platformlarla sorunlar yaşamamak için HTML yorumların "
+"silinmeden sayfa kaynağında kalmasını isterseniz bu seçeneği işaretleyin."
+
+#: classes/autoptimizeConfig.php:82
+msgid "JavaScript Options"
+msgstr "JavaScript Seçenekleri"
+
+#: classes/autoptimizeConfig.php:85
+msgid "Optimize JavaScript Code?"
+msgstr "JavaScript kodunu optimize et"
+
+#: classes/autoptimizeConfig.php:89
+msgid "Force JavaScript in &lt;head&gt;?"
+msgstr "JavaScript'i zorla &lt;head&gt;'de yüklet"
+
+#: classes/autoptimizeConfig.php:91
+msgid ""
+"For performance reasons it is better to include JavaScript at the bottom of "
+"HTML, but this sometimes breaks things. Especially useful for jQuery-based "
+"themes."
+msgstr ""
+"Performans düşünüldüğünde JavaScript dosyalarının, sayfaların en sonunda "
+"yüklenmesi tavsiye edilir, ama bu bazen bir takım kodların bozulmasına sebep "
+"olur. jQuery ağırlıklı temalarda bu ayar özellikle işe yarar."
+
+#: classes/autoptimizeConfig.php:94
+msgid "Look for scripts only in &lt;head&gt;?"
+msgstr "Yalnızca &lt;head&gt;'deki JavaScript dosyalarıyla ilgilen"
+
+#: classes/autoptimizeConfig.php:96
+msgid ""
+"Mostly usefull in combination with previous option when using jQuery-based "
+"templates, but might help keeping cache size under control."
+msgstr ""
+"Çoğunlukla, önceki seçenekle beraber jQuery ağırlıklı temalarında "
+"kullanıldığında işe yarar, ama önbellek boyutunu kontrol altında tutmanıza "
+"da yardımcı olur."
+
+#: classes/autoptimizeConfig.php:99
+msgid "Exclude scripts from Autoptimize:"
+msgstr "Autoptimize'dan hariç tutulacak script'ler:"
+
+#: classes/autoptimizeConfig.php:101
+msgid ""
+"A comma-seperated list of scripts you want to exclude from being optimized, "
+"for example 'whatever.js, another.js' (without the quotes) to exclude those "
+"scripts from being aggregated and minimized by Autoptimize."
+msgstr ""
+"Virgülle ayırılmış, optimize edilmesini istemediğiniz dosya isimlerini "
+"buraya yazın (\"falan.js, filan.js\" gibi, tırnaklar olmadan). Bu script'ler "
+"Autoptimize tarafından sıkıştırılıp birleştirilmeyecektir."
+
+#: classes/autoptimizeConfig.php:104
+msgid "Add try-catch wrapping?"
+msgstr "\"Try-catch\" sarma özelliğini ekle"
+
+#: classes/autoptimizeConfig.php:106
+msgid ""
+"If your scripts break because of an script error, you might want to try this."
+msgstr ""
+"Bir script hatası yüzünden JavaScript'leriniz bozuluyorsa, bunu "
+"etkinleştirmeyi deneyin."
+
+#: classes/autoptimizeConfig.php:110
+msgid "CSS Options"
+msgstr "CSS Seçenekleri"
+
+#: classes/autoptimizeConfig.php:113
+msgid "Optimize CSS Code?"
+msgstr "CSS kodunu optimize et"
+
+#: classes/autoptimizeConfig.php:117
+msgid "Generate data: URIs for images?"
+msgstr "Görseller için data:URI'lar kullan"
+
+#: classes/autoptimizeConfig.php:119
+msgid ""
+"Enable this to include small background-images in the CSS itself instead of "
+"as seperate downloads."
+msgstr ""
+"CSS'in içindeki ufak arkaplan görsellerini CSS'in içine gömmek için bunu "
+"kullanın."
+
+#: classes/autoptimizeConfig.php:122
+msgid "Look for styles only in &lt;head&gt;?"
+msgstr "Yalnızca &lt;head&gt;'deki stil dosyalarıyla ilgilen"
+
+#: classes/autoptimizeConfig.php:124
+msgid ""
+"Don't autoptimize CSS outside the head-section. If the cache gets big, you "
+"might want to enable this."
+msgstr ""
+"&lt;head&gt;'deki CSS'ler dışındaki stil dosyalarını hariç tutar. Önbellek "
+"dosyanız çok büyürse, bunu etkinleştirmeyi isteyebilirsiniz."
+
+#: classes/autoptimizeConfig.php:127
+msgid "Inline and Defer CSS?"
+msgstr "CSS'i \"inline\" olarak düzenle ve ertele (defer)"
+
+#: classes/autoptimizeConfig.php:129
+msgid ""
+"Inline \"above the fold CSS\" while loading the main autoptimized CSS only "
+"after page load. <a href=\"http://wordpress.org/plugins/autoptimize/faq/\" "
+"target=\"_blank\">Check the FAQ</a> before activating this option!"
+msgstr ""
+"Sayfanın ekranda gözüken kısmını \"inline\" olarak sayfa içine "
+"yerleştirirken geri kalanını sayfa sonunda yükletir. Bu özelliği "
+"etkinleştirmeden önce <a href=\"http://wordpress.org/plugins/autoptimize/faq/"
+"\" target=\"_blank\">Sık Sorulan Sorular'ı inceleyin</a>!"
+
+#: classes/autoptimizeConfig.php:133
+msgid "Paste the above the fold CSS here."
+msgstr "İlk ekranda gözüken elemanların CSS'ini buraya yapıştırın."
+
+#: classes/autoptimizeConfig.php:136
+msgid "Inline all CSS?"
+msgstr "Tüm CSS'i \"inline\" olarak düzenle"
+
+#: classes/autoptimizeConfig.php:138
+msgid ""
+"Inlining all CSS can improve performance for sites with a low pageviews/ "
+"visitor-rate, but may slow down performance otherwise."
+msgstr ""
+"CSS'i \"inline\" olarak gömmek az ziyaretçi sayısına sahip sitelerde "
+"performansı artırırken, popüler sitelerde performansı azaltabilir."
+
+#: classes/autoptimizeConfig.php:141
+msgid "Exclude CSS from Autoptimize:"
+msgstr "Autoptimize'dan hariç tutulacak CSS"
+
+#: classes/autoptimizeConfig.php:143
+msgid "A comma-seperated list of CSS you want to exclude from being optimized."
+msgstr ""
+"Autoptimize'ın kullanmasını istemediğiniz CSS'i buraya koyarak onları hariç "
+"tutabilirsiniz."
+
+#: classes/autoptimizeConfig.php:147
+msgid "CDN Options"
+msgstr "CDN Seçenekleri"
+
+#: classes/autoptimizeConfig.php:150
+msgid "CDN Base URL"
+msgstr "CDN URL Temeli"
+
+#: classes/autoptimizeConfig.php:152
+msgid ""
+"Enter your CDN blog root directory URL if you want to enable CDN for images "
+"referenced in the CSS."
+msgstr ""
+"Burada, CSS içindeki URL'lerde kullanılmak üzere bir temel CDN adresi "
+"belirleyebilirsiniz."
+
+#: classes/autoptimizeConfig.php:156
+msgid "Cache Info"
+msgstr "Cache Bilgisi"
+
+#: classes/autoptimizeConfig.php:159
+msgid "Cache folder"
+msgstr "Önbellek dizini"
+
+#: classes/autoptimizeConfig.php:163
+msgid "Can we write?"
+msgstr "Yazılabilir durumda mı?"
+
+#: classes/autoptimizeConfig.php:164
+msgid "Yes"
+msgstr "Evet"
+
+#: classes/autoptimizeConfig.php:164
+msgid "No"
+msgstr "Hayır"
+
+#: classes/autoptimizeConfig.php:167
+msgid "Cached styles and scripts"
+msgstr "Önbelleklenen stil ve script'ler"
+
+#: classes/autoptimizeConfig.php:171
+msgid "Save aggregated script/css as static files?"
+msgstr "Çıktı script ve stilleri statik dosyalar olarak kaydet"
+
+#: classes/autoptimizeConfig.php:173
+msgid ""
+"By default files saved are static css/js, uncheck this option if your "
+"webserver doesn't properly handle the compression and expiry."
+msgstr ""
+"Stil ve script'ler varsayılan olarak statik dosyalar halinde kaydedilir. "
+"Eğer sunucunuz sıkıştırma ve expiry'leri düzgün şekilde işleyemiyorsa bunun "
+"işaretini kaldırın."
+
+#: classes/autoptimizeConfig.php:179
+msgid "Save Changes"
+msgstr "Değişiklikleri Kaydet"
+
+#: classes/autoptimizeConfig.php:180
+msgid "Save Changes and Empty Cache"
+msgstr "Değişiklikleri Kaydet ve Önbelleği Temizle"
+
+#: classes/autoptimizeConfig.php:188
+msgid "futtta about"
+msgstr "futta hakkında"
+
+#. Plugin Name of the plugin/theme
+#: classes/autoptimizeConfig.php:190
+msgid "Autoptimize"
+msgstr "Autoptimize"
+
+#: classes/autoptimizeConfig.php:191
+msgid "WordPress"
+msgstr "WordPress"
+
+#: classes/autoptimizeConfig.php:192
+msgid "Web Technology"
+msgstr "Web Teknolojileri"
+
+#: classes/autoptimizeConfig.php:197
+msgid "Do not donate for this plugin!"
+msgstr "Bu eklentiye bağış yapmayın!é"
+
+#: classes/autoptimizeConfig.php:313
+msgid "Autoptimize Options"
+msgstr "Autoptimize Seçenekleri"
+
+#: classes/autoptimizeConfig.php:358 classes/autoptimizeConfig.php:364
+msgid "Settings"
+msgstr "Ayarlar"
+
+#. Plugin URI of the plugin/theme
+msgid "http://blog.futtta.be/autoptimize"
+msgstr "http://blog.futtta.be/autoptimize"
+
+#. Description of the plugin/theme
+msgid ""
+"Optimizes your website, concatenating the CSS and JavaScript code, and "
+"compressing it."
+msgstr ""
+"CSS ve JavaScript kodlarınızı birleştirip sıkıştırarak, sitenizi optimize "
+"etmeye yardımcı olur."
+
+#. Author of the plugin/theme
+msgid "Frank Goossens (futtta)"
+msgstr "Frank Goossens (futtta)"
+
+#. Author URI of the plugin/theme
+msgid "http://blog.futtta.be/"
+msgstr "http://blog.futtta.be/"

@@ -1,0 +1,211 @@
+# Spanish translation for autoptimize
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the autoptimize package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: autoptimize\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-10-19 21:41+0000\n"
+"PO-Revision-Date: 2009-10-24 02:41+0000\n"
+"Last-Translator: Emilio <Unknown>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-10-25 02:04+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: classes/autoptimizeConfig.php:50
+msgid "Autoptimize Settings"
+msgstr "Configuración de Autoptimize"
+
+#: classes/autoptimizeConfig.php:71
+msgid "HTML Options"
+msgstr "Opciones de HTML"
+
+#: classes/autoptimizeConfig.php:74
+msgid "Optimize HTML Code?"
+msgstr "¿Optimizar el código HTML?"
+
+#: classes/autoptimizeConfig.php:78
+msgid "Keep HTML comments?"
+msgstr "¿Mantener comentarios HTML?"
+
+#: classes/autoptimizeConfig.php:80
+msgid ""
+"Disabled by default. Enable this if you want HTML comments to remain in the "
+"page."
+msgstr ""
+"Deshabilitado por defecto. Habilite esto si quiere mantener los comentarios "
+"HTML en la página."
+
+#: classes/autoptimizeConfig.php:84
+msgid "JavaScript Options"
+msgstr "Opciones de JavaScript"
+
+#: classes/autoptimizeConfig.php:87
+msgid "Optimize JavaScript Code?"
+msgstr "¿Optimizar el código JavaScript?"
+
+#: classes/autoptimizeConfig.php:91
+msgid "Look for scripts only in &lt;head&gt;?"
+msgstr "¿Buscar scripts solo en &lt;head&gt;?"
+
+#: classes/autoptimizeConfig.php:93 classes/autoptimizeConfig.php:116
+msgid ""
+"Disabled by default. If the cache gets big, you might want to enable this."
+msgstr ""
+"Deshabilitado por defecto. Si el cache se hace grande, tal vez quiera "
+"habilitar esto."
+
+#: classes/autoptimizeConfig.php:96
+msgid "Add try-catch wrapping?"
+msgstr "¿Añadir envolturas try-catch?"
+
+#: classes/autoptimizeConfig.php:98
+msgid ""
+"Disabled by default. If your scripts break because of an script error, you "
+"might want to try this."
+msgstr ""
+"Deshabilitado por defecto. Si sus scripts dejan de funcionar por un error de "
+"scripting, tal vez quiera probar esto."
+
+#: classes/autoptimizeConfig.php:101 classes/autoptimizeConfig.php:124
+msgid "Use YUI compression?"
+msgstr "¿Comprimir con YUI?"
+
+#: classes/autoptimizeConfig.php:103 classes/autoptimizeConfig.php:126
+msgid ""
+"Disabled by default. Read [autoptimize]/yui/README.txt for more information."
+msgstr ""
+"Deshabilitado por defecto. Lea [autoptimize]/yui/README.txt para más "
+"información."
+
+#: classes/autoptimizeConfig.php:107
+msgid "CSS Options"
+msgstr "Opciones de CSS"
+
+#: classes/autoptimizeConfig.php:110
+msgid "Optimize CSS Code?"
+msgstr "¿Optimizar el código CSS?"
+
+#: classes/autoptimizeConfig.php:114
+msgid "Look for styles on just &lt;head&gt;?"
+msgstr "¿Buscar estilos solo en &lt;head&gt;?"
+
+#: classes/autoptimizeConfig.php:119
+msgid "Generate data: URIs for images?"
+msgstr "¿Generar data: URIs de imágenes?"
+
+#: classes/autoptimizeConfig.php:121
+msgid "Disabled by default. Enable this to include images on the CSS itself."
+msgstr ""
+"Deshabilitador por defecto. Habilite esto para incluir imágenes en el código "
+"CSS."
+
+#: classes/autoptimizeConfig.php:130
+msgid "CDN Options"
+msgstr "Opciones de CDN"
+
+#: classes/autoptimizeConfig.php:133
+msgid "Rewrite JavaScript URLs?"
+msgstr "¿Reescribir URLs de JavaScript?"
+
+#: classes/autoptimizeConfig.php:135 classes/autoptimizeConfig.php:145
+#: classes/autoptimizeConfig.php:155
+msgid ""
+"Disabled by default. Do not enable this unless you know what you are doing."
+msgstr ""
+"Deshabilitado por defecto. No habilite esto a menos que sepa lo que está "
+"haciendo."
+
+#: classes/autoptimizeConfig.php:138
+msgid "JavaScript Base URL"
+msgstr "URL Base para JavaScript"
+
+#: classes/autoptimizeConfig.php:140 classes/autoptimizeConfig.php:150
+#: classes/autoptimizeConfig.php:160
+msgid ""
+"This is the new base URL that will be used when rewriting. It should point "
+"to the blog root directory."
+msgstr ""
+"Esta es la nueva URL de base que se utilizará al reescribir. Debe apuntar al "
+"directorio principal del blog."
+
+#: classes/autoptimizeConfig.php:143
+msgid "Rewrite CSS URLs?"
+msgstr "¿Reescribir URLs de CSS?"
+
+#: classes/autoptimizeConfig.php:148
+msgid "CSS Base URL"
+msgstr "URL Base para CSS"
+
+#: classes/autoptimizeConfig.php:153
+msgid "Rewrite Image URLs?"
+msgstr "¿Reescribir URLs de Imágenes?"
+
+#: classes/autoptimizeConfig.php:158
+msgid "Image Base URL"
+msgstr "URL Base para Imágenes"
+
+#: classes/autoptimizeConfig.php:164
+msgid "Cache Info"
+msgstr "Información sobre el Caché"
+
+#: classes/autoptimizeConfig.php:167
+msgid "Cache folder"
+msgstr "Carpeta de Caché"
+
+#: classes/autoptimizeConfig.php:171
+msgid "Can we write?"
+msgstr "¿Se puede escribir?"
+
+#: classes/autoptimizeConfig.php:172
+msgid "Yes"
+msgstr "Si"
+
+#: classes/autoptimizeConfig.php:172
+msgid "No"
+msgstr "No"
+
+#: classes/autoptimizeConfig.php:175
+msgid "Cached styles and scripts"
+msgstr "Estilos y scripts cacheados"
+
+#: classes/autoptimizeConfig.php:179
+msgid "Do not compress cache files"
+msgstr "No comprimir archivos de cache"
+
+#: classes/autoptimizeConfig.php:181
+msgid ""
+"Disabled by default. Enable this if you want to compress the served files "
+"using your webserver."
+msgstr ""
+"Deshabilitado por defecto. Habilite esto si quiere comprimir los archivos "
+"servidos usando su servidor web."
+
+#: classes/autoptimizeConfig.php:188
+msgid "Save Changes"
+msgstr "Guardar Cambios"
+
+#: classes/autoptimizeConfig.php:189
+msgid "Save Changes and Empty Cache"
+msgstr "Guardar Cambios y Vaciar el Caché"
+
+#: classes/autoptimizeConfig.php:199
+msgid "Autoptimize Options"
+msgstr "Configuración de Autoptimize"
+
+#: classes/autoptimizeConfig.php:236 classes/autoptimizeConfig.php:243
+msgid "Settings"
+msgstr "Configuración"
+
+#. Description of an extension
+msgid ""
+"Optimizes your website, concatenating the CSS and JavaScript code, and "
+"compressing it."
+msgstr ""
+"Optimiza tu sitio web, concatenando el código CSS y Javascript, y "
+"comprimiéndolo."
