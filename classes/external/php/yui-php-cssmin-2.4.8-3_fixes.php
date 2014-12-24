@@ -342,7 +342,7 @@ class CSSmin
         $css = preg_replace('/([^\\\\]\:|\s)0(?:em|ex|ch|rem|vw|vh|vm|vmin|cm|mm|in|px|pt|pc|%)/iS', '${1}0', $css);
 
 		// 0% step in a keyframe? restore the % unit
-		$css = preg_replace_callback('/(@[a-z\-]*?keyframes[^\{]*?\{)(.*?\}\s*\})/iS', array($this, 'replace_keyframe_zero'), $css);
+		$css = preg_replace_callback('/(@[a-z\-]*?keyframes[^\{]+\{)(.*?)(\}\})/iS', array($this, 'replace_keyframe_zero'), $css);
 
         // Replace 0 0; or 0 0 0; or 0 0 0 0; with 0.
         $css = preg_replace('/\:0(?: 0){1,3}(;|\}| \!)/', ':0$1', $css);
@@ -598,7 +598,7 @@ class CSSmin
 
 	private function replace_keyframe_zero($matches)
     {
-        return $matches[1] . preg_replace('/0\s*,/', '0%,', preg_replace('/\s*0\s*\{/', '0%{', $matches[2]));
+	return $matches[1] . preg_replace('/0(\{|,[^\)\{]+\{)/', '0%$1', $matches[2]) . $matches[3];
     }
 
     private function rgb_to_hex($matches)

@@ -1,13 +1,13 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-class autoptimizeScripts extends autoptimizeBase
-{
+class autoptimizeScripts extends autoptimizeBase {
 	private $scripts = array();
-	private $dontmove = array('document.write','html5.js','show_ads.js','google_ad','blogcatalog.com/w','tweetmeme.com/i','mybloglog.com/','histats.com/js','ads.smowtion.com/ad.js','statcounter.com/counter/counter.js','widgets.amung.us','ws.amazon.com/widgets','media.fastclick.net','/ads/','comment-form-quicktags/quicktags.php','edToolbar','intensedebate.com','scripts.chitika.net/','_gaq.push','jotform.com/','admin-bar.min.js','GoogleAnalyticsObject','plupload.full.min.js','syntaxhighlighter','adsbygoogle','potentialAction');
+	private $dontmove = array('document.write','html5.js','show_ads.js','google_ad','blogcatalog.com/w','tweetmeme.com/i','mybloglog.com/','histats.com/js','ads.smowtion.com/ad.js','statcounter.com/counter/counter.js','widgets.amung.us','ws.amazon.com/widgets','media.fastclick.net','/ads/','comment-form-quicktags/quicktags.php','edToolbar','intensedebate.com','scripts.chitika.net/','_gaq.push','jotform.com/','admin-bar.min.js','GoogleAnalyticsObject','plupload.full.min.js','syntaxhighlighter','adsbygoogle','application/ld+json');
 	private $domove = array('gaJsHost','load_cmc','jd.gallery.transitions.js','swfobject.embedSWF(','tiny_mce.js','tinyMCEPreInit.go');
 	private $domovelast = array('addthis.com','/afsonline/show_afs_search.js','disqus.js','networkedblogs.com/getnetworkwidget','infolinks.com/js/','jd.gallery.js.php','jd.gallery.transitions.js','swfobject.embedSWF(','linkwithin.com/widget.js','tiny_mce.js','tinyMCEPreInit.go');
 	private $trycatch = false;
+	private $alreadyminified = false;
 	private $forcehead = false;
 	private $jscode = '';
 	private $url = '';
@@ -16,11 +16,9 @@ class autoptimizeScripts extends autoptimizeBase
 	private $md5hash = '';
 	
 	//Reads the page and collects script tags
-	public function read($options)
-	{
+	public function read($options) {
 		//Remove everything that's not the header
-		if($options['justhead'] == true)
-		{
+		if($options['justhead'] == true) {
 			$content = explode('</head>',$this->content,2);
 			$this->content = $content[0].'</head>';
 			$this->restofcontent = $content[1];
@@ -144,18 +142,28 @@ class autoptimizeScripts extends autoptimizeBase
 				if($this->trycatch) {
 					$script = 'try{'.$script.'}catch(e){}';
 				}
+				$tmpscript = apply_filters( 'autoptimize_js_individual_script', $script, "" );
+				if ($tmpscript!==$script && !empty($tmpscript)) {
+					$script=$tmpscript;
+					$this->alreadyminified=true;
+				}
 				$this->jscode .= "\n" . $script;
 			} else {
 				//External script
 				if($script !== false && file_exists($script) && is_readable($script)) {
-					$script = file_get_contents($script);
-					$script = preg_replace('/\x{EF}\x{BB}\x{BF}/','',$script);
-					$script = rtrim($script,";\n\t\r").';';
+					$scriptsrc = file_get_contents($script);
+					$scriptsrc = preg_replace('/\x{EF}\x{BB}\x{BF}/','',$scriptsrc);
+					$scriptsrc = rtrim($scriptsrc,";\n\t\r").';';
 					//Add try-catch?
 					if($this->trycatch) {
-						$script = 'try{'.$script.'}catch(e){}';
+						$scriptsrc = 'try{'.$scriptsrc.'}catch(e){}';
 					}
-					$this->jscode .= "\n".$script;
+					$tmpscriptsrc = apply_filters( 'autoptimize_js_individual_script', $scriptsrc, $script );
+					if ($tmpscriptsrc!==$scriptsrc && !empty($tmpscriptsrc)) {
+						$scriptsrc=$tmpscriptsrc;
+						$this->alreadyminified=true;
+					}
+					$this->jscode .= "\n".$scriptsrc;
 				}/*else{
 					//Couldn't read JS. Maybe getpath isn't working?
 				}*/
@@ -171,10 +179,12 @@ class autoptimizeScripts extends autoptimizeBase
 		}
 		unset($ccheck);
 		
-		//$this->jscode has all the uncompressed code now. 
-		if(class_exists('JSMin') && apply_filters( 'autoptimize_js_do_minify' , true)) {
+		//$this->jscode has all the uncompressed code now.
+		if ($this->alreadyminified!==true) {
+		  if (class_exists('JSMin') && apply_filters( 'autoptimize_js_do_minify' , true)) {
 			if (@is_callable(array(new JSMin,"minify"))) {
 				$tmp_jscode = trim(JSMin::minify($this->jscode));
+				$tmp_jscode = apply_filters( 'autoptimize_js_after_minify', $tmp_jscode );
 				if (!empty($tmp_jscode)) {
 					$this->jscode = $tmp_jscode;
 					unset($tmp_jscode);
@@ -183,9 +193,11 @@ class autoptimizeScripts extends autoptimizeBase
 			} else {
 				return false;
 			}
-		} else {
+		  } else {
 			return false;
+		  }
 		}
+		return true;
 	}
 	
 	//Caches the JS in uncompressed, deflated and gzipped form.

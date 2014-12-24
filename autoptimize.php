@@ -3,7 +3,7 @@
 Plugin Name: Autoptimize
 Plugin URI: http://blog.futtta.be/autoptimize
 Description: Optimizes your website, concatenating the CSS and JavaScript code, and compressing it.
-Version: 1.9.1
+Version: 1.9.2
 Author: Frank Goossens (futtta)
 Author URI: http://blog.futtta.be/
 Domain Path: localization/
@@ -23,15 +23,20 @@ define('AUTOPTIMIZE_CACHE_NOGZIP',(bool) get_option('autoptimize_cache_nogzip'))
 // Load cache class
 include(WP_PLUGIN_DIR.'/autoptimize/classes/autoptimizeCache.php');
 
+// wp-content dir, dirname of AO cache dir and AO-prefix can be overridden in wp-config.php
+if (!defined('AUTOPTIMIZE_CACHE_CHILD_DIR')) { define('AUTOPTIMIZE_CACHE_CHILD_DIR','/cache/autoptimize/'); }
+if (!defined('AUTOPTIMIZE_WP_CONTENT_NAME')) { define('AUTOPTIMIZE_WP_CONTENT_NAME','/wp-content'); }
+if (!defined('AUTOPTIMIZE_CACHEFILE_PREFIX')) { define('AUTOPTIMIZE_CACHEFILE_PREFIX', 'autoptimize_'); }
+
 // Plugin dir constants (plugin url's defined later to accomodate domain mapped sites)
 if (is_multisite()) {
 	$blog_id = get_current_blog_id();
-	define('AUTOPTIMIZE_CACHE_DIR' , WP_CONTENT_DIR.'/cache/autoptimize/'.$blog_id.'/' );
+	define('AUTOPTIMIZE_CACHE_DIR' , WP_CONTENT_DIR.AUTOPTIMIZE_CACHE_CHILD_DIR.$blog_id.'/' );
 } else {
-	define('AUTOPTIMIZE_CACHE_DIR',WP_CONTENT_DIR.'/cache/autoptimize/');
+	define('AUTOPTIMIZE_CACHE_DIR',WP_CONTENT_DIR.AUTOPTIMIZE_CACHE_CHILD_DIR);
 }
 define('AUTOPTIMIZE_CACHE_DELAY',true);
-define('WP_ROOT_DIR',str_replace('/wp-content','',WP_CONTENT_DIR));
+define('WP_ROOT_DIR',str_replace(AUTOPTIMIZE_WP_CONTENT_NAME,'',WP_CONTENT_DIR));
 
 // Initialize the cache at least once
 $conf = autoptimizeConfig::instance();
@@ -39,7 +44,7 @@ $conf = autoptimizeConfig::instance();
 /* Check if we're updating, in which case we might need to do stuff and flush the cache
 to avoid old versions of aggregated files lingering around */
 
-$autoptimize_version="1.9.1";
+$autoptimize_version="1.9.2";
 $autoptimize_db_version=get_option('autoptimize_version','none');
 
 if ($autoptimize_db_version !== $autoptimize_version) {
@@ -185,7 +190,7 @@ function autoptimize_start_buffering() {
 			}
 		} else {
 			if (!class_exists('CSSmin')) {
-				@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/yui-php-cssmin-2.4.8-3.php');
+				@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/yui-php-cssmin-2.4.8-3_fixes.php');
 			}
 		}
 		define('COMPRESS_CSS',false);
@@ -208,13 +213,14 @@ function autoptimize_end_buffering($content) {
 		define('AUTOPTIMIZE_WP_SITE_URL',site_url());
 		define('AUTOPTIMIZE_WP_CONTENT_URL',content_url());
 	}
+	
 	if ( is_multisite() ) {
         	$blog_id = get_current_blog_id();
-        	define('AUTOPTIMIZE_CACHE_URL' , AUTOPTIMIZE_WP_CONTENT_URL.'/cache/autoptimize/'.$blog_id.'/' );
+        	define('AUTOPTIMIZE_CACHE_URL',AUTOPTIMIZE_WP_CONTENT_URL.AUTOPTIMIZE_CACHE_CHILD_DIR.$blog_id.'/' );
 	} else {
-		define('AUTOPTIMIZE_CACHE_URL',AUTOPTIMIZE_WP_CONTENT_URL.'/cache/autoptimize/');
+		define('AUTOPTIMIZE_CACHE_URL',AUTOPTIMIZE_WP_CONTENT_URL.AUTOPTIMIZE_CACHE_CHILD_DIR);
 	}
-	define('AUTOPTIMIZE_WP_ROOT_URL',str_replace('/wp-content','',AUTOPTIMIZE_WP_CONTENT_URL));
+	define('AUTOPTIMIZE_WP_ROOT_URL',str_replace(AUTOPTIMIZE_WP_CONTENT_NAME,'',AUTOPTIMIZE_WP_CONTENT_URL));
 
 	// Config element
 	$conf = autoptimizeConfig::instance();
@@ -262,6 +268,7 @@ function autoptimize_end_buffering($content) {
 		}
 		unset($instance);
 	}
+	$content = apply_filters( 'autoptimize_html_after_minify', $content );
 	return $content;
 }
 
@@ -305,7 +312,7 @@ if(autoptimizeCache::cacheavail()) {
 	$conf = autoptimizeConfig::instance();
 	if( $conf->get('autoptimize_html') || $conf->get('autoptimize_js') || $conf->get('autoptimize_css') || $conf->get('autoptimize_cdn_js') || $conf->get('autoptimize_cdn_css')) {
 		// Hook to wordpress
-		add_action('template_redirect','autoptimize_start_buffering',11);
+		add_action('template_redirect','autoptimize_start_buffering',2);
 	}
 }
 

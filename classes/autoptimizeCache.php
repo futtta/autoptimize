@@ -12,12 +12,12 @@ class autoptimizeCache {
 		$this->delayed = AUTOPTIMIZE_CACHE_DELAY;
 		$this->nogzip = AUTOPTIMIZE_CACHE_NOGZIP;
 		if($this->nogzip == false) {
-			$this->filename = 'autoptimize_'.$md5.'.php';
+			$this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX.$md5.'.php';
 		} else {
 			if (in_array($ext, array("js","css")))	 {
-				$this->filename = $ext.'/autoptimize_'.$md5.'.'.$ext;
+				$this->filename = $ext.'/'.AUTOPTIMIZE_CACHEFILE_PREFIX.$md5.'.'.$ext;
 			} else {
-				$this->filename = '/autoptimize_'.$md5.'.'.$ext;
+				$this->filename = '/'.AUTOPTIMIZE_CACHEFILE_PREFIX.$md5.'.'.$ext;
 			}
 		}
 	}

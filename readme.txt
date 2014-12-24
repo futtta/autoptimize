@@ -3,8 +3,8 @@ Contributors: futtta, turl
 Tags: css, html, javascript, js, optimize, speed, cache, data-uri, aggregate, minimize, minification, performance, pagespeed, booster, multisite
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 2.7
-Tested up to: 4.0
-Stable tag: 1.9.1
+Tested up to: 4.1
+Stable tag: 1.9.2
 
 Autoptimize speeds up your website and helps you save bandwidth by aggregating and minimizing JS, CSS and HTML.
 
@@ -55,13 +55,16 @@ You can find more information on this topic [in this blog post](http://blog.futt
 
 = My cache is getting huge, doesn't Autoptimize purge the cache? =
 
-Autoptimize does not have its proper cache purging mechanism, as this could remove optimized CSS/JS which is still referred to in other caches which would break your site.
+Autoptimize does not have its proper cache purging mechanism, as this could remove optimized CSS/JS which is still referred to in other caches, which would break your site.
 
-You can however keep the cache size at an acceptable level by excludinng JS-variables (or sometimes CSS-selectors) that change on a per page (or per pageload) basis. You can read how you can do that [in this blogpost](http://blog.futtta.be/2014/03/19/how-to-keep-autoptimizes-cache-size-under-control-and-improve-visitor-experience/).
+You can however keep the cache size at an acceptable level by either:
+* ticking the "look only in head" option for JS and/or CSS.
+* using the API to force AO not to aggregate inline CSS or JS (see example-code in autoptimize_helper.php_example).
+* excluding JS-variables (or sometimes CSS-selectors) that change on a per page (or per pageload) basis. You can read how you can do that [in this blogpost](http://blog.futtta.be/2014/03/19/how-to-keep-autoptimizes-cache-size-under-control-and-improve-visitor-experience/).
 
 = What can I do with the API? =
 
-A whole lot; there are filters you can use to conditionally disable Autoptimize per request, to change the CSS- and JS-excludes, to change the limit for CSS background-images to be inlined in the CSS, to define what JS-files are moved behing the aggregated on, to change the defer-attribute on the aggregated JS script-tag,  There are examples for all filters in autoptimize_helper.php_example.
+A whole lot; there are filters you can use to conditionally disable Autoptimize per request, to change the CSS- and JS-excludes, to change the limit for CSS background-images to be inlined in the CSS, to define what JS-files are moved behing the aggregated on, to change the defer-attribute on the aggregated JS script-tag, ... There are examples for many filters in autoptimize_helper.php_example.
 
 = How can I use/ activate autoptimize_helper.php_example? =
 
@@ -69,7 +72,7 @@ Copy it to /wp-content/plugins/autoptimize_helper.php and activate it in WordPre
 
 = How does CDN work? =
 
-Starting from version 1.7.0, CDN is activated upon entering the CDN blog root directory (e.g. http://cdn.example.net/wordpress/). If that URL is present, it will used for all Autoptimize-generated files (i.e. aggregated CSS and JS), includinng background-images in the CSS (when not using data-uri's).
+Starting from version 1.7.0, CDN is activated upon entering the CDN blog root directory (e.g. http://cdn.example.net/wordpress/). If that URL is present, it will used for all Autoptimize-generated files (i.e. aggregated CSS and JS), including background-images in the CSS (when not using data-uri's).
 
 If you want your uploaded images to be on the CDN as well, you can change the upload_url_path in your WordPress configuration (/wp-admin/options.php) to the target CDN upload directory (e.g. http://cdn.example.net/wordpress/wp-content/uploads/). Do take into consideration this only works for images uploaded from that point onwards, not for images that already were uploaded. Thanks to [BeautyPirate for the tip](http://wordpress.org/support/topic/please-don%c2%b4t-remove-cdn?replies=15#post-4720048)!
 
@@ -101,12 +104,33 @@ If your blog doesn't function normally after having turned on Autoptimize, here 
 * If you can't get either CSS or JS optimization working, you can off course always continue using the other two optimization-techniques.
 * If you tried the troubleshooting tips above and you still can't get CSS and JS working at all, you can ask for support on the [WordPress Autoptimize support forum](http://wordpress.org/support/plugin/autoptimize). See below for a description of what information you should provide in your "trouble ticket"
 
+= Help, I have a blank page after enabling Autoptimize!! =
+
+In some rare cases the [CSS minification component](https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port/) currently used by Autoptimize crashes due to a lack of resources (see [detailed technical explanation here](http://blog.futtta.be/2014/01/14/irregular-expressions-have-your-stack-for-lunch/)). You can in that case either disable CSS optimization, try to exclude specific CSS from being aggregated or activate the legacy minifiers which don't have that problem. The latter can be accomplished by adding this to your wp-config.php:
+
+`define("AUTOPTIMIZE_LEGACY_MINIFIERS","true");`
+
+The "legacy minifiers" will remain in Autoptimize "for ever" and changes to wp-config.php are not affected by core-, theme- or plugin-upgrades so you should be good to go.
+
 = What is noptimize? =
 
 Starting with version 1.6.6 Autoptimize excludes everything inside noptimize tags, e.g.:
 `<!--noptimize--><script>alert('this will not get autoptimized');</script><!--/noptimize-->`
 
 You can do this in your page/ post content, in widgets and in your theme files (consider creating [a child theme](http://codex.wordpress.org/Child_Themes) to avoid your work being overwritten by theme updates).
+
+= Can I change the directory & filename of cached autoptimize files? =
+
+Yes, if you want to serve files from e.g. /wp-content/resources/aggregated_12345.css instead of the default /wp-content/cache/autoptimize/autoptimize_12345.css, then add this to wp-config.php: 
+`
+define('AUTOPTIMIZE_CACHE_CHILD_DIR','/resources/');
+define('AUTOPTIMIZE_CACHEFILE_PREFIX','aggregated_');
+`
+
+If you renamed your wp-content-folder, you can tell Autoptimize about that with;
+`
+define( 'AUTOPTIMIZE_WP_CONTENT_NAME','/content' );
+`
 
 = Where can I report an error? =
 
@@ -121,11 +145,30 @@ You can report problems on the [wordpress.org support forum](http://wordpress.or
 * optionally plugins used (if you suspect one or more plugins are raising havoc)
 
 = I want out, how should I remove Autoptimize? =
+
 * Disable the plugin (this will remove options and cache)
 * Remove the plugin
 * Clear any cache that might still have pages which reference Autoptimized CSS/JS (e.g. of a page caching plugin such as WP Super Cache)
 
+= How can I help/ contribute? =
+
+Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
+
 == Changelog ==
+
+= 1.9.2 =
+First of all; Happy holidays, all the best for 2015!!
+
+* New: support for alternative cache-directory and file-prefix as requested by a.o. [Jassi Bacha](https://wordpress.org/support/topic/requesthelp-add-ability-to-specify-cache-folder?replies=1#post-6300128), [Cluster666](https://wordpress.org/support/topic/rewrite-js-path?replies=6#post-6363535) and Baris Unver.
+* Improvement: hard-exclude all linked-data json objects (script type=application/ld+json)
+* Improvement: several filters added to the API, e.g. to alter optimized HTML, CSS or JS
+* Bugfix: set Autoptimize priority back from 11 to 2 (as previously) to avoid some pages not being optimized (thanks to [CaveatLector for investigating & reporting](https://wordpress.org/support/topic/wp-property-plugin-add_action-priority-incompatibility?replies=1))
+* Bugfix (in YUI-CSS-compressor-PHP-port): don't convert bools to percentages in rotate3D-transforms (cfr. [bugreport on Github](https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port/issues/17))
+* Bugfix: background images with a space in the path didn't load, [reported by johnh10](https://wordpress.org/support/topic/optimize-css-code-error-with-background-image-elements?replies=6#post-6201582).
+* Bugfix: SVG image with fill:url broken after CSS optimization as [reported by Tkama](https://wordpress.org/support/topic/one-more-broblem-with-plugin?replies=2)
+* Updated translation for Swedish, new translation for Ukrainian by [Zanatoly of SebWeo.com](http://SebWeo.com)
+* Updated readme.txt
+* Confirmed working with WordPress 4.1
 
 = 1.9.1 =
 * hard-exclude [the sidelink-search-box introduced in WP SEO v1.6](http://wordpress.org/plugins/wordpress-seo/changelog/) from JS optimization (this [broke some JS-optimization badly](http://wordpress.org/support/topic/190-breaks-js?replies=4))

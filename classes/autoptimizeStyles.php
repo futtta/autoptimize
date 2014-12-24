@@ -9,6 +9,7 @@ class autoptimizeStyles extends autoptimizeBase {
 	private $mhtml = '';
 	private $datauris = false;
 	private $hashmap = array();
+	private $alreadyminified = false;
 	
 	//Reads the page and collects style tags
 	public function read($options) {
@@ -76,20 +77,20 @@ class autoptimizeStyles extends autoptimizeBase {
 							$media[] = $elem;
 						}
 					} else {
-						//No media specified - applies to all
+						// No media specified - applies to all
 						$media = array('all');
 					}
 				
 					if(preg_match('#<link.*href=("|\')(.*)("|\')#Usmi',$tag,$source)) {
-						//<link>
+						// <link>
 						$url = current(explode('?',$source[2],2));
 						$path = $this->getpath($url);
 						
-						if($path !==false && preg_match('#\.css$#',$path)) {
-							//Good link
+						if($path!==false && preg_match('#\.css$#',$path)) {
+							// Good link
 							$this->css[] = array($media,$path);
 						}else{
-							//Link is dynamic (.php etc)
+							// Link is dynamic (.php etc)
 							$tag = '';
 						}
 					} else {
@@ -108,7 +109,7 @@ class autoptimizeStyles extends autoptimizeBase {
 						}
 					}
 					
-					//Remove the original style tag
+					// Remove the original style tag
 					$this->content = str_replace($tag,'',$this->content);
 				}
 			}
@@ -123,16 +124,27 @@ class autoptimizeStyles extends autoptimizeBase {
 		foreach($this->css as $group) {
 			list($media,$css) = $group;
 			if(preg_match('#^INLINE;#',$css)) {
-				//<style>
+				// <style>
 				$css = preg_replace('#^INLINE;#','',$css);
 				$css = $this->fixurls(ABSPATH.'/index.php',$css);
+				$tmpstyle = apply_filters( 'autoptimize_css_individual_style', $css, "" );
+				if ($tmpstyle!==$css && !empty($tmpstyle)) {
+					$css=$tmpstyle;
+					$this->alreadyminified=true;
+				}
 			} else {
 				//<link>
 				if($css !== false && file_exists($css) && is_readable($css)) {
+					$cssPath = $css;
 					$css = $this->fixurls($css,file_get_contents($css));
 					$css = preg_replace('/\x{EF}\x{BB}\x{BF}/','',$css);
+					$tmpstyle = apply_filters( 'autoptimize_css_individual_style', $css, $cssPath );
+					if ($tmpstyle!==$css && !empty($tmpstyle)) {
+						$css=$tmpstyle;
+						$this->alreadyminified=true;
+					}
 				} else {
-					//Couldn't read CSS. Maybe getpath isn't working?
+					// Couldn't read CSS. Maybe getpath isn't working?
 					$css = '';
 				}
 			}
@@ -151,7 +163,7 @@ class autoptimizeStyles extends autoptimizeBase {
 			$md5sum = md5($code);
 			$medianame = $media;
 			foreach($md5list as $med => $sum) {
-				//If same code
+				// If same code
 				if($sum === $md5sum) {
 					//Add the merged code
 					$medianame = $med.', '.$media;
@@ -165,7 +177,7 @@ class autoptimizeStyles extends autoptimizeBase {
 		}
 		unset($tmpcss);
 		
-		//Manage @imports, while is for recursive import management
+		// Manage @imports, while is for recursive import management
 		foreach ($this->csscode as &$thiscss) {
 			// Flag to trigger import reconstitution and var to hold external imports
 			$fiximports = false;
@@ -179,6 +191,11 @@ class autoptimizeStyles extends autoptimizeBase {
 					if (file_exists($path) && is_readable($path)) {
 						$code = addcslashes($this->fixurls($path,file_get_contents($path)),"\\");
 						$code = preg_replace('/\x{EF}\x{BB}\x{BF}/','',$code);
+						$tmpstyle = apply_filters( 'autoptimize_css_individual_style', $code, "" );
+						if ($tmpstyle!==$code && !empty($tmpstyle)) {
+							$code=$tmpstyle;
+							$this->alreadyminified=true;
+						}
 						if(!empty($code)) {
 							$tmp_thiscss = preg_replace('#(/\*FILESTART\*/.*)'.preg_quote($import,'#').'#Us','/*FILESTART2*/'.$code.'$1',$thiscss);
 							if (!empty($tmp_thiscss)) {
@@ -287,10 +304,10 @@ class autoptimizeStyles extends autoptimizeBase {
 						}
 						unset($icheck);
 
-						//Add it to the list for replacement
+						// Add it to the list for replacement
 						$imgreplace[$matches[1][$count]] = str_replace($quotedurl,$headAndData,$matches[1][$count]).";\n*".str_replace($quotedurl,'mhtml:%%MHTML%%!'.$mhtmlcount,$matches[1][$count]).";\n_".$matches[1][$count].';';
 						
-						//Store image on the mhtml document
+						// Store image on the mhtml document
 						$this->mhtml .= "--_\r\nContent-Location:{$mhtmlcount}\r\nContent-Transfer-Encoding:base64\r\n\r\n{$base64data}\r\n";
 						$mhtmlcount++;
 					}
@@ -308,8 +325,8 @@ class autoptimizeStyles extends autoptimizeBase {
 				$code = str_replace(array_keys($imgreplace),array_values($imgreplace),$code);
 				}
 			
-			//Minify
-			if (apply_filters( "autoptimize_css_do_minify", true)) {
+			// Minify
+			if (($this->already_minified!==true) && (apply_filters( "autoptimize_css_do_minify", true))) {
 				if (class_exists('Minify_CSS_Compressor')) {
 					$tmp_code = trim(Minify_CSS_Compressor::process($code));
 				} else if(class_exists('CSSmin')) {
@@ -320,7 +337,7 @@ class autoptimizeStyles extends autoptimizeBase {
 						$tmp_code = trim(CssMin::minify($code));
 					}
 				}
-			
+				$tmp_code = apply_filters( 'autoptimize_css_after_minify',$tmp_code );
 				if (!empty($tmp_code)) {
 					$code = $tmp_code;
 					unset($tmp_code);
@@ -335,19 +352,19 @@ class autoptimizeStyles extends autoptimizeBase {
 	
 	//Caches the CSS in uncompressed, deflated and gzipped form.
 	public function cache() {
-		if($this->datauris)	{
+		if($this->datauris) {
 			// MHTML Preparation
 			$this->mhtml = "/*\r\nContent-Type: multipart/related; boundary=\"_\"\r\n\r\n".$this->mhtml."*/\r\n";
 			$md5 = md5($this->mhtml);
 			$cache = new autoptimizeCache($md5,'txt');
 			if(!$cache->check()) {
-				//Cache our images for IE
+				// Cache our images for IE
 				$cache->cache($this->mhtml,'text/plain');
 			}
 			$mhtml = AUTOPTIMIZE_CACHE_URL.$cache->getname();
 		}
 		
-		//CSS cache
+		// CSS cache
 		foreach($this->csscode as $media => $code) {
 			$md5 = $this->hashmap[md5($code)];
 
@@ -465,7 +482,7 @@ class autoptimizeStyles extends autoptimizeBase {
 		// quick fix for import-troubles in e.g. arras theme
 		$code=preg_replace('#@import ("|\')(.+?)\.css("|\')#','@import url("${2}.css")',$code);
 
-		if(preg_match_all('#url\((?!data)(.*)\)#Usi',$code,$matches)) {
+		if(preg_match_all('#url\((?!data)(?!\#)(.*)\)#Usi',$code,$matches)) {
 			$replace = array();
 			foreach($matches[1] as $k => $url) {
 				// Remove quotes
@@ -482,7 +499,8 @@ class autoptimizeStyles extends autoptimizeBase {
 					continue;
 				} else {
 					// relative URL
-					$newurl = preg_replace('/https?:/','',AUTOPTIMIZE_WP_ROOT_URL.str_replace('//','/',$dir.'/'.$url));
+					$newurl = preg_replace('/https?:/','',str_replace(" ","%20",AUTOPTIMIZE_WP_ROOT_URL.str_replace('//','/',$dir.'/'.$url)));
+
 					$hash = md5($url);
 					$code = str_replace($matches[0][$k],$hash,$code);
 
