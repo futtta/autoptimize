@@ -270,6 +270,8 @@ class autoptimizeStyles extends autoptimizeBase {
 						if($icheck->check()) {
 							// we have the base64 image in cache
 							$headAndData=$icheck->retrieve();
+							$_base64data=explode(";base64,",$headAndData);
+							$base64data=$_base64data[1];
 						} else {
 							// It's an image and we don't have it in cache, get the type
 							$explA=explode('.',$ipath);
@@ -326,7 +328,7 @@ class autoptimizeStyles extends autoptimizeBase {
 				}
 			
 			// Minify
-			if (($this->already_minified!==true) && (apply_filters( "autoptimize_css_do_minify", true))) {
+			if (($this->alreadyminified!==true) && (apply_filters( "autoptimize_css_do_minify", true))) {
 				if (class_exists('Minify_CSS_Compressor')) {
 					$tmp_code = trim(Minify_CSS_Compressor::process($code));
 				} else if(class_exists('CSSmin')) {
