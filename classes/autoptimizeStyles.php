@@ -339,11 +339,15 @@ class autoptimizeStyles extends autoptimizeBase {
 						$tmp_code = trim(CssMin::minify($code));
 					}
 				}
-				$tmp_code = apply_filters( 'autoptimize_css_after_minify',$tmp_code );
 				if (!empty($tmp_code)) {
 					$code = $tmp_code;
 					unset($tmp_code);
 				}
+			}
+			$tmp_code = apply_filters( 'autoptimize_css_after_minify',$code );
+			if (!empty($tmp_code)) {
+				$code = $tmp_code;
+				unset($tmp_code);
 			}
 			
 			$this->hashmap[md5($code)] = $hash;
