@@ -219,6 +219,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 			if (jQuery("#autoptimize_js").attr('checked')) {
 				jQuery(".js_sub:visible").fadeTo("fast",1);
 			}
+			check_ini_state()
 			jQuery( "input#autoptimize_show_adv" ).val("1");
 		});
 
@@ -232,6 +233,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
                         if (!jQuery("#autoptimize_js").attr('checked')) {
                                 jQuery(".js_sub:visible").fadeTo("fast",.33);
                         }
+                        check_ini_state()
 			jQuery( "input#autoptimize_show_adv" ).val("0");
 		});
 
