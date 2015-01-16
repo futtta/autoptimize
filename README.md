@@ -1,4 +1,4 @@
-autoptimize
+Autoptimize
 ===========
 
-Official Autoptimize repo on Github
+The [official Autoptimize repo on Github can be found here](https://github.com/futtta/autoptimize/).
