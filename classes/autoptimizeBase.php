@@ -172,7 +172,12 @@ abstract class autoptimizeBase
 	
 	protected function url_replace_cdn($url) {		
 		if (!empty($this->cdn_url)) {
-			$url=str_replace(AUTOPTIMIZE_WP_SITE_URL,rtrim($this->cdn_url,'/'),$url);
+			$tmpurl = apply_filters( 'autoptimize_base_replace_cdn',$url);
+                        if ($tmpurl === $url) {
+                                $url = str_replace(AUTOPTIMIZE_WP_SITE_URL,rtrim($this->cdn_url,'/'),$url);
+                        } else {
+                                $url = $tmpurl;
+                        }
 		}
 		return $url;
 	}
