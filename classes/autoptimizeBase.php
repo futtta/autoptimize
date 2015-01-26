@@ -1,14 +1,12 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-abstract class autoptimizeBase
-{
+abstract class autoptimizeBase {
 	protected $content = '';
 	
-	public function __construct($content)
-	{
-			$this->content = $content;
-			//Best place to catch errors
+	public function __construct($content) {
+		$this->content = $content;
+		//Best place to catch errors
 	}
 	
 	//Reads the page and collects tags
@@ -25,6 +23,8 @@ abstract class autoptimizeBase
 	
 	//Converts an URL to a full path
 	protected function getpath($url) {
+		$url=apply_filters( 'autoptimize_filter_cssjs_alter_url', $url);
+		
 		if (strpos($url,'%')!==false) {
 			$url=urldecode($url);
 		}
