@@ -312,7 +312,14 @@ class autoptimizeStyles extends autoptimizeBase {
 						// Store image on the mhtml document
 						$this->mhtml .= "--_\r\nContent-Location:{$mhtmlcount}\r\nContent-Transfer-Encoding:base64\r\n\r\n{$base64data}\r\n";
 						$mhtmlcount++;
-					}
+					} else {
+                                                // just cdn the URL if applicable
+                                                if (!empty($this->cdn_url)) {
+                                                        $url = trim($quotedurl," \t\n\r\0\x0B\"'");
+                                                        $cdn_url=$this->url_replace_cdn($url);
+                                                        $imgreplace[$matches[1][$count]] = str_replace($quotedurl,$cdn_url,$matches[1][$count]);
+                                                }
+
 				}
 			} else if ((is_array($matches)) && (!empty($this->cdn_url))) {
 				// change background image urls to cdn-url
