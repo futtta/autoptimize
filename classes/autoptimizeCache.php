@@ -78,7 +78,7 @@ class autoptimizeCache {
 		foreach ($scan as $scandirName=>$scanneddir) {
 			$thisAoCacheDir=rtrim(AUTOPTIMIZE_CACHE_DIR.$scandirName,"/")."/";
 			foreach($scanneddir as $file) {
-				if(!in_array($file,array('.','..')) && strpos($file,'autoptimize') !== false && is_file($thisAoCacheDir.$file)) {
+				if(!in_array($file,array('.','..')) && strpos($file,AUTOPTIMIZE_CACHEFILE_PREFIX) !== false && is_file($thisAoCacheDir.$file)) {
 					@unlink($thisAoCacheDir.$file);
 				}
 			}
