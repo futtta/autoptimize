@@ -3,7 +3,7 @@ Autoptimize
 
 The [official Autoptimize repo on Github can be found here](https://github.com/futtta/autoptimize/).
 
-## Examples
+## Example use of Autoptimize's API
 
 ### Filter: `autoptimize_filter_css_datauri_maxsize`
 
