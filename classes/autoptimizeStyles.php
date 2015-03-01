@@ -36,6 +36,9 @@ class autoptimizeStyles extends autoptimizeBase {
 		// should we inline?
 		$this->inline = $options['inline'];
 		
+		// get css location
+		$this->css_location = $options['css_location'];
+		
 		// get cdn url
 		$this->cdn_url = $options['cdn_url'];
 		
@@ -375,6 +378,10 @@ class autoptimizeStyles extends autoptimizeBase {
 				$cache->cache($this->mhtml,'text/plain');
 			}
 			$mhtml = AUTOPTIMIZE_CACHE_URL.$cache->getname();
+
+			if($this->css_location != '') {
+				$mhtml = $this->css_location.$cache->getname();
+			}
 		}
 		
 		// CSS cache
@@ -392,6 +399,10 @@ class autoptimizeStyles extends autoptimizeBase {
 				$cache->cache($code,'text/css');
 			}
 			$this->url[$media] = AUTOPTIMIZE_CACHE_URL.$cache->getname();
+
+			if($this->css_location != '') {
+				$this->url[$media] = $this->css_location.$cache->getname();
+			}
 		}
 	}
 	
