@@ -344,11 +344,13 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 		register_setting('autoptimize','autoptimize_html');
 		register_setting('autoptimize','autoptimize_html_keepcomments');
 		register_setting('autoptimize','autoptimize_js');
+		register_setting('autoptimize','autoptimize_js_location');
 		register_setting('autoptimize','autoptimize_js_exclude');
 		register_setting('autoptimize','autoptimize_js_trycatch');
 		register_setting('autoptimize','autoptimize_js_justhead');
 		register_setting('autoptimize','autoptimize_js_forcehead');
 		register_setting('autoptimize','autoptimize_css');
+		register_setting('autoptimize','autoptimize_css_location');
 		register_setting('autoptimize','autoptimize_css_exclude');
 		register_setting('autoptimize','autoptimize_css_justhead');
 		register_setting('autoptimize','autoptimize_css_datauris');
@@ -390,11 +392,13 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 			$config = array('autoptimize_html' => 0,
 				'autoptimize_html_keepcomments' => 0,
 				'autoptimize_js' => 0,
+				'autoptimize_js_location' => "/wp-content/cache/autoptimize/",
 				'autoptimize_js_exclude' => "s_sid, smowtion_size, sc_project, WAU_, wau_add, comment-form-quicktags, edToolbar, ch_client, nonce, post_id",
 				'autoptimize_js_trycatch' => 0,
 				'autoptimize_js_justhead' => 0,
 				'autoptimize_js_forcehead' => 0,
 				'autoptimize_css' => 0,
+				'autoptimize_css_location' => "/wp-content/cache/autoptimize/",
 				'autoptimize_css_exclude' => "admin-bar.min.css, dashicons.min.css",
 				'autoptimize_css_justhead' => 0,
 				'autoptimize_css_defer' => 0,
