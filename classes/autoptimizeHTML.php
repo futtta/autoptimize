@@ -4,22 +4,34 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class autoptimizeHTML extends autoptimizeBase {
 	private $keepcomments = false;
+	private $exclude = array('<!-- ngg_resource_manager_marker -->');
 	
-	//Does nothing
-	public function read($options)
-	{
-		//Remove the HTML comments?
+	public function read($options) {
+		// Remove the HTML comments?
 		$this->keepcomments = (bool) $options['keepcomments'];
 		
-		//Nothing to read for HTML
+		// filter to add strings to be excluded from HTML minification
+		$excludeHTML = apply_filters( 'autoptimize_filter_html_exclude' );
+                if ($excludeHTML!=="") {
+                        $exclHTMLArr = array_filter(array_map('trim',explode(",",$excludeHTML)));
+                        $this->exclude = array_merge($exclHTMLArr,$this->exclude);
+                }
+		
+		// Nothing else for HTML
 		return true;
 	}
 	
 	//Joins and optimizes CSS
-	public function minify()
-	{
-		if(class_exists('Minify_HTML'))
-		{
+	public function minify() {
+		if(class_exists('Minify_HTML')) {
+			// wrap the to-be-excluded strings in noptimize tags
+                        foreach ($this->exclude as $exclString) {
+                                if (strpos($this->content,$exclString)!==false) {
+                                        $replString="<!--noptimize-->".$exclString."<!--/noptimize-->";
+                                        $this->content=str_replace($exclString,$replString,$this->content);
+                                }
+                        }
+
 			// noptimize me
 			$this->content = $this->hide_noptimize($this->content);
 
@@ -36,23 +48,30 @@ class autoptimizeHTML extends autoptimizeBase {
 
 			// restore noptimize
 			$this->content = $this->restore_noptimize($this->content);
+			
+			// remove the noptimize-wrapper from around the excluded strings
+                        foreach ($this->exclude as $exclString) {
+                                $replString="<!--noptimize-->".$exclString."<!--/noptimize-->";
+                                if (strpos($this->content,$replString)!==false) {
+                                        $this->content=str_replace($replString,$exclString,$this->content);
+                                }
+                        }
+
 			return true;
 		}
 		
-		//Didn't minify :(
+		// Didn't minify :(
 		return false;
 	}
 	
-	//Does nothing
-	public function cache()
-	{
+	// Does nothing
+	public function cache() {
 		//No cache for HTML
 		return true;
 	}
 	
 	//Returns the content
-	public function getcontent()
-	{
+	public function getcontent() {
 		return $this->content;
 	}
 }
