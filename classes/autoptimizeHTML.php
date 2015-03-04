@@ -11,7 +11,7 @@ class autoptimizeHTML extends autoptimizeBase {
 		$this->keepcomments = (bool) $options['keepcomments'];
 		
 		// filter to add strings to be excluded from HTML minification
-		$excludeHTML = apply_filters( 'autoptimize_filter_html_exclude' );
+		$excludeHTML = apply_filters( 'autoptimize_filter_html_exclude','' );
                 if ($excludeHTML!=="") {
                         $exclHTMLArr = array_filter(array_map('trim',explode(",",$excludeHTML)));
                         $this->exclude = array_merge($exclHTMLArr,$this->exclude);
