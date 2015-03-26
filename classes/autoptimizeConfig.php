@@ -194,6 +194,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
                 </h3>
                 <div id="futtta_feed"></div>
         </div>
+        <div style="margin:15px;font-size:larger;"><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=futtta"><?php _e("Have a look at other plugins by the same author!"); ?></a></div>
 	<div style="float:right;margin:50px 15px;"><a href="http://blog.futtta.be/2013/10/21/do-not-donate-to-me/" target="_blank"><img width="100px" height="85px" src="<?php echo content_url(); ?>/plugins/autoptimize/classes/external/do_not_donate_smallest.png" title="<?php _e("Do not donate for this plugin!"); ?>"></a></div>
 </div>
 
