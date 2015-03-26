@@ -41,7 +41,7 @@ abstract class autoptimizeBase {
 		}
 
 		// first check; hostname wp site should be hostname of url
-		if (parse_url($url,PHP_URL_HOST)!==parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST)) {
+		if (@parse_url($url,PHP_URL_HOST)!==parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST)) {
 			return false;
 		}
 		
