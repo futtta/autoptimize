@@ -93,7 +93,7 @@ msgstr "Yalnızca &lt;head&gt;'deki JavaScript dosyalarıyla ilgilen"
 
 #: classes/autoptimizeConfig.php:96
 msgid ""
-"Mostly usefull in combination with previous option when using jQuery-based "
+"Mostly useful in combination with previous option when using jQuery-based "
 "templates, but might help keeping cache size under control."
 msgstr ""
 "Çoğunlukla, önceki seçenekle beraber jQuery ağırlıklı temalarında "

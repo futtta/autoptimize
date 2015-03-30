@@ -152,7 +152,7 @@ msgstr "Оптимізувати скрипти тільки в секції &lt
 # @ autoptimize
 #: classes/autoptimizeConfig.php:96
 msgid ""
-"Mostly usefull in combination with previous option when using jQuery-based "
+"Mostly useful in combination with previous option when using jQuery-based "
 "templates, but might help keeping cache size under control."
 msgstr ""
 "Корисна опція (в поєднанні з попередньою опцією), при використанні шаблонів "

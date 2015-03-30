@@ -92,7 +92,7 @@ msgstr "Leta efter script enbart i &lt;head&gt;?"
 
 #: classes/autoptimizeConfig.php:96
 msgid ""
-"Mostly usefull in combination with previous option when using jQuery-based "
+"Mostly useful in combination with previous option when using jQuery-based "
 "templates, but might help keeping cache size under control."
 msgstr ""
 "Mest användbart i kombination med föregående alternativ, när jQuery-baserade "

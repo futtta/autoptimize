@@ -17,11 +17,11 @@ If you consider performance important, you really should use a caching-plugin su
 
 == Installation ==
 
-Just install form your WordPress "Plugins|Add New" screen and all will be well. Manual installation is very straightforward as well:
+Just install from your WordPress "Plugins > Add New" screen and all will be well. Manual installation is very straightforward as well:
 
-1. Upload the zip-file and unzip it in the /wp-content/plugins/ directory
+1. Upload the zip file and unzip it in the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Go to `Settings -> Autoptimize` and enable the options you want. Generally this means "Optimize HTML/ CSS/ JavaScript".
+1. Go to `Settings > Autoptimize` and enable the options you want. Generally this means "Optimize HTML/ CSS/ JavaScript".
 
 == Frequently Asked Questions ==
 

@@ -94,7 +94,7 @@ msgstr "Nach Skripten nur in &lt;head&gt; suchen?"
 
 #: classes/autoptimizeConfig.php:96
 msgid ""
-"Mostly usefull in combination with previous option when using jQuery-based "
+"Mostly useful in combination with previous option when using jQuery-based "
 "templates, but might help keeping cache size under control."
 msgstr ""
 "Oft in Kombination mit der vorhergehenden Option nützlich, wenn "

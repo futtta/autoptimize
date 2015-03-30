@@ -91,7 +91,7 @@ msgstr "Haal javascript enkel uit &lt;head&gt;?"
 
 #: classes/autoptimizeConfig.php:96
 msgid ""
-"Mostly usefull in combination with previous option when using jQuery-based "
+"Mostly useful in combination with previous option when using jQuery-based "
 "templates, but might help keeping cache size under control."
 msgstr ""
 "Vooral nuttig in combinatie met de vorige optie voor jQuery-gebaseerde "
