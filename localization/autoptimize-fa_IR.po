@@ -91,7 +91,7 @@ msgstr "فقط اسکریپت های موجود در تگ &lt;head&gt; بهین�
 
 #: classes/autoptimizeConfig.php:96
 msgid ""
-"Mostly usefull in combination with previous option when using jQuery-based "
+"Mostly useful in combination with previous option when using jQuery-based "
 "templates, but might help keeping cache size under control."
 msgstr ""
 "این گزینه بیشتر زمانی کاربردی است که با گزینه قبلی برای پوسته های تحت jQuery "

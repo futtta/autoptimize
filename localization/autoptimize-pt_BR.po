@@ -97,7 +97,7 @@ msgstr "Buscar scripts somente na seção &lt;head&gt;?"
 
 #: classes/autoptimizeConfig.php:96
 msgid ""
-"Mostly usefull in combination with previous option when using jQuery-based "
+"Mostly useful in combination with previous option when using jQuery-based "
 "templates, but might help keeping cache size under control."
 msgstr ""
 "Normalmente usado em conjunto com a opção anterior quando se usa temas "
