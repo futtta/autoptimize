@@ -28,13 +28,18 @@ class autoptimizeStyles extends autoptimizeBase {
 		}
 
 		// should we defer css?
+		// value: true/ false
 		$this->defer = $options['defer'];
+		$this->defer = apply_filters( 'autoptimize_filter_css_defer', $this->defer );
 
 		// should we inline while deferring?
+		// value: inlined CSS
 		$this->defer_inline = $options['defer_inline'];
 
 		// should we inline?
+		// value: true/ false
 		$this->inline = $options['inline'];
+		$this->inline = apply_filters( 'autoptimize_filter_css_inline', $this->inline );
 		
 		// get cdn url
 		$this->cdn_url = $options['cdn_url'];
