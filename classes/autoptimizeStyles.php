@@ -348,7 +348,7 @@ class autoptimizeStyles extends autoptimizeBase {
 					if (method_exists($cssmin,"run")) {
 						$tmp_code = trim($cssmin->run($code));
 					} elseif (@is_callable(array($cssmin,"minify"))) {
-						$tmp_code = trim(CssMin::minify($code));
+						$tmp_code = trim(CssMin::minify($code,false));
 					}
 				}
 				if (!empty($tmp_code)) {
