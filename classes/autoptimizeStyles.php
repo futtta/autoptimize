@@ -10,6 +10,9 @@ class autoptimizeStyles extends autoptimizeBase {
 	private $datauris = false;
 	private $hashmap = array();
 	private $alreadyminified = false;
+	private $inline = false;
+	private $defer = false;
+	private $defer_inline = false;
 	
 	//Reads the page and collects style tags
 	public function read($options) {
