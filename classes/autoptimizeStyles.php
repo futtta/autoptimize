@@ -324,7 +324,7 @@ class autoptimizeStyles extends autoptimizeBase {
                                                         $cdn_url=$this->url_replace_cdn($url);
                                                         $imgreplace[$matches[1][$count]] = str_replace($quotedurl,$cdn_url,$matches[1][$count]);
                                                 }
-
+					}
 				}
 			} else if ((is_array($matches)) && (!empty($this->cdn_url))) {
 				// change background image urls to cdn-url
