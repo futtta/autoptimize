@@ -3,6 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 abstract class autoptimizeBase {
 	protected $content = '';
+	protected $tagWarning = false;
 	
 	public function __construct($content) {
 		$this->content = $content;
@@ -207,9 +208,9 @@ abstract class autoptimizeBase {
 			$this->content = str_replace($replaceTag[0],$replaceBlock,$this->content);
 		} else {
 			$this->content .= $payload;
-			if (!$tagWarning) {
+			if (!$this->tagWarning) {
 				$this->content .= "<!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag ".$replaceTag[0]." missing --><!--/noptimize-->";
-				$tagWarning=true;
+				$this->tagWarning=true;
 			}
 		}
 	}

@@ -10,6 +10,9 @@ class autoptimizeStyles extends autoptimizeBase {
 	private $datauris = false;
 	private $hashmap = array();
 	private $alreadyminified = false;
+	private $inline = false;
+	private $defer = false;
+	private $defer_inline = false;
 	
 	//Reads the page and collects style tags
 	public function read($options) {
@@ -348,7 +351,7 @@ class autoptimizeStyles extends autoptimizeBase {
 					if (method_exists($cssmin,"run")) {
 						$tmp_code = trim($cssmin->run($code));
 					} elseif (@is_callable(array($cssmin,"minify"))) {
-						$tmp_code = trim(CssMin::minify($code));
+						$tmp_code = trim(CssMin::minify($code,false));
 					}
 				}
 				if (!empty($tmp_code)) {
