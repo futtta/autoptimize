@@ -86,6 +86,11 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <td><input type="checkbox" id="autoptimize_js" name="autoptimize_js" <?php echo get_option('autoptimize_js')?'checked="checked" ':''; ?>/></td>
 </tr>
 <tr valign="top" class="hidden js_sub ao_adv">
+<th scope="row"><?php _e('Load Scripts from other loaction:','autoptimize'); ?></th>
+<td><label for="autoptimize_js_location"><input type="text" style="width:100%;" name="autoptimize_js_location" value="<?php echo get_option('autoptimize_js_location',"/wp-content/cache/autoptimize/js/"); ?>"/><br />
+<?php _e('URL to cache directory or subdomain, for example default \'/wp-content/cache/autoptimize/\' or \'assets.yourdomain.com\'','autoptimize'); ?></label></td>
+</tr>
+<tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Force JavaScript in &lt;head&gt;?','autoptimize'); ?></th>
 <td><label for="autoptimize_js_forcehead"><input type="checkbox" name="autoptimize_js_forcehead" <?php echo get_option('autoptimize_js_forcehead')?'checked="checked" ':''; ?>/>
 <?php _e('For performance reasons it is better to include JavaScript at the bottom of HTML, but this sometimes breaks things. Especially useful for jQuery-based themes.','autoptimize'); ?></label></td>
@@ -112,6 +117,11 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr valign="top">
 <th scope="row"><?php _e('Optimize CSS Code?','autoptimize'); ?></th>
 <td><input type="checkbox" id="autoptimize_css" name="autoptimize_css" <?php echo get_option('autoptimize_css')?'checked="checked" ':''; ?>/></td>
+</tr>
+<tr valign="top" class="hidden js_sub ao_adv">
+<th scope="row"><?php _e('Load Styles from other loaction:','autoptimize'); ?></th>
+<td><label for="autoptimize_css_location"><input type="text" style="width:100%;" name="autoptimize_css_location" value="<?php echo get_option('autoptimize_css_location',"/wp-content/cache/autoptimize/css/"); ?>"/><br />
+<?php _e('URL to cache directory or subdomain, for example default \'/wp-content/cache/autoptimize/\' or \'assets.yourdomain.com\'','autoptimize'); ?></label></td>
 </tr>
 <tr class="css_sub" valign="top">
 <th scope="row"><?php _e('Generate data: URIs for images?','autoptimize'); ?></th>
@@ -335,11 +345,13 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 		register_setting('autoptimize','autoptimize_html');
 		register_setting('autoptimize','autoptimize_html_keepcomments');
 		register_setting('autoptimize','autoptimize_js');
+		register_setting('autoptimize','autoptimize_js_location');
 		register_setting('autoptimize','autoptimize_js_exclude');
 		register_setting('autoptimize','autoptimize_js_trycatch');
 		register_setting('autoptimize','autoptimize_js_justhead');
 		register_setting('autoptimize','autoptimize_js_forcehead');
 		register_setting('autoptimize','autoptimize_css');
+		register_setting('autoptimize','autoptimize_css_location');
 		register_setting('autoptimize','autoptimize_css_exclude');
 		register_setting('autoptimize','autoptimize_css_justhead');
 		register_setting('autoptimize','autoptimize_css_datauris');
@@ -381,11 +393,13 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 			$config = array('autoptimize_html' => 0,
 				'autoptimize_html_keepcomments' => 0,
 				'autoptimize_js' => 0,
+				'autoptimize_js_location' => "/wp-content/cache/autoptimize/",
 				'autoptimize_js_exclude' => "s_sid, smowtion_size, sc_project, WAU_, wau_add, comment-form-quicktags, edToolbar, ch_client, nonce, post_id",
 				'autoptimize_js_trycatch' => 0,
 				'autoptimize_js_justhead' => 0,
 				'autoptimize_js_forcehead' => 0,
 				'autoptimize_css' => 0,
+				'autoptimize_css_location' => "/wp-content/cache/autoptimize/",
 				'autoptimize_css_exclude' => "admin-bar.min.css, dashicons.min.css",
 				'autoptimize_css_justhead' => 0,
 				'autoptimize_css_defer' => 0,

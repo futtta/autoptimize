@@ -41,6 +41,9 @@ class autoptimizeScripts extends autoptimizeBase {
 		// force js in head?	
 		if($options['forcehead'] == true)
 			$this->forcehead = true;
+		
+		// get js_location
+		$this->js_location = $options['js_location'];
 
 		// get cdn url
 		$this->cdn_url = $options['cdn_url'];
@@ -210,6 +213,10 @@ class autoptimizeScripts extends autoptimizeBase {
 		}
 		$this->url = AUTOPTIMIZE_CACHE_URL.$cache->getname();
 		$this->url = $this->url_replace_cdn($this->url);
+
+		if($this->js_location != '') {
+			$this->url = $this->js_location.$cache->getname();
+		}
 	}
 	
 	// Returns the content
