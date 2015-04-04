@@ -97,7 +97,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 </tr>
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
-<td><label for="autoptimize_js_exclude"><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"s_sid,smowtion_size,sc_project,WAU_,wau_add,comment-form-quicktags,edToolbar,ch_client,nonce,post_id"); ?>"/><br />
+<td><label for="autoptimize_js_exclude"><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"s_sid,smowtion_size,sc_project,WAU_,wau_add,comment-form-quicktags,edToolbar,ch_client,seal.js"); ?>"/><br />
 <?php _e('A comma-seperated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated and minimized by Autoptimize.','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="hidden js_sub ao_adv">
@@ -381,7 +381,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 			$config = array('autoptimize_html' => 0,
 				'autoptimize_html_keepcomments' => 0,
 				'autoptimize_js' => 0,
-				'autoptimize_js_exclude' => "s_sid, smowtion_size, sc_project, WAU_, wau_add, comment-form-quicktags, edToolbar, ch_client, nonce, post_id, seal.js",
+				'autoptimize_js_exclude' => "s_sid, smowtion_size, sc_project, WAU_, wau_add, comment-form-quicktags, edToolbar, ch_client, seal.js",
 				'autoptimize_js_trycatch' => 0,
 				'autoptimize_js_justhead' => 0,
 				'autoptimize_js_forcehead' => 0,
