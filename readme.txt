@@ -62,6 +62,10 @@ You can however keep the cache size at an acceptable level by either:
 * using the API to force AO not to aggregate inline CSS or JS (see example-code in autoptimize_helper.php_example).
 * excluding JS-variables (or sometimes CSS-selectors) that change on a per page (or per pageload) basis. You can read how you can do that [in this blogpost](http://blog.futtta.be/2014/03/19/how-to-keep-autoptimizes-cache-size-under-control-and-improve-visitor-experience/).
 
+= Why is "look only in head" marked as deprecated =
+
+While "look only in head" still works, it will in the next major version be replaced by an option to choose if inline JS/ CSS should be autoptimized (which is much more useful). So this is just a small heads up, really.
+
 = What can I do with the API? =
 
 A whole lot; there are filters you can use to conditionally disable Autoptimize per request, to change the CSS- and JS-excludes, to change the limit for CSS background-images to be inlined in the CSS, to define what JS-files are moved behing the aggregated on, to change the defer-attribute on the aggregated JS script-tag, ... There are examples for many filters in autoptimize_helper.php_example.
