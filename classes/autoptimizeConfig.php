@@ -91,7 +91,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <?php _e('For performance reasons it is better to include JavaScript at the bottom of HTML, but this sometimes breaks things. Especially useful for jQuery-based themes.','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="hidden js_sub ao_adv">
-<th scope="row"><?php _e('Look for scripts only in &lt;head&gt;?','autoptimize'); ?></th>
+<th scope="row"><?php _e('Look for scripts only in &lt;head&gt;?','autoptimize');  _e(' <i>(deprecated)</i>','autoptimize'); ?></th>
 <td><label for="autoptimize_js_justhead"><input type="checkbox" name="autoptimize_js_justhead" <?php echo get_option('autoptimize_js_justhead')?'checked="checked" ':''; ?>/>
 <?php _e('Mostly useful in combination with previous option when using jQuery-based templates, but might help keeping cache size under control.','autoptimize'); ?></label></td>
 </tr>
@@ -119,7 +119,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <?php _e('Enable this to include small background-images in the CSS itself instead of as seperate downloads.','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="hidden css_sub ao_adv">
-<th scope="row"><?php _e('Look for styles only in &lt;head&gt;?','autoptimize'); ?></th>
+<th scope="row"><?php _e('Look for styles only in &lt;head&gt;?','autoptimize'); _e(' <i>(deprecated)</i>','autoptimize'); ?></th>
 <td><label for="autoptimize_css_justhead"><input type="checkbox" name="autoptimize_css_justhead" <?php echo get_option('autoptimize_css_justhead')?'checked="checked" ':''; ?>/>
 <?php _e('Don\'t autoptimize CSS outside the head-section. If the cache gets big, you might want to enable this.','autoptimize'); ?></label></td>
 </tr>
