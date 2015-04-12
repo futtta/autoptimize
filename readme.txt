@@ -4,7 +4,7 @@ Tags: css, html, javascript, js, optimize, speed, cache, data-uri, aggregate, mi
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 2.7
 Tested up to: 4.1
-Stable tag: 1.9.2
+Stable tag: 1.9.E
 
 Autoptimize speeds up your website and helps you save bandwidth by aggregating and minimizing JS, CSS and HTML.
 
@@ -160,7 +160,16 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 1.9.3 =
-* bufixes
+* improvement: more intelligent CDN-replacement logic, thanks [Squazz for reporting and testing](https://wordpress.org/support/topic/enable-cdn-for-images-referenced-in-the-css?replies=9)
+* improvement: allow strings (comments) to be excluded from HTML-optimization (comment removal)
+* improvement: changed priority with which AO gets triggered by WordPress, solving JS not being aggregated when NextGen Galleries is active, with great [help from msebald](https://wordpress.org/support/topic/js-options-dont-work-if-html-disabled/)
+* improvement: extra JS exclude-strings: gist.github.com, text/html, text/template, wp-slimstat.min.js, _stq, nonce, post_id (the latter two were removed from the "manual" exclude list on the settings-page)
+* new in API: autoptimize_filter_html_exclude, autoptimize_filter_css_defer, autoptimize_filter_css_inline, autoptimize_filter_base_replace_cdn
+* bugfix: remove some PHP notices, as [reported by dimitrov.adrian](https://wordpress.org/support/topic/php-errors-39)
+* bugfix: make sure HTML-optimalization does not gobble a space before a cite [as proposed by ecdltf](https://wordpress.org/support/topic/%E2%80%9Coptimize-html%E2%80%9D-is-gobbling-whitespace-before-cite-tag)
+* bugfix: cleaning the cache did not work on non-default directories as [encountered by NoahJ Champion](https://wordpress.org/support/topic/changing-the-wp-content-path-to-top-level?replies=10#post-6573657)
+* upgraded to [yui compressor php port 2.4.8-4](https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port)
+* added arabic translation, thanks to the [ekleel team](http://www.ekleel.net)
 
 = 1.9.2 =
 First of all; Happy holidays, all the best for 2015!!
