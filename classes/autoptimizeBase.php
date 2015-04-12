@@ -174,7 +174,7 @@ abstract class autoptimizeBase {
         protected function url_replace_cdn($url) {
                 if (!empty($this->cdn_url)) {
                 // first allow API filter to take care of CDN replacement
-                        $tmp_url = apply_filters( 'autoptimize_base_replace_cdn',$url);
+                        $tmp_url = apply_filters( 'autoptimize_filter_base_replace_cdn',$url);
                         if ($tmp_url === $url) {
                                 // secondly prepend domain-less absolute URL's
                                 if((substr($url,0,1)==='/')&&(substr($url,1,1)!=='/')) {
