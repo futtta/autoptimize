@@ -16,6 +16,10 @@ class autoptimizeStyles extends autoptimizeBase {
 	
 	//Reads the page and collects style tags
 	public function read($options) {
+		$noptimizeCSS = apply_filters( 'autoptimize_filter_css_noptimize', false );
+                if ($noptimizeCSS)
+                        return false;
+
 		// Remove everything that's not the header
 		if ($options['justhead'] == true) {
 			$content = explode('</head>',$this->content,2);
