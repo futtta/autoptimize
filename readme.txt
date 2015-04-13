@@ -164,7 +164,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * improvement: allow strings (comments) to be excluded from HTML-optimization (comment removal)
 * improvement: changed priority with which AO gets triggered by WordPress, solving JS not being aggregated when NextGen Galleries is active, with great [help from msebald](https://wordpress.org/support/topic/js-options-dont-work-if-html-disabled/)
 * improvement: extra JS exclude-strings: gist.github.com, text/html, text/template, wp-slimstat.min.js, _stq, nonce, post_id (the latter two were removed from the "manual" exclude list on the settings-page)
-* new in API: autoptimize_filter_html_exclude, autoptimize_filter_css_defer, autoptimize_filter_css_inline, autoptimize_filter_base_replace_cdn
+* new in API: autoptimize_filter_html_exclude, autoptimize_filter_css_defer, autoptimize_filter_css_inline, autoptimize_filter_base_replace_cdn, autopitmize_filter_js_noptimize, autopitmize_filter_css_noptimize, autopitmize_filter_html_noptimize
 * bugfix: remove some PHP notices, as [reported by dimitrov.adrian](https://wordpress.org/support/topic/php-errors-39)
 * bugfix: make sure HTML-optimalization does not gobble a space before a cite [as proposed by ecdltf](https://wordpress.org/support/topic/%E2%80%9Coptimize-html%E2%80%9D-is-gobbling-whitespace-before-cite-tag)
 * bugfix: cleaning the cache did not work on non-default directories as [encountered by NoahJ Champion](https://wordpress.org/support/topic/changing-the-wp-content-path-to-top-level?replies=10#post-6573657)
