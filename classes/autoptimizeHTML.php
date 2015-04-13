@@ -23,6 +23,10 @@ class autoptimizeHTML extends autoptimizeBase {
 	
 	//Joins and optimizes CSS
 	public function minify() {
+                $noptimizeHTML = apply_filters( 'autoptimize_filter_html_noptimize', false, $this->content );
+                if ($noptimizeHTML)
+                        return false;
+		
 		if(class_exists('Minify_HTML')) {
 			// wrap the to-be-excluded strings in noptimize tags
                         foreach ($this->exclude as $exclString) {
