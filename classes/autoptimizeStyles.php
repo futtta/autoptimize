@@ -16,7 +16,7 @@ class autoptimizeStyles extends autoptimizeBase {
 	
 	//Reads the page and collects style tags
 	public function read($options) {
-		$noptimizeCSS = apply_filters( 'autoptimize_filter_css_noptimize', false );
+		$noptimizeCSS = apply_filters( 'autoptimize_filter_css_noptimize', false, $this->content );
                 if ($noptimizeCSS)
                         return false;
 
