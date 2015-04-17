@@ -4,7 +4,7 @@ Tags: css, html, javascript, js, optimize, speed, cache, data-uri, aggregate, mi
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 2.7
 Tested up to: 4.2
-Stable tag: 1.9.3
+Stable tag: 1.9.4
 
 Autoptimize speeds up your website and helps you save bandwidth by aggregating and minimizing JS, CSS and HTML.
 
@@ -115,6 +115,11 @@ In some rare cases the [CSS minification component](https://github.com/tubalmart
 
 The "legacy minifiers" will remain in Autoptimize "for ever" and changes to wp-config.php are not affected by core-, theme- or plugin-upgrades so you should be good to go.
 
+= I use NextGen Galleries and a lot of JS is not aggregated/ minified? =
+
+NextGen Galleries does some nifty stuff to add JavaScript. In order for Autoptimize to be able to aggregate that, you'll need to tell it to initialize earlier, by adding this to your wp-config.php:
+`define("AUTOPTIMIZE_INIT_EARLIER","true");`
+
 = What is noptimize? =
 
 Starting with version 1.6.6 Autoptimize excludes everything inside noptimize tags, e.g.:
@@ -158,6 +163,11 @@ You can report problems on the [wordpress.org support forum](http://wordpress.or
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 1.9.4 =
+* bugfix: make sure non-AO CSSmin doesn't get fed 2 parameters (as some only expect one, which resulted in an internal server error), based on [feedback from zerooverture and zamba](https://wordpress.org/support/topic/error-code-500internal-server-error?replies=7)
+* bugfix: make default add_action hook back into "template_redirect" instead of "init" to fix multiple problems as reported by [schecteracademicservices, bond138, rickenbacker](https://wordpress.org/support/topic/192-concatenated-js-but-193-does-not-for-me?replies=11), [Rick Sportel](https://wordpress.org/support/topic/version-193-made-plugin-wp-cdn-rewrite-crash?replies=3#post-6833159) and [wizray](https://wordpress.org/support/topic/the-page-loads-both-the-auto-combined-css-file-and-origin-raw-file?replies=11#post-6833146). If you do need Autoptimize to initialize earlier (e.g. when using Nextgen Galleries), then add this to your wp-config.php:
+`define("AUTOPTIMIZE_INIT_EARLIER","true");`
 
 = 1.9.3 =
 * improvement: more intelligent CDN-replacement logic, thanks [Squazz for reporting and testing](https://wordpress.org/support/topic/enable-cdn-for-images-referenced-in-the-css?replies=9)
