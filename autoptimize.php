@@ -312,7 +312,11 @@ if(autoptimizeCache::cacheavail()) {
 	$conf = autoptimizeConfig::instance();
 	if( $conf->get('autoptimize_html') || $conf->get('autoptimize_js') || $conf->get('autoptimize_css') || $conf->get('autoptimize_cdn_js') || $conf->get('autoptimize_cdn_css')) {
 		// Hook to wordpress
-		add_action('init','autoptimize_start_buffering',-1);
+                if (defined('AUTOPTIMIZE_INIT_EARLIER')) {
+                        add_action('init','autoptimize_start_buffering',-1);
+                } else {
+                        add_action('template_redirect','autoptimize_start_buffering',2);
+                }
 	}
 }
 
