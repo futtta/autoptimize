@@ -237,7 +237,7 @@ class autoptimizeScripts extends autoptimizeBase {
 		$replaceTag = apply_filters( 'autoptimize_filter_js_replacetag', $replaceTag );
 
 		$bodyreplacement = implode('',$this->move['first']);
-		$bodyreplacement .= '<script type="text/javascript" '.$defer.'src="'.$this->url.'"></script>';
+		$bodyreplacement .= '<script '.$defer.'src="'.$this->url.'"></script>';
 		$bodyreplacement .= implode('',$this->move['last']);
 
 		$this->inject_in_html($bodyreplacement,$replaceTag);
