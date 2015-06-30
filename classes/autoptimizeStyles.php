@@ -32,6 +32,8 @@ class autoptimizeStyles extends autoptimizeBase {
 		$excludeCSS = apply_filters( 'autoptimize_filter_css_exclude', $excludeCSS );
 		if ($excludeCSS!=="") {
 			$this->dontmove = array_filter(array_map('trim',explode(",",$excludeCSS)));
+		} else {
+			$this->dontmove = "";
 		}
 
 		// should we defer css?
