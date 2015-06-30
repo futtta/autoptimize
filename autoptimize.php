@@ -178,8 +178,6 @@ function autoptimize_start_buffering() {
 				@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/minify-2.1.7-jsmin.php');
 			}
 		}
-		define('CONCATENATE_SCRIPTS',false);
-		define('COMPRESS_SCRIPTS',false);
 	}
 	
 	if($conf->get('autoptimize_css')) {
