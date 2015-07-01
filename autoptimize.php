@@ -15,13 +15,13 @@ http://www.gnu.org/licenses/gpl.txt
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 // Load config class
-include(WP_PLUGIN_DIR.'/autoptimize/classes/autoptimizeConfig.php');
+include(plugin_dir_path(__FILE__).'classes/autoptimizeConfig.php');
 
 // Do we gzip when caching (needed early to load autoptimizeCache.php)
 define('AUTOPTIMIZE_CACHE_NOGZIP',(bool) get_option('autoptimize_cache_nogzip'));
 
 // Load cache class
-include(WP_PLUGIN_DIR.'/autoptimize/classes/autoptimizeCache.php');
+include(plugin_dir_path(__FILE__).'/classes/autoptimizeCache.php');
 
 // wp-content dir, dirname of AO cache dir and AO-prefix can be overridden in wp-config.php
 if (!defined('AUTOPTIMIZE_CACHE_CHILD_DIR')) { define('AUTOPTIMIZE_CACHE_CHILD_DIR','/cache/autoptimize/'); }
