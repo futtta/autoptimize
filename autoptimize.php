@@ -156,39 +156,39 @@ function autoptimize_start_buffering() {
 	$conf = autoptimizeConfig::instance();
 	
 	// Load our base class
-	include(WP_PLUGIN_DIR.'/autoptimize/classes/autoptimizeBase.php');
+	include(plugin_dir_path(__FILE__).'classes/autoptimizeBase.php');
 	
 	// Load extra classes and set some vars
 	if($conf->get('autoptimize_html')) {
-		include(WP_PLUGIN_DIR.'/autoptimize/classes/autoptimizeHTML.php');
+		include(plugin_dir_path(__FILE__).'classes/autoptimizeHTML.php');
 		// BUG: new minify-html does not support keeping HTML comments, skipping for now
 		// if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
-			@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/minify-html.php');
+			@include(plugin_dir_path(__FILE__).'classes/external/php/minify-html.php');
 		// } else {
 		//	@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/minify-2.1.7-html.php');
 		// }
 	}
 	
 	if($conf->get('autoptimize_js')) {
-		include(WP_PLUGIN_DIR.'/autoptimize/classes/autoptimizeScripts.php');
+		include(plugin_dir_path(__FILE__).'classes/autoptimizeScripts.php');
 		if (!class_exists('JSMin')) {
 			if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
-				@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/jsmin-1.1.1.php');
+				@include(plugin_dir_path(__FILE__).'classes/external/php/jsmin-1.1.1.php');
 			} else {
-				@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/minify-2.1.7-jsmin.php');
+				@include(plugin_dir_path(__FILE__).'classes/external/php/minify-2.1.7-jsmin.php');
 			}
 		}
 	}
 	
 	if($conf->get('autoptimize_css')) {
-		include(WP_PLUGIN_DIR.'/autoptimize/classes/autoptimizeStyles.php');
+		include(plugin_dir_path(__FILE__).'classes/autoptimizeStyles.php');
 		if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
 			if (!class_exists('Minify_CSS_Compressor')) {
-				@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/minify-css-compressor.php');
+				@include(plugin_dir_path(__FILE__).'classes/external/php/minify-css-compressor.php');
 			}
 		} else {
 			if (!class_exists('CSSmin')) {
-				@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/yui-php-cssmin-2.4.8-4.php');
+				@include(plugin_dir_path(__FILE__).'classes/external/php/yui-php-cssmin-2.4.8-4.php');
 			}
 		}
 		define('COMPRESS_CSS',false);
