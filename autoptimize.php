@@ -102,7 +102,7 @@ if ($autoptimize_db_version !== $autoptimize_version) {
 
 // Load translations
 $plugin_dir = basename(dirname(__FILE__));
-load_plugin_textdomain('autoptimize','wp-content/plugins/'.$plugin_dir.'/localization',$plugin_dir.'/localization');
+load_plugin_textdomain('autoptimize',false,$plugin_dir.'/localization');
 
 function autoptimize_uninstall(){
 	autoptimizeCache::clearall();
