@@ -59,7 +59,7 @@ Autoptimize does not have its proper cache purging mechanism, as this could remo
 
 You can however keep the cache size at an acceptable level by either:
 * ticking the "look only in head" option for JS and/or CSS.
-* using the API to force AO not to aggregate inline CSS or JS (see example-code in autoptimize_helper.php_example).
+* using the API to force AO not to aggregate inline CSS or JS ("autoptimize_js_include_inline" and "autoptimize_css_include_inline" filters, see example-code in autoptimize_helper.php_example).
 * excluding JS-variables (or sometimes CSS-selectors) that change on a per page (or per pageload) basis. You can read how you can do that [in this blogpost](http://blog.futtta.be/2014/03/19/how-to-keep-autoptimizes-cache-size-under-control-and-improve-visitor-experience/).
 
 = Why is "look only in head" marked as deprecated =
