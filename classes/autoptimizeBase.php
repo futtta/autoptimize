@@ -97,7 +97,7 @@ abstract class autoptimizeBase {
 				'#%%NOPTIMIZE%%(.*?)%%NOPTIMIZE%%#is',
 				create_function(
 					'$matches',
-					'return stripslashes(base64_decode($matches[1]));'
+					'return base64_decode($matches[1]);'
 				),
 				$noptimize_in
 			);
@@ -129,7 +129,7 @@ abstract class autoptimizeBase {
 				'#%%IEHACK%%(.*?)%%IEHACK%%#is',
 				create_function(
 					'$matches',
-					'return stripslashes(base64_decode($matches[1]));'
+					'return base64_decode($matches[1]);'
 				),
 				$iehacks_in
 			);
@@ -161,7 +161,7 @@ abstract class autoptimizeBase {
                                 '#%%COMMENTS%%(.*?)%%COMMENTS%%#is',
                                 create_function(
                                         '$matches',
-                                        'return stripslashes(base64_decode($matches[1]));'
+                                        'return base64_decode($matches[1]);'
                                 ),
                                 $comments_in
                         );
