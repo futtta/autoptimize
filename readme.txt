@@ -58,6 +58,7 @@ You can find more information on this topic [in this blog post](http://blog.futt
 Autoptimize does not have its proper cache purging mechanism, as this could remove optimized CSS/JS which is still referred to in other caches, which would break your site.
 
 You can however keep the cache size at an acceptable level by either:
+
 * ticking the "look only in head" option for JS and/or CSS.
 * excluding JS-variables (or sometimes CSS-selectors) that change on a per page (or per pageload) basis. You can read how you can do that [in this blogpost](http://blog.futtta.be/2014/03/19/how-to-keep-autoptimizes-cache-size-under-control-and-improve-visitor-experience/).
 * using the API to force AO not to aggregate inline JS (this will become an option in the next AO-version), adding e.g. this code to your (child) theme's functions.php:
