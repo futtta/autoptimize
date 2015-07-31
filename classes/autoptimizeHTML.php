@@ -11,7 +11,7 @@ class autoptimizeHTML extends autoptimizeBase {
 		$this->keepcomments = (bool) $options['keepcomments'];
 		
 		// filter to force xhtml
-		$this->forcexhtml = apply_filters( 'autoptimize_filter_html_forcexhtml','false');
+		$this->forcexhtml = (bool) apply_filters( 'autoptimize_filter_html_forcexhtml', false );
 		
 		// filter to add strings to be excluded from HTML minification
 		$excludeHTML = apply_filters( 'autoptimize_filter_html_exclude','' );
