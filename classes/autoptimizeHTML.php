@@ -43,7 +43,10 @@ class autoptimizeHTML extends autoptimizeBase {
 			$this->content = $this->hide_noptimize($this->content);
 
 			// Minify html
-			$options = array('keepComments' => $this->keepcomments, 'xhtml' => $this->forcexhtml);
+			$options = array('keepComments' => $this->keepcomments);
+			if ($this->forcexhtml) {
+				$options['xhtml'] = true;
+			}
 
 			if (@is_callable(array(new Minify_HTML,"minify"))) {
 				$tmp_content = Minify_HTML::minify($this->content,$options);
