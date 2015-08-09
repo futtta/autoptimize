@@ -167,7 +167,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <th scope="row"><?php _e('Cached styles and scripts','autoptimize'); ?></th>
 <td><?php
 	$AOstatArr=autoptimizeCache::stats(); 
-	$AOcacheSize=round($statArr[1]/1024);
+	$AOcacheSize=round($AOstatArr[1]/1024);
 	echo $AOstatArr[0]." files (".$AOcacheSize." Kbytes)";
 ?></td>
 </tr>
