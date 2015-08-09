@@ -140,20 +140,21 @@ class autoptimizeCache {
 		foreach ($scan as $scandirName=>$scanneddir) {
 			$thisAoCacheDir=rtrim(AUTOPTIMIZE_CACHE_DIR.$scandirName,"/")."/";
 			foreach($scanneddir as $file) {
-				if(!in_array($file,array('.','..')) && strpos($file,'autoptimize') !== false) {
+				if(!in_array($file,array('.','..')) && strpos($file,AUTOPTIMIZE_CACHEFILE_PREFIX) !== false) {
 					if(is_file($thisAoCacheDir.$file)) {
-						if(AUTOPTIMIZE_CACHE_NOGZIP && (strpos($file,'.js') !== false || strpos($file,'.css') !== false)) {
+						if(AUTOPTIMIZE_CACHE_NOGZIP && (strpos($file,'.js') !== false || strpos($file,'.css') !== false || strpos($file,'.img') !== false || strpos($file,'.txt') !== false )) {
 							$count++;
 						} elseif(!AUTOPTIMIZE_CACHE_NOGZIP && strpos($file,'.none') !== false) {
 							$count++;
 						}
+						$size+=filesize($thisAoCacheDir.$file);
 					}
 				}
 			}
 		}
 		
 		// print the number of instances
-		return $count;
+		return array($count,$size);
 	}
 	
 	static function cacheavail() {
