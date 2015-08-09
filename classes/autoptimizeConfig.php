@@ -165,7 +165,11 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 </tr>
 <tr valign="top" class="hidden ao_adv">
 <th scope="row"><?php _e('Cached styles and scripts','autoptimize'); ?></th>
-<td><?php echo autoptimizeCache::stats(); ?></td>
+<td><?php
+	$AOstatArr=autoptimizeCache::stats(); 
+	$AOcacheSize=round($statArr[1]/1024);
+	echo $AOstatArr[0]." files (".$AOcacheSize." Kbytes)";
+?></td>
 </tr>
 <tr valign="top" class="hidden ao_adv">
 <th scope="row"><?php _e('Save aggregated script/css as static files?','autoptimize'); ?></th>
