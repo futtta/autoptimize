@@ -168,7 +168,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <td><?php
 	$AOstatArr=autoptimizeCache::stats(); 
 	$AOcacheSize=round($AOstatArr[1]/1024);
-	echo $AOstatArr[0]." files (".$AOcacheSize." Kbytes)";
+	echo $AOstatArr[0]." files, totalling ".$AOcacheSize." Kbytes (calculated at ".date("H:i e", $AOstatArr[2]).")";
 ?></td>
 </tr>
 <tr valign="top" class="hidden ao_adv">
