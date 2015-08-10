@@ -85,6 +85,7 @@ class autoptimizeCache {
 		}
 
 		@unlink(AUTOPTIMIZE_CACHE_DIR."/.htaccess");
+		delete_transient("AOstats");
 		
 		// Do we need to clean any caching plugins cache-files?
 		if(function_exists('wp_cache_clear_cache')) {
@@ -122,41 +123,47 @@ class autoptimizeCache {
 		}
 		return true;
 	}
-	
+
 	static function stats()	{
-		// Cache not available :(
-		if(!autoptimizeCache::cacheavail()) {
-			return 0;
-		}
-		
-		// Count cached info
-		$count = 0;
-		
-		// scan the cachedirs		
-		foreach (array("","js","css") as $scandirName) {
-			$scan[$scandirName] = scandir(AUTOPTIMIZE_CACHE_DIR.$scandirName);
-		}
-		
-		foreach ($scan as $scandirName=>$scanneddir) {
-			$thisAoCacheDir=rtrim(AUTOPTIMIZE_CACHE_DIR.$scandirName,"/")."/";
-			foreach($scanneddir as $file) {
-				if(!in_array($file,array('.','..')) && strpos($file,AUTOPTIMIZE_CACHEFILE_PREFIX) !== false) {
-					if(is_file($thisAoCacheDir.$file)) {
-						if(AUTOPTIMIZE_CACHE_NOGZIP && (strpos($file,'.js') !== false || strpos($file,'.css') !== false || strpos($file,'.img') !== false || strpos($file,'.txt') !== false )) {
-							$count++;
-						} elseif(!AUTOPTIMIZE_CACHE_NOGZIP && strpos($file,'.none') !== false) {
-							$count++;
+		$AOstats=get_transient("AOstats");
+
+		if (empty($AOstats)) {
+			// Cache not available :(
+			if(!autoptimizeCache::cacheavail()) {
+				return 0;
+			}
+			
+			// Count cached info
+			$count = 0;
+			$size = 0;
+			
+			// scan the cachedirs		
+			foreach (array("","js","css") as $scandirName) {
+				$scan[$scandirName] = scandir(AUTOPTIMIZE_CACHE_DIR.$scandirName);
+			}
+			
+			foreach ($scan as $scandirName=>$scanneddir) {
+				$thisAoCacheDir=rtrim(AUTOPTIMIZE_CACHE_DIR.$scandirName,"/")."/";
+				foreach($scanneddir as $file) {
+					if(!in_array($file,array('.','..')) && strpos($file,AUTOPTIMIZE_CACHEFILE_PREFIX) !== false) {
+						if(is_file($thisAoCacheDir.$file)) {
+							if(AUTOPTIMIZE_CACHE_NOGZIP && (strpos($file,'.js') !== false || strpos($file,'.css') !== false || strpos($file,'.img') !== false || strpos($file,'.txt') !== false )) {
+								$count++;
+							} elseif(!AUTOPTIMIZE_CACHE_NOGZIP && strpos($file,'.none') !== false) {
+								$count++;
+							}
+							$size+=filesize($thisAoCacheDir.$file);
 						}
-						$size+=filesize($thisAoCacheDir.$file);
 					}
 				}
 			}
+			$AOstats=array($count,$size,time());
+			set_transient("AOstats",$AOstats,HOUR_IN_SECONDS);
 		}
-		
 		// print the number of instances
-		return array($count,$size);
-	}
-	
+		return $AOstats;
+	}	
+
 	static function cacheavail() {
 		if(!defined('AUTOPTIMIZE_CACHE_DIR')) {
 			// We didn't set a cache
