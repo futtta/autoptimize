@@ -234,11 +234,14 @@ class autoptimizeScripts extends autoptimizeBase {
 		}
 		
 		$defer = apply_filters( 'autoptimize_filter_js_defer', $defer );
-		$replaceTag = apply_filters( 'autoptimize_filter_js_replacetag', $replaceTag );
+		$bodyreplacementpayload = '<script type="text/javascript" '.$defer.'src="'.$this->url.'"></script>';
+		$bodyreplacementpayload = apply_filters('autoptimize_filter_js_bodyreplacementpayload',$bodyreplacementpayload);
 
 		$bodyreplacement = implode('',$this->move['first']);
-		$bodyreplacement .= '<script type="text/javascript" '.$defer.'src="'.$this->url.'"></script>';
+		$bodyreplacement .= $bodyreplacementpayload;
 		$bodyreplacement .= implode('',$this->move['last']);
+
+		$replaceTag = apply_filters( 'autoptimize_filter_js_replacetag', $replaceTag );
 
 		$this->inject_in_html($bodyreplacement,$replaceTag);
 
