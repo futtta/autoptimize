@@ -254,7 +254,8 @@ function autoptimize_end_buffering($content) {
 			'keepcomments' => $conf->get('autoptimize_html_keepcomments')
 		)
 	);
-		
+	
+	$content = apply_filters( 'autoptimize_filter_html_before_minify', $content );	
 	// Run the classes
 	foreach($classes as $name) {
 		$instance = new $name($content);
