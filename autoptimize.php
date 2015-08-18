@@ -140,15 +140,20 @@ function autoptimize_update_config_notice() {
 function autoptimize_start_buffering() {
 	$ao_noptimize = false;
 
-	// filter you can use to block autoptimization on your own terms
-	$ao_noptimize = (bool) apply_filters( 'autoptimize_filter_noptimize', $ao_noptimize );
-
 	// noptimize in qs to get non-optimized page for debugging
 	if (array_key_exists("ao_noptimize",$_GET)) {
 		if ($_GET["ao_noptimize"]==="1") {
 			$ao_noptimize = true;
 		}
 	}
+
+	// check for DONOTMINIFY constant as used by e.g. WooCommerce POS
+        if (defined('DONOTMINIFY') && (constant('DONOTMINIFY')===true || constant('DONOTMINIFY')==="true")) {
+                $ao_noptimize = true;
+        }
+
+	// filter you can use to block autoptimization on your own terms
+	$ao_noptimize = (bool) apply_filters( 'autoptimize_filter_noptimize', $ao_noptimize );
 
 	if (!is_feed() && !$ao_noptimize && !is_admin()) {
 
