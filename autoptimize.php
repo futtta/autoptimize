@@ -156,51 +156,50 @@ function autoptimize_start_buffering() {
 	$ao_noptimize = (bool) apply_filters( 'autoptimize_filter_noptimize', $ao_noptimize );
 
 	if (!is_feed() && !$ao_noptimize && !is_admin()) {
-
-	// Config element
-	$conf = autoptimizeConfig::instance();
-	
-	// Load our base class
-	include(plugin_dir_path(__FILE__).'classes/autoptimizeBase.php');
-	
-	// Load extra classes and set some vars
-	if($conf->get('autoptimize_html')) {
-		include(plugin_dir_path(__FILE__).'classes/autoptimizeHTML.php');
-		// BUG: new minify-html does not support keeping HTML comments, skipping for now
-		// if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
-			@include(plugin_dir_path(__FILE__).'classes/external/php/minify-html.php');
-		// } else {
-		//	@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/minify-2.1.7-html.php');
-		// }
-	}
-	
-	if($conf->get('autoptimize_js')) {
-		include(plugin_dir_path(__FILE__).'classes/autoptimizeScripts.php');
-		if (!class_exists('JSMin')) {
+		// Config element
+		$conf = autoptimizeConfig::instance();
+		
+		// Load our base class
+		include(plugin_dir_path(__FILE__).'classes/autoptimizeBase.php');
+		
+		// Load extra classes and set some vars
+		if($conf->get('autoptimize_html')) {
+			include(plugin_dir_path(__FILE__).'classes/autoptimizeHTML.php');
+			// BUG: new minify-html does not support keeping HTML comments, skipping for now
+			// if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
+				@include(plugin_dir_path(__FILE__).'classes/external/php/minify-html.php');
+			// } else {
+			//	@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/minify-2.1.7-html.php');
+			// }
+		}
+		
+		if($conf->get('autoptimize_js')) {
+			include(plugin_dir_path(__FILE__).'classes/autoptimizeScripts.php');
+			if (!class_exists('JSMin')) {
+				if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
+					@include(plugin_dir_path(__FILE__).'classes/external/php/jsmin-1.1.1.php');
+				} else {
+					@include(plugin_dir_path(__FILE__).'classes/external/php/minify-2.1.7-jsmin.php');
+				}
+			}
+		}
+		
+		if($conf->get('autoptimize_css')) {
+			include(plugin_dir_path(__FILE__).'classes/autoptimizeStyles.php');
 			if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
-				@include(plugin_dir_path(__FILE__).'classes/external/php/jsmin-1.1.1.php');
+				if (!class_exists('Minify_CSS_Compressor')) {
+					@include(plugin_dir_path(__FILE__).'classes/external/php/minify-css-compressor.php');
+				}
 			} else {
-				@include(plugin_dir_path(__FILE__).'classes/external/php/minify-2.1.7-jsmin.php');
+				if (!class_exists('CSSmin')) {
+					@include(plugin_dir_path(__FILE__).'classes/external/php/yui-php-cssmin-2.4.8-4.php');
+				}
 			}
+			define('COMPRESS_CSS',false);
 		}
-	}
-	
-	if($conf->get('autoptimize_css')) {
-		include(plugin_dir_path(__FILE__).'classes/autoptimizeStyles.php');
-		if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
-			if (!class_exists('Minify_CSS_Compressor')) {
-				@include(plugin_dir_path(__FILE__).'classes/external/php/minify-css-compressor.php');
-			}
-		} else {
-			if (!class_exists('CSSmin')) {
-				@include(plugin_dir_path(__FILE__).'classes/external/php/yui-php-cssmin-2.4.8-4.php');
-			}
-		}
-		define('COMPRESS_CSS',false);
-	}
-			
-	// Now, start the real thing!
-	ob_start('autoptimize_end_buffering');
+				
+		// Now, start the real thing!
+		ob_start('autoptimize_end_buffering');
 	}
 }
 
