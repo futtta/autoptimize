@@ -14,13 +14,18 @@ class autoptimizeScripts extends autoptimizeBase {
 	private $move = array('first' => array(), 'last' => array());
 	private $restofcontent = '';
 	private $md5hash = '';
+	private $whitelist = '';
 	
 	//Reads the page and collects script tags
 	public function read($options) {
 		$noptimizeJS = apply_filters( 'autoptimize_filter_js_noptimize', false, $this->content );
-                if ($noptimizeJS)
-                        return false;
-		
+                if ($noptimizeJS) return false;
+
+		$whitelistJS = apply_filters( 'autoptimize_filter_js_whitelist', "" );
+		if (!empty($whitelistJS)) {
+			$this->whitelist = array_filter(array_map('trim',explode(",",$whitelistJS)));
+		}
+
 		//Remove everything that's not the header
 		if($options['justhead'] == true) {
 			$content = explode('</head>',$this->content,2);
@@ -205,8 +210,7 @@ class autoptimizeScripts extends autoptimizeBase {
 	}
 	
 	//Caches the JS in uncompressed, deflated and gzipped form.
-	public function cache()
-	{
+	public function cache()	{
 		$cache = new autoptimizeCache($this->md5hash,'js');
 		if(!$cache->check()) {
 			//Cache our code
@@ -258,28 +262,38 @@ class autoptimizeScripts extends autoptimizeBase {
 		return $this->content;
 	}
 	
-	//Checks agains the whitelist
+	// Checks against the white- and blacklists
 	private function ismergeable($tag) {
-		foreach($this->domove as $match) {
-			if(strpos($tag,$match)!==false)	{
-				//Matched something
-				return false;
+		if (!empty($this->whitelist)) {
+			foreach ($this->whitelist as $match) {
+				if(strpos($tag,$match)!==false) {
+					return true;
+				}
 			}
-		}
-		
-		if ($this->movetolast($tag)) {
+			// no match with whitelist
 			return false;
+		} else {
+			foreach($this->domove as $match) {
+				if(strpos($tag,$match)!==false)	{
+					//Matched something
+					return false;
+				}
 			}
-		
-		foreach($this->dontmove as $match) {
-			if(strpos($tag,$match)!==false)	{
-				//Matched something
+			
+			if ($this->movetolast($tag)) {
 				return false;
+				}
+			
+			foreach($this->dontmove as $match) {
+				if(strpos($tag,$match)!==false)	{
+					//Matched something
+					return false;
+				}
 			}
+			
+			// If we're here it's safe to merge
+			return true;
 		}
-		
-		//If we're here it's safe to merge
-		return true;
 	}
 	
 	//Checks agains the blacklist
