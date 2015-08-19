@@ -106,8 +106,9 @@ class autoptimizeStyles extends autoptimizeBase {
 						$path = current(explode('?',$path,2));
 						if($path!==false && preg_match('#\.css$#',$path)) {
 							// Good link
-							$this->css[] = array($media,$path);
-						}else{
+							$this->css[] = array($media, $path);
+						} else if(!$this->is_external_css || $this->inline == true) {
+
 							// Link is dynamic (.php etc)
 							$tag = '';
 						}

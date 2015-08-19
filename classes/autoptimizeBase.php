@@ -5,6 +5,7 @@ abstract class autoptimizeBase {
 	protected $content = '';
 	protected $tagWarning = false;
 	protected $external_css = array();
+	protected $is_external_css = false;
 	
 	public function __construct($content) {
 		$this->content = $content;
@@ -25,6 +26,7 @@ abstract class autoptimizeBase {
 	
 	//Converts an URL to a full path
 	protected function getpath($url) {
+		$this->is_external_css = false;
 		$url=apply_filters( 'autoptimize_filter_cssjs_alter_url', $url);
 		
 		if (strpos($url,'%')!==false) {
@@ -45,6 +47,7 @@ abstract class autoptimizeBase {
 		// first check; hostname wp site should be hostname of url
 		if (@parse_url($url,PHP_URL_HOST)!==parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST)) {
 			$this->external_css[] = $url;
+			$this->is_external_css = true;
 			return false;
 		}
 		
