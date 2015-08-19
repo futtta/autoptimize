@@ -102,9 +102,8 @@ class autoptimizeStyles extends autoptimizeBase {
 				
 					if(preg_match('#<link.*href=("|\')(.*)("|\')#Usmi',$tag,$source)) {
 						// <link>
-						$url = current(explode('?',$source[2],2));
-						$path = $this->getpath($url);
-						
+						$path = $this->getpath($source[2]);
+						$path = current(explode('?',$path,2));
 						if($path!==false && preg_match('#\.css$#',$path)) {
 							// Good link
 							$this->css[] = array($media,$path);
@@ -483,8 +482,21 @@ class autoptimizeStyles extends autoptimizeBase {
 				}
 			}
 
+			/* external css may be google fonts, and we want them loaded before other styles */
+			$external_css_position = apply_filters( 'autoptimize_filter_css_defer_external_links_position', 'before' );
+			if ($external_css_position == 'before') {
+				$this->url = $this->external_css + $this->url;
+			} else {
+				$this->url = $this->url + $this->external_css;
+			}
+
+			$this->url = apply_filters( 'autoptimize_filter_css_defer_links', $this->url );
+
 			foreach($this->url as $media => $url) {
 				$url = $this->url_replace_cdn($url);
+
+				if (empty($media) || is_int($media))
+					$media = 'all';
 				
 				//Add the stylesheet either deferred (import at bottom) or normal links in head
 				if($this->defer == true) {

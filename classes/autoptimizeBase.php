@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 abstract class autoptimizeBase {
 	protected $content = '';
 	protected $tagWarning = false;
+	protected $external_css = array();
 	
 	public function __construct($content) {
 		$this->content = $content;
@@ -43,6 +44,7 @@ abstract class autoptimizeBase {
 
 		// first check; hostname wp site should be hostname of url
 		if (@parse_url($url,PHP_URL_HOST)!==parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST)) {
+			$this->external_css[] = $url;
 			return false;
 		}
 		
