@@ -13,12 +13,17 @@ class autoptimizeStyles extends autoptimizeBase {
 	private $inline = false;
 	private $defer = false;
 	private $defer_inline = false;
+	private $whitelist = '';
 	
 	//Reads the page and collects style tags
 	public function read($options) {
 		$noptimizeCSS = apply_filters( 'autoptimize_filter_css_noptimize', false, $this->content );
-                if ($noptimizeCSS)
-                        return false;
+                if ($noptimizeCSS) return false;
+
+		$whitelistCSS = apply_filters( 'autoptimize_filter_css_whitelist', '' );
+		if (!empty($whitelistCSS)) {
+			$this->whitelist = array_filter(array_map('trim',explode(",",$whitelistCSS)));
+		}
 
 		// Remove everything that's not the header
 		if ($options['justhead'] == true) {
@@ -545,17 +550,26 @@ class autoptimizeStyles extends autoptimizeBase {
 	}
 	
 	private function ismovable($tag) {
-		if (is_array($this->dontmove)) {
-			foreach($this->dontmove as $match) {
+		if (!empty($this->whitelist)) {
+			foreach ($this->whitelist as $match) {
 				if(strpos($tag,$match)!==false) {
-					//Matched something
-					return false;
+					return true;
 				}
 			}
+			// no match with whitelist
+			return false;
+		} else {
+			if (is_array($this->dontmove)) {
+				foreach($this->dontmove as $match) {
+					if(strpos($tag,$match)!==false) {
+						//Matched something
+						return false;
+					}
+				}
+			}
+			
+			//If we're here it's safe to move
+			return true;
 		}
-		
-		//If we're here it's safe to move
-		return true;
 	}
-
 }
