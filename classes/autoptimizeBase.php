@@ -205,7 +205,7 @@ abstract class autoptimizeBase {
 			} else {
 				$replaceBlock=$payload.$replaceTag[0];
 			}
-			$this->content = str_replace($replaceTag[0],$replaceBlock,$this->content);
+			$this->content = substr_replace($this->content,$replaceBlock,strpos($this->content,$replaceTag[0]),strlen($replaceTag[0]));
 		} else {
 			$this->content .= $payload;
 			if (!$this->tagWarning) {
