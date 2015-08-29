@@ -92,7 +92,7 @@ class autoptimizeStyles extends autoptimizeBase {
 						$medias = explode(',',$medias[1]);
 						$media = array();
 						foreach($medias as $elem) {
-							// $media[] = current(explode(' ',trim($elem),2));
+							if (empty($elem)) { $elem="all"; }
 							$media[] = $elem;
 						}
 					} else {
