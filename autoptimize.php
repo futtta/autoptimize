@@ -107,7 +107,7 @@ load_plugin_textdomain('autoptimize',false,$plugin_dir.'/localization');
 function autoptimize_uninstall(){
 	autoptimizeCache::clearall();
 	
-	$delete_options=array("autoptimize_cache_clean", "autoptimize_cache_nogzip", "autoptimize_css", "autoptimize_css_datauris", "autoptimize_css_justhead", "autoptimize_css_defer", "autoptimize_css_defer_inline", "autoptimize_css_inline", "autoptimize_css_exclude", "autoptimize_html", "autoptimize_html_keepcomments", "autoptimize_js", "autoptimize_js_exclude", "autoptimize_js_forcehead", "autoptimize_js_justhead", "autoptimize_js_trycatch", "autoptimize_version", "autoptimize_show_adv", "autoptimize_cdn_url");
+	$delete_options=array("autoptimize_cache_clean", "autoptimize_cache_nogzip", "autoptimize_css", "autoptimize_css_datauris", "autoptimize_css_justhead", "autoptimize_css_defer", "autoptimize_css_defer_inline", "autoptimize_css_inline", "autoptimize_css_exclude", "autoptimize_html", "autoptimize_html_keepcomments", "autoptimize_js", "autoptimize_js_exclude", "autoptimize_js_forcehead", "autoptimize_js_justhead", "autoptimize_js_trycatch", "autoptimize_version", "autoptimize_show_adv", "autoptimize_cdn_url", "autoptimize_cachesize_notice");
 	
 	if ( !is_multisite() ) {
 		foreach ($delete_options as $del_opt) {	delete_option( $del_opt ); }
@@ -121,6 +121,10 @@ function autoptimize_uninstall(){
 			foreach ($delete_options as $del_opt) {	delete_option( $del_opt ); }
 		}
 		switch_to_blog( $original_blog_id );
+	}
+	
+	if ( wp_get_schedule( 'ao_cachechecker' ) ) {
+		wp_clear_scheduled_hook( 'ao_cachechecker' );
 	}
 }
 
@@ -324,6 +328,7 @@ if(autoptimizeCache::cacheavail()) {
 }
 
 register_uninstall_hook(__FILE__, "autoptimize_uninstall");
+include_once('classlesses/autoptimizeCacheChecker.php');
 
 // Do not pollute other plugins
 unset($conf);
