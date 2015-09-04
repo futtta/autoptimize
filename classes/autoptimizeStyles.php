@@ -266,7 +266,7 @@ class autoptimizeStyles extends autoptimizeBase {
 					$iurl = trim($quotedurl," \t\n\r\0\x0B\"'");
 
 					// if querystring, remove it from url
-					if (strpos($iurl,'?') !== false) { $iurl = reset(explode('?',$iurl)); }
+					if (strpos($iurl,'?') !== false) { $iurl = strtok($iurl,'?'); }
 					
 					$ipath = $this->getpath($iurl);
 
