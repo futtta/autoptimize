@@ -158,7 +158,9 @@ class autoptimizeCache {
 				}
 			}
 			$AOstats=array($count,$size,time());
-			set_transient("AOstats",$AOstats,HOUR_IN_SECONDS);
+                        if ($count>100) {
+				set_transient("AOstats",$AOstats,HOUR_IN_SECONDS);
+                        }
 		}
 		// print the number of instances
 		return $AOstats;
