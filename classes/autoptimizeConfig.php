@@ -187,6 +187,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 </form>
 </div>
 <div style="float:right;width:30%" id="autoptimize_admin_feed">
+        <div style="margin:0px 15px 15px 15px;font-size:larger;"><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>."); ?></div>
 	<div style="margin:0px 15px 15px 15px;font-size:larger;"><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=futtta"><?php _e("Happy with Autoptimize? Try my other plugins!"); ?></a></div>
         <div style="margin-left:10px;margin-top:-5px;">
                 <h3>
