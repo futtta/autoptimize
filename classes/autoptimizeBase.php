@@ -194,11 +194,13 @@ abstract class autoptimizeBase {
                                 if((substr($url,0,1)==='/')&&(substr($url,1,1)!=='/')) {
                                        $url=rtrim($this->cdn_url,'/').$url;
                                 } else {
+                                	$WPSiteBreakdown = parse_url(AUTOPTIMIZE_WP_SITE_URL);										$WPSiteBreakdown = parse_url(AUTOPTIMIZE_WP_SITE_URL);
+					$WPBaseUrl = $WPSiteBreakdown['scheme'] . '://' . $WPSiteBreakdown['host'];
                                         // three: replace full url's with scheme
-                                        $tmp_url=str_replace(AUTOPTIMIZE_WP_SITE_URL,rtrim($this->cdn_url,'/'),$url);
+                                        $tmp_url=str_replace($WPBaseUrl,rtrim($this->cdn_url,'/'),$url);
                                         if ($tmp_url===$url) {
                                                 // last attempt; replace scheme-less URL's
-                                                $url=str_replace(preg_replace('/https?:/','',AUTOPTIMIZE_WP_SITE_URL),rtrim($this->cdn_url,'/'),$url);
+                                                $url=str_replace(preg_replace('/https?:/','',$WPBaseUrl),rtrim($this->cdn_url,'/'),$url);
                                         } else {
                                                 $url=$tmp_url;
                                         }
