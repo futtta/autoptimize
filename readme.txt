@@ -1,5 +1,5 @@
 === Autoptimize ===
-Contributors: futtta, turl
+Contributors: futtta, turl, optimizingmatters
 Tags: css, html, javascript, js, optimize, speed, cache, data-uri, aggregate, minimize, minification, performance, pagespeed, booster, multisite
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 2.7
