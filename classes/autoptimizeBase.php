@@ -45,11 +45,12 @@ abstract class autoptimizeBase {
 		$thisHost=@parse_url($url,PHP_URL_HOST);
 		if ($thisHost!==parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST)) {
 			/* 
-			* autoptimize_filter_cssjs_multidomain takes an array of hostnames
+			* first try to get all domains from WPML (if available)
+			* then apply own filter autoptimize_filter_cssjs_multidomain takes an array of hostnames
 			* each item in that array will be considered part of the same WP multisite installation
-			* as workaround for WPML installs having CSS/JS pointing to main domain when on non-main one
 			*/
-			if (is_array($multidomains=apply_filters('autoptimize_filter_cssjs_multidomain',''))) {
+			$multidomains = apply_filters('wpml_setting', array(), 'language_domains');
+			if (is_array($multidomains = apply_filters('autoptimize_filter_cssjs_multidomain', $multidomains))) {
 				if (in_array($thisHost,$multidomains)) {
 					$url=str_replace($thisHost, parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST), $url);
 				} else {
