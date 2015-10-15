@@ -85,7 +85,7 @@ class autoptimizeCache {
 		}
 
 		@unlink(AUTOPTIMIZE_CACHE_DIR."/.htaccess");
-		delete_transient("AOstats");
+		delete_transient("autoptimize_stats");
 		
 		// Do we need to clean any caching plugins cache-files?
 		if(function_exists('wp_cache_clear_cache')) {
@@ -125,7 +125,7 @@ class autoptimizeCache {
 	}
 
 	static function stats()	{
-		$AOstats=get_transient("AOstats");
+		$AOstats=get_transient("autoptimize_stats");
 
 		if (empty($AOstats)) {
 			// Cache not available :(
@@ -159,7 +159,7 @@ class autoptimizeCache {
 			}
 			$AOstats=array($count,$size,time());
                         if ($count>100) {
-				set_transient("AOstats",$AOstats,HOUR_IN_SECONDS);
+				set_transient("autoptimize_stats",$AOstats,HOUR_IN_SECONDS);
                         }
 		}
 		// print the number of instances
