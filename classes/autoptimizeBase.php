@@ -49,8 +49,11 @@ abstract class autoptimizeBase {
 			* then apply own filter autoptimize_filter_cssjs_multidomain takes an array of hostnames
 			* each item in that array will be considered part of the same WP multisite installation
 			*/
+			
 			$multidomainsWPML = apply_filters('wpml_setting', array(), 'language_domains');
-			// $multidomains = array_map(array($this,"ao_getDomain"),$multidomainsWPML)
+			if (!empty($multidomainsWPML)) {
+				$multidomains = array_map(array($this,"ao_getDomain"),$multidomainsWPML);
+			}
 
 			if (is_array($multidomains = apply_filters('autoptimize_filter_cssjs_multidomain', $multidomains))) {
 				if (in_array($thisHost,$multidomains)) {
@@ -79,9 +82,9 @@ abstract class autoptimizeBase {
 	}
 
 	// needed for WPML-filter
-	// protected function ao_getDomain($in) {
-	// 	return(parse_url($in,PHP_URL_HOST));
-	// }
+	protected function ao_getDomain($in) {
+		return(parse_url($in,PHP_URL_HOST));
+	}
 
 
 	// logger
