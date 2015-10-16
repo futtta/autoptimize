@@ -148,7 +148,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <table class="form-table"> 
 <tr valign="top">
 <th scope="row"><?php _e('CDN Base URL','autoptimize'); ?></th>
-<td><label for="autoptimize_url"><input id="cdn_url" type="url" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*\/?$" style="width:100%" value="<?php $it = get_option('autoptimize_cdn_url','');echo htmlentities($it); ?>" /><br />
+<td><label for="autoptimize_url"><input id="cdn_url" type="url" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" value="<?php $it = get_option('autoptimize_cdn_url','');echo htmlentities($it); ?>" /><br />
 <?php _e('Enter your CDN blog root directory URL if you want to enable CDN for images referenced in the CSS.','autoptimize'); ?></label></td>
 </tr>
 </table>
