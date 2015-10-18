@@ -46,6 +46,7 @@ abstract class autoptimizeBase {
 		if ($thisHost!==parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST)) {
 			/* 
 			* first try to get all domains from WPML (if available)
+			* then explicitely declare $this->cdn_url as OK as well
 			* then apply own filter autoptimize_filter_cssjs_multidomain takes an array of hostnames
 			* each item in that array will be considered part of the same WP multisite installation
 			*/
@@ -54,7 +55,9 @@ abstract class autoptimizeBase {
 			if (!empty($multidomainsWPML)) {
 				$multidomains = array_map(array($this,"ao_getDomain"),$multidomainsWPML);
 			}
-
+			
+			$multidomains[]=parse_url($this->cdn_url,PHP_URL_HOST);
+			
 			if (is_array($multidomains = apply_filters('autoptimize_filter_cssjs_multidomain', $multidomains))) {
 				if (in_array($thisHost,$multidomains)) {
 					$url=str_replace($thisHost, parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST), $url);
