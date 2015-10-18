@@ -56,7 +56,9 @@ abstract class autoptimizeBase {
 				$multidomains = array_map(array($this,"ao_getDomain"),$multidomainsWPML);
 			}
 			
-			$multidomains[]=parse_url($this->cdn_url,PHP_URL_HOST);
+			if (!empty($this->cdn_url)) {
+				$multidomains[]=parse_url($this->cdn_url,PHP_URL_HOST);
+			}
 			
 			if (is_array($multidomains = apply_filters('autoptimize_filter_cssjs_multidomain', $multidomains))) {
 				if (in_array($thisHost,$multidomains)) {
