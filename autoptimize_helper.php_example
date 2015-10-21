@@ -133,3 +133,11 @@ function my_ao_css_include_inline() {
 function my_ao_css_defer_inline($inlined) {
 	return $inlined."h2,h1{color:red !important;}";
 	}
+	
+/* autoptimize_filter_css_fonts_cdn: do we want to move fonts to the CDN-url as well
+
+@return: false (default) or false */ 
+// add_filter('autoptimize_filter_css_fonts_cdn','my_css_cdnfont',10,0);
+function my_css_cdnfont(){
+	return true;
+}
