@@ -353,6 +353,26 @@ class autoptimizeStyles extends autoptimizeBase {
 				$code = str_replace(array_keys($imgreplace),array_values($imgreplace),$code);
 				}
 			
+			// CDN the fonts!
+			if ((!empty($this->cdn_url))&&apply_filters("autoptimize_filter_css_fonts_cdn",false)) {
+				$fontreplace = array();
+				$fonturl_regex = <<<'LOD'
+~(?(DEFINE)(?<quoted_content>(["']) (?>[^"'\\]++ | \\{2} | \\. | (?!\g{-1})["'] )*+ \g{-1})(?<comment> /\* .*? \*/ ) (?<url_skip>(?: data: ) [^"'\s)}]*+ ) (?<other_content>(?> [^u}/"']++ | \g<quoted_content> | \g<comment> | \Bu | u(?!rl\s*+\() | /(?!\*) | \g<url_start> \g<url_skip> ["']?+ )++ ) (?<anchor> \G(?<!^) ["']?+ | @font-face \s*+ { ) (?<url_start> url\( \s*+ ["']?+ ) ) \g<comment> (*SKIP)(*FAIL) | \g<anchor> \g<other_content>?+ \g<url_start> \K ((?:(?:https?:)?(?://[[:alnum:]\-\.]+)(?::[0-9]+)?)?\/[^"'\s)}]*+) ~xs
+LOD;
+
+				preg_match_all($fonturl_regex,$code,$matches);
+				if (is_array($matches)) {
+					foreach($matches[8] as $count => $quotedurl) {
+						$url = trim($quotedurl," \t\n\r\0\x0B\"'");
+						$cdn_url=$this->url_replace_cdn($url);
+						$fontreplace[$matches[8][$count]] = str_replace($quotedurl,$cdn_url,$matches[8][$count]);
+					}
+					if(!empty($fontreplace)) {
+						$code = str_replace(array_keys($fontreplace),array_values($fontreplace),$code);
+					}
+				}
+			}
+			
 			// Minify
 			if (($this->alreadyminified!==true) && (apply_filters( "autoptimize_css_do_minify", true))) {
 				if (class_exists('Minify_CSS_Compressor')) {
