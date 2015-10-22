@@ -14,6 +14,7 @@ class autoptimizeStyles extends autoptimizeBase {
 	private $defer = false;
 	private $defer_inline = false;
 	private $whitelist = '';
+	private $cssinlinesize = '';
 	
 	//Reads the page and collects style tags
 	public function read($options) {
@@ -24,6 +25,8 @@ class autoptimizeStyles extends autoptimizeBase {
 		if (!empty($whitelistCSS)) {
 			$this->whitelist = array_filter(array_map('trim',explode(",",$whitelistCSS)));
 		}
+		
+		$this->cssinlinesize = apply_filters('autoptimize_filter_css_inlinesize',128);
 
 		// Remove everything that's not the header
 		if ($options['justhead'] == true) {
@@ -511,7 +514,11 @@ LOD;
 					$deferredCssBlock .= "lCss('".$url."','".$media."');";
 					$noScriptCssBlock .= '<link type="text/css" media="'.$media.'" href="'.$url.'" rel="stylesheet" />';
 				} else {
-					$this->inject_in_html('<link type="text/css" media="'.$media.'" href="'.$url.'" rel="stylesheet" />',$replaceTag);
+					if (strlen($this->csscode[$media]) > $this->cssinlinesize) {
+						$this->inject_in_html('<link type="text/css" media="'.$media.'" href="'.$url.'" rel="stylesheet" />',$replaceTag);
+					} else {
+						$this->inject_in_html('<style type="text/css" media="'.$media.'">'.$this->csscode[$media].'</style>',$replaceTag);
+					}
 				}
 			}
 			
