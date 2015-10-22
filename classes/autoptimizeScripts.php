@@ -15,6 +15,7 @@ class autoptimizeScripts extends autoptimizeBase {
 	private $restofcontent = '';
 	private $md5hash = '';
 	private $whitelist = '';
+	private $jsremovables = array();
 	
 	//Reads the page and collects script tags
 	public function read($options) {
@@ -26,7 +27,12 @@ class autoptimizeScripts extends autoptimizeBase {
 			$this->whitelist = array_filter(array_map('trim',explode(",",$whitelistJS)));
 		}
 
-		//Remove everything that's not the header
+		$removableJS = apply_filters( 'autoptimize_filter_js_removables', '');
+		if (!empty($removableJS)) {
+			$this->jsremovables = array_filter(array_map('trim',explode(",",$removableJS)));
+		}
+
+		// Remove everything that's not the header
 		if($options['justhead'] == true) {
 			$content = explode('</head>',$this->content,2);
 			$this->content = $content[0].'</head>';
@@ -72,7 +78,11 @@ class autoptimizeScripts extends autoptimizeBase {
 					continue;
 				}
 				if(preg_match('#src=("|\')(.*)("|\')#Usmi',$tag,$source)) {
-					//External script
+					if ($this->isremovable($tag,$this->jsremovables)) {
+						$this->content = str_replace($tag,'',$this->content);
+						continue;
+					}
+					// External script
 					$url = current(explode('?',$source[2],2));
 					$path = $this->getpath($url);
 					if($path !== false && preg_match('#\.js$#',$path)) {
@@ -110,6 +120,10 @@ class autoptimizeScripts extends autoptimizeBase {
 					}
 				} else {
 					// Inline script
+					if ($this->isremovable($tag,$this->jsremovables)) {
+						$this->content = str_replace($tag,'',$this->content);
+					}
+					
 					// unhide comments, as javascript may be wrapped in comment-tags for old times' sake
 					$tag = $this->restore_comments($tag);
 					if($this->ismergeable($tag) && ( apply_filters('autoptimize_js_include_inline',true) )) {
