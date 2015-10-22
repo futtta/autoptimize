@@ -61,7 +61,9 @@ abstract class autoptimizeBase {
 				$multidomains[]=parse_url($this->cdn_url,PHP_URL_HOST);
 			}
 			
-			if (!empty($multidomains = apply_filters('autoptimize_filter_cssjs_multidomain', $multidomains))) {
+			$multidomains = apply_filters('autoptimize_filter_cssjs_multidomain', $multidomains);
+			
+			if (!empty($multidomains)) {
 				if (in_array($thisHost,$multidomains)) {
 					$url=str_replace($thisHost, parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST), $url);
 				} else {
