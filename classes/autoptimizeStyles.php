@@ -15,6 +15,7 @@ class autoptimizeStyles extends autoptimizeBase {
 	private $defer_inline = false;
 	private $whitelist = '';
 	private $cssinlinesize = '';
+	private $cssremovables = array();
 	
 	//Reads the page and collects style tags
 	public function read($options) {
@@ -26,6 +27,11 @@ class autoptimizeStyles extends autoptimizeBase {
 			$this->whitelist = array_filter(array_map('trim',explode(",",$whitelistCSS)));
 		}
 		
+		$removableCSS = apply_filters( 'autoptimize_filter_css_removables', '');
+		if (!empty($removableCSS)) {
+			$this->cssremovables = array_filter(array_map('trim',explode(",",$removableCSS)));
+		}
+
 		$this->cssinlinesize = apply_filters('autoptimize_filter_css_inlinesize',128);
 
 		// Remove everything that's not the header
@@ -88,7 +94,9 @@ class autoptimizeStyles extends autoptimizeBase {
 		// Get <style> and <link>
 		if(preg_match_all('#(<style[^>]*>.*</style>)|(<link[^>]*stylesheet[^>]*>)#Usmi',$this->content,$matches)) {
 			foreach($matches[0] as $tag) {
-				if ($this->ismovable($tag)) {
+				if ($this->isremovable($tag,$this->cssremovables)) {
+					$this->content = str_replace($tag,'',$this->content);
+				} else if ($this->ismovable($tag)) {
 					// Get the media
 					if(strpos($tag,'media=')!==false) {
 						preg_match('#media=(?:"|\')([^>]*)(?:"|\')#Ui',$tag,$medias);
@@ -207,25 +215,30 @@ class autoptimizeStyles extends autoptimizeBase {
 
 			while(preg_match_all('#^(/*\s?)@import.*(?:;|$)#Um',$thiscss,$matches)) {
 				foreach($matches[0] as $import)	{
-					$url = trim(preg_replace('#^.*((?:https?:|ftp:)?//.*\.css).*$#','$1',trim($import))," \t\n\r\0\x0B\"'");
-					$path = $this->getpath($url);
-					$import_ok = false;
-					if (file_exists($path) && is_readable($path)) {
-						$code = addcslashes($this->fixurls($path,file_get_contents($path)),"\\");
-						$code = preg_replace('/\x{EF}\x{BB}\x{BF}/','',$code);
-						$tmpstyle = apply_filters( 'autoptimize_css_individual_style', $code, "" );
-						if ($tmpstyle!==$code && !empty($tmpstyle)) {
-							$code=$tmpstyle;
-							$this->alreadyminified=true;
-						}
-						if(!empty($code)) {
-							$tmp_thiscss = preg_replace('#(/\*FILESTART\*/.*)'.preg_quote($import,'#').'#Us','/*FILESTART2*/'.$code.'$1',$thiscss);
-							if (!empty($tmp_thiscss)) {
-								$thiscss = $tmp_thiscss;
-								$import_ok = true;
-								unset($tmp_thiscss);
+					if ($this->isremovable($import,$this->cssremovables)) {
+						$thiscss = str_replace($import,'',$thiscss);
+						$import_ok = true;
+					} else {
+						$url = trim(preg_replace('#^.*((?:https?:|ftp:)?//.*\.css).*$#','$1',trim($import))," \t\n\r\0\x0B\"'");
+						$path = $this->getpath($url);
+						$import_ok = false;
+						if (file_exists($path) && is_readable($path)) {
+							$code = addcslashes($this->fixurls($path,file_get_contents($path)),"\\");
+							$code = preg_replace('/\x{EF}\x{BB}\x{BF}/','',$code);
+							$tmpstyle = apply_filters( 'autoptimize_css_individual_style', $code, "" );
+							if ($tmpstyle!==$code && !empty($tmpstyle)) {
+								$code=$tmpstyle;
+								$this->alreadyminified=true;
 							}
-						unset($code);
+							if(!empty($code)) {
+								$tmp_thiscss = preg_replace('#(/\*FILESTART\*/.*)'.preg_quote($import,'#').'#Us','/*FILESTART2*/'.$code.'$1',$thiscss);
+								if (!empty($tmp_thiscss)) {
+									$thiscss = $tmp_thiscss;
+									$import_ok = true;
+									unset($tmp_thiscss);
+								}
+							unset($code);
+							}
 						}
 					}
 
