@@ -254,4 +254,13 @@ abstract class autoptimizeBase {
 			}
 		}
 	}
+	
+	protected function isremovable($tag, $removables) {
+		foreach ($removables as $match) {
+			if (strpos($tag,$match)!==false) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
