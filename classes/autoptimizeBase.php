@@ -212,10 +212,14 @@ abstract class autoptimizeBase {
                         if ($tmp_url === $url) {
                                 // secondly prepend domain-less absolute URL's
                                 if((substr($url,0,1)==='/')&&(substr($url,1,1)!=='/')) {
-                                       $url=rtrim($this->cdn_url,'/').$url;
+                                	$url=rtrim($this->cdn_url,'/').$url;
                                 } else {
+                                	// get wordpress base URL
                                 	$WPSiteBreakdown = parse_url(AUTOPTIMIZE_WP_SITE_URL);										$WPSiteBreakdown = parse_url(AUTOPTIMIZE_WP_SITE_URL);
 					$WPBaseUrl = $WPSiteBreakdown['scheme'] . '://' . $WPSiteBreakdown['host'];
+					if (!empty($WPSiteBreakdown['port'])) {
+						$WPBaseUrl.=":".$WPSiteBreakdown['port'];
+					}
                                         // three: replace full url's with scheme
                                         $tmp_url=str_replace($WPBaseUrl,rtrim($this->cdn_url,'/'),$url);
                                         if ($tmp_url===$url) {
