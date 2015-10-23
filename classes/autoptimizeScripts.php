@@ -122,6 +122,7 @@ class autoptimizeScripts extends autoptimizeBase {
 					// Inline script
 					if ($this->isremovable($tag,$this->jsremovables)) {
 						$this->content = str_replace($tag,'',$this->content);
+						continue;
 					}
 					
 					// unhide comments, as javascript may be wrapped in comment-tags for old times' sake
