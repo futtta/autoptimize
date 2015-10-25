@@ -173,7 +173,7 @@ function autoptimize_start_buffering() {
 			// if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
 				@include(plugin_dir_path(__FILE__).'classes/external/php/minify-html.php');
 			// } else {
-			//	@include(WP_PLUGIN_DIR.'/autoptimize/classes/external/php/minify-2.1.7-html.php');
+			//	@include(plugin_dir_path(__FILE__).'/autoptimize/classes/external/php/minify-2.1.7-html.php');
 			// }
 		}
 		
