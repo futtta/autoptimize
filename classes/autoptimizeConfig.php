@@ -18,7 +18,7 @@ class autoptimizeConfig {
 				add_filter('plugin_row_meta',array($this,'setmeta'),10,2);
 			} elseif(function_exists('post_class')) {
 				//2.7
-				$plugin = plugin_basename(WP_PLUGIN_DIR.'/autoptimize/autoptimize.php');
+				$plugin = plugin_basename(AUTOPTIMIZE_PLUGIN_DIR.'/autoptimize.php');
 				add_filter('plugin_action_links_'.$plugin,array($this,'setmeta'));
 			}
 
@@ -362,7 +362,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 		//Do it only once - saves time
 		static $plugin;
 		if(empty($plugin))
-			$plugin = plugin_basename(WP_PLUGIN_DIR.'/autoptimize/autoptimize.php');
+			$plugin = plugin_basename(AUTOPTIMIZE_PLUGIN_DIR.'/autoptimize.php');
 		
 		if($file===null) {
 			//2.7
