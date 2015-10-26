@@ -263,4 +263,22 @@ abstract class autoptimizeBase {
 		}
 		return false;
 	}
+	
+	// helper function to inject already minified code in optimized JS/CSS
+	protected function inject_minified($in) {
+		if ( strpos( $in, '%%INJECTLATER%%' ) !== false ) {
+			$out = preg_replace_callback(
+				'#%%INJECTLATER%%(.*?)%%INJECTLATER%%#is',
+				create_function(
+					'$matches',
+					'return file_get_contents(base64_decode($matches[1]));'
+				),
+				$in
+			);
+		} else {
+			$out = $in;
+		}
+		return $out;
+	}	
+
 }
