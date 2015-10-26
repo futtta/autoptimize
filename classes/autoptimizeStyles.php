@@ -172,6 +172,8 @@ class autoptimizeStyles extends autoptimizeBase {
 					if ($tmpstyle!==$css && !empty($tmpstyle)) {
 						$css=$tmpstyle;
 						$this->alreadyminified=true;
+					} else if (strpos($cssPath,"min.css")!==false){
+						$css="%%INJECTLATER%%".base64_encode($cssPath)."%%INJECTLATER%%";
 					}
 				} else {
 					// Couldn't read CSS. Maybe getpath isn't working?
@@ -229,7 +231,10 @@ class autoptimizeStyles extends autoptimizeBase {
 							if ($tmpstyle!==$code && !empty($tmpstyle)) {
 								$code=$tmpstyle;
 								$this->alreadyminified=true;
+							} else if (strpos($path,"min.css")!==false){
+								$code="%%INJECTLATER%%".base64_encode($path)."%%INJECTLATER%%";
 							}
+							
 							if(!empty($code)) {
 								$tmp_thiscss = preg_replace('#(/\*FILESTART\*/.*)'.preg_quote($import,'#').'#Us','/*FILESTART2*/'.$code.'$1',$thiscss);
 								if (!empty($tmp_thiscss)) {
@@ -406,6 +411,9 @@ LOD;
 					unset($tmp_code);
 				}
 			}
+			
+			$code = $this->inject_minified($code);
+			
 			$tmp_code = apply_filters( 'autoptimize_css_after_minify',$code );
 			if (!empty($tmp_code)) {
 				$code = $tmp_code;
