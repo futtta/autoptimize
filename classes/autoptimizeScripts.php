@@ -191,6 +191,8 @@ class autoptimizeScripts extends autoptimizeBase {
 					if ($tmpscriptsrc!==$scriptsrc && !empty($tmpscriptsrc)) {
 						$scriptsrc=$tmpscriptsrc;
 						$this->alreadyminified=true;
+					} else if (strpos($script,"min.js")!==false){
+						$scriptsrc="%%INJECTLATER%%".base64_encode($script)."%%INJECTLATER%%";
 					}
 					$this->jscode .= "\n".$scriptsrc;
 				}/*else{
@@ -218,6 +220,7 @@ class autoptimizeScripts extends autoptimizeBase {
 					$this->jscode = $tmp_jscode;
 					unset($tmp_jscode);
 				}
+				$this->jscode = $this->inject_minified($this->jscode);
 				return true;
 			} else {
 				return false;
