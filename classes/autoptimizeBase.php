@@ -271,7 +271,7 @@ abstract class autoptimizeBase {
 				'#%%INJECTLATER%%(.*?)%%INJECTLATER%%#is',
 				create_function(
 					'$matches',
-					'return file_get_contents(base64_decode($matches[1]));'
+					'return "\n".file_get_contents(base64_decode($matches[1]));'
 				),
 				$in
 			);
