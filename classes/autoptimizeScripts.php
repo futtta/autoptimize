@@ -33,7 +33,7 @@ class autoptimizeScripts extends autoptimizeBase {
 		}
 
 		// Remove everything that's not the header
-		if($options['justhead'] == true) {
+		if(($options['justhead'] == true) || (apply_filters('autoptimize_filter_js_justhead') == true)) {
 			$content = explode('</head>',$this->content,2);
 			$this->content = $content[0].'</head>';
 			$this->restofcontent = $content[1];
