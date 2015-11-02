@@ -45,7 +45,7 @@ class autoptimizeConfig {
 
 <div class="wrap">
 
-<h2><?php _e('Autoptimize Settings','autoptimize'); ?></h2>
+<h1><?php _e('Autoptimize Settings','autoptimize'); ?></h1>
 
 <div style="float:left;width:70%;">
 <?php 
@@ -66,7 +66,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <form method="post" action="options.php">
 <?php settings_fields('autoptimize'); ?>
 
-<h3><?php _e('HTML Options','autoptimize'); ?></h3>
+<h2><?php _e('HTML Options','autoptimize'); ?></h2>
 <table class="form-table">
 <tr valign="top">
 <th scope="row"><?php _e('Optimize HTML Code?','autoptimize'); ?></th>
@@ -79,7 +79,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 </tr>
 </table>
 
-<h3><?php _e('JavaScript Options','autoptimize'); ?></h3>
+<h2><?php _e('JavaScript Options','autoptimize'); ?></h2>
 <table class="form-table"> 
 <tr valign="top">
 <th scope="row"><?php _e('Optimize JavaScript Code?','autoptimize'); ?></th>
@@ -107,7 +107,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 </tr>
 </table>
 
-<h3><?php _e('CSS Options','autoptimize'); ?></h3>
+<h2><?php _e('CSS Options','autoptimize'); ?></h2>
 <table class="form-table"> 
 <tr valign="top">
 <th scope="row"><?php _e('Optimize CSS Code?','autoptimize'); ?></th>
@@ -144,7 +144,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 </tr>
 </table>
 
-<h3><?php _e('CDN Options','autoptimize'); ?></h3>
+<h2><?php _e('CDN Options','autoptimize'); ?></h2>
 <table class="form-table"> 
 <tr valign="top">
 <th scope="row"><?php _e('CDN Base URL','autoptimize'); ?></th>
@@ -153,7 +153,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 </tr>
 </table>
 
-<h3 class="hidden ao_adv"><?php _e('Cache Info','autoptimize'); ?></h3>
+<h2 class="hidden ao_adv"><?php _e('Cache Info','autoptimize'); ?></h2>
 <table class="form-table" > 
 <tr valign="top" class="hidden ao_adv">
 <th scope="row"><?php _e('Cache folder','autoptimize'); ?></th>
@@ -190,14 +190,14 @@ if (get_option('autoptimize_show_adv','0')=='1') {
         <div style="margin:0px 15px 15px 15px;font-size:larger;"><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>."); ?></div>
 	<div style="margin:0px 15px 15px 15px;font-size:larger;"><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=futtta"><?php _e("Happy with Autoptimize? Try my other plugins!"); ?></a></div>
         <div style="margin-left:10px;margin-top:-5px;">
-                <h3>
+                <h2>
                         <?php _e("futtta about","autoptimize") ?>
                         <select id="feed_dropdown" >
                                 <option value="1"><?php _e("Autoptimize","autoptimize") ?></option>
                                 <option value="2"><?php _e("WordPress","autoptimize") ?></option>
                                 <option value="3"><?php _e("Web Technology","autoptimize") ?></option>
                         </select>
-                </h3>
+                </h2>
                 <div id="futtta_feed"></div>
         </div>
 	<div style="float:right;margin:50px 15px;"><a href="http://blog.futtta.be/2013/10/21/do-not-donate-to-me/" target="_blank"><img width="100px" height="85px" src="<?php echo content_url(); ?>/plugins/autoptimize/classes/external/do_not_donate_smallest.png" title="<?php _e("Do not donate for this plugin!"); ?>"></a></div>
