@@ -264,21 +264,27 @@ abstract class autoptimizeBase {
 		return false;
 	}
 	
-	// helper function to inject already minified code in optimized JS/CSS
-	protected function inject_minified($in) {
-		if ( strpos( $in, '%%INJECTLATER%%' ) !== false ) {
-			$out = preg_replace_callback(
-				'#%%INJECTLATER%%(.*?)%%INJECTLATER%%#is',
-				create_function(
-					'$matches',
-					'return "\n".file_get_contents(base64_decode($matches[1]));'
-				),
-				$in
-			);
-		} else {
-			$out = $in;
-		}
-		return $out;
-	}	
+        // inject already minified code in optimized JS/CSS
+        protected function inject_minified($in) {
+                if ( strpos( $in, '%%INJECTLATER%%' ) !== false ) {
+                        $out = preg_replace_callback(
+                                '#%%INJECTLATER%%(.*?)%%INJECTLATER%%#is',
+                                create_function(
+                                        '$matches',
+                                        '$filecontent=file_get_contents(base64_decode($matches[1]));
+                                        if ((get_option("autoptimize_js_trycatch")==="on")&&(substr($matches[1],-3,3)===".js")) {
+                                                return "\ntry{".$filecontent."}catch(e){}";
+                                        } else {
+                                                return "\n".$filecontent;
+                                        }'
+                                ),
+                                $in
+                        );
+                } else {
+                        $out = $in;
+                }
+                return $out;
+        }
+
 
 }
