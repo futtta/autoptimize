@@ -73,13 +73,13 @@ class autoptimizeStyles extends autoptimizeBase {
 		// noptimize me
 		$this->content = $this->hide_noptimize($this->content);
 		
-		// exclude noscript, as those may contain CSS
-		if ( strpos( $this->content, '<noscript>' ) !== false ) { 
+		// exclude (no)script, as those may contain CSS which should be left as is
+		if ( strpos( $this->content, '<script' ) !== false ) { 
 			$this->content = preg_replace_callback(
-				'#<noscript>.*?</noscript>#is',
+				'#<(?:no)?script.*?<\/(?:no)?script>#is',
 				create_function(
 					'$matches',
-					'return "%%NOSCRIPT%%".base64_encode($matches[0])."%%NOSCRIPT%%";'
+					'return "%%SCRIPT%%".base64_encode($matches[0])."%%SCRIPT%%";'
 				),
 				$this->content
 			);
@@ -466,18 +466,18 @@ LOD;
 		// restore comments
 		$this->content = $this->restore_comments($this->content);
 		
-		// restore noscript
-		if ( strpos( $this->content, '%%NOSCRIPT%%' ) !== false ) { 
+		// restore (no)script
+		if ( strpos( $this->content, '%%SCRIPT%%' ) !== false ) { 
 			$this->content = preg_replace_callback(
-				'#%%NOSCRIPT%%(.*?)%%NOSCRIPT%%#is',
+				'#%%SCRIPT%%(.*?)%%SCRIPT%%#is',
 				create_function(
 					'$matches',
-					'return stripslashes(base64_decode($matches[1]));'
+					'return base64_decode($matches[1]);'
 				),
 				$this->content
 			);
 		}
-
+		
 		// restore noptimize
 		$this->content = $this->restore_noptimize($this->content);
 		
