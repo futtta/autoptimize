@@ -272,6 +272,9 @@ abstract class autoptimizeBase {
                                 create_function(
                                         '$matches',
                                         '$filecontent=file_get_contents(base64_decode($matches[1]));
+					if (strpos($filecontent,";",-1)!==";") {
+						$filecontent.=";";
+					}
                                         if ((get_option("autoptimize_js_trycatch")==="on")&&(substr($matches[1],-3,3)===".js")) {
                                                 return "\ntry{".$filecontent."}catch(e){}";
                                         } else {
