@@ -215,12 +215,12 @@ class autoptimizeScripts extends autoptimizeBase {
 		  if (class_exists('JSMin') && apply_filters( 'autoptimize_js_do_minify' , true)) {
 			if (@is_callable(array("JSMin","minify"))) {
 				$tmp_jscode = trim(JSMin::minify($this->jscode));
-				$tmp_jscode = apply_filters( 'autoptimize_js_after_minify', $tmp_jscode );
 				if (!empty($tmp_jscode)) {
 					$this->jscode = $tmp_jscode;
 					unset($tmp_jscode);
 				}
 				$this->jscode = $this->inject_minified($this->jscode);
+				$this->jscode = apply_filters( 'autoptimize_js_after_minify', $this->jscode );
 				return true;
 			} else {
 				return false;
