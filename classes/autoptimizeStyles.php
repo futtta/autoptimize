@@ -172,7 +172,7 @@ class autoptimizeStyles extends autoptimizeBase {
 					if ($tmpstyle!==$css && !empty($tmpstyle)) {
 						$css=$tmpstyle;
 						$this->alreadyminified=true;
-					} else if (strpos($cssPath,"min.css")!==false){
+					} else if ((strpos($cssPath,"min.css")!==false) && ($this->inject_min_late===true)){
 						$css="%%INJECTLATER%%".base64_encode($cssPath)."%%INJECTLATER%%";
 					}
 				} else {
@@ -231,7 +231,7 @@ class autoptimizeStyles extends autoptimizeBase {
 							if ($tmpstyle!==$code && !empty($tmpstyle)) {
 								$code=$tmpstyle;
 								$this->alreadyminified=true;
-							} else if (strpos($path,"min.css")!==false){
+							} else if ((strpos($path,"min.css")!==false) && ($this->inject_min_late===true)){
 								$code="%%INJECTLATER%%".base64_encode($path)."%%INJECTLATER%%";
 							}
 							
