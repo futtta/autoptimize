@@ -278,7 +278,7 @@ abstract class autoptimizeBase {
 					if (strpos($filecontent,";",-1)!==";") {
 						$filecontent.=";";
 					}
-					$filecontent=preg_replace("#\/\*[^!].*\*\/#Us","",$filecontent);
+					$filecontent=preg_replace("#\/\*[^!].*\*\/\s?#Us","",$filecontent);
 					$filecontent=preg_replace("#^\/\/.*$#Um","",$filecontent);
 					$filecontent=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $filecontent);
                                         if ((get_option("autoptimize_js_trycatch")==="on")&&(substr($matches[1],-3,3)===".js")) {
