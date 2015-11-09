@@ -123,6 +123,10 @@ In some rare cases the [CSS minification component](https://github.com/tubalmart
 
 The "legacy minifiers" will remain in Autoptimize "for ever" and changes to wp-config.php are not affected by core-, theme- or plugin-upgrades so you should be good to go.
 
+= But I still have blank autoptimized CSS or JS-files! =
+
+If you are running Apache, the htaccess file written by Autoptimize can in some cases conflict with the AllowOverrides settings of your Apache configuration (as is the case with the default configuration of some Ubuntu installations), which results in "internal server errors" on the autoptimize CSS- and JS-files. This can be solved by [setting AllowOverrides to All](http://httpd.apache.org/docs/2.4/mod/core.html#allowoverride).
+
 = I use NextGen Galleries and a lot of JS is not aggregated/ minified? =
 
 NextGen Galleries does some nifty stuff to add JavaScript. In order for Autoptimize to be able to aggregate that, you'll need to tell it to initialize earlier, by adding this to your wp-config.php:
