@@ -537,7 +537,7 @@ LOD;
 				} else {
 					if (strlen($this->csscode[$media]) > $this->cssinlinesize) {
 						$this->inject_in_html('<link type="text/css" media="'.$media.'" href="'.$url.'" rel="stylesheet" />',$replaceTag);
-					} else {
+					} else if (strlen($this->csscode[$media]>0)) {
 						$this->inject_in_html('<style type="text/css" media="'.$media.'">'.$this->csscode[$media].'</style>',$replaceTag);
 					}
 				}
