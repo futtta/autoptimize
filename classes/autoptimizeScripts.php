@@ -270,7 +270,7 @@ class autoptimizeScripts extends autoptimizeBase {
 
 		$replaceTag = apply_filters( 'autoptimize_filter_js_replacetag', $replaceTag );
 
-		if (strlen($this->jscode)<>0) {
+		if (strlen($this->jscode)>0) {
 			$this->inject_in_html($bodyreplacement,$replaceTag);
 		}
 
