@@ -270,7 +270,9 @@ class autoptimizeScripts extends autoptimizeBase {
 
 		$replaceTag = apply_filters( 'autoptimize_filter_js_replacetag', $replaceTag );
 
-		$this->inject_in_html($bodyreplacement,$replaceTag);
+		if (strlen($this->jscode)<>0) {
+			$this->inject_in_html($bodyreplacement,$replaceTag);
+		}
 
 		// restore comments
 		$this->content = $this->restore_comments($this->content);
