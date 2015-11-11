@@ -275,7 +275,7 @@ abstract class autoptimizeBase {
                                 create_function(
                                         '$matches',
                                         '$filecontent=file_get_contents(base64_decode($matches[1]));
-					if (strpos($filecontent,";",-1)!==";") {
+					if ((substr($filecontent,-1,1)!==";")&&(substr($filecontent,-1,1)!=="}")) {
 						$filecontent.=";";
 					}
 					$filecontent=preg_replace("#\/\*[^!].*\*\/\s?#Us","",$filecontent);
