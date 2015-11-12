@@ -274,20 +274,29 @@ abstract class autoptimizeBase {
                                 '#%%INJECTLATER%%(.*?)%%INJECTLATER%%#is',
                                 create_function(
                                         '$matches',
-                                        '$filecontent=file_get_contents(base64_decode($matches[1]));
-					if ((substr($filecontent,-1,1)!==";")&&(substr($filecontent,-1,1)!=="}")) {
-						$filecontent.=";";
+                                        '$filepath=base64_decode($matches[1]);
+					$filecontent=file_get_contents($filepath);
+	
+					// remove comments and blank lines
+					if (substr($filepath,-3,3)===".js") {
+						$filecontent=preg_replace("#^\s*\/\/.*$#Um","",$filecontent);
 					}
 					$filecontent=preg_replace("#\/\*[^!].*\*\/\s?#Us","",$filecontent);
-					if (substr($matches[1],-3,3)===".js") {
-						$filecontent=preg_replace("#^\/\/.*$#Um","",$filecontent);
-					}
 					$filecontent=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $filecontent);
-                                        if ((get_option("autoptimize_js_trycatch")==="on")&&(substr($matches[1],-3,3)===".js")) {
-                                                return "\ntry{".$filecontent."}catch(e){}";
-                                        } else {
-                                                return "\n".$filecontent;
-                                        }'
+
+					// specific stuff for JS-files
+					if (substr($filepath,-3,3)===".js") {
+						if ((substr($filecontent,-1,1)!==";")&&(substr($filecontent,-1,1)!=="}")) {
+							$filecontent.=";";
+						}
+						
+						if (get_option("autoptimize_js_trycatch")==="on") {
+							$filecontent="try{".$filecontent."}catch(e){}";
+						}
+					}
+	
+					// return 
+                                        return "\n".$filecontent;'
                                 ),
                                 $in
                         );
