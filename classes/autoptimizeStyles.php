@@ -32,7 +32,7 @@ class autoptimizeStyles extends autoptimizeBase {
 			$this->cssremovables = array_filter(array_map('trim',explode(",",$removableCSS)));
 		}
 
-		$this->cssinlinesize = apply_filters('autoptimize_filter_css_inlinesize',128);
+		$this->cssinlinesize = apply_filters('autoptimize_filter_css_inlinesize',256);
 
 		// Remove everything that's not the header
 		if(($options['justhead'] == true) || (apply_filters('autoptimize_filter_css_justhead') == true)) {
