@@ -497,7 +497,7 @@ LOD;
 			}
 		} else {
 			if ($this->defer == true) {
-				$deferredCssBlock = "<script>function lCss(url,media) {var d=document;var l=d.createElement('link');l.rel='stylesheet';l.type='text/css';l.href=url;l.media=media; d.getElementsByTagName('head')[0].appendChild(l);}function deferredCSS() {";
+				$deferredCssBlock = "<script>function lCss(url,media) {var d=document;var l=d.createElement('link');l.rel='stylesheet';l.type='text/css';l.href=url;l.media=media;aoin=d.getElementById('aoinlined');aoin.parentNode.insertBefore(l,aoin.nextSibling);}function deferredCSS() {";
 				$noScriptCssBlock = "<noscript>";
 				$defer_inline_code=$this->defer_inline;
 				$defer_inline_code=apply_filters( 'autoptimize_filter_css_defer_inline', $defer_inline_code );
@@ -522,7 +522,7 @@ LOD;
 						unset($tmp_code);
 					     }
 					}
-					$code_out='<style type="text/css" media="all">'.$defer_inline_code.'</style>';
+					$code_out='<style type="text/css" id="aoinlined" media="all">'.$defer_inline_code.'</style>';
 					$this->inject_in_html($code_out,$replaceTag);
 				}
 			}
