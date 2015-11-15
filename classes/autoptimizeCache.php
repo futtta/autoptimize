@@ -106,6 +106,8 @@ class autoptimizeCache {
                 	$wpfc -> deleteCache();
 		} else if ( class_exists("c_ws_plugin__qcache_purging_routines") ) {
 			c_ws_plugin__qcache_purging_routines::purge_cache_dir(); // quick cache
+		} else if ( class_exists("zencache") ) {
+			zencache::clear(); // zen cache, tbc
 		} else if(file_exists(WP_CONTENT_DIR.'/wp-cache-config.php') && function_exists('prune_super_cache')){
 			// fallback for WP-Super-Cache
 			global $cache_path;
