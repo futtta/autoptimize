@@ -136,10 +136,16 @@ function autoptimize_install_config_notice() {
 }
 
 function autoptimize_update_config_notice() {
-    echo '<div class="updated"><p>';
+	echo '<div class="updated"><p>';
 	_e('Autoptimize has just been updated. Please <strong>test your site now</strong> and adapt Autoptimize config if needed.', 'autoptimize' );
 	echo '</p></div>';
-	}
+}
+
+function autoptimize_cache_unavailable_notice() {
+	echo '<div class="error"><p>';
+	_e('Autoptimize cannot write to the cache directory (default: /wp-content/cache/autoptimize), please fix to enable CSS/ JS optimization!', 'autoptimize' );
+	echo '</p></div>';
+}
 
 // Set up the buffering
 function autoptimize_start_buffering() {
@@ -328,6 +334,8 @@ if(autoptimizeCache::cacheavail()) {
                         add_action('template_redirect','autoptimize_start_buffering',2);
                 }
 	}
+} else {
+	add_action('admin_notices', 'autoptimize_cache_unavailable_notice');
 }
 
 register_uninstall_hook(__FILE__, "autoptimize_uninstall");
