@@ -16,7 +16,8 @@ class autoptimizeStyles extends autoptimizeBase {
 	private $whitelist = '';
 	private $cssinlinesize = '';
 	private $cssremovables = array();
-	
+	private $include_inline = false;
+
 	//Reads the page and collects style tags
 	public function read($options) {
 		$noptimizeCSS = apply_filters( 'autoptimize_filter_css_noptimize', false, $this->content );
@@ -39,6 +40,11 @@ class autoptimizeStyles extends autoptimizeBase {
 			$content = explode('</head>',$this->content,2);
 			$this->content = $content[0].'</head>';
 			$this->restofcontent = $content[1];
+		}
+
+		// include inline?
+		if( apply_filters('autoptimize_css_include_inline',$options['include_inline']) == true ) {
+			$this->include_inline = true;
 		}
 		
 		// what CSS shouldn't be autoptimized
@@ -131,7 +137,7 @@ class autoptimizeStyles extends autoptimizeBase {
 						// and re-hide them to be able to to the removal based on tag
 						$tag = $this->hide_comments($tag);
 
-						if (apply_filters('autoptimize_css_include_inline',true)) {
+						if ( $this->include_inline ) {
 							$code = preg_replace('#^.*<!\[CDATA\[(?:\s*\*/)?(.*)(?://|/\*)\s*?\]\]>.*$#sm','$1',$code[1]);
 							$this->css[] = array($media,'INLINE;'.$code);
 						} else {
@@ -172,7 +178,8 @@ class autoptimizeStyles extends autoptimizeBase {
 					if ($tmpstyle!==$css && !empty($tmpstyle)) {
 						$css=$tmpstyle;
 						$this->alreadyminified=true;
-					} else if ((strpos($cssPath,"min.css")!==false) && ($this->inject_min_late===true)){
+					} else if ((strpos($cssPath,"min.css")!==false) && ($this->inject_min_late===true)) {
+						// only if filter is true?
 						$css="%%INJECTLATER%%".base64_encode($cssPath)."%%INJECTLATER%%";
 					}
 				} else {
@@ -231,7 +238,7 @@ class autoptimizeStyles extends autoptimizeBase {
 							if ($tmpstyle!==$code && !empty($tmpstyle)) {
 								$code=$tmpstyle;
 								$this->alreadyminified=true;
-							} else if ((strpos($path,"min.css")!==false) && ($this->inject_min_late===true)){
+							} else if ((strpos($path,"min.css")!==false) && ($this->inject_min_late===true)) {
 								$code="%%INJECTLATER%%".base64_encode($path)."%%INJECTLATER%%";
 							}
 							
@@ -477,7 +484,7 @@ LOD;
 				$this->content
 			);
 		}
-		
+
 		// restore noptimize
 		$this->content = $this->restore_noptimize($this->content);
 		
