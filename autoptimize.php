@@ -108,7 +108,7 @@ load_plugin_textdomain('autoptimize',false,AUTOPTIMIZE_PLUGIN_DIR.'/localization
 function autoptimize_uninstall(){
 	autoptimizeCache::clearall();
 	
-	$delete_options=array("autoptimize_cache_clean", "autoptimize_cache_nogzip", "autoptimize_css", "autoptimize_css_datauris", "autoptimize_css_justhead", "autoptimize_css_defer", "autoptimize_css_defer_inline", "autoptimize_css_inline", "autoptimize_css_exclude", "autoptimize_html", "autoptimize_html_keepcomments", "autoptimize_js", "autoptimize_js_exclude", "autoptimize_js_forcehead", "autoptimize_js_justhead", "autoptimize_js_trycatch", "autoptimize_version", "autoptimize_show_adv", "autoptimize_cdn_url", "autoptimize_cachesize_notice");
+	$delete_options=array("autoptimize_cache_clean", "autoptimize_cache_nogzip", "autoptimize_css", "autoptimize_css_datauris", "autoptimize_css_justhead", "autoptimize_css_defer", "autoptimize_css_defer_inline", "autoptimize_css_inline", "autoptimize_css_exclude", "autoptimize_html", "autoptimize_html_keepcomments", "autoptimize_js", "autoptimize_js_exclude", "autoptimize_js_forcehead", "autoptimize_js_justhead", "autoptimize_js_trycatch", "autoptimize_version", "autoptimize_show_adv", "autoptimize_cdn_url", "autoptimize_cachesize_notice","autoptimize_css_include_inline","autoptimize_js_include_inline");
 	
 	if ( !is_multisite() ) {
 		foreach ($delete_options as $del_opt) {	delete_option( $del_opt ); }
@@ -136,7 +136,7 @@ function autoptimize_install_config_notice() {
 }
 
 function autoptimize_update_config_notice() {
-	echo '<div class="updated"><p>';
+    echo '<div class="updated"><p>';
 	_e('Autoptimize has just been updated. Please <strong>test your site now</strong> and adapt Autoptimize config if needed.', 'autoptimize' );
 	echo '</p></div>';
 }
@@ -147,6 +147,7 @@ function autoptimize_cache_unavailable_notice() {
 	echo '</p></div>';
 }
 
+	
 // Set up the buffering
 function autoptimize_start_buffering() {
 	$ao_noptimize = false;
@@ -254,7 +255,8 @@ function autoptimize_end_buffering($content) {
 			'forcehead' => $conf->get('autoptimize_js_forcehead'),
 			'trycatch' => $conf->get('autoptimize_js_trycatch'),
 			'js_exclude' => $conf->get('autoptimize_js_exclude'),
-			'cdn_url' => $conf->get('autoptimize_cdn_url')
+			'cdn_url' => $conf->get('autoptimize_cdn_url'),
+			'include_inline' => $conf->get('autoptimize_js_include_inline')
 		),
 		'autoptimizeStyles' => array(
 			'justhead' => $conf->get('autoptimize_css_justhead'),
@@ -263,7 +265,8 @@ function autoptimize_end_buffering($content) {
 			'defer_inline' => $conf->get('autoptimize_css_defer_inline'),
 			'inline' => $conf->get('autoptimize_css_inline'),
 			'css_exclude' => $conf->get('autoptimize_css_exclude'),
-			'cdn_url' => $conf->get('autoptimize_cdn_url')
+			'cdn_url' => $conf->get('autoptimize_cdn_url'),
+			'include_inline' => $conf->get('autoptimize_css_include_inline')
 		),
 		'autoptimizeHTML' => array(
 			'keepcomments' => $conf->get('autoptimize_html_keepcomments')
@@ -307,8 +310,8 @@ function autoptimize_flush_pagecache($nothing) {
                 $wpfc -> deleteCache();
         } else if ( class_exists("c_ws_plugin__qcache_purging_routines") ) {
                 c_ws_plugin__qcache_purging_routines::purge_cache_dir(); // quick cache
-	} else if ( class_exists("zencache")) {
-		zencache::clear(); // zen cache
+		} else if ( class_exists("zencache")) {
+			zencache::clear(); // zen cache
         } else if(file_exists(WP_CONTENT_DIR.'/wp-cache-config.php') && function_exists('prune_super_cache')){
                 // fallback for WP-Super-Cache
                 global $cache_path;
@@ -324,15 +327,17 @@ function autoptimize_flush_pagecache($nothing) {
 }
 add_action('ao_flush_pagecache','autoptimize_flush_pagecache',10,1);
 
-if(autoptimizeCache::cacheavail()) {
+if ( autoptimizeCache::cacheavail() ) {
 	$conf = autoptimizeConfig::instance();
-	if( $conf->get('autoptimize_html') || $conf->get('autoptimize_js') || $conf->get('autoptimize_css') || $conf->get('autoptimize_cdn_js') || $conf->get('autoptimize_cdn_css')) {
+	if( $conf->get('autoptimize_html') || $conf->get('autoptimize_js') || $conf->get('autoptimize_css') ) {
 		// Hook to wordpress
-                if (defined('AUTOPTIMIZE_INIT_EARLIER')) {
-                        add_action('init','autoptimize_start_buffering',-1);
-                } else {
-                        add_action('template_redirect','autoptimize_start_buffering',2);
-                }
+        if (defined('AUTOPTIMIZE_INIT_EARLIER')) {
+            add_action('init','autoptimize_start_buffering',-1);
+
+        } else {
+            add_action('template_redirect','autoptimize_start_buffering',2);
+
+        }
 	}
 } else {
 	add_action('admin_notices', 'autoptimize_cache_unavailable_notice');
