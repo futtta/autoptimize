@@ -9,6 +9,7 @@ class autoptimizeScripts extends autoptimizeBase {
 	private $trycatch = false;
 	private $alreadyminified = false;
 	private $forcehead = false;
+	private $include_inline = false;
 	private $jscode = '';
 	private $url = '';
 	private $move = array('first' => array(), 'last' => array());
@@ -22,23 +23,31 @@ class autoptimizeScripts extends autoptimizeBase {
 		$noptimizeJS = apply_filters( 'autoptimize_filter_js_noptimize', false, $this->content );
                 if ($noptimizeJS) return false;
 
+		// only optimize known good JS?
 		$whitelistJS = apply_filters( 'autoptimize_filter_js_whitelist', "" );
 		if (!empty($whitelistJS)) {
 			$this->whitelist = array_filter(array_map('trim',explode(",",$whitelistJS)));
 		}
 
+		// is there JS we should simply remove
 		$removableJS = apply_filters( 'autoptimize_filter_js_removables', '');
 		if (!empty($removableJS)) {
 			$this->jsremovables = array_filter(array_map('trim',explode(",",$removableJS)));
 		}
 
-		// Remove everything that's not the header
-		if(($options['justhead'] == true) || (apply_filters('autoptimize_filter_js_justhead') == true)) {
+		// only header?
+		if( apply_filters('autoptimize_filter_js_justhead',$options['justhead']) == true ) {
 			$content = explode('</head>',$this->content,2);
 			$this->content = $content[0].'</head>';
 			$this->restofcontent = $content[1];
 		}
+		
+		// include inline?
+		if( apply_filters('autoptimize_js_include_inline',$options['include_inline']) == true ) {
+			$this->include_inline = true;
+		}
 
+		// get extra exclusions settings or filter
 		$excludeJS = $options['js_exclude'];
 		$excludeJS = apply_filters( 'autoptimize_filter_js_exclude', $excludeJS );
 		
@@ -82,6 +91,7 @@ class autoptimizeScripts extends autoptimizeBase {
 						$this->content = str_replace($tag,'',$this->content);
 						continue;
 					}
+					
 					// External script
 					$url = current(explode('?',$source[2],2));
 					$path = $this->getpath($url);
@@ -127,23 +137,25 @@ class autoptimizeScripts extends autoptimizeBase {
 					
 					// unhide comments, as javascript may be wrapped in comment-tags for old times' sake
 					$tag = $this->restore_comments($tag);
-					if($this->ismergeable($tag) && ( apply_filters('autoptimize_js_include_inline',true) )) {
+					if($this->ismergeable($tag) && ( $this->include_inline )) {
 						preg_match('#<script.*>(.*)</script>#Usmi',$tag,$code);
 						$code = preg_replace('#.*<!\[CDATA\[(?:\s*\*/)?(.*)(?://|/\*)\s*?\]\]>.*#sm','$1',$code[1]);
 						$code = preg_replace('/(?:^\\s*<!--\\s*|\\s*(?:\\/\\/)?\\s*-->\\s*$)/','',$code);
 						$this->scripts[] = 'INLINE;'.$code;
 					} else {
-						//Can we move this?
-						if($this->ismovable($tag)) {
-							if($this->movetolast($tag))	{
-								$this->move['last'][] = $tag;
-							} else {
-								$this->move['first'][] = $tag;
-							}
-						} else {
+						// Can we move this?
+						// if($this->ismovable($tag)) {
+							// if($this->movetolast($tag))	{
+							//	$this->move['last'][] = $tag;
+							// } else {
+
+							//	$this->move['first'][] = $tag;
+							// }
+						$tag = '';
+						// } else {
 							//We shouldn't touch this
-							$tag = '';
-						}
+						//	$tag = '';
+						// }
 					}
 					// re-hide comments to be able to do the removal based on tag from $this->content
 					$tag = $this->hide_comments($tag);
@@ -191,7 +203,7 @@ class autoptimizeScripts extends autoptimizeBase {
 					if ($tmpscriptsrc!==$scriptsrc && !empty($tmpscriptsrc)) {
 						$scriptsrc=$tmpscriptsrc;
 						$this->alreadyminified=true;
-					} else if ((strpos($script,"min.js")!==false) && ($this->inject_min_late===true)){
+					} else if ((strpos($script,"min.js")!==false) && ($this->inject_min_late===true)) {
 						$scriptsrc="%%INJECTLATER%%".base64_encode($script)."%%INJECTLATER%%";
 					}
 					$this->jscode .= "\n".$scriptsrc;
@@ -220,7 +232,7 @@ class autoptimizeScripts extends autoptimizeBase {
 					unset($tmp_jscode);
 				}
 				$this->jscode = $this->inject_minified($this->jscode);
-				$this->jscode = apply_filters( 'autoptimize_js_after_minify', $this->jscode );
+				$tmp_jscode = apply_filters( 'autoptimize_js_after_minify', $tmp_jscode );
 				return true;
 			} else {
 				return false;
@@ -273,6 +285,7 @@ class autoptimizeScripts extends autoptimizeBase {
 		if (strlen($this->jscode)>0) {
 			$this->inject_in_html($bodyreplacement,$replaceTag);
 		}
+		
 
 		// restore comments
 		$this->content = $this->restore_comments($this->content);
