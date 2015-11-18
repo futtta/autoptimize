@@ -36,7 +36,7 @@ class autoptimizeStyles extends autoptimizeBase {
 		$this->cssinlinesize = apply_filters('autoptimize_filter_css_inlinesize',256);
 
 		// Remove everything that's not the header
-		if(($options['justhead'] == true) || (apply_filters('autoptimize_filter_css_justhead') == true)) {
+		if(($options['justhead'] == true) || (apply_filters('autoptimize_filter_css_justhead','false') == true)) {
 			$content = explode('</head>',$this->content,2);
 			$this->content = $content[0].'</head>';
 			$this->restofcontent = $content[1];
