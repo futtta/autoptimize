@@ -200,7 +200,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 
 </form>
 </div>
-<style>.autoptimize_banner ul li {font-size:medium;text-align:center;}</style>
+<style>.autoptimize_banner ul li {font-size:medium;text-align:center;} .unslider-arrow {left:unset;}</style>
 <div class="autoptimize_banner">
 	<ul>
 		<li><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>."); ?></li>
