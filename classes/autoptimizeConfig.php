@@ -88,7 +88,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Force JavaScript in &lt;head&gt;?','autoptimize'); ?></th>
 <td><label for="autoptimize_js_forcehead"><input type="checkbox" name="autoptimize_js_forcehead" <?php echo get_option('autoptimize_js_forcehead')?'checked="checked" ':''; ?>/>
-<?php _e('For new installations, AO will include JS in the head-section by default, but for performance reasons it is better to include JavaScript at the bottom of HTML.','autoptimize'); ?></label></td>
+<?php _e('If you force JavaScript in head, there is a smaller chance things get broken, but the optimized JS will remain render blocking (it is not deferred). If not forced in head, the optimized JS is deferred and as such not render blocking. Use this option if your inline code is not aggregated.','autoptimize'); ?></label></td>
 </tr>
 <?php if (get_option('autoptimize_js_justhead')) { ?>
 <tr valign="top" class="hidden js_sub ao_adv">
@@ -200,9 +200,16 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 
 </form>
 </div>
+<style>.autoptimize_banner ul li {font-size:medium;text-align:center;}</style>
+<div class="autoptimize_banner">
+	<ul>
+		<li><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>."); ?></li>
+		<li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=futtta"><?php _e("Try my other plugins!"); ?></a></li>
+	</ul>
+</div>
 <div style="float:right;width:30%" id="autoptimize_admin_feed">
-        <div style="margin:0px 15px 15px 15px;font-size:larger;"><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>."); ?></div>
-	<div style="margin:0px 15px 15px 15px;font-size:larger;"><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=futtta"><?php _e("Happy with Autoptimize? Try my other plugins!"); ?></a></div>
+
+
         <div style="margin-left:10px;margin-top:-5px;">
                 <h2>
                         <?php _e("futtta about","autoptimize") ?>
@@ -226,6 +233,9 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 
 	jQuery(document).ready(function() {
 		check_ini_state();
+		
+		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:5000});
+		
 		jQuery( "#ao_show_adv" ).click(function() {
 			jQuery( "#ao_show_adv" ).hide();
 			jQuery( "#ao_hide_adv" ).show();
@@ -343,13 +353,16 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	public function autoptimize_admin_scripts() {
 		wp_enqueue_script('jqzrssfeed', plugins_url('/external/js/jquery.zrssfeed.min.js', __FILE__), array('jquery'),null,true);
 		wp_enqueue_script('jqcookie', plugins_url('/external/js/jquery.cookie.min.js', __FILE__), array('jquery'),null,true);
+		wp_enqueue_script('unslider', plugins_url('/external/js/unslider-min.js', __FILE__), array('jquery'),null,true);
 	}
 
 	public function autoptimize_admin_styles() {
         	wp_enqueue_style('zrssfeed', plugins_url('/external/js/jquery.zrssfeed.css', __FILE__));
+		wp_enqueue_style('unslider', plugins_url('/external/js/unslider.css', __FILE__));
+		wp_enqueue_style('unslider-dots', plugins_url('/external/js/unslider-dots.css', __FILE__));
 	}
 
-	
+
 	public function registersettings() {
 		register_setting('autoptimize','autoptimize_html');
 		register_setting('autoptimize','autoptimize_html_keepcomments');
