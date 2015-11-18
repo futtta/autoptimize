@@ -232,7 +232,7 @@ class autoptimizeScripts extends autoptimizeBase {
 					unset($tmp_jscode);
 				}
 				$this->jscode = $this->inject_minified($this->jscode);
-				$tmp_jscode = apply_filters( 'autoptimize_js_after_minify', $tmp_jscode );
+				$this->jscode = apply_filters( 'autoptimize_js_after_minify', $this->jscode );
 				return true;
 			} else {
 				return false;
