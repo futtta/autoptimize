@@ -206,23 +206,21 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	<?php
 	$AO_banner=get_transient("autoptimize_banner");
 	if (empty($AO_banner)) {
-		$AO_banner = "<li>Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a></li><li>Happy with Autoptimize?<br /><a href=\"/plugin-install.php?tab=search&type=author&s=futtta\">Try my other plugins!</a></li>";
-				
 		$banner_resp = wp_remote_get("http://optimizingmatters.com/autoptimize_news.html");
 		if (!is_wp_error($banner_resp)) {
 			if (wp_remote_retrieve_response_code($banner_resp)=="200") {
-				$AO_banner = wp_remote_retrieve_body($banner_resp).$AO_banner;
+				$AO_banner = wp_remote_retrieve_body($banner_resp);
 				set_transient("autoptimize_banner",$AO_banner,DAY_IN_SECONDS);
 			}
 		}
 	}
 	echo $AO_banner;
 	?>
+	<li><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>."); ?></li>
+	<li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=futtta"><?php _e("Try my other plugins!"); ?></a></li>
 	</ul>
 </div>
 <div style="float:right;width:30%" id="autoptimize_admin_feed">
-
-
         <div style="margin-left:10px;margin-top:-5px;">
                 <h2>
                         <?php _e("futtta about","autoptimize") ?>
