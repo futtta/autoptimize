@@ -88,7 +88,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Force JavaScript in &lt;head&gt;?','autoptimize'); ?></th>
 <td><label for="autoptimize_js_forcehead"><input type="checkbox" name="autoptimize_js_forcehead" <?php echo get_option('autoptimize_js_forcehead')?'checked="checked" ':''; ?>/>
-<?php _e('If you force JavaScript in head, there is a smaller chance things get broken, but the optimized JS will remain render blocking (it is not deferred). If not forced in head, the optimized JS is deferred and as such not render blocking. Use this option if your inline code is not aggregated.','autoptimize'); ?></label></td>
+<?php _e('With this option enabled there is a smaller chance of things to break (especially if you are not aggregating inline JS), but the optimized JS will not be deferred and will remain render blocking.','autoptimize'); ?></label></td>
 </tr>
 <?php if (get_option('autoptimize_js_justhead')) { ?>
 <tr valign="top" class="hidden js_sub ao_adv">
@@ -97,10 +97,10 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <?php _e('Mostly useful in combination with previous option when using jQuery-based templates, but might help keeping cache size under control.','autoptimize'); ?></label></td>
 </tr>
 <?php } ?>
-<tr valign="top" class="hidden css_sub ao_adv">
+<tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Also aggregate inline JS?','autoptimize'); ?></th>
 <td><label for="autoptimize_js_include_inline"><input type="checkbox" name="autoptimize_js_include_inline" <?php echo get_option('autoptimize_js_include_inline')?'checked="checked" ':''; ?>/>
-<?php _e('Check this option for Autoptimize to also aggregate JS in the HTML.','autoptimize'); ?></label></td>
+<?php _e('Check this option for Autoptimize to also aggregate JS in the HTML. If this option is not enabled, you will probably have to "force JavaScript in head".','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
