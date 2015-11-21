@@ -3,7 +3,7 @@
 Plugin Name: Autoptimize
 Plugin URI: http://blog.futtta.be/autoptimize
 Description: Optimizes your website, concatenating the CSS and JavaScript code, and compressing it.
-Version: 1.9.4
+Version: 1.9.9
 Author: Frank Goossens (futtta)
 Author URI: http://blog.futtta.be/
 Domain Path: localization/
@@ -46,7 +46,7 @@ $conf = autoptimizeConfig::instance();
 /* Check if we're updating, in which case we might need to do stuff and flush the cache
 to avoid old versions of aggregated files lingering around */
 
-$autoptimize_version="1.9.3";
+$autoptimize_version="2.0.0";
 $autoptimize_db_version=get_option('autoptimize_version','none');
 
 if ($autoptimize_db_version !== $autoptimize_version) {
@@ -93,6 +93,23 @@ if ($autoptimize_db_version !== $autoptimize_version) {
 						update_option('autoptimize_css_exclude',$css_exclude);
 					}
 					switch_to_blog( $original_blog_id );
+				}
+			case "1.9":
+				/* 2.0 will not aggregate inline CSS/JS by default, but we want
+				users on 1.9 to keep their inline code aggregated by default */
+				if (!is_multisite() ) {
+					update_option('autoptimize_css_include_inline','on');
+					update_option('autoptimize_js_include_inline','on');
+				} else {
+					global $wpdb;
+					$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+					$original_blog_id = get_current_blog_id();
+					foreach ( $blog_ids as $blog_id ) {
+						switch_to_blog( $blog_id );
+						update_option('autoptimize_css_include_inline','on');
+						update_option('autoptimize_js_include_inline','on');
+					}
+					switch_to_blog( $original_blog_id );	
 				}
 		}
 	}
