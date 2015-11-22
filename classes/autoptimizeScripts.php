@@ -47,17 +47,19 @@ class autoptimizeScripts extends autoptimizeBase {
 			$this->include_inline = true;
 		}
 
+		// filters to override hardcoded do(nt)move(last) array contents (array in, array out!)
+		$this->dontmove = apply_filters( 'autoptimize_filter_js_dontmove', $this->dontmove );		
+		$this->domovelast = apply_filters( 'autoptimize_filter_js_movelast', $this->domovelast );
+		$this->domove = apply_filters( 'autoptimize_filter_js_domove', $this->domove );
+
 		// get extra exclusions settings or filter
 		$excludeJS = $options['js_exclude'];
 		$excludeJS = apply_filters( 'autoptimize_filter_js_exclude', $excludeJS );
-		
 		if ($excludeJS!=="") {
 			$exclJSArr = array_filter(array_map('trim',explode(",",$excludeJS)));
 			$this->dontmove = array_merge($exclJSArr,$this->dontmove);
 		}
-		
-		$this->domovelast = apply_filters( 'autoptimize_filter_js_movelast', $this->domovelast );
-		
+
 		//Should we add try-catch?
 		if($options['trycatch'] == true)
 			$this->trycatch = true;
