@@ -8,7 +8,7 @@ class autoptimizeScripts extends autoptimizeBase {
 	private $domovelast = array('addthis.com','/afsonline/show_afs_search.js','disqus.js','networkedblogs.com/getnetworkwidget','infolinks.com/js/','jd.gallery.js.php','jd.gallery.transitions.js','swfobject.embedSWF(','linkwithin.com/widget.js','tiny_mce.js','tinyMCEPreInit.go');
 	private $trycatch = false;
 	private $alreadyminified = false;
-	private $forcehead = false;
+	private $forcehead = true;
 	private $include_inline = false;
 	private $jscode = '';
 	private $url = '';
@@ -65,8 +65,11 @@ class autoptimizeScripts extends autoptimizeBase {
 			$this->trycatch = true;
 
 		// force js in head?	
-		if($options['forcehead'] == true)
+		if($options['forcehead'] == true) {
 			$this->forcehead = true;
+		} else {
+			$this->forcehead = false;
+		}
 
 		// get cdn url
 		$this->cdn_url = $options['cdn_url'];
