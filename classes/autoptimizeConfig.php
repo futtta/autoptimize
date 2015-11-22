@@ -430,7 +430,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 				'autoptimize_js_trycatch' => 0,
 				'autoptimize_js_justhead' => 0,
 				'autoptimize_js_include_inline' => 0,
-				'autoptimize_js_forcehead' => 0,
+				'autoptimize_js_forcehead' => 1,
 				'autoptimize_css' => 0,
 				'autoptimize_css_exclude' => "admin-bar.min.css, dashicons.min.css",
 				'autoptimize_css_justhead' => 0,
