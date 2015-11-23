@@ -123,6 +123,12 @@ class autoptimizeCache {
 			// fallback; schedule event and try to clear there
 			wp_schedule_single_event( time() + 1, 'ao_flush_pagecache' , array(time()));
 		}
+
+		add_action("after_setup_theme","autoptimize_do_cachepurged_action");
+		function autoptimize_do_cachepurged_action() {
+			do_action("autoptimize_action_cachepurged");
+		}
+
 		return true;
 	}
 
