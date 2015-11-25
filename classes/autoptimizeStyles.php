@@ -116,6 +116,7 @@ class autoptimizeStyles extends autoptimizeBase {
 						// No media specified - applies to all
 						$media = array('all');
 					}
+					$media = apply_filters( 'autoptimize_filter_css_tagmedia',$media,$tag );
 				
 					if(preg_match('#<link.*href=("|\')(.*)("|\')#Usmi',$tag,$source)) {
 						// <link>
