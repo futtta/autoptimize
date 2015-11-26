@@ -211,6 +211,8 @@ function autoptimize_start_buffering() {
 					@include(AUTOPTIMIZE_PLUGIN_DIR.'classes/external/php/minify-2.1.7-jsmin.php');
 				}
 			}
+			define('CONCATENATE_SCRIPTS',false);
+			define('COMPRESS_SCRIPTS',false);
 		}
 		
 		if($conf->get('autoptimize_css')) {
@@ -327,8 +329,8 @@ function autoptimize_flush_pagecache($nothing) {
                 $wpfc -> deleteCache();
         } else if ( class_exists("c_ws_plugin__qcache_purging_routines") ) {
                 c_ws_plugin__qcache_purging_routines::purge_cache_dir(); // quick cache
-		} else if ( class_exists("zencache")) {
-			zencache::clear(); // zen cache
+	} else if ( class_exists("zencache")) {
+		zencache::clear(); // zen cache
         } else if(file_exists(WP_CONTENT_DIR.'/wp-cache-config.php') && function_exists('prune_super_cache')){
                 // fallback for WP-Super-Cache
                 global $cache_path;
@@ -348,13 +350,11 @@ if ( autoptimizeCache::cacheavail() ) {
 	$conf = autoptimizeConfig::instance();
 	if( $conf->get('autoptimize_html') || $conf->get('autoptimize_js') || $conf->get('autoptimize_css') ) {
 		// Hook to wordpress
-        if (defined('AUTOPTIMIZE_INIT_EARLIER')) {
-            add_action('init','autoptimize_start_buffering',-1);
-
-        } else {
-            add_action('template_redirect','autoptimize_start_buffering',2);
-
-        }
+        	if (defined('AUTOPTIMIZE_INIT_EARLIER')) {
+        	    	add_action('init','autoptimize_start_buffering',-1);
+	        } else {
+			add_action('template_redirect','autoptimize_start_buffering',2);
+	        }
 	}
 } else {
 	add_action('admin_notices', 'autoptimize_cache_unavailable_notice');
