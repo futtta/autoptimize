@@ -312,7 +312,7 @@ class autoptimizeStyles extends autoptimizeBase {
 						}
 					}
 
-					if($ipath != false && preg_match('#\.(jpe?g|png|gif|bmp)$#',$ipath) && file_exists($ipath) && is_readable($ipath) && filesize($ipath) <= $datauri_max_size) {
+					if($ipath != false && preg_match('#\.(jpe?g|png|gif|bmp)$#i',$ipath) && file_exists($ipath) && is_readable($ipath) && filesize($ipath) <= $datauri_max_size) {
 						$ihash=md5($ipath);
 						$icheck = new autoptimizeCache($ihash,'img');
 						if($icheck->check()) {
