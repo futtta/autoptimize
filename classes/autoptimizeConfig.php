@@ -88,7 +88,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Force JavaScript in &lt;head&gt;?','autoptimize'); ?></th>
 <td><label for="autoptimize_js_forcehead"><input type="checkbox" name="autoptimize_js_forcehead" <?php echo get_option('autoptimize_js_forcehead')?'checked="checked" ':''; ?>/>
-<?php _e('With this option enabled there is a smaller chance of things to break (especially if you are not aggregating inline JS), but the optimized JS will not be deferred and will remain render blocking.','autoptimize'); ?></label></td>
+<?php _e('Load JavaScript early, reducing the chance of JS-errors but making it render blocking. You can disable this if you\'re not aggregating inline JS and you want JS to be deferred.','autoptimize'); ?></label></td>
 </tr>
 <?php if (get_option('autoptimize_js_justhead')) { ?>
 <tr valign="top" class="hidden js_sub ao_adv">
@@ -100,7 +100,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Also aggregate inline JS?','autoptimize'); ?></th>
 <td><label for="autoptimize_js_include_inline"><input type="checkbox" name="autoptimize_js_include_inline" <?php echo get_option('autoptimize_js_include_inline')?'checked="checked" ':''; ?>/>
-<?php _e('Check this option for Autoptimize to also aggregate JS in the HTML. If this option is not enabled, you will probably have to "force JavaScript in head".','autoptimize'); ?></label></td>
+<?php _e('Check this option for Autoptimize to also aggregate JS in the HTML. If this option is not enabled, you might have to "force JavaScript in head".','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
@@ -110,7 +110,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Add try-catch wrapping?','autoptimize'); ?></th>
 <td><label for="autoptimize_js_trycatch"><input type="checkbox" name="autoptimize_js_trycatch" <?php echo get_option('autoptimize_js_trycatch')?'checked="checked" ':''; ?>/>
-<?php _e('If your scripts break because of an script error, you might want to try this.','autoptimize'); ?></label></td>
+<?php _e('If your scripts break because of a JS-error, you might want to try this.','autoptimize'); ?></label></td>
 </tr>
 </table>
 
