@@ -264,8 +264,11 @@ class CSSmin
         // Normalize all whitespace strings to single spaces. Easier to work with that way.
         $css = preg_replace('/\s+/', ' ', $css);
 
-		// Fix IE7 issue on matrix filters which browser accept whitespaces between Matrix parameters
-		$css = preg_replace_callback('/\s*filter\:\s*progid:DXImageTransform\.Microsoft\.Matrix\(([^\)]+)\)/', array($this, 'preserve_old_IE_specific_matrix_definition'), $css);
+	// preserve flex, keeping percentage even if 0
+	$css = preg_replace_callback('/flex\s?:\s?([0-9 %]*)/i',array($this, 'replace_flex'),$css);
+
+	// Fix IE7 issue on matrix filters which browser accept whitespaces between Matrix parameters
+	$css = preg_replace_callback('/\s*filter\:\s*progid:DXImageTransform\.Microsoft\.Matrix\(([^\)]+)\)/', array($this, 'preserve_old_IE_specific_matrix_definition'), $css);
 
         // Shorten & preserve calculations calc(...) since spaces are important
         $css = preg_replace_callback('/calc(\(((?:[^\(\)]+|(?1))*)\))/i', array($this, 'replace_calc'), $css);
@@ -408,7 +411,8 @@ class CSSmin
 
         // restore preserved comments and strings in reverse order
         for ($i = count($this->preserved_tokens) - 1; $i >= 0; $i--) {
-            $css = preg_replace('/' . self::TOKEN . $i . '___/', $this->preserved_tokens[$i], $css, 1);
+			  $css = preg_replace('/' . self::TOKEN . $i . '___/', $this->preserved_tokens[$i], $css, 1);
+			  // $css.=$this->preserved_tokens[$i];
         }
 
         // Trim the final string (for any leading or trailing white spaces)
@@ -465,7 +469,9 @@ class CSSmin
 
             if ($found_terminator) {
                 $token = $this->str_slice($css, $start_index, $end_index);
-                $token = preg_replace('/\s+/', '', $token);
+				if (strpos($token,"<svg")===false) {
+					$token = preg_replace('/\s+/', '', $token);
+				}
                 $this->preserved_tokens[] = $token;
 
                 $preserver = 'url(' . self::TOKEN . (count($this->preserved_tokens) - 1) . '___)';
@@ -589,6 +595,12 @@ class CSSmin
         $this->preserved_tokens[] = trim($matches[2]);
         return 'calc('. self::TOKEN . (count($this->preserved_tokens) - 1) . '___' . ')';
     }
+    
+    private function replace_flex($matches)
+    {
+        $this->preserved_tokens[] = trim($matches[1]);
+        return 'flex:'.self::TOKEN . (count($this->preserved_tokens) - 1) . '___';
+    }   
 
 	private function preserve_old_IE_specific_matrix_definition($matches)
 	{
