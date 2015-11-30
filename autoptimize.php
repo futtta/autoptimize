@@ -211,8 +211,12 @@ function autoptimize_start_buffering() {
 					@include(AUTOPTIMIZE_PLUGIN_DIR.'classes/external/php/minify-2.1.7-jsmin.php');
 				}
 			}
-			define('CONCATENATE_SCRIPTS',false);
-			define('COMPRESS_SCRIPTS',false);
+			if ( ! defined( 'CONCATENATE_SCRIPTS' )) {
+				define('CONCATENATE_SCRIPTS',false);
+			}
+			if ( ! defined( 'COMPRESS_SCRIPTS' )) {
+				define('COMPRESS_SCRIPTS',false);
+			}
 		}
 		
 		if($conf->get('autoptimize_css')) {
@@ -226,9 +230,11 @@ function autoptimize_start_buffering() {
 					@include(AUTOPTIMIZE_PLUGIN_DIR.'classes/external/php/yui-php-cssmin-2.4.8-4_fgo.php');
 				}
 			}
-			define('COMPRESS_CSS',false);
+			if ( ! defined( 'COMPRESS_CSS' )) {
+				define('COMPRESS_CSS',false);
+			}
 		}
-				
+	
 		// Now, start the real thing!
 		ob_start('autoptimize_end_buffering');
 	}
