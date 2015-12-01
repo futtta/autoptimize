@@ -17,6 +17,7 @@ class autoptimizeScripts extends autoptimizeBase {
 	private $md5hash = '';
 	private $whitelist = '';
 	private $jsremovables = array();
+	private $inject_min_late = '';
 	
 	//Reads the page and collects script tags
 	public function read($options) {
@@ -46,6 +47,9 @@ class autoptimizeScripts extends autoptimizeBase {
 		if( apply_filters('autoptimize_js_include_inline',$options['include_inline']) == true ) {
 			$this->include_inline = true;
 		}
+
+		// filter to "late inject minified JS", default to true for now (it is faster)
+		$this->inject_min_late = apply_filters('autoptimize_filter_js_inject_min_late',true);
 
 		// filters to override hardcoded do(nt)move(last) array contents (array in, array out!)
 		$this->dontmove = apply_filters( 'autoptimize_filter_js_dontmove', $this->dontmove );		
