@@ -17,6 +17,7 @@ class autoptimizeStyles extends autoptimizeBase {
 	private $cssinlinesize = '';
 	private $cssremovables = array();
 	private $include_inline = false;
+	private $inject_min_late = '';
 
 	//Reads the page and collects style tags
 	public function read($options) {
@@ -34,6 +35,9 @@ class autoptimizeStyles extends autoptimizeBase {
 		}
 
 		$this->cssinlinesize = apply_filters('autoptimize_filter_css_inlinesize',256);
+
+		// filter to "late inject minified CSS", default to true for now (it is faster)
+		$this->inject_min_late = apply_filters('autoptimize_filter_css_inject_min_late',true);
 
 		// Remove everything that's not the header
 		if(($options['justhead'] == true) || (apply_filters('autoptimize_filter_css_justhead','false') == true)) {
