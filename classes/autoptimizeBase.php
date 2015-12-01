@@ -4,13 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 abstract class autoptimizeBase {
 	protected $content = '';
 	protected $tagWarning = false;
-	public $inject_min_late;
 	
 	public function __construct($content) {
 		$this->content = $content;
-		
-		// filter to "late inject minified CSS or JS", default to true for now (it is faster)
-		$this->inject_min_late = apply_filters('autoptimize_filter_cssjs_inject_min_late',true);
 	}
 	
 	//Reads the page and collects tags
