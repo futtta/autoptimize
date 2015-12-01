@@ -174,7 +174,7 @@ class autoptimizeStyles extends autoptimizeBase {
 				$css = preg_replace('#^INLINE;#','',$css);
 				$css = $this->fixurls(ABSPATH.'/index.php',$css);
 				$tmpstyle = apply_filters( 'autoptimize_css_individual_style', $css, "" );
-				if ($tmpstyle!==$css && !empty($tmpstyle)) {
+				if ( has_filter('autoptimize_css_individual_style') && !empty($tmpstyle) ) {
 					$css=$tmpstyle;
 					$this->alreadyminified=true;
 				}
@@ -185,7 +185,7 @@ class autoptimizeStyles extends autoptimizeBase {
 					$css = $this->fixurls($css,file_get_contents($css));
 					$css = preg_replace('/\x{EF}\x{BB}\x{BF}/','',$css);
 					$tmpstyle = apply_filters( 'autoptimize_css_individual_style', $css, $cssPath );
-					if ($tmpstyle!==$css && !empty($tmpstyle)) {
+					if (has_filter('autoptimize_css_individual_style') && !empty($tmpstyle)) {
 						$css=$tmpstyle;
 						$this->alreadyminified=true;
 					} else if ((strpos($cssPath,"min.css")!==false) && ($this->inject_min_late===true)) {
@@ -245,7 +245,7 @@ class autoptimizeStyles extends autoptimizeBase {
 							$code = addcslashes($this->fixurls($path,file_get_contents($path)),"\\");
 							$code = preg_replace('/\x{EF}\x{BB}\x{BF}/','',$code);
 							$tmpstyle = apply_filters( 'autoptimize_css_individual_style', $code, "" );
-							if ($tmpstyle!==$code && !empty($tmpstyle)) {
+							if ( has_filter('autoptimize_css_individual_style') && !empty($tmpstyle)) {
 								$code=$tmpstyle;
 								$this->alreadyminified=true;
 							} else if ((strpos($path,"min.css")!==false) && ($this->inject_min_late===true)) {
