@@ -563,7 +563,7 @@ LOD;
 		return $this->content;
 	}
 	
-	private function fixurls($file,$code) {
+	static function fixurls($file,$code) {
 		$file = str_replace(WP_ROOT_DIR,'/',$file);
 		$dir = dirname($file); //Like /wp-content
 
