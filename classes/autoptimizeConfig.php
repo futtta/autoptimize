@@ -120,10 +120,15 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <th scope="row"><?php _e('Optimize CSS Code?','autoptimize'); ?></th>
 <td><input type="checkbox" id="autoptimize_css" name="autoptimize_css" <?php echo get_option('autoptimize_css')?'checked="checked" ':''; ?>/></td>
 </tr>
-<tr class="css_sub" valign="top">
+<tr class="hidden css_sub ao_adv" valign="top">
 <th scope="row"><?php _e('Generate data: URIs for images?','autoptimize'); ?></th>
 <td><label for="autoptimize_css_datauris"><input type="checkbox" name="autoptimize_css_datauris" <?php echo get_option('autoptimize_css_datauris')?'checked="checked" ':''; ?>/>
 <?php _e('Enable this to include small background-images in the CSS itself instead of as seperate downloads.','autoptimize'); ?></label></td>
+</tr>
+<tr class="hidden css_sub ao_adv" valign="top">
+<th scope="row"><?php _e('Remove Google Fonts?','autoptimize'); ?></th>
+<td><label for="autoptimize_css_datauris"><input type="checkbox" name="autoptimize_css_nogooglefont" <?php echo get_option('autoptimize_css_nogooglefont')?'checked="checked" ':''; ?>/>
+<?php _e('Check this if you don\'t need or want Google Fonts being loaded.','autoptimize'); ?></label></td>
 </tr>
 <?php if (get_option('autoptimize_css_justhead')) { ?>
 <tr valign="top" class="hidden css_sub ao_adv">
@@ -391,6 +396,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 		register_setting('autoptimize','autoptimize_css_defer_inline');
 		register_setting('autoptimize','autoptimize_css_inline');
 		register_setting('autoptimize','autoptimize_css_include_inline');
+		register_setting('autoptimize','autoptimize_css_nogooglefont');
 		register_setting('autoptimize','autoptimize_cdn_url');
 		register_setting('autoptimize','autoptimize_cache_clean');
 		register_setting('autoptimize','autoptimize_cache_nogzip');
@@ -439,6 +445,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 				'autoptimize_css_defer_inline' => "",
 				'autoptimize_css_inline' => 0,
 				'autoptimize_css_datauris' => 0,
+				'autoptimize_css_nogooglefont' => 0,
 				'autoptimize_cdn_url' => "",
 				'autoptimize_cache_nogzip' => 1,
 				'autoptimize_show_adv' => 0
