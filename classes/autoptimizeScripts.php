@@ -193,7 +193,7 @@ class autoptimizeScripts extends autoptimizeBase {
 					$script = 'try{'.$script.'}catch(e){}';
 				}
 				$tmpscript = apply_filters( 'autoptimize_js_individual_script', $script, "" );
-				if ($tmpscript!==$script && !empty($tmpscript)) {
+				if ( has_filter('autoptimize_js_individual_script') && !empty($tmpscript) ) {
 					$script=$tmpscript;
 					$this->alreadyminified=true;
 				}
@@ -209,7 +209,7 @@ class autoptimizeScripts extends autoptimizeBase {
 						$scriptsrc = 'try{'.$scriptsrc.'}catch(e){}';
 					}
 					$tmpscriptsrc = apply_filters( 'autoptimize_js_individual_script', $scriptsrc, $script );
-					if ($tmpscriptsrc!==$scriptsrc && !empty($tmpscriptsrc)) {
+					if ( has_filter('autoptimize_js_individual_script') && !empty($tmpscriptsrc) ) {
 						$scriptsrc=$tmpscriptsrc;
 						$this->alreadyminified=true;
 					} else if ((strpos($script,"min.js")!==false) && ($this->inject_min_late===true)) {
