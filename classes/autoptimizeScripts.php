@@ -153,18 +153,16 @@ class autoptimizeScripts extends autoptimizeBase {
 						$this->scripts[] = 'INLINE;'.$code;
 					} else {
 						// Can we move this?
-						// if($this->ismovable($tag)) {
-							// if($this->movetolast($tag))	{
-							//	$this->move['last'][] = $tag;
-							// } else {
-
-							//	$this->move['first'][] = $tag;
-							// }
-						$tag = '';
-						// } else {
+						if($this->ismovable($tag)) {
+							if($this->movetolast($tag))	{
+								$this->move['last'][] = $tag;
+							} else {
+								$this->move['first'][] = $tag;
+							}
+						} else {
 							//We shouldn't touch this
-						//	$tag = '';
-						// }
+							$tag = '';
+						}
 					}
 					// re-hide comments to be able to do the removal based on tag from $this->content
 					$tag = $this->hide_comments($tag);
@@ -345,6 +343,7 @@ class autoptimizeScripts extends autoptimizeBase {
 	
 	//Checks agains the blacklist
 	private function ismovable($tag) {
+		return false;
 		foreach($this->domove as $match) {
 			if(strpos($tag,$match)!==false)	{
 				//Matched something
