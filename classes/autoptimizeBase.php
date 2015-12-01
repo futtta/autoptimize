@@ -293,8 +293,10 @@ abstract class autoptimizeBase {
 						if (get_option("autoptimize_js_trycatch")==="on") {
 							$filecontent="try{".$filecontent."}catch(e){}";
 						}
+					} else if ((substr($filepath,-4,4)===".css")) {
+						$filecontent=autoptimizeStyles::fixurls($filepath,$filecontent);
 					}
-	
+					
 					// return 
                                         return "\n".$filecontent;'
                                 ),
