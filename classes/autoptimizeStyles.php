@@ -29,7 +29,12 @@ class autoptimizeStyles extends autoptimizeBase {
 			$this->whitelist = array_filter(array_map('trim',explode(",",$whitelistCSS)));
 		}
 		
-		$removableCSS = apply_filters( 'autoptimize_filter_css_removables', '');
+		if ($options['nogooglefont'] == true) {
+			$removableCSS = "fonts.googleapis.com";
+		} else {
+			$removableCSS = "";
+		}
+		$removableCSS = apply_filters( 'autoptimize_filter_css_removables', $removableCSS);
 		if (!empty($removableCSS)) {
 			$this->cssremovables = array_filter(array_map('trim',explode(",",$removableCSS)));
 		}
