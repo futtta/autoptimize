@@ -41,7 +41,7 @@ class autoptimizeConfig {
 	
 	public function show() {
 ?>
-<style>input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:100;}</style>
+<style>input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:100;} #futtta_feed ul{list-style:outside;} #futtta_feed {font-size:medium; margin:0px 20px;}</style>
 
 <div class="wrap">
 
@@ -235,16 +235,26 @@ if (get_option('autoptimize_show_adv','0')=='1') {
                                 <option value="3"><?php _e("Web Technology","autoptimize") ?></option>
                         </select>
                 </h2>
-                <div id="futtta_feed"></div>
+                <div id="futtta_feed">
+       			<div id="autoptimizefeed">
+				<?php $this->getFutttaFeeds("http://feeds.feedburner.com/futtta_autoptimize"); ?>
+			</div>
+			<div id="wordpressfeed">
+				<?php $this->getFutttaFeeds("http://feeds.feedburner.com/futtta_wordpress"); ?>
+			</div>
+			<div id="webtechfeed">
+				<?php $this->getFutttaFeeds("http://feeds.feedburner.com/futtta_webtech"); ?>
+			</div>
+                </div>
         </div>
 	<div style="float:right;margin:50px 15px;"><a href="http://blog.futtta.be/2013/10/21/do-not-donate-to-me/" target="_blank"><img width="100px" height="85px" src="<?php echo content_url(); ?>/plugins/autoptimize/classes/external/do_not_donate_smallest.png" title="<?php _e("Do not donate for this plugin!"); ?>"></a></div>
 </div>
 
 <script type="text/javascript">
 	var feed = new Array;
-	feed[1]="http://feeds.feedburner.com/futtta_autoptimize";
-	feed[2]="http://feeds.feedburner.com/futtta_wordpress";
-	feed[3]="http://feeds.feedburner.com/futtta_webtech";
+	feed[1]="autoptimizefeed";
+	feed[2]="wordpressfeed";
+	feed[3]="webtechfeed";
 	cookiename="autoptimize_feed";
 
 	jQuery(document).ready(function() {
@@ -345,12 +355,8 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	}
 
 	function show_feed(id) {
-  		jQuery('#futtta_feed').rssfeed(feed[id], {
-			<?php if ( is_ssl() ) echo "ssl: true,"; ?>
-    			limit: 4,
-			date: true,
-			header: false
-  		});
+		jQuery('#futtta_feed').children().hide();
+		jQuery('#'+feed[id]).show();
 		jQuery("#feed_dropdown").val(id);
 		jQuery.cookie(cookiename,id,{ expires: 365 });
 	}
@@ -367,13 +373,11 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	}
 
 	public function autoptimize_admin_scripts() {
-		wp_enqueue_script('jqzrssfeed', plugins_url('/external/js/jquery.zrssfeed.min.js', __FILE__), array('jquery'),null,true);
 		wp_enqueue_script('jqcookie', plugins_url('/external/js/jquery.cookie.min.js', __FILE__), array('jquery'),null,true);
 		wp_enqueue_script('unslider', plugins_url('/external/js/unslider-min.js', __FILE__), array('jquery'),null,true);
 	}
 
 	public function autoptimize_admin_styles() {
-        	wp_enqueue_style('zrssfeed', plugins_url('/external/js/jquery.zrssfeed.css', __FILE__));
 		wp_enqueue_style('unslider', plugins_url('/external/js/unslider.css', __FILE__));
 		wp_enqueue_style('unslider-dots', plugins_url('/external/js/unslider-dots.css', __FILE__));
 	}
@@ -468,5 +472,31 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 			return $this->config[$key];
 		
 		return false;
+	}
+
+	private function getFutttaFeeds($url) {
+		$rss = fetch_feed( $url );
+		$maxitems = 0;
+
+		if ( ! is_wp_error( $rss ) ) {
+			$maxitems = $rss->get_item_quantity( 7 ); 
+			$rss_items = $rss->get_items( 0, $maxitems );
+		}
+		?>
+		<ul>
+			<?php if ( $maxitems == 0 ) : ?>
+				<li><?php _e( 'No items', 'autoptimize' ); ?></li>
+			<?php else : ?>
+				<?php foreach ( $rss_items as $item ) : ?>
+					<li>
+						<a href="<?php echo esc_url( $item->get_permalink() ); ?>"
+							title="<?php printf( __( 'Posted %s', 'autoptimize' ), $item->get_date('j F Y | g:i a') ); ?>">
+							<?php echo esc_html( $item->get_title() ); ?>
+						</a>
+					</li>
+				<?php endforeach; ?>
+			<?php endif; ?>
+		</ul>
+		<?php 
 	}
 }
