@@ -169,30 +169,27 @@ abstract class autoptimizeBase {
                         $comments_out=$comments_in;
                 }
                 return $comments_out;
-	}
+		}
 	
         protected function url_replace_cdn($url) {
                 if (!empty($this->cdn_url)) {
-                // first allow API filter to take care of CDN replacement
-                        $tmp_url = apply_filters( 'autoptimize_filter_base_replace_cdn',$url);
-                        if ($tmp_url === $url) {
-                                // secondly prepend domain-less absolute URL's
-                                if((substr($url,0,1)==='/')&&(substr($url,1,1)!=='/')) {
-                                       $url=rtrim($this->cdn_url,'/').$url;
-                                } else {
-                                        // three: replace full url's with scheme
-                                        $tmp_url=str_replace(AUTOPTIMIZE_WP_SITE_URL,rtrim($this->cdn_url,'/'),$url);
-                                        if ($tmp_url===$url) {
-                                                // last attempt; replace scheme-less URL's
-                                                $url=str_replace(preg_replace('/https?:/','',AUTOPTIMIZE_WP_SITE_URL),rtrim($this->cdn_url,'/'),$url);
-                                        } else {
-                                                $url=$tmp_url;
-                                        }
-                                }
-                        } else {
-                                $url=$tmp_url;
-                        }
+                    // secondly prepend domain-less absolute URL's
+                    if((substr($url,0,1)==='/')&&(substr($url,1,1)!=='/')) {
+                           $url=rtrim($this->cdn_url,'/').$url;
+                    } else {
+                            // three: replace full url's with scheme
+                            $tmp_url=str_replace(AUTOPTIMIZE_WP_SITE_URL,rtrim($this->cdn_url,'/'),$url);
+                            if ($tmp_url===$url) {
+                                    // last attempt; replace scheme-less URL's
+                                    $url=str_replace(preg_replace('/https?:/','',AUTOPTIMIZE_WP_SITE_URL),rtrim($this->cdn_url,'/'),$url);
+                            } else {
+                                    $url=$tmp_url;
+                            }
+                    }
                 }
+
+	            // allow API filter to take care of CDN replacement
+	            $url = apply_filters( 'autoptimize_filter_base_replace_cdn',$url);
                 return $url;
         }
 
