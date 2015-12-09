@@ -212,7 +212,6 @@ abstract class autoptimizeBase {
 			} else {
 				// get wordpress base URL
 				$WPSiteBreakdown = parse_url( AUTOPTIMIZE_WP_SITE_URL );
-				$WPSiteBreakdown = parse_url( AUTOPTIMIZE_WP_SITE_URL );
 				$WPBaseUrl       = $WPSiteBreakdown['scheme'] . '://' . $WPSiteBreakdown['host'];
 				if ( ! empty( $WPSiteBreakdown['port'] ) ) {
 					$WPBaseUrl .= ":" . $WPSiteBreakdown['port'];
