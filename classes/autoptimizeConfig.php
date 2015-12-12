@@ -214,7 +214,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 		$banner_resp = wp_remote_get("http://optimizingmatters.com/autoptimize_news.html");
 		if (!is_wp_error($banner_resp)) {
 			if (wp_remote_retrieve_response_code($banner_resp)=="200") {
-				$AO_banner = wp_remote_retrieve_body($banner_resp);
+				$AO_banner = wp_kses_post(wp_remote_retrieve_body($banner_resp));
 				set_transient("autoptimize_banner",$AO_banner,DAY_IN_SECONDS);
 			}
 		}
