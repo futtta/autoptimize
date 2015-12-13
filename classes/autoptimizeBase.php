@@ -205,30 +205,33 @@ abstract class autoptimizeBase {
 	}
 
 	protected function url_replace_cdn( $url ) {
-		if ( ! empty( $this->cdn_url ) ) {
-			// secondly prepend domain-less absolute URL's
-			if ( ( substr( $url, 0, 1 ) === '/' ) && ( substr( $url, 1, 1 ) !== '/' ) ) {
-				$url = rtrim( $this->cdn_url, '/' ) . $url;
-			} else {
-				// get wordpress base URL
-				$WPSiteBreakdown = parse_url( AUTOPTIMIZE_WP_SITE_URL );
-				$WPBaseUrl       = $WPSiteBreakdown['scheme'] . '://' . $WPSiteBreakdown['host'];
-				if ( ! empty( $WPSiteBreakdown['port'] ) ) {
-					$WPBaseUrl .= ":" . $WPSiteBreakdown['port'];
-				}
-				// three: replace full url's with scheme
-				$tmp_url = str_replace( $WPBaseUrl, rtrim( $this->cdn_url, '/' ), $url );
-				if ( $tmp_url === $url ) {
-					// last attempt; replace scheme-less URL's
-					$url = str_replace( preg_replace( '/https?:/', '', $WPBaseUrl ), rtrim( $this->cdn_url, '/' ), $url );
+		if ( ! ( 0 === strpos( $url, 'data:image' ) ) ) {
+			if ( ! empty( $this->cdn_url ) ) {
+				// secondly prepend domain-less absolute URL's
+				if ( ( substr( $url, 0, 1 ) === '/' ) && ( substr( $url, 1, 1 ) !== '/' ) ) {
+					$url = rtrim( $this->cdn_url, '/' ) . $url;
 				} else {
-					$url = $tmp_url;
+					// get wordpress base URL
+					$WPSiteBreakdown = parse_url( AUTOPTIMIZE_WP_SITE_URL );
+					$WPBaseUrl       = $WPSiteBreakdown['scheme'] . '://' . $WPSiteBreakdown['host'];
+					if ( ! empty( $WPSiteBreakdown['port'] ) ) {
+						$WPBaseUrl .= ":" . $WPSiteBreakdown['port'];
+					}
+					// three: replace full url's with scheme
+					$tmp_url = str_replace( $WPBaseUrl, rtrim( $this->cdn_url, '/' ), $url );
+					if ( $tmp_url === $url ) {
+						// last attempt; replace scheme-less URL's
+						$url = str_replace( preg_replace( '/https?:/', '', $WPBaseUrl ), rtrim( $this->cdn_url, '/' ), $url );
+					} else {
+						$url = $tmp_url;
+					}
 				}
 			}
+
+			// allow API filter to take care of CDN replacement
+			$url = apply_filters( 'autoptimize_filter_base_replace_cdn', $url );
 		}
 
-		// allow API filter to take care of CDN replacement
-		$url = apply_filters( 'autoptimize_filter_base_replace_cdn', $url );
 		return $url;
 	}
 
