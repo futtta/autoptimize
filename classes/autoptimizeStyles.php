@@ -297,7 +297,7 @@ class autoptimizeStyles extends autoptimizeBase {
 
 			// Do the imaging!
 			$imgreplace = array();
-			preg_match_all('#(background[^;}]*url\((?!data)(.*)\)[^;}]*)(?:;|$|})#Usm',$code,$matches);
+			preg_match_all('#(background[^;}]*url\((?!\s?"?\s?data)(.*)\)[^;}]*)(?:;|$|})#Usm',$code,$matches);
 			
 			if(($this->datauris == true) && (function_exists('base64_encode')) && (is_array($matches)))	{
 				foreach($matches[2] as $count => $quotedurl) {
