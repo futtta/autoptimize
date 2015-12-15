@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Autoptimize v1.9.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-12-02 21:53+0200\n"
+"PO-Revision-Date: 2015-12-09 14:48+0200\n"
 "Last-Translator: ZAnatoly <zanatoly.web@gmail.com>\n"
 "Language-Team: SebWeo.com\n"
 "MIME-Version: 1.0\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%100/10==1 ? 2 : n%10==1 ? 0 : (n"
 "+9)%10>3 ? 2 : 1;\n"
-"X-Generator: Poedit 1.6.11\n"
+"X-Generator: Poedit 1.7.3\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
@@ -24,13 +24,13 @@ msgstr ""
 #. translators: plugin header field 'Name'
 #: autoptimize.php:0 classes/autoptimizeConfig.php:190
 msgid "Autoptimize"
-msgstr ""
+msgstr "Autoptimize"
 
 # @ autoptimize
 #. translators: plugin header field 'PluginURI'
 #: autoptimize.php:0
 msgid "http://blog.futtta.be/autoptimize"
-msgstr ""
+msgstr "http://blog.futtta.be/autoptimize"
 
 # @ autoptimize
 #. translators: plugin header field 'Description'
@@ -46,19 +46,19 @@ msgstr ""
 #. translators: plugin header field 'Author'
 #: autoptimize.php:0
 msgid "Frank Goossens (futtta)"
-msgstr ""
+msgstr "Frank Goossens (futtta)"
 
 # @ autoptimize
 #. translators: plugin header field 'AuthorURI'
 #: autoptimize.php:0
 msgid "http://blog.futtta.be/"
-msgstr ""
+msgstr "http://blog.futtta.be/"
 
 # @ autoptimize
 #. translators: plugin header field 'Version'
 #: autoptimize.php:0
 msgid "1.9.1"
-msgstr ""
+msgstr "1.9.1"
 
 # @ autoptimize
 #: autoptimize.php:124
@@ -355,17 +355,17 @@ msgstr "про futtta"
 # @ autoptimize
 #: classes/autoptimizeConfig.php:191
 msgid "WordPress"
-msgstr ""
+msgstr "WordPress"
 
 # @ autoptimize
 #: classes/autoptimizeConfig.php:192
 msgid "Web Technology"
-msgstr ""
+msgstr "Веб Технології"
 
 # @ default
 #: classes/autoptimizeConfig.php:197
 msgid "Do not donate for this plugin!"
-msgstr ""
+msgstr "Не жертвуйте гроші на цей плагін!"
 
 # @ autoptimize
 #: classes/autoptimizeConfig.php:316
@@ -375,4 +375,4 @@ msgstr "Опції Autoptimize"
 # @ default
 #: classes/autoptimizeConfig.php:361 classes/autoptimizeConfig.php:367
 msgid "Settings"
-msgstr ""
+msgstr "Налаштування"
