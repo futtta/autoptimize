@@ -10,7 +10,7 @@ Autoptimize speeds up your website and helps you save bandwidth by aggregating a
 
 == Description ==
 
-Autoptimize makes optimizing your site really easy. It concatenates all scripts and styles, minifies and compresses them, adds expires headers, caches them, and moves styles to the page head, and scripts to the footer. It also minifies the HTML code itself, making your page really lightweight. There are advanced options available to enable you to tailor Autoptimize to each and every site's specific need.
+Autoptimize makes optimizing your site really easy. It concatenates all scripts and styles, minifies and compresses them, adds expires headers, caches them, and moves styles to the page head and can move scripts to the footer. It also minifies the HTML code itself, making your page really lightweight. There are advanced options and an extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
 
 If you consider performance important, you really should use a caching-plugin such as e.g. [WP Super Cache](http://wordpress.org/extend/plugins/wp-super-cache/) or 
 [HyperCache](http://wordpress.org/extend/plugins/hyper-cache/) to complement Autoptimize.
@@ -27,7 +27,7 @@ Just install from your WordPress "Plugins > Add New" screen and all will be well
 
 = What does the plugin do to help speed up my site? =
 
-It concatenates all scripts and styles, minifies and compresses them, adds expires headers, caches them, and moves styles to the page head, and scripts to the footer. It also minifies the HTML code itself, making your page really lightweight.
+It concatenates all scripts and styles, minifies and compresses them, adds expires headers, caches them, and moves styles to the page head, and scripts (optionally) to the footer. It also minifies the HTML code itself, making your page really lightweight.
 
 = Will this work with my blog? =
 
@@ -39,17 +39,17 @@ CSS in general should go in the head of the document. Recently a.o. Google start
 
 = But how can one find out what the "above the fold CSS" is? =
 
-There's no easy solution for that as "above the fold" depends on where the fold is, which in turn depends on screensize. There are some tools available however, which try to identify just what is "above the fold". [This list of tools](https://github.com/addyosmani/above-the-fold-css-tools) is a great starting point and esp. [http://jonassebastianohlsson.com/criticalpathcssgenerator/](http://jonassebastianohlsson.com/criticalpathcssgenerator/) is an easy solution if you're not into node.js yourself.
+There's no easy solution for that as "above the fold" depends on where the fold is, which in turn depends on screensize. There are some tools available however, which try to identify just what is "above the fold". [This list of tools](https://github.com/addyosmani/above-the-fold-css-tools) is a great starting point and esp. [http://jonassebastianohlsson.com/criticalpathcssgenerator/](http://jonassebastianohlsson.com/criticalpathcssgenerator/) is an easy solution if you're not into node.js yourself. Alternatively [this bookmarklet](https://gist.github.com/PaulKinlan/6284142) (Chrome-only) can be helpful as well. 
 
 = Or should you inline all CSS? =
 
-The short answer: if you just want to improve your (mobile) pagespeed score; yes, otherwise maybe not.
+The short answer: probably not (but I do).
 
-Back in the days CSS optimization was easy; put all CSS in your head, aggregating everything in one CSS-file per media-type and you were good to go. But ever since Google included mobile in PageSpeed Insights and started complaining about redering blocking CSS, things got messy (see "deferring CSS" elsewhere in this FAQ). One of the solutions is inlining all your CSS, which as of Autoptimize 1.8.0 is supported.
+Back in the days CSS optimization was easy; put all CSS in your head, aggregating everything in one CSS-file per media-type and you were good to go. But ever since Google included mobile in PageSpeed Insights and started complaining about render blocking CSS, things got messy (see "deferring CSS" elsewhere in this FAQ). One of the solutions is inlining all your CSS, which as of Autoptimize 1.8.0 is supported.
 
-Inlining all CSS has one clear advantage (better PageSpeed score) and one big disadvantage; your base HTML-page gets significantly bigger. The fact that the HTML gets heavier as such is not a huge issue; when looking at performance for a single page request/ response, performance will be better, as there's no overhead of one or more extra requests for CSS-files. But when looking at a test that includes multiple requests (let's say 5), performance will be worse, as the CSS-payload is sent over whereas normally the seperate CSS-files would not need to be sent any more as they would be in cache.
+Inlining all CSS has one clear advantage (better PageSpeed score) and one big disadvantage; your base HTML-page gets significantly bigger and if the amount of CSS is big, Pagespeed Insights will complain of "roundtrip times". Also when looking at a test that includes multiple requests (let's say 5 pages), performance will be worse, as the CSS-payload is sent over again and again whereas normally the seperate CSS-files would not need to be sent any more as they would be in cache.
 
-So the choice should be based on your answer to some site-specific questions; what is your site's bounce rate? How many pages per visit do your visitors request? If you have a high bounce rate and a low number of average pages per visit, inlining CSS looks like a good idea. But with a high number of pages/ visit, it's probably not a good idea. Except if all you care about is a stellar PageSpeed-score, off course.
+So the choice should be based on your answer to some site-specific questions; how much CSS do you have? How many pages per visit do your visitors request? If you have a lot of CSS o a high number of pages/ visit, it's probably not a good idea to inline all CSS. But I do (as I have a low amount of average requests/ visitor and only a small amount of CSS as I use a pretty simple theme).
 
 You can find more information on this topic [in this blog post](http://blog.futtta.be/2014/02/13/should-you-inline-or-defer-blocking-css/).
 
@@ -59,20 +59,16 @@ Autoptimize does not have its proper cache purging mechanism, as this could remo
 
 You can however keep the cache size at an acceptable level by either:
 
-* ticking the "look only in head" option for JS and/or CSS.
+* disactivating the "aggregate inline JS" and/ or "aggregate inline CSS" options
 * excluding JS-variables (or sometimes CSS-selectors) that change on a per page (or per pageload) basis. You can read how you can do that [in this blogpost](http://blog.futtta.be/2014/03/19/how-to-keep-autoptimizes-cache-size-under-control-and-improve-visitor-experience/).
-* using the API to force AO not to aggregate inline JS (this will become an option in the next AO-version), adding e.g. this code to your (child) theme's functions.php:
 
-`add_filter('autoptimize_js_include_inline','readme_ao_js_include_inline',10,1);
-function readme_ao_js_include_inline() {
-        return false;
-}`
+= Where is the "look only in head" option? =
 
-There's also a filter to stop inline CSS from being aggregated ("autoptimize_css_include_inline"), see example-code in autoptimize_helper.php_example if the amount of autoptimized CSS-files would become to high.
+While "look only in head" still works, it is now (since Autoptimize 2.0 no longer visible on the settings-page if it is not active. As long as the option is active (for JS or CSS), it will however remain visible until you deactivate it. If you're comfortable with PHP, there however still are filters available to keep on using "look only in head".
 
-= Why is "look only in head" marked as deprecated =
+= So should I aggregate inline CSS/ JS? =
 
-While "look only in head" still works, it will in the next major version be replaced by an option to choose if inline JS/ CSS should be autoptimized (which is much more useful). So this is just a small heads up, really.
+Before Autoptimize 2.0, inline code was always optimized with all CSS pushed in the head-section and all JS at the end with a defer-flag. This often caused 2 problems; the priority of inline CSS got lost and inline JS could contain page- or request-specific code which broke Autoptimize's caching mechanism leading to too many cached files and the minification running over and over. This is why as from 2.0 by default inline code is not optimized (except for those upgrading from previous versions). Additionally, to avoid inline JS breaking because the optimized JS is not available, JS is forced in head by default. If you want to squeeze out as much performance as possible, you should indeed tick the "aggregate inline"-options and disable "force JS into head", while off course keeping an eye out for the disadvantages listed above.
 
 = What can I do with the API? =
 
@@ -106,9 +102,9 @@ After having installed and activated the plugin, you'll have access to an admin 
 
 If your blog doesn't function normally after having turned on Autoptimize, here are some pointers to identify & solve such issues using "advanced settings":
 
-* If all works but you notice your blog is slower, ensure you have a page caching plugin installed (WP Super Cache or similar).
+* If all works but you notice your blog is slower, ensure you have a page caching plugin installed (WP Super Cache or similar) and check the info on cache size (the solution for that problem also impacts performance for uncached pages) in this FAQ as well.
 * In case your blog looks weird, i.e. when the layout gets messed up, there is problem with CSS optimization. In this case you can turn on the option "Look for styles on just head?" and see if that solves the problem. You can also force CSS not to be aggregated by wrapping it in noptimize-tags in your theme or widget or by adding filename (for external stylesheets) or string (for inline styles) to the exclude-list.
-* In case some functionality on your site stops working (a carroussel, a menu, the search input, ...) you're likely hitting JavaScript optimization trouble. Enable the option "Look for scripts only in head?" and/or "Force JavaScript in <head>?" and/or "[Add try/catch wrapping](http://blog.futtta.be/2014/08/18/when-should-you-trycatch-javascript/)" and try again. Alternatively -for the technically savvy- you can exclude specific scripts from being treated (moved and/ or aggregated) by Autoptimize by adding a string that will match the offending Javascript or excluding it from within your template files or widgets by wrapping the code between noptimize-tags. Identifying the offending JavaScript and choosing the correct exclusion-string can be trial and error, but in the majority of cases JavaScript optimization issues can be solved this way.
+* In case some functionality on your site stops working (a carroussel, a menu, the search input, ...) you're likely hitting JavaScript optimization trouble. Disable the option "Aggregate inline JS" and activate "Force JavaScript in <head>?" (and optionally "[Add try/catch wrapping](http://blog.futtta.be/2014/08/18/when-should-you-trycatch-javascript/)") and try again. Alternatively -for the technically savvy- you can exclude specific scripts from being treated (moved and/ or aggregated) by Autoptimize by adding a string that will match the offending Javascript or excluding it from within your template files or widgets by wrapping the code between noptimize-tags. Identifying the offending JavaScript and choosing the correct exclusion-string can be trial and error, but in the majority of cases JavaScript optimization issues can be solved this way. When debugging JavaScript issues, your browsers error console is the most important tool to help you understand what is going on.
 * If your theme uses jQuery, you can try either forcing all in head or excluding jquery(-min).js (and jQuery-plugins if needed).
 * If you can't get either CSS or JS optimization working, you can off course always continue using the other two optimization-techniques.
 * If you tried the troubleshooting tips above and you still can't get CSS and JS working at all, you can ask for support on the [WordPress Autoptimize support forum](http://wordpress.org/support/plugin/autoptimize). See below for a description of what information you should provide in your "trouble ticket"
@@ -175,6 +171,17 @@ You can report problems on the [wordpress.org support forum](http://wordpress.or
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.0.0 =
+* On average 30% faster minification!
+* New: Option to (de-)activate aggregation of inline JS and CSS.
+* New: Option to remove Google Fonts.
+* New: Cache-size will be checked daily and a notice will be shown on wp-admin if cache size goes over 512 MB (can be changed by filter).
+* New: Small autoptimized CSS (less then 256 characters, can be changed by filter) will be inlined instead of linked.
+* New in API: filters to declare a JS and CSS whitelist, where only files in that whitelist are autoptimized and all others are left untouched.
+* New in API: filters to declare “removable” CSS and JS, upon which Autoptimize will simply delete that code (emoji CSS/JS for example, if you prefer not to dequeue them).
+* lots of small and bigger bugfixes, I won’t bother you with a full list but have a look at [the commmit log on GitHub](https://github.com/futtta/autoptimize/commits/master).
+* tested and confirmed working with PHP7
 
 = 1.9.4 =
 * bugfix: make sure non-AO CSSmin doesn't get fed 2 parameters (as some only expect one, which resulted in an internal server error), based on [feedback from zerooverture and zamba](https://wordpress.org/support/topic/error-code-500internal-server-error?replies=7)
