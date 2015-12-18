@@ -265,7 +265,7 @@ class CSSmin
         $css = preg_replace('/\s+/', ' ', $css);
 
 	// preserve flex, keeping percentage even if 0
-	$css = preg_replace_callback('/flex\s?:\s?([0-9 %]*)/i',array($this, 'replace_flex'),$css);
+	$css = preg_replace_callback('/flex\s?:\s?([0-9 %]*(?:auto)?)/i',array($this, 'replace_flex'),$css);
 
 	// Fix IE7 issue on matrix filters which browser accept whitespaces between Matrix parameters
 	$css = preg_replace_callback('/\s*filter\:\s*progid:DXImageTransform\.Microsoft\.Matrix\(([^\)]+)\)/', array($this, 'preserve_old_IE_specific_matrix_definition'), $css);
