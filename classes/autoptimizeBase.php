@@ -274,7 +274,7 @@ abstract class autoptimizeBase {
 					if (substr($filepath,-3,3)===".js") {
 						$filecontent=preg_replace("#^\s*\/\/.*$#Um","",$filecontent);
 					}
-					$filecontent=preg_replace("#\/\*[^!].*\*\/\s?#Us","",$filecontent);
+					$filecontent=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Us","",$filecontent);
 					$filecontent=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $filecontent);
 
 					// specific stuff for JS-files
