@@ -242,9 +242,11 @@ class autoptimizeScripts extends autoptimizeBase {
 				$this->jscode = apply_filters( 'autoptimize_js_after_minify', $this->jscode );
 				return true;
 			} else {
+				$this->jscode = $this->inject_minified($this->jscode);
 				return false;
 			}
 		  } else {
+		  	$this->jscode = $this->inject_minified($this->jscode);
 			return false;
 		  }
 		}
