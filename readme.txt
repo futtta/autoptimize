@@ -123,6 +123,20 @@ The "legacy minifiers" will remain in Autoptimize "for ever" and changes to wp-c
 
 If you are running Apache, the htaccess file written by Autoptimize can in some cases conflict with the AllowOverrides settings of your Apache configuration (as is the case with the default configuration of some Ubuntu installations), which results in "internal server errors" on the autoptimize CSS- and JS-files. This can be solved by [setting AllowOverrides to All](http://httpd.apache.org/docs/2.4/mod/core.html#allowoverride).
 
+= My Autoptimized CSS/ JS is broken after upgrading from 1.9.4 to 2.0! =
+
+One of the bigger changes in Autoptimize 2.0 is that files that have "min.js" or "min.css" in their name are considered already minified and are only injected into the aggregated code after the actual minification, because this has an important performance-benefit. Although this has been tested rather thoroughly, it is possible that this approach does not always work. You can turn this behavior off by hooking into Autoptimize's API, like this;
+
+`
+add_filter('autoptimize_filter_js_inject_min_late','no_late_inject');
+add_filter('autoptimize_filter_css_inject_min_late','no_late_inject');
+function no_late_inject() {
+	return false;
+}
+`
+
+Obviously you can choose to do this for only CSS, JS or both (as in example).
+
 = I use NextGen Galleries and a lot of JS is not aggregated/ minified? =
 
 NextGen Galleries does some nifty stuff to add JavaScript. In order for Autoptimize to be able to aggregate that, you'll need to tell it to initialize earlier, by adding this to your wp-config.php:
