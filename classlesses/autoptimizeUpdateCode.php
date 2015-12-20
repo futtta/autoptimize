@@ -15,9 +15,6 @@ switch($autoptimize_major_version) {
 		foreach ($to_delete_options as $del_opt) {
 			delete_option( $del_opt );
 		}
-
-		// and notify user to check result
-		add_action('admin_notices', 'autoptimize_update_config_notice');
 	case "1.7":
 		// force 3.8 dashicons in CSS exclude options when upgrading from 1.7 to 1.8
 		if ( !is_multisite() ) {
@@ -45,10 +42,11 @@ switch($autoptimize_major_version) {
 			switch_to_blog( $original_blog_id );
 		}
 	case "1.9":
-		/* 2.0 will not aggregate inline CSS/JS by default, but we want
-		* users on 1.9 to keep their inline code aggregated by default. 
+		/* 
+		* 2.0 will not aggregate inline CSS/JS by default, but we want users
+		* upgrading from 1.9 to keep their inline code aggregated by default. 
 		*/
-		if (!is_multisite() ) {
+		if ( !is_multisite() ) {
 			update_option('autoptimize_css_include_inline','on');
 			update_option('autoptimize_js_include_inline','on');
 		} else {
@@ -64,4 +62,6 @@ switch($autoptimize_major_version) {
 		}
 	}
 
+// and finally clear cache and and notify user to check result
 autoptimizeCache::clearall();
+add_action('admin_notices', 'autoptimize_update_config_notice');
