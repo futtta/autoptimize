@@ -2,8 +2,10 @@
 /* 
 * below code handles updates and is only included by autoptimize.php if/ when needed
 */
-		
+
+$majorUp = false;		
 $autoptimize_major_version=substr($autoptimize_db_version,0,3);
+
 switch($autoptimize_major_version) {
 	case "1.6":
 		// from back in the days when I did not yet consider multisite
@@ -15,6 +17,7 @@ switch($autoptimize_major_version) {
 		foreach ($to_delete_options as $del_opt) {
 			delete_option( $del_opt );
 		}
+		$majorUp = true;
 	case "1.7":
 		// force 3.8 dashicons in CSS exclude options when upgrading from 1.7 to 1.8
 		if ( !is_multisite() ) {
@@ -41,6 +44,7 @@ switch($autoptimize_major_version) {
 			}
 			switch_to_blog( $original_blog_id );
 		}
+		$majorUp = true;
 	case "1.9":
 		/* 
 		* 2.0 will not aggregate inline CSS/JS by default, but we want users
@@ -60,8 +64,11 @@ switch($autoptimize_major_version) {
 			}
 			switch_to_blog( $original_blog_id );	
 		}
+		$majorUp = true;
 	}
 
-// and finally clear cache and and notify user to check result
-autoptimizeCache::clearall();
-add_action('admin_notices', 'autoptimize_update_config_notice');
+if ( $majorUp === true ) {
+	// clear cache and notify user to check result if major upgrade
+	autoptimizeCache::clearall();
+	add_action('admin_notices', 'autoptimize_update_config_notice');
+}
