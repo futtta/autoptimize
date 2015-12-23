@@ -203,6 +203,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * New: Small autoptimized CSS (less then 256 characters, can be changed by filter) will be inlined instead of linked.
 * New in API: filters to declare a JS and CSS whitelist, where only files in that whitelist are autoptimized and all others are left untouched.
 * New in API: filters to declare “removable” CSS and JS, upon which Autoptimize will simply delete that code (emoji CSS/JS for example, if you prefer not to dequeue them).
+* New in API: filter to move fonts to CDN as well.
 * lots of small and bigger bugfixes, I won’t bother you with a full list but have a look at [the commmit log on GitHub](https://github.com/futtta/autoptimize/commits/master).
 * tested and confirmed working with PHP7
 
