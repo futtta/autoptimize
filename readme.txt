@@ -15,6 +15,8 @@ Autoptimize makes optimizing your site really easy. It concatenates all scripts 
 If you consider performance important, you really should use a caching-plugin such as e.g. [WP Super Cache](http://wordpress.org/extend/plugins/wp-super-cache/) or 
 [HyperCache](http://wordpress.org/extend/plugins/hyper-cache/) to complement Autoptimize.
 
+(Image under creative commons by LL Twistiti, https://www.flickr.com/photos/twistiti/818552808/)
+
 == Installation ==
 
 Just install from your WordPress "Plugins > Add New" screen and all will be well. Manual installation is very straightforward as well:
@@ -196,7 +198,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.0.0 =
-* On average 30% faster minification!
+* On average 30% faster minification (more info [in this blogpost](http://blog.futtta.be/2015/12/22/making-autoptimize-faster/))!
 * New: Option to (de-)activate aggregation of inline JS and CSS.
 * New: Option to remove Google Fonts.
 * New: Cache-size will be checked daily and a notice will be shown on wp-admin if cache size goes over 512 MB (can be changed by filter).
