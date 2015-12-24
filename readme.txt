@@ -15,7 +15,7 @@ Autoptimize makes optimizing your site really easy. It concatenates all scripts 
 If you consider performance important, you really should use a caching-plugin such as e.g. [WP Super Cache](http://wordpress.org/extend/plugins/wp-super-cache/) or 
 [HyperCache](http://wordpress.org/extend/plugins/hyper-cache/) to complement Autoptimize.
 
-(Image under creative commons by LL Twistiti, https://www.flickr.com/photos/twistiti/818552808/)
+(Image under creative commons [by LL Twistiti](https://www.flickr.com/photos/twistiti/818552808/))
 
 == Installation ==
 
