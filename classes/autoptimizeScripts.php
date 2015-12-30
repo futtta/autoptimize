@@ -345,7 +345,10 @@ class autoptimizeScripts extends autoptimizeBase {
 	
 	//Checks agains the blacklist
 	private function ismovable($tag) {
-		return false;
+		if ($this->include_inline !== true) {
+			return false;
+		}
+		
 		foreach($this->domove as $match) {
 			if(strpos($tag,$match)!==false)	{
 				//Matched something
