@@ -209,17 +209,19 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <div class="autoptimize_banner">
 	<ul>
 	<?php
-	$AO_banner=get_transient("autoptimize_banner");
-	if (empty($AO_banner)) {
-		$banner_resp = wp_remote_get("http://optimizingmatters.com/autoptimize_news.html");
-		if (!is_wp_error($banner_resp)) {
-			if (wp_remote_retrieve_response_code($banner_resp)=="200") {
-				$AO_banner = wp_kses_post(wp_remote_retrieve_body($banner_resp));
-				set_transient("autoptimize_banner",$AO_banner,DAY_IN_SECONDS);
+	if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
+		$AO_banner=get_transient("autoptimize_banner");
+		if (empty($AO_banner)) {
+			$banner_resp = wp_remote_get("http://optimizingmatters.com/autoptimize_news.html");
+			if (!is_wp_error($banner_resp)) {
+				if (wp_remote_retrieve_response_code($banner_resp)=="200") {
+					$AO_banner = wp_kses_post(wp_remote_retrieve_body($banner_resp));
+					set_transient("autoptimize_banner",$AO_banner,DAY_IN_SECONDS);
+				}
 			}
 		}
+		echo $AO_banner;
 	}
-	echo $AO_banner;
 	?>
 	<li><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>."); ?></li>
 	<li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php _e("Try my other plugins!"); ?></a></li>
@@ -475,28 +477,30 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	}
 
 	private function getFutttaFeeds($url) {
-		$rss = fetch_feed( $url );
-		$maxitems = 0;
-
-		if ( ! is_wp_error( $rss ) ) {
-			$maxitems = $rss->get_item_quantity( 7 ); 
-			$rss_items = $rss->get_items( 0, $maxitems );
+		if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
+			$rss = fetch_feed( $url );
+			$maxitems = 0;
+	
+			if ( ! is_wp_error( $rss ) ) {
+				$maxitems = $rss->get_item_quantity( 7 ); 
+				$rss_items = $rss->get_items( 0, $maxitems );
+			}
+			?>
+			<ul>
+				<?php if ( $maxitems == 0 ) : ?>
+					<li><?php _e( 'No items', 'autoptimize' ); ?></li>
+				<?php else : ?>
+					<?php foreach ( $rss_items as $item ) : ?>
+						<li>
+							<a href="<?php echo esc_url( $item->get_permalink() ); ?>"
+								title="<?php printf( __( 'Posted %s', 'autoptimize' ), $item->get_date('j F Y | g:i a') ); ?>">
+								<?php echo esc_html( $item->get_title() ); ?>
+							</a>
+						</li>
+					<?php endforeach; ?>
+				<?php endif; ?>
+			</ul>
+			<?php
 		}
-		?>
-		<ul>
-			<?php if ( $maxitems == 0 ) : ?>
-				<li><?php _e( 'No items', 'autoptimize' ); ?></li>
-			<?php else : ?>
-				<?php foreach ( $rss_items as $item ) : ?>
-					<li>
-						<a href="<?php echo esc_url( $item->get_permalink() ); ?>"
-							title="<?php printf( __( 'Posted %s', 'autoptimize' ), $item->get_date('j F Y | g:i a') ); ?>">
-							<?php echo esc_html( $item->get_title() ); ?>
-						</a>
-					</li>
-				<?php endforeach; ?>
-			<?php endif; ?>
-		</ul>
-		<?php 
 	}
 }
