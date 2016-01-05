@@ -267,7 +267,7 @@ abstract class autoptimizeBase {
                                 '#%%INJECTLATER%%(.*?)%%INJECTLATER%%#is',
                                 create_function(
                                         '$matches',
-                                        '$filepath=base64_decode($matches[1]);
+                                        '$filepath=base64_decode(strtok($matches[1],"|"));
 					$filecontent=file_get_contents($filepath);
 	
 					// remove comments and blank lines

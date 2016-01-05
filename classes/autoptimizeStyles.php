@@ -190,7 +190,7 @@ class autoptimizeStyles extends autoptimizeBase {
 						$this->alreadyminified=true;
 					} else if ((strpos($cssPath,"min.css")!==false) && (strpos($css,"@import")===false) && ($this->inject_min_late===true)) {
 						// only if filter is true?
-						$css="%%INJECTLATER%%".base64_encode($cssPath)."%%INJECTLATER%%";
+						$css="%%INJECTLATER%%".base64_encode($cssPath)."|".md5($css)."%%INJECTLATER%%";
 					}
 				} else {
 					// Couldn't read CSS. Maybe getpath isn't working?
@@ -249,7 +249,7 @@ class autoptimizeStyles extends autoptimizeBase {
 								$code=$tmpstyle;
 								$this->alreadyminified=true;
 							} else if ((strpos($path,"min.css")!==false) && (strpos($css,"@import")===false) && ($this->inject_min_late===true)) {
-								$code="%%INJECTLATER%%".base64_encode($path)."%%INJECTLATER%%";
+								$code="%%INJECTLATER%%".base64_encode($path)."|".md5($code)."%%INJECTLATER%%";
 							}
 							
 							if(!empty($code)) {
