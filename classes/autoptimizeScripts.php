@@ -90,8 +90,8 @@ class autoptimizeScripts extends autoptimizeBase {
 		//Get script files
 		if(preg_match_all('#<script.*</script>#Usmi',$this->content,$matches)) {
 			foreach($matches[0] as $tag) {
-				// only consider aggregation if no js type is specified or if type is text/javascript
-				if((strpos($tag,"type=")!==strpos($tag,"type=\"text/javascript\""))&&(strpos($tag,"type=")!==strpos($tag,"type='text/javascript'"))){
+				// only consider aggregation whitelisted in should_aggregate-function
+				if( !$this->should_aggregate($tag) ) {
 					$tag='';
 					continue;
 				}
@@ -382,4 +382,26 @@ class autoptimizeScripts extends autoptimizeBase {
 		//Should be in 'first'
 		return false;
 	}
+   /**
+     * Determines wheter a <script> $tag should be aggregated or not.
+     *
+     * We consider these as "aggregation-safe" currently:
+     * - script tags without a `type` attribute
+     * - script tags with an explicit `type` of `text/javascript`, 'text/ecmascript', 
+	 *   'application/javascript' or 'application/ecmascript'
+     *
+     * Everything else should return false.
+     *
+     * @param string $tag
+     * @return bool
+	 * 
+	 * original function by https://github.com/zytzagoo/ on his AO fork, thanks Tomas!
+     */
+    public function should_aggregate($tag) {
+        if ((strpos($tag, 'type=')===false) || (preg_match('/type=["\']?(?:text|application)\/(?:javascript|ecmascript)["\']?/i', $tag))) {
+            return true;
+		} else {
+			return false;
+		}
+    }
 }
