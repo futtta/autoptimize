@@ -539,7 +539,7 @@ LOD;
 						unset($tmp_code);
 					     }
 					}
-					$code_out='<style type="text/css" media="all">'.$defer_inline_code.'</style>';
+					$code_out='<style type="text/css" id="aoatfcss" media="all">'.$defer_inline_code.'</style>';
 					$this->inject_in_html($code_out,$replaceTag);
 				}
 			}
@@ -561,7 +561,7 @@ LOD;
 			}
 			
 			if($this->defer == true) {
-				$deferredCssBlock .= "}if(window.addEventListener){window.addEventListener('DOMContentLoaded',deferredCSS,false);}else{window.onload = deferredCSS;}</script>";
+				$deferredCssBlock .= "document.getElementById(\"aoatfcss\").media=\"none\";}if(window.addEventListener){window.addEventListener('DOMContentLoaded',deferredCSS,false);}else{window.onload = deferredCSS;}</script>";
 				$noScriptCssBlock .= "</noscript>";
 				$this->inject_in_html($noScriptCssBlock,$replaceTag);
 				$this->inject_in_html($deferredCssBlock,array('</body>','before'));
