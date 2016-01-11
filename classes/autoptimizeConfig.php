@@ -187,7 +187,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <td><?php
 	$AOstatArr=autoptimizeCache::stats(); 
 	$AOcacheSize=round($AOstatArr[1]/1024);
-	echo $AOstatArr[0]." files, totalling ".$AOcacheSize." Kbytes (calculated at ".date("H:i e", $AOstatArr[2]).")";
+	echo $AOstatArr[0].__(' files, totalling ','autoptimize').$AOcacheSize.__(' Kbytes (calculated at ','autoptimize').date("H:i e", $AOstatArr[2]).')';
 ?></td>
 </tr>
 <tr valign="top" class="hidden ao_adv">
@@ -208,23 +208,23 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <style>.autoptimize_banner ul li {font-size:medium;text-align:center;} .unslider-arrow {left:unset;}</style>
 <div class="autoptimize_banner">
 	<ul>
-	<?php
-	if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
-		$AO_banner=get_transient("autoptimize_banner");
-		if (empty($AO_banner)) {
-			$banner_resp = wp_remote_get("http://optimizingmatters.com/autoptimize_news.html");
-			if (!is_wp_error($banner_resp)) {
-				if (wp_remote_retrieve_response_code($banner_resp)=="200") {
-					$AO_banner = wp_kses_post(wp_remote_retrieve_body($banner_resp));
-					set_transient("autoptimize_banner",$AO_banner,DAY_IN_SECONDS);
-				}
-			}
-		}
-		echo $AO_banner;
-	}
-	?>
-	<li><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>."); ?></li>
-	<li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php _e("Try my other plugins!"); ?></a></li>
+        <?php
+        if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
+            $AO_banner=get_transient("autoptimize_banner");
+            if (empty($AO_banner)) {
+                $banner_resp = wp_remote_get("http://optimizingmatters.com/autoptimize_news.html");
+                if (!is_wp_error($banner_resp)) {
+                    if (wp_remote_retrieve_response_code($banner_resp)=="200") {
+                        $AO_banner = wp_kses_post(wp_remote_retrieve_body($banner_resp));
+                        set_transient("autoptimize_banner",$AO_banner,DAY_IN_SECONDS);
+                    }
+                }
+            }
+            echo $AO_banner;
+        }
+        ?>
+        <li><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>.","autoptimize"); ?></li>
+        <li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php _e("Try my other plugins!","autoptimize"); ?></a></li>
 	</ul>
 </div>
 <div style="float:right;width:30%" id="autoptimize_admin_feed">
