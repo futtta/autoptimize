@@ -394,16 +394,16 @@ class autoptimizeScripts extends autoptimizeBase {
      *
      * @param string $tag
      * @return bool
-	 * 
-	 * original function by https://github.com/zytzagoo/ on his AO fork, thanks Tomas!
+     *
+     * original function by https://github.com/zytzagoo/ on his AO fork, thanks Tomas!
      */
     public function should_aggregate($tag) {
         if ( strpos($tag, 'type=')===false ) {
             return true;
-		} else if ( preg_match('/type=["\']?(?:text|application)\/(?:javascript|ecmascript)["\']?/i', $tag) ) {
-			return true;
-		} else {
-			return false;
-		}
+    	} else if ( preg_match('/type=["\']?(?:text|application)\/(?:javascript|ecmascript)["\']?/i', $tag) ) {
+		    return true;
+	    } else {
+		    return false;
+	    }
     }
 }
