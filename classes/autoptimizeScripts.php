@@ -400,10 +400,10 @@ class autoptimizeScripts extends autoptimizeBase {
     public function should_aggregate($tag) {
         if ( strpos($tag, 'type=')===false ) {
             return true;
-		} else if ( preg_match('/type=["\']?(?:text|application)\/(?:javascript|ecmascript)["\']?/i', $tag) ) {
-			return true;
-		} else {
-			return false;
-		}
+        } else if ( preg_match('/type=["\']?(?:text|application)\/(?:javascript|ecmascript)["\']?/i', $tag) ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
