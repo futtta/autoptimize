@@ -647,7 +647,7 @@ LOD;
 		} else if ( (strpos($css,"@font-face")!==false ) && ( apply_filters("autoptimize_filter_css_fonts_cdn",false)===true) && (!empty($this->cdn_url)) ) {
 			// don't late-inject CSS with font-src's if fonts are set to be CDN'ed
 			return false;
-		} else if ( (($this->datauris == true) || (!empty($this->cdn_url))) && preg_match("#(background[^;}]*url\(#Ui",$css) ) {
+		} else if ( (($this->datauris == true) || (!empty($this->cdn_url))) && preg_match("#background[^;}]*url\(#Ui",$css) ) {
 			// don't late-inject CSS with images if CDN is set OR is image inlining is on
 			return false;
 		} else {
