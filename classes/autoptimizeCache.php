@@ -61,6 +61,7 @@ class autoptimizeCache {
 	}
 	
 	public function getname() {
+	        apply_filters('autoptimize_filter_cache_getname',AUTOPTIMIZE_CACHE_URL.$this->filename);
 		return $this->filename;
 	}
 	
