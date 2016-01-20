@@ -123,11 +123,6 @@ function autoptimize_start_buffering() {
                 $ao_noptimize = true;
         }
 
-    // don't optimize AMP-pages
-    if (defined('AMP_QUERY_VAR')) {
-        $ao_noptimize = true;
-    }
-        
 	// filter you can use to block autoptimization on your own terms
 	$ao_noptimize = (bool) apply_filters( 'autoptimize_filter_noptimize', $ao_noptimize );
 
