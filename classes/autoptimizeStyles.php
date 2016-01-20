@@ -513,7 +513,7 @@ LOD;
 			}
 		} else {
 			if ($this->defer == true) {
-				$deferredCssBlock = "<script>function lCss(url,media) {var d=document;var l=d.createElement('link');l.rel='stylesheet';l.type='text/css';l.href=url;l.media=media;aoin=d.getElementsByTagName('noscript')[0];aoin.parentNode.insertBefore(l,aoin.nextSibling);}function deferredCSS() {";
+				$deferredCssBlock = "<script data-cfasync='false'>function lCss(url,media) {var d=document;var l=d.createElement('link');l.rel='stylesheet';l.type='text/css';l.href=url;l.media=media;aoin=d.getElementsByTagName('noscript')[0];aoin.parentNode.insertBefore(l,aoin.nextSibling);}function deferredCSS() {";
 				$noScriptCssBlock = "<noscript>";
 				$defer_inline_code=$this->defer_inline;
 				$defer_inline_code=apply_filters( 'autoptimize_filter_css_defer_inline', $defer_inline_code );
