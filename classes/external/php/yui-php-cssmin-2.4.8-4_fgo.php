@@ -469,7 +469,7 @@ class CSSmin
 
             if ($found_terminator) {
                 $token = $this->str_slice($css, $start_index, $end_index);
-				if (strpos($token,"<svg")===false) {
+				if (strpos($token,"<svg")===false && strpos($token,'svg+xml')===false) {
 					$token = preg_replace('/\s+/', '', $token);
 				}
                 $this->preserved_tokens[] = $token;
