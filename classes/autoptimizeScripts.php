@@ -274,7 +274,7 @@ class autoptimizeScripts extends autoptimizeBase {
 		
 		// Add the scripts taking forcehead/ deferred (default) into account
 		if($this->forcehead == true) {
-			$replaceTag=array("</title>","after");
+			$replaceTag=array("</head>","before");
 			$defer="";
 		} else {
 			$replaceTag=array("</body>","before");
