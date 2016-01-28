@@ -560,7 +560,7 @@ LOD;
 			}
 			
 			if($this->defer == true) {
-				$deferredCssBlock .= "document.getElementById(\"aoatfcss\").media=\"none\";}if(window.addEventListener){window.addEventListener('DOMContentLoaded',deferredCSS,false);}else{window.onload = deferredCSS;}</script>";
+				$deferredCssBlock .= "}if(window.addEventListener){window.addEventListener('DOMContentLoaded',deferredCSS,false);}else{window.onload = deferredCSS;}</script>";
 				$noScriptCssBlock .= "</noscript>";
 				$this->inject_in_html($noScriptCssBlock,$replaceTag);
 				$this->inject_in_html($deferredCssBlock,array('</body>','before'));
