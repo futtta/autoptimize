@@ -75,7 +75,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr class="html_sub" valign="top">
 <th scope="row"><?php _e('Keep HTML comments?','autoptimize'); ?></th>
 <td><label for="autoptimize_html_keepcomments"><input type="checkbox" name="autoptimize_html_keepcomments" <?php echo get_option('autoptimize_html_keepcomments')?'checked="checked" ':''; ?>/>
-<?php _e('Enable this if you want HTML comments to remain in the page, needed for e.g. AdSense to function properly.','autoptimize'); ?></label></td>
+<?php _e('Enable this if you want HTML comments to remain in the page.','autoptimize'); ?></label></td>
 </tr>
 </table>
 
