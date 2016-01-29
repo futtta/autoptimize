@@ -41,13 +41,20 @@ class autoptimizeConfig {
 	
 	public function show() {
 ?>
-<style>input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:100;} #futtta_feed ul{list-style:outside;} #futtta_feed {font-size:medium; margin:0px 20px;}</style>
+<style>input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:100;} #futtta_feed ul{list-style:outside;} #futtta_feed {font-size:medium; margin:0px 20px;} #ao_hide_adv,#ao_show_adv{float:right;margin-top:10px;margin-right:10px;}</style>
 
 <div class="wrap">
 
 <h1><?php _e('Autoptimize Settings','autoptimize'); ?></h1>
 
 <div style="float:left;width:70%;">
+
+<?php
+// do we need to show tabs?
+$ao_plugin_tabs = apply_filters('autoptimize_settingsscreen_tabs',array('autoptimize' => __('General','autoptimize')));
+echo $this->ao_admin_tabs($ao_plugin_tabs);
+?>
+
 <?php 
 if (get_option('autoptimize_show_adv','0')=='1') {
 	?>
@@ -503,4 +510,30 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 			<?php
 		}
 	}
+    
+    // based on http://wordpress.stackexchange.com/a/58826
+    private function ao_admin_tabs($tabs, $current=NULL){
+        $tabContent="";
+
+        if (count($tabs)>1) {
+            if(is_null($currentId)){
+                $currentId="autoptimize";
+            }
+            $tabContent .= "<h2 class=\"nav-tab-wrapper\">";
+            foreach($tabs as $tabId => $tabName){
+                if($currentId == $tabId){
+                    $class = " nav-tab-active";
+                } else{
+                    $class = "";
+                }
+                //$tabContent .= "<a class=\"nav-tab".$class."\" id=\"".$tabId."\">".$tabName."</a>";
+                $tabContent .= '<a class="nav-tab'.$class.'" href="?page='.$tabId.'">'.$tabName.'</a>';
+            }
+            $tabContent .= "</h2>";
+        } else {
+            echo "<hr/>";
+        }
+        
+        return $tabContent;
+    }
 }
