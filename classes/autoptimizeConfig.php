@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class autoptimizeConfig {
 	private $config = null;
 	static private $instance = null;
-	
+
 	//Singleton: private construct
 	private function __construct() {
 		if( is_admin() ) {
@@ -49,11 +49,7 @@ class autoptimizeConfig {
 
 <div style="float:left;width:70%;">
 
-<?php
-// do we need to show tabs?
-$ao_plugin_tabs = apply_filters('autoptimize_settingsscreen_tabs',array('autoptimize' => __('General','autoptimize')));
-echo $this->ao_admin_tabs($ao_plugin_tabs);
-?>
+<?php echo $this->ao_admin_tabs(); ?>
 
 <?php 
 if (get_option('autoptimize_show_adv','0')=='1') {
@@ -512,13 +508,17 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	}
     
     // based on http://wordpress.stackexchange.com/a/58826
-    private function ao_admin_tabs($tabs, $current=NULL){
+    static function ao_admin_tabs(){
+		$tabs = apply_filters('autoptimize_filter_settingsscreen_tabs',array('autoptimize' => __('Main','autoptimize')));
         $tabContent="";
 
         if (count($tabs)>1) {
-            if(is_null($currentId)){
-                $currentId="autoptimize";
-            }
+			if(isset($_GET['page'])){
+				$currentId = $_GET['page'];
+			} else {
+				$currentId = "autoptimize";
+			}
+
             $tabContent .= "<h2 class=\"nav-tab-wrapper\">";
             foreach($tabs as $tabId => $tabName){
                 if($currentId == $tabId){
@@ -526,12 +526,11 @@ if (get_option('autoptimize_show_adv','0')=='1') {
                 } else{
                     $class = "";
                 }
-                //$tabContent .= "<a class=\"nav-tab".$class."\" id=\"".$tabId."\">".$tabName."</a>";
                 $tabContent .= '<a class="nav-tab'.$class.'" href="?page='.$tabId.'">'.$tabName.'</a>';
             }
             $tabContent .= "</h2>";
         } else {
-            echo "<hr/>";
+            $tabContent = "<hr/>";
         }
         
         return $tabContent;
