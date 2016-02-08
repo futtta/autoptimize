@@ -47,7 +47,7 @@ add_filter('autoptimize_filter_js_defer','my_ao_override_defer',10,1);
  */
 function my_ao_override_defer($defer) {
 	return $defer."async ";
-} 
+}
 ```
 
 ### Filter: autoptimize_filter_noptimize
@@ -215,4 +215,13 @@ add_filter('autoptimize_filter_css_defer_inline','my_ao_css_defer_inline',10,1);
 function my_ao_css_defer_inline($inlined) {
 	return $inlined."h2,h1{color:red !important;}";
 }
+```
+
+### Filter: `autoptimize_separate_blog_caches`
+
+```php
+add_filter('autoptimize_separate_blog_caches','__return_false',10,1);
+/**
+ * Do not separate cache folders in multisite setup.
+ */
 ```
