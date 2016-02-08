@@ -31,11 +31,11 @@ if (!defined('AUTOPTIMIZE_CACHE_CHILD_DIR')) { define('AUTOPTIMIZE_CACHE_CHILD_D
 if (!defined('AUTOPTIMIZE_CACHEFILE_PREFIX')) { define('AUTOPTIMIZE_CACHEFILE_PREFIX', 'autoptimize_'); }
 
 // Plugin dir constants (plugin url's defined later to accomodate domain mapped sites)
-if (is_multisite()) {
+if (is_multisite() && apply_filters( 'autoptimize_separate_blog_caches' , true )) {
 	$blog_id = get_current_blog_id();
-	define('AUTOPTIMIZE_CACHE_DIR' , WP_CONTENT_DIR.AUTOPTIMIZE_CACHE_CHILD_DIR.$blog_id.'/' );
+	define('AUTOPTIMIZE_CACHE_DIR', WP_CONTENT_DIR.AUTOPTIMIZE_CACHE_CHILD_DIR.$blog_id.'/' );
 } else {
-	define('AUTOPTIMIZE_CACHE_DIR',WP_CONTENT_DIR.AUTOPTIMIZE_CACHE_CHILD_DIR);
+	define('AUTOPTIMIZE_CACHE_DIR', WP_CONTENT_DIR.AUTOPTIMIZE_CACHE_CHILD_DIR);
 }
 define('AUTOPTIMIZE_CACHE_DELAY',true);
 define('WP_ROOT_DIR',str_replace(AUTOPTIMIZE_WP_CONTENT_NAME,'',WP_CONTENT_DIR));
@@ -51,12 +51,12 @@ $autoptimize_db_version=get_option('autoptimize_version','none');
 
 if ($autoptimize_db_version !== $autoptimize_version) {
 	if ($autoptimize_db_version==="none") {
-        	add_action('admin_notices', 'autoptimize_install_config_notice');
+    add_action('admin_notices', 'autoptimize_install_config_notice');
 	} else {
 		// updating, include the update-code
 		include(AUTOPTIMIZE_PLUGIN_DIR.'/classlesses/autoptimizeUpdateCode.php');
 	}
-	
+
 	update_option('autoptimize_version',$autoptimize_version);
 	$autoptimize_db_version=$autoptimize_version;
 }
@@ -66,23 +66,23 @@ load_plugin_textdomain('autoptimize',false,plugin_basename(dirname( __FILE__ )).
 
 function autoptimize_uninstall(){
 	autoptimizeCache::clearall();
-	
+
 	$delete_options=array("autoptimize_cache_clean", "autoptimize_cache_nogzip", "autoptimize_css", "autoptimize_css_datauris", "autoptimize_css_justhead", "autoptimize_css_defer", "autoptimize_css_defer_inline", "autoptimize_css_inline", "autoptimize_css_exclude", "autoptimize_html", "autoptimize_html_keepcomments", "autoptimize_js", "autoptimize_js_exclude", "autoptimize_js_forcehead", "autoptimize_js_justhead", "autoptimize_js_trycatch", "autoptimize_version", "autoptimize_show_adv", "autoptimize_cdn_url", "autoptimize_cachesize_notice","autoptimize_css_include_inline","autoptimize_js_include_inline","autoptimize_css_nogooglefont");
-	
+
 	if ( !is_multisite() ) {
 		foreach ($delete_options as $del_opt) {	delete_option( $del_opt ); }
 	} else {
 		global $wpdb;
 		$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
 		$original_blog_id = get_current_blog_id();
-		foreach ( $blog_ids as $blog_id ) 
+		foreach ( $blog_ids as $blog_id )
 		{
 			switch_to_blog( $blog_id );
 			foreach ($delete_options as $del_opt) {	delete_option( $del_opt ); }
 		}
 		switch_to_blog( $original_blog_id );
 	}
-	
+
 	if ( wp_get_schedule( 'ao_cachechecker' ) ) {
 		wp_clear_scheduled_hook( 'ao_cachechecker' );
 	}
@@ -106,7 +106,7 @@ function autoptimize_cache_unavailable_notice() {
 	echo '</p></div>';
 }
 
-	
+
 // Set up the buffering
 function autoptimize_start_buffering() {
 	$ao_noptimize = false;
@@ -119,9 +119,9 @@ function autoptimize_start_buffering() {
 	}
 
 	// check for DONOTMINIFY constant as used by e.g. WooCommerce POS
-        if (defined('DONOTMINIFY') && (constant('DONOTMINIFY')===true || constant('DONOTMINIFY')==="true")) {
-                $ao_noptimize = true;
-        }
+  if (defined('DONOTMINIFY') && (constant('DONOTMINIFY')===true || constant('DONOTMINIFY')==="true")) {
+          $ao_noptimize = true;
+  }
 
 	// filter you can use to block autoptimization on your own terms
 	$ao_noptimize = (bool) apply_filters( 'autoptimize_filter_noptimize', $ao_noptimize );
@@ -129,10 +129,10 @@ function autoptimize_start_buffering() {
 	if (!is_feed() && !$ao_noptimize && !is_admin()) {
 		// Config element
 		$conf = autoptimizeConfig::instance();
-		
+
 		// Load our base class
 		include(AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeBase.php');
-		
+
 		// Load extra classes and set some vars
 		if($conf->get('autoptimize_html')) {
 			include(AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeHTML.php');
@@ -143,7 +143,7 @@ function autoptimize_start_buffering() {
 			//	@include(AUTOPTIMIZE_PLUGIN_DIR.'classes/external/php/minify-2.1.7-html.php');
 			// }
 		}
-		
+
 		if($conf->get('autoptimize_js')) {
 			include(AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeScripts.php');
 			if (!class_exists('JSMin')) {
@@ -160,7 +160,7 @@ function autoptimize_start_buffering() {
 				define('COMPRESS_SCRIPTS',false);
 			}
 		}
-		
+
 		if($conf->get('autoptimize_css')) {
 			include(AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeStyles.php');
 			if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
@@ -176,7 +176,7 @@ function autoptimize_start_buffering() {
 				define('COMPRESS_CSS',false);
 			}
 		}
-	
+
 		// Now, start the real thing!
 		ob_start('autoptimize_end_buffering');
 	}
@@ -194,10 +194,10 @@ function autoptimize_end_buffering($content) {
 		define('AUTOPTIMIZE_WP_SITE_URL',site_url());
 		define('AUTOPTIMIZE_WP_CONTENT_URL',content_url());
 	}
-	
-	if ( is_multisite() ) {
-        	$blog_id = get_current_blog_id();
-        	define('AUTOPTIMIZE_CACHE_URL',AUTOPTIMIZE_WP_CONTENT_URL.AUTOPTIMIZE_CACHE_CHILD_DIR.$blog_id.'/' );
+
+	if ( is_multisite() && apply_filters( 'autoptimize_separate_blog_caches' , true ) ) {
+  	$blog_id = get_current_blog_id();
+  	define('AUTOPTIMIZE_CACHE_URL',AUTOPTIMIZE_WP_CONTENT_URL.AUTOPTIMIZE_CACHE_CHILD_DIR.$blog_id.'/' );
 	} else {
 		define('AUTOPTIMIZE_CACHE_URL',AUTOPTIMIZE_WP_CONTENT_URL.AUTOPTIMIZE_CACHE_CHILD_DIR);
 	}
@@ -205,7 +205,7 @@ function autoptimize_end_buffering($content) {
 
 	// Config element
 	$conf = autoptimizeConfig::instance();
-	
+
 	// Choose the classes
 	$classes = array();
 	if($conf->get('autoptimize_js'))
@@ -214,7 +214,7 @@ function autoptimize_end_buffering($content) {
 		$classes[] = 'autoptimizeStyles';
 	if($conf->get('autoptimize_html'))
 		$classes[] = 'autoptimizeHTML';
-		
+
 	// Set some options
 	$classoptions = array(
 		'autoptimizeScripts' => array(
@@ -240,8 +240,8 @@ function autoptimize_end_buffering($content) {
 			'keepcomments' => $conf->get('autoptimize_html_keepcomments')
 		)
 	);
-	
-	$content = apply_filters( 'autoptimize_filter_html_before_minify', $content );	
+
+	$content = apply_filters( 'autoptimize_filter_html_before_minify', $content );
 	// Run the classes
 	foreach($classes as $name) {
 		$instance = new $name($content);
@@ -258,40 +258,40 @@ function autoptimize_end_buffering($content) {
 }
 
 function autoptimize_flush_pagecache($nothing) {
-        if(function_exists('wp_cache_clear_cache')) {
-       		if (is_multisite()) {
-                	$blog_id = get_current_blog_id();
-                        wp_cache_clear_cache($blog_id);
-                } else {
-                       	wp_cache_clear_cache();
-               	}
+  if(function_exists('wp_cache_clear_cache')) {
+ 		if (is_multisite() && apply_filters( 'autoptimize_separate_blog_caches' , true )) {
+    	$blog_id = get_current_blog_id();
+      wp_cache_clear_cache($blog_id);
+    } else {
+     	wp_cache_clear_cache();
+   	}
 	} else if ( has_action('cachify_flush_cache') ) {
 		do_action('cachify_flush_cache');
-        } else if ( function_exists('w3tc_pgcache_flush') ) {
-                w3tc_pgcache_flush(); // w3 total cache
-        } else if ( function_exists('hyper_cache_invalidate') ) {
-                hyper_cache_invalidate(); // hypercache
-        } else if ( function_exists('wp_fast_cache_bulk_delete_all') ) {
-                wp_fast_cache_bulk_delete_all(); // wp fast cache
-        } else if (class_exists("WpFastestCache")) {
-                $wpfc = new WpFastestCache(); // wp fastest cache
-                $wpfc -> deleteCache();
-        } else if ( class_exists("c_ws_plugin__qcache_purging_routines") ) {
-                c_ws_plugin__qcache_purging_routines::purge_cache_dir(); // quick cache
+  } else if ( function_exists('w3tc_pgcache_flush') ) {
+    w3tc_pgcache_flush(); // w3 total cache
+  } else if ( function_exists('hyper_cache_invalidate') ) {
+    hyper_cache_invalidate(); // hypercache
+  } else if ( function_exists('wp_fast_cache_bulk_delete_all') ) {
+    wp_fast_cache_bulk_delete_all(); // wp fast cache
+  } else if (class_exists("WpFastestCache")) {
+    $wpfc = new WpFastestCache(); // wp fastest cache
+    $wpfc -> deleteCache();
+  } else if ( class_exists("c_ws_plugin__qcache_purging_routines") ) {
+    c_ws_plugin__qcache_purging_routines::purge_cache_dir(); // quick cache
 	} else if ( class_exists("zencache")) {
 		zencache::clear(); // zen cache
-        } else if(file_exists(WP_CONTENT_DIR.'/wp-cache-config.php') && function_exists('prune_super_cache')){
-                // fallback for WP-Super-Cache
-                global $cache_path;
-                if (is_multisite()) {
-                        $blog_id = get_current_blog_id();
+  } else if(file_exists(WP_CONTENT_DIR.'/wp-cache-config.php') && function_exists('prune_super_cache')){
+    // fallback for WP-Super-Cache
+    global $cache_path;
+    if (is_multisite() && apply_filters( 'autoptimize_separate_blog_caches' , true )) {
+      $blog_id = get_current_blog_id();
 			prune_super_cache( get_supercache_dir( $blog_id ), true );
-                        prune_super_cache( $cache_path . 'blogs/', true );
-                } else {
-                        prune_super_cache($cache_path.'supercache/',true);
-                        prune_super_cache($cache_path,true);
-                }
-        }
+      prune_super_cache( $cache_path . 'blogs/', true );
+    } else {
+      prune_super_cache($cache_path.'supercache/',true);
+      prune_super_cache($cache_path,true);
+    }
+  }
 }
 add_action('ao_flush_pagecache','autoptimize_flush_pagecache',10,1);
 
@@ -299,11 +299,11 @@ if ( autoptimizeCache::cacheavail() ) {
 	$conf = autoptimizeConfig::instance();
 	if( $conf->get('autoptimize_html') || $conf->get('autoptimize_js') || $conf->get('autoptimize_css') ) {
 		// Hook to wordpress
-        	if (defined('AUTOPTIMIZE_INIT_EARLIER')) {
-        	    	add_action('init','autoptimize_start_buffering',-1);
-	        } else {
+  	if (defined('AUTOPTIMIZE_INIT_EARLIER')) {
+    	add_action('init','autoptimize_start_buffering',-1);
+    } else {
 			add_action('template_redirect','autoptimize_start_buffering',2);
-	        }
+    }
 	}
 } else {
 	add_action('admin_notices', 'autoptimize_cache_unavailable_notice');
