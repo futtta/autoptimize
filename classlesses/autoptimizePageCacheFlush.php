@@ -1,5 +1,6 @@
 <?php 
 // flush as many page cache plugin's caches as possible
+// hyper cache and gator cache hook into AO, so we don't need to :-)
 
 function autoptimize_flush_pagecache() {
   if(function_exists('wp_cache_clear_cache')) {
@@ -13,9 +14,6 @@ function autoptimize_flush_pagecache() {
 	do_action('cachify_flush_cache');
   } else if ( function_exists('w3tc_pgcache_flush') ) {
     w3tc_pgcache_flush();
-  } else if ( has_action('hyper_cache_clean') ) {
-    // hypercache NOK, hyper_cache_clean only removes pages older then time+max_age
-    // do_action('hyper_cache_clean');
   } else if ( function_exists('wp_fast_cache_bulk_delete_all') ) {
     wp_fast_cache_bulk_delete_all(); // still to retest
   } else if (class_exists("WpFastestCache")) {
@@ -30,7 +28,7 @@ function autoptimize_flush_pagecache() {
     global $cache_path;
     if (is_multisite() && apply_filters( 'autoptimize_separate_blog_caches' , true )) {
       $blog_id = get_current_blog_id();
-			prune_super_cache( get_supercache_dir( $blog_id ), true );
+      prune_super_cache( get_supercache_dir( $blog_id ), true );
       prune_super_cache( $cache_path . 'blogs/', true );
     } else {
       prune_super_cache($cache_path.'supercache/',true);
