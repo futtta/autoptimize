@@ -399,9 +399,10 @@ class autoptimizeScripts extends autoptimizeBase {
 	 * original function by https://github.com/zytzagoo/ on his AO fork, thanks Tomas!
      */
     public function should_aggregate($tag) {
-        if ( strpos($tag, 'type=')===false ) {
+        preg_match('#<(script[^>]*)>#i',$scripttag);
+        if ( strpos($scripttag[1], 'type=')===false ) {
             return true;
-        } else if ( preg_match('/type=["\']?(?:text|application)\/(?:javascript|ecmascript)["\']?/i', $tag) ) {
+        } else if ( preg_match('/type=["\']?(?:text|application)\/(?:javascript|ecmascript)["\']?/i', $scripttag[1]) ) {
             return true;
         } else {
             return false;
