@@ -113,7 +113,7 @@ function autoptimize_start_buffering() {
 
 	// noptimize in qs to get non-optimized page for debugging
 	if (array_key_exists("ao_noptimize",$_GET)) {
-		if ($_GET["ao_noptimize"]==="1") {
+		if ( ($_GET["ao_noptimize"]==="1") && (apply_filters('autoptimize_filter_honor_qs_noptimize',true)) ) {
 			$ao_noptimize = true;
 		}
 	}
