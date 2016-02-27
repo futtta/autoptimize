@@ -21,8 +21,18 @@ function autoptimize_flush_pagecache() {
     $wpfc -> deleteCache();
   } else if ( class_exists("c_ws_plugin__qcache_purging_routines") ) {
     c_ws_plugin__qcache_purging_routines::purge_cache_dir(); // quick cache, still to retest
-  } else if ( class_exists("zencache")) {
+  } else if ( class_exists("zencache") ) {
     zencache::clear();
+  } else if ( class_exists("WpeCommon") ) {
+    if ( method_exists( "WpeCommon", "purge_memcached" ) ) {
+        WpeCommon::purge_memcached();
+    }
+    if ( method_exists( "WpeCommon", "clear_maxcdn_cache" ) ) {  
+        WpeCommon::clear_maxcdn_cache();
+    }
+    if ( method_exists( "WpeCommon", "purge_varnish_cache" ) ) {
+        WpeCommon::purge_varnish_cache();   
+    }
   } else if(file_exists(WP_CONTENT_DIR.'/wp-cache-config.php') && function_exists('prune_super_cache')){
     // fallback for WP-Super-Cache
     global $cache_path;
