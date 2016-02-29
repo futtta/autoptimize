@@ -24,11 +24,13 @@ function autoptimize_flush_pagecache() {
   } else if ( class_exists("zencache") ) {
     zencache::clear();
   } else if ( class_exists("WpeCommon") ) {
-    if ( method_exists( "WpeCommon", "purge_memcached" ) ) {
-        WpeCommon::purge_memcached();
-    }
-    if ( method_exists( "WpeCommon", "clear_maxcdn_cache" ) ) {  
-        WpeCommon::clear_maxcdn_cache();
+    if ( apply_filters('autoptimize_flush_wpengine_aggressive', false) ) {
+        if ( method_exists( "WpeCommon", "purge_memcached" ) ) {
+            WpeCommon::purge_memcached();
+        }
+        if ( method_exists( "WpeCommon", "clear_maxcdn_cache" ) ) {  
+            WpeCommon::clear_maxcdn_cache();
+        }
     }
     if ( method_exists( "WpeCommon", "purge_varnish_cache" ) ) {
         WpeCommon::purge_varnish_cache();   
