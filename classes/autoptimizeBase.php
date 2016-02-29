@@ -76,7 +76,7 @@ abstract class autoptimizeBase {
 		// try to remove "wp root url" from url while not minding http<>https
 		$tmp_ao_root = preg_replace('/https?/','',AUTOPTIMIZE_WP_ROOT_URL);
 		$tmp_url = preg_replace('/https?/','',$url);
-        	$path = str_replace($tmp_ao_root,'',$tmp_url);
+		$path = str_replace($tmp_ao_root,'',$tmp_url);
 		
 		// final check; if path starts with :// or //, this is not a URL in the WP context and we have to assume we can't aggregate
 		if (preg_match('#^:?//#',$path)) {
@@ -90,7 +90,18 @@ abstract class autoptimizeBase {
 
 	// needed for WPML-filter
 	protected function ao_getDomain($in) {
-		return(parse_url($in,PHP_URL_HOST));
+        // make sure the url starts with something vaguely resembling a protocol
+        if ((strpos($in,"http")!==0) && (strpos($in,"//")!==0)) {
+            $in="http://".$in;
+        }
+        
+        // do the actual parse_url
+		$out = parse_url($in,PHP_URL_HOST);
+        
+        // fallback if parse_url does not understand the url is in fact a url
+		if (empty($out)) $out=$in;
+        
+		return $out;
 	}
 
 
