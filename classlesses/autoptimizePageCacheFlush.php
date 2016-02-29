@@ -23,6 +23,8 @@ function autoptimize_flush_pagecache() {
     c_ws_plugin__qcache_purging_routines::purge_cache_dir(); // quick cache, still to retest
   } else if ( class_exists("zencache") ) {
     zencache::clear();
+  } else if ( class_exists("comet_cache") ) {
+    comet_cache::clear();
   } else if ( class_exists("WpeCommon") ) {
     if ( apply_filters('autoptimize_flush_wpengine_aggressive', false) ) {
         if ( method_exists( "WpeCommon", "purge_memcached" ) ) {
