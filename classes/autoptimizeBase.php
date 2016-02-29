@@ -111,9 +111,7 @@ abstract class autoptimizeBase {
 			$logmsg="<!--noptimize--><!-- ".$logmsg." --><!--/noptimize-->";
 			$this->content.=$logmsg;
 		} else {
-			$logfile=WP_CONTENT_DIR.'/ao_log.txt';
-			$logmsg.="\n--\n";
-			file_put_contents($logfile,$logmsg,FILE_APPEND);
+			error_log("Autoptimize: ".$logmsg);
 		}
 	}
 
