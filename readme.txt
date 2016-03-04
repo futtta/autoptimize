@@ -220,8 +220,9 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 = 2.0.1 =
 * Improvement: Autoptimize now also tries to purge WP Engine cache when AO’s cache is cleared
 * Improvement: for AMP pages (which are pretty optimized anyway) Autoptimize will not optimize to avoid issues with "inline & defer" and with AO adding attributes to link-tags that are not allowed in the subset of HTML that AMP is
-* Improvements to the page cache purging mechanism (refactoring to better hook into WordPress actions)
+* Improvement: refactored the page cache purging mechanism (removing duplicate code, now nicely hooking into AO's own `autoptimize_action_cachepurged` action)
 * Improvement: Re-enable functionality to move non-aggregated JS  if “also aggregate inline JS” is active
+* Improvement: script tags with `date-noptimize` attribute will be excluded from optimization
 * Bugfix: Better support for renamed wp-content directories
 * Bugfix: Multiple fixes for late-injected CSS/ JS (changes in those files not being picked up, fonts or background images not beind CDN’ed, …)
 * Misc. other fixes & improvements, go read [the commit-log on GitHub](https://github.com/futtta/autoptimize/commits/master) if you’re that curious
