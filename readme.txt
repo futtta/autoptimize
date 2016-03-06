@@ -135,7 +135,7 @@ If you are running Apache, the htaccess file written by Autoptimize can in some 
 
 Autoptimize does a number of checks before actually optimizing. When one of the following is true, your pages won't be optimized:
 * if there is no opening `<html` tag
-* if there iis `<xsl:stylesheet` in the response (indicating the output is not HTML but XML)
+* if there is `<xsl:stylesheet` in the response (indicating the output is not HTML but XML)
 * if there is `<html amp` in the response (as AMP-pages are optimized already)
 * if the output is an RSS-feed (is_feed() function)
 * if the output is a WordPress administration page (is_admin() function)
