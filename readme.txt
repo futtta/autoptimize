@@ -226,7 +226,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * Bugfix: Better support for renamed wp-content directories
 * Bugfix: Multiple fixes for late-injected CSS/ JS (changes in those files not being picked up, fonts or background images not beind CDN’ed, …)
 * Misc. other fixes & improvements, go read [the commit-log on GitHub](https://github.com/futtta/autoptimize/commits/master) if you’re that curious
-* Tested & confirmed working with WordPress 4.5 (beta 1)
+* Tested & confirmed working with WordPress 4.5 (beta 2)
 
 = 2.0.0 =
 * On average 30% faster minification (more info [in this blogpost](http://blog.futtta.be/2015/12/22/making-autoptimize-faster/))!
