@@ -214,7 +214,7 @@ abstract class autoptimizeBase {
 	}
 
 	protected function url_replace_cdn( $url ) {
-		if ( ! empty( $this->cdn_url ) ) {
+		if ( ! empty( apply_filters('autoptimize_filter_base_cdnurl', $this->cdn_url ) ) ) {
 			// secondly prepend domain-less absolute URL's
 			if ( ( substr( $url, 0, 1 ) === '/' ) && ( substr( $url, 1, 1 ) !== '/' ) ) {
 				$url = rtrim( $this->cdn_url, '/' ) . $url;
