@@ -4,7 +4,7 @@
 
 function autoptimize_flush_pagecache() {
   if(function_exists('wp_cache_clear_cache')) {
- 	if (is_multisite() && apply_filters( 'autoptimize_separate_blog_caches' , true )) {
+ 	if (is_multisite()) {
     	$blog_id = get_current_blog_id();
         wp_cache_clear_cache($blog_id);
     } else {
@@ -40,7 +40,7 @@ function autoptimize_flush_pagecache() {
   } else if(file_exists(WP_CONTENT_DIR.'/wp-cache-config.php') && function_exists('prune_super_cache')){
     // fallback for WP-Super-Cache
     global $cache_path;
-    if (is_multisite() && apply_filters( 'autoptimize_separate_blog_caches' , true )) {
+    if (is_multisite()) {
       $blog_id = get_current_blog_id();
       prune_super_cache( get_supercache_dir( $blog_id ), true );
       prune_super_cache( $cache_path . 'blogs/', true );
