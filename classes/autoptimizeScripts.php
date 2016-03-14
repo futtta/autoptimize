@@ -346,7 +346,7 @@ class autoptimizeScripts extends autoptimizeBase {
 	
 	//Checks agains the blacklist
 	private function ismovable($tag) {
-		if ($this->include_inline !== true || apply_filters('autoptimize_filter_js_unmovable',false)) {
+		if ($this->include_inline !== true || apply_filters('autoptimize_filter_js_unmovable',true)) {
 			return false;
 		}
 		
