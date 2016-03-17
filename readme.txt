@@ -212,11 +212,16 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.0.2 =
+* bugfix: disallow moving non-aggregated JS by default (can be re-enabled by passing false to the `autoptimize_filter_js_unmovable`)
+* bugfix: hook autoptimize_action_cachepurged into after_theme_loaded to avoid ugly error-message for ZenCache (Comet Cache) users
+* bugfix to allow for Autoptimize to work with PHP 5.2 (although [you really should upgrade](http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/))
+
 = 2.0.1 =
 * Improvement: Autoptimize now also tries to purge WP Engine cache when AO’s cache is cleared
 * Improvement: for AMP pages (which are pretty optimized anyway) Autoptimize will not optimize to avoid issues with e.g. "inline & defer" and with AO adding attributes to link-tags that are not allowed in the subset of HTML that AMP is
 * Improvement: refactored the page cache purging mechanism (removing duplicate code, now nicely hooking into AO's own `autoptimize_action_cachepurged` action)
-* Improvement: Re-enable functionality to move non-aggregated JS if “also aggregate inline JS” is active (can be disabled with `autoptiize_filter_js_unmovable` filter)
+* Improvement: Re-enable functionality to move non-aggregated JS if “also aggregate inline JS” is active (can be disabled with `autoptimize_filter_js_unmovable` filter)
 * Improvement: script tags with `data-noptimize` attribute will be excluded from optimization
 * Bugfix: Better support for renamed wp-content directories
 * Bugfix: Multiple fixes for late-injected CSS/ JS (changes in those files were not always picked up, fonts or background images were not being CDN’ed, …)
