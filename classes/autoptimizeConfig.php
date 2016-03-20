@@ -47,6 +47,10 @@ class autoptimizeConfig {
 
 <h1><?php _e('Autoptimize Settings','autoptimize'); ?></h1>
 
+<?php if (version_compare(PHP_VERSION, '5.3.0') < 0) { ?>
+<div class="settings error notice"><?php _e('You are using a very old version of PHP (5.2.x or older) which has <a href="http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/" target="_blank">serious security and performance issues</a>. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0','autoptimze'); ?></div>
+<?php } ?>
+
 <div style="float:left;width:70%;">
 
 <?php echo $this->ao_admin_tabs(); ?>
