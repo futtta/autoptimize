@@ -288,7 +288,7 @@ abstract class autoptimizeBase {
                         $filecontent=preg_replace("#^\s*\/\/.*$#Um","",$filecontent);
                     }
 
-                    $filecontent=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Us","",$filecontent);
+                    $filecontent=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Um","",$filecontent);
                     $filecontent=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $filecontent);
 
                     // specific stuff for JS-files
