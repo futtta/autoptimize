@@ -22,13 +22,6 @@ class autoptimizeToolbar {
 			'title' => __("Delete Cache",'autoptimize'),
 			'parent'=> 'autoptimize'
 		));
-
-		?>
-		<script type="text/javascript">
-
-		</script>
-		<?php
-
 	}
 }
 ?>
