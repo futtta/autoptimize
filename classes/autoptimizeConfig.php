@@ -8,9 +8,21 @@ class autoptimizeConfig {
 	//Singleton: private construct
 	private function __construct() {
 		if( is_admin() ) {
+			
+			// Load custom admin styles
+			add_action( 'admin_enqueue_scripts', array( $this, 'load_custom_wp_admin_style' ) );
+
+			// Load custom admin javascript
+			add_action('admin_enqueue_scripts', array( $this, 'load_custom_wp_admin_javascript' ) );
+			
 			//Add the admin page and settings
 			add_action('admin_menu',array($this,'addmenu'));
 			add_action('admin_init',array($this,'registersettings'));
+
+			// Load admin toolbar feature
+			if(file_exists(AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeToolbar.php')){
+				add_action('plugins_loaded', array($this, 'load_admin_toolbar'));
+			}
 
 			//Set meta info
 			if(function_exists('plugin_row_meta')) {
@@ -194,7 +206,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <td><?php
 	$AOstatArr=autoptimizeCache::stats(); 
 	$AOcacheSize=round($AOstatArr[1]/1024);
-	echo $AOstatArr[0].__(' files, totalling ','autoptimize').$AOcacheSize.__(' Kbytes (calculated at ','autoptimize').date("H:i e", $AOstatArr[2]).')';
+	echo $AOstatArr[0].' '.__(' files, totalling ','autoptimize').' '.$AOcacheSize.' '.__(' Kbytes (calculated at ','autoptimize').' '.date("H:i e", $AOstatArr[2]).')';
 ?></td>
 </tr>
 <tr valign="top" class="hidden ao_adv">
@@ -539,4 +551,46 @@ if (get_option('autoptimize_show_adv','0')=='1') {
         
         return $tabContent;
     }
+
+	public function load_custom_wp_admin_style()
+	{
+		wp_enqueue_style( 'autoptimize-toolbar', plugins_url( 'autoptimize/css/toolbar.css' ), array(), time(), "all" );
+	}
+    
+	public function load_custom_wp_admin_javascript()
+	{
+		wp_enqueue_script( 'autoptimize-toolbar', plugins_url( 'autoptimize/js/toolbar.js' ), array(), time(), true );
+	}
+	
+	public function load_admin_toolbar()
+	{
+		$show = false;
+
+		// Admin
+		$show = ( current_user_can( 'manage_options' ) || current_user_can( 'edit_others_pages' ) ) ? true : false;
+
+		// Author
+		if( defined( 'AUTOPTIMIZE_TOOLBAR_FOR_AUTHOR' ) && AUTOPTIMIZE_TOOLBAR_FOR_AUTHOR )
+		{
+			if( current_user_can( 'delete_published_posts' ) || current_user_can( 'edit_published_posts' ) )
+			{
+				$show = true;
+			}
+		}
+		
+		if( $show )
+		{
+			include_once( AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeToolbar.php' );
+
+			add_action( 'wp_ajax_autoptimize_delete_cache', array( $this, 'delete_cache' ) );
+			
+			$toolbar = new autoptimizeToolbar();
+			$toolbar->add();
+		}
+	}
+
+	public function delete_cache()
+	{
+		autoptimizeCache::clearall();
+	}
 }
