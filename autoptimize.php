@@ -16,11 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 define('AUTOPTIMIZE_PLUGIN_DIR',plugin_dir_path(__FILE__));
 
-// Enable the feature to clear the cache through the admin bar for authors
-if (!defined('AUTOPTIMIZE_TOOLBAR_FOR_AUTHOR')) { define('AUTOPTIMIZE_TOOLBAR_FOR_AUTHOR', false); }
-
 // Load config class
 include(AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeConfig.php');
+
+// Load toolbar class
+include( AUTOPTIMIZE_PLUGIN_DIR . 'classes/autoptimizeToolbar.php' );
 
 // Do we gzip when caching (needed early to load autoptimizeCache.php)
 define('AUTOPTIMIZE_CACHE_NOGZIP',(bool) get_option('autoptimize_cache_nogzip'));
@@ -54,7 +54,7 @@ $autoptimize_db_version=get_option('autoptimize_version','none');
 
 if ($autoptimize_db_version !== $autoptimize_version) {
 	if ($autoptimize_db_version==="none") {
-    add_action('admin_notices', 'autoptimize_install_config_notice');
+		add_action('admin_notices', 'autoptimize_install_config_notice');
 	} else {
 		// updating, include the update-code
 		include(AUTOPTIMIZE_PLUGIN_DIR.'/classlesses/autoptimizeUpdateCode.php');
@@ -64,8 +64,15 @@ if ($autoptimize_db_version !== $autoptimize_version) {
 	$autoptimize_db_version=$autoptimize_version;
 }
 
+// Load translations from the languages directory.
+$locale = get_locale();
+
+// This filter is documented in /wp-includes/l10n.php.
+$locale = apply_filters( 'plugin_locale', $locale, 'autoptimize' );
+load_textdomain( 'autoptimize', WP_LANG_DIR . '/plugins/autoptimize-' . $locale . '.mo' );
+
 // Load translations
-load_plugin_textdomain('autoptimize',false,plugin_basename(dirname( __FILE__ )).'/localization');
+load_plugin_textdomain( 'autoptimize', false, dirname( plugin_basename( __FILE__ ) ) . '/localization/' );
 
 function autoptimize_uninstall(){
 	autoptimizeCache::clearall();
