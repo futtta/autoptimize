@@ -16,6 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 define('AUTOPTIMIZE_PLUGIN_DIR',plugin_dir_path(__FILE__));
 
+// Enable the feature to clear the cache through the admin bar for authors
+if (!defined('AUTOPTIMIZE_TOOLBAR_FOR_AUTHOR')) { define('AUTOPTIMIZE_TOOLBAR_FOR_AUTHOR', false); }
+
 // Load config class
 include(AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeConfig.php');
 
