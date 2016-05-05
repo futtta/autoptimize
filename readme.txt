@@ -49,7 +49,7 @@ The short answer: probably not (but I do).
 
 Back in the days CSS optimization was easy; put all CSS in your head, aggregating everything in one CSS-file per media-type and you were good to go. But ever since Google included mobile in PageSpeed Insights and started complaining about render blocking CSS, things got messy (see "deferring CSS" elsewhere in this FAQ). One of the solutions is inlining all your CSS, which as of Autoptimize 1.8.0 is supported.
 
-Inlining all CSS has one clear advantage (better PageSpeed score) and one big disadvantage; your base HTML-page gets significantly bigger and if the amount of CSS is big, Pagespeed Insights will complain of "roundtrip times". Also when looking at a test that includes multiple requests (let's say 5 pages), performance will be worse, as the CSS-payload is sent over again and again whereas normally the seperate CSS-files would not need to be sent any more as they would be in cache.
+Inlining all CSS has one clear advantage (better PageSpeed score) and one big disadvantage; your base HTML-page gets significantly bigger and if the amount of CSS is big, Pagespeed Insights will complain of "roundtrip times". Also when looking at a test that includes multiple requests (let's say 5 pages), performance will be worse, as the CSS-payload is sent over again and again whereas normally the separate CSS-files would not need to be sent any more as they would be in cache.
 
 So the choice should be based on your answer to some site-specific questions; how much CSS do you have? How many pages per visit do your visitors request? If you have a lot of CSS o a high number of pages/ visit, it's probably not a good idea to inline all CSS. But I do (as I have a low amount of average requests/ visitor and only a small amount of CSS as I use a pretty simple theme).
 
@@ -98,7 +98,7 @@ If your webserver is properly configured to handle compression (gzip or deflate)
 
 = How does "exclude from optimizing" work? =
 
-Both CSS and JS optimization can skip code from being aggregated and minimized by adding "identifiers" to the comma-seperated exclusion list. The exact identifier string to use can be determined this way:
+Both CSS and JS optimization can skip code from being aggregated and minimized by adding "identifiers" to the comma-separated exclusion list. The exact identifier string to use can be determined this way:
 
 * if you want to exclude a specific file, e.g. wp-content/plugins/funkyplugin/css/style.css, you could simply exclude "funkyplugin/css/style.css"
 * if you want to exclude all files of a specific plugin, e.g. wp-content/plugins/funkyplugin/js/*, you can exclude for example "funkyplugin/js/" or "plugins/funkyplugin"
@@ -289,7 +289,7 @@ First of all; Happy holidays, all the best for 2015!!
 
 = 1.8.5 =
 * Updated to lastest version of [CSS minification component](https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port/)
-* Improvement: for multi-sites the cache is now written to seperate directories, avoiding one site to clean out the cache for the entire installation. Code [contributed by Joern Lund](http://wordpress.org/support/topic/multisite-blog-admin-can-delete-entire-network-cache), kudo's Joern!!
+* Improvement: for multi-sites the cache is now written to separate directories, avoiding one site to clean out the cache for the entire installation. Code [contributed by Joern Lund](http://wordpress.org/support/topic/multisite-blog-admin-can-delete-entire-network-cache), kudo's Joern!!
 * Improvement: add WordPress plugin header to autoptimize_helper.php_example to make it easier to enable it as a module
 * Improvement: nonce and post_id are added to default configuration for JS exclusion
 * Improvement: explicitely exclude wp-admin from being Autoptimized
@@ -396,7 +396,7 @@ First of all; Happy holidays, all the best for 2015!!
 * fixed stupid typo in config/delayed.php which broke things badly (april fools-wise); strpos instead of str_pos as reported by Takahiro.
 
 = 1.6.0 =
-* You can now specify scripts that should not be Autoptimized in the admin page. Just add the names (or part of the path) of the scripts in a comma-seperated list and that JavaScript-file will remain untouched by Autoptimize.
+* You can now specify scripts that should not be Autoptimized in the admin page. Just add the names (or part of the path) of the scripts in a comma-separated list and that JavaScript-file will remain untouched by Autoptimize.
 * Added support for ETag and LastModified (essentially for a better pagespeed score, as the files are explicitely cacheable for 1 year)
 * Autoptimizing for logged in users is enabled again
 * Autoptimize now creates an index.html in wp-content/cache/autoptimize to prevent snooping (as [proposed by Chris](http://blog.futtta.be/2013/01/07/adopting-an-oss-orphan-autoptimize/#li-comment-36292))

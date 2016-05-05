@@ -112,7 +112,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
 <td><label for="autoptimize_js_exclude"><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"s_sid,smowtion_size,sc_project,WAU_,wau_add,comment-form-quicktags,edToolbar,ch_client,seal.js"); ?>"/><br />
-<?php _e('A comma-seperated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated and minimized by Autoptimize.','autoptimize'); ?></label></td>
+<?php _e('A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated and minimized by Autoptimize.','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Add try-catch wrapping?','autoptimize'); ?></th>
@@ -130,7 +130,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr class="hidden css_sub ao_adv" valign="top">
 <th scope="row"><?php _e('Generate data: URIs for images?','autoptimize'); ?></th>
 <td><label for="autoptimize_css_datauris"><input type="checkbox" name="autoptimize_css_datauris" <?php echo get_option('autoptimize_css_datauris')?'checked="checked" ':''; ?>/>
-<?php _e('Enable this to include small background-images in the CSS itself instead of as seperate downloads.','autoptimize'); ?></label></td>
+<?php _e('Enable this to include small background-images in the CSS itself instead of as separate downloads.','autoptimize'); ?></label></td>
 </tr>
 <tr class="hidden css_sub ao_adv" valign="top">
 <th scope="row"><?php _e('Remove Google Fonts?','autoptimize'); ?></th>
@@ -166,7 +166,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr valign="top" class="hidden ao_adv css_sub">
 <th scope="row"><?php _e('Exclude CSS from Autoptimize:','autoptimize'); ?></th>
 <td><label for="autoptimize_css_exclude"><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo get_option('autoptimize_css_exclude','admin-bar.min.css, dashicons.min.css'); ?>"/><br />
-<?php _e('A comma-seperated list of CSS you want to exclude from being optimized.','autoptimize'); ?></label></td>
+<?php _e('A comma-separated list of CSS you want to exclude from being optimized.','autoptimize'); ?></label></td>
 </tr>
 </table>
 
