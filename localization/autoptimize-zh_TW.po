@@ -1,0 +1,380 @@
+# Copyright (C) 2014 Autoptimize
+# This file is distributed under the same license as the Autoptimize package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Autoptimize 1.9.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/autoptimize\n"
+"POT-Creation-Date: 2015-12-09 21:43+0800\n"
+"PO-Revision-Date: 2015-12-09 21:58+0800\n"
+"Last-Translator: Pseric <pserics@gmail.com>\n"
+"Language-Team: \n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: autoptimize.php:93
+msgid ""
+"Thank you for installing and activating Autoptimize. Please configure it "
+"under \"Settings\" -> \"Autoptimize\" to start improving your site's "
+"performance."
+msgstr ""
+"感謝你安裝和啟用 Autoptimize。請從「設定」 -> 「Autopimize」進行設定並開始改"
+"善你的網站效能。"
+
+#: autoptimize.php:99
+msgid ""
+"Autoptimize has just been updated. Please <strong>test your site now</"
+"strong> and adapt Autoptimize config if needed."
+msgstr ""
+"Autoptimize 已經更新。請<strong>立即測試你的網站</strong>及調整 Autoptimize "
+"設定（如果需要的話）。"
+
+#: autoptimize.php:105
+msgid ""
+"Autoptimize cannot write to the cache directory (default: /wp-content/cache/"
+"autoptimize), please fix to enable CSS/ JS optimization!"
+msgstr ""
+"Autoptimize 無法寫入快取目錄（預設值：/wp-content/cache/autoptimize），請修復"
+"來啟用 CSS/JS 最佳化！"
+
+#: classes/autoptimizeConfig.php:48
+msgid "Autoptimize Settings"
+msgstr "Autoptimize 設定"
+
+#: classes/autoptimizeConfig.php:54 classes/autoptimizeConfig.php:60
+msgid "Show advanced settings"
+msgstr "顯示進階設定"
+
+#: classes/autoptimizeConfig.php:55 classes/autoptimizeConfig.php:61
+msgid "Hide advanced settings"
+msgstr "隱藏進階設定"
+
+#: classes/autoptimizeConfig.php:69
+msgid "HTML Options"
+msgstr "HTML 選項"
+
+#: classes/autoptimizeConfig.php:72
+msgid "Optimize HTML Code?"
+msgstr "最佳化 HTML 程式碼？"
+
+#: classes/autoptimizeConfig.php:76
+msgid "Keep HTML comments?"
+msgstr "保留 HTML 註解？"
+
+#: classes/autoptimizeConfig.php:78
+msgid ""
+"Enable this if you want HTML comments to remain in the page, needed for e.g. "
+"AdSense to function properly."
+msgstr ""
+"如果你想讓 HTML 註解保留在頁面裡，請啟用此選項，例如要讓 AdSense 正常運作就必"
+"須用到。"
+
+#: classes/autoptimizeConfig.php:82
+msgid "JavaScript Options"
+msgstr "JavaScript 選項"
+
+#: classes/autoptimizeConfig.php:85
+msgid "Optimize JavaScript Code?"
+msgstr "最佳化 JavaScript 程式碼？"
+
+#: classes/autoptimizeConfig.php:89
+msgid "Force JavaScript in &lt;head&gt;?"
+msgstr "只處理在 &lt;head&gt; 的 JavaScript？"
+
+#: classes/autoptimizeConfig.php:91
+msgid ""
+"Load JavaScript early, reducing the chance of JS-errors but making it render "
+"blocking. You can disable this if you're not aggregating inline JS and you "
+"want JS to be deferred."
+msgstr ""
+"提早載入JavaScript，降低 JS 錯誤的機會，但可能延遲網頁載入速度。如果你不想合"
+"併內連 JS，但你希望 JS 延遲載入，你可以停用這個選項。"
+
+#: classes/autoptimizeConfig.php:95
+msgid "Look for scripts only in &lt;head&gt;?"
+msgstr "只在 &lt;head&gt; 尋找程式？"
+
+#: classes/autoptimizeConfig.php:95 classes/autoptimizeConfig.php:135
+msgid " <i>(deprecated)</i>"
+msgstr " <i>（不推薦）</i>"
+
+#: classes/autoptimizeConfig.php:97
+msgid ""
+"Mostly useful in combination with previous option when using jQuery-based "
+"templates, but might help keeping cache size under control."
+msgstr ""
+"當使用 jQuery 模版時，合併先前的選項是非常有用的，但可能有助於維持快取檔案大"
+"小。"
+
+#: classes/autoptimizeConfig.php:101
+msgid "Also aggregate inline JS?"
+msgstr "也合併內連 JS？"
+
+#: classes/autoptimizeConfig.php:103
+msgid ""
+"Check this option for Autoptimize to also aggregate JS in the HTML. If this "
+"option is not enabled, you might have to \"force JavaScript in head\"."
+msgstr ""
+"選取這個選項讓 Autoptimize 也合併 HTML 內的 JS 檔。如果這個選項沒有啟用，你可"
+"能必須「只處理在 head 部分的 JavaScript」。"
+
+#: classes/autoptimizeConfig.php:106
+msgid "Exclude scripts from Autoptimize:"
+msgstr "從 Autoptimize 排除程式："
+
+#: classes/autoptimizeConfig.php:108
+msgid ""
+"A comma-seperated list of scripts you want to exclude from being optimized, "
+"for example 'whatever.js, another.js' (without the quotes) to exclude those "
+"scripts from being aggregated and minimized by Autoptimize."
+msgstr ""
+"使用逗號來分隔你想從最佳化中排除的程式，舉例來說使用「whatever.js, another."
+"js」（沒有引號）來排除這些程式，不讓它們被 Autoptimize 合併及最小化。"
+
+#: classes/autoptimizeConfig.php:111
+msgid "Add try-catch wrapping?"
+msgstr "加入異常處理環繞？"
+
+#: classes/autoptimizeConfig.php:113
+msgid ""
+"If your scripts break because of a JS-error, you might want to try this."
+msgstr "如果你的程式因為 JS 錯誤而發生異常，你可能會需要嘗試這個。"
+
+#: classes/autoptimizeConfig.php:117
+msgid "CSS Options"
+msgstr "CSS 選項"
+
+#: classes/autoptimizeConfig.php:120
+msgid "Optimize CSS Code?"
+msgstr "最佳化 CSS 程式碼？"
+
+#: classes/autoptimizeConfig.php:124
+msgid "Generate data: URIs for images?"
+msgstr "為圖片產生 data: URIs？"
+
+#: classes/autoptimizeConfig.php:126
+msgid ""
+"Enable this to include small background-images in the CSS itself instead of "
+"as seperate downloads."
+msgstr "啟用這個選項將小型背景圖片併入 CSS 檔，不再分開單獨下載。"
+
+#: classes/autoptimizeConfig.php:129
+msgid "Remove Google Fonts?"
+msgstr "移除 Google Fonts？"
+
+#: classes/autoptimizeConfig.php:131
+msgid "Check this if you don't need or want Google Fonts being loaded."
+msgstr "如果你不需要或不想載入 Google Fonts，勾選這個選項。"
+
+#: classes/autoptimizeConfig.php:135
+msgid "Look for styles only in &lt;head&gt;?"
+msgstr "只在 &lt;head&gt; 尋找樣式？"
+
+#: classes/autoptimizeConfig.php:137
+msgid ""
+"Don't autoptimize CSS outside the head-section. If the cache gets big, you "
+"might want to enable this."
+msgstr ""
+"不在 head 以外部分自動最佳化 CSS。如果快取太大，你也許可以啟用這項功能。"
+
+#: classes/autoptimizeConfig.php:141
+msgid "Also aggregate inline CSS?"
+msgstr "也合併內連 CSS？"
+
+#: classes/autoptimizeConfig.php:143
+msgid "Check this option for Autoptimize to also aggregate CSS in the HTML."
+msgstr "勾選這個選項讓 Autoptimize 也合併 HTML 裡的 CSS。"
+
+#: classes/autoptimizeConfig.php:146
+msgid "Inline and Defer CSS?"
+msgstr "內連及延遲載入 CSS？"
+
+#: classes/autoptimizeConfig.php:148
+msgid ""
+"Inline \"above the fold CSS\" while loading the main autoptimized CSS only "
+"after page load. <a href=\"http://wordpress.org/plugins/autoptimize/faq/\" "
+"target=\"_blank\">Check the FAQ</a> before activating this option!"
+msgstr ""
+"只在頁面載入後，才載入最佳化的 CSS 檔。在啟用這個選項前，請先<a href="
+"\"http://wordpress.org/plugins/autoptimize/faq/\" target=\"_blank\">查看問與"
+"答</a>！"
+
+#: classes/autoptimizeConfig.php:152
+msgid "Paste the above the fold CSS here."
+msgstr "在這裡貼上 CSS 檔。"
+
+#: classes/autoptimizeConfig.php:155
+msgid "Inline all CSS?"
+msgstr "內連所有 CSS？"
+
+#: classes/autoptimizeConfig.php:157
+msgid ""
+"Inlining all CSS can improve performance for sites with a low pageviews/ "
+"visitor-rate, but may slow down performance otherwise."
+msgstr "內連所有 CSS 可加速低流量網站，但可能造成效能降低。"
+
+#: classes/autoptimizeConfig.php:160
+msgid "Exclude CSS from Autoptimize:"
+msgstr "從 Autoptimize 排除 CSS 檔："
+
+#: classes/autoptimizeConfig.php:162
+msgid "A comma-seperated list of CSS you want to exclude from being optimized."
+msgstr "使用逗號來分隔你想從最佳化中排除的 CSS 檔。"
+
+#: classes/autoptimizeConfig.php:166
+msgid "CDN Options"
+msgstr "CDN 選項"
+
+#: classes/autoptimizeConfig.php:169
+msgid "CDN Base URL"
+msgstr "CDN 主網址"
+
+#: classes/autoptimizeConfig.php:171
+msgid ""
+"Enter your CDN blog root directory URL if you want to enable CDN for images "
+"referenced in the CSS."
+msgstr "如果你想在 CSS 裡為圖片啟用 CDN，輸入你的 CDN 網誌根目錄網址。"
+
+#: classes/autoptimizeConfig.php:175
+msgid "Cache Info"
+msgstr "快取資訊"
+
+#: classes/autoptimizeConfig.php:178
+msgid "Cache folder"
+msgstr "快取資料夾"
+
+#: classes/autoptimizeConfig.php:182
+msgid "Can we write?"
+msgstr "是否可以寫入？"
+
+#: classes/autoptimizeConfig.php:183
+msgid "Yes"
+msgstr "是"
+
+#: classes/autoptimizeConfig.php:183
+msgid "No"
+msgstr "否"
+
+#: classes/autoptimizeConfig.php:186
+msgid "Cached styles and scripts"
+msgstr "已快取的樣式和程式"
+
+#: classes/autoptimizeConfig.php:194
+msgid "Save aggregated script/css as static files?"
+msgstr "將彙整的程式／樣式檔儲存為靜態檔案？"
+
+#: classes/autoptimizeConfig.php:196
+msgid ""
+"By default files saved are static css/js, uncheck this option if your "
+"webserver doesn't properly handle the compression and expiry."
+msgstr ""
+"預設情況下會將 css/js 儲存為靜態檔案，如果你的網頁伺服器無法正確處理壓縮和過"
+"期時間，請取消勾選這個選項。"
+
+#: classes/autoptimizeConfig.php:202
+msgid "Save Changes"
+msgstr "儲存變更"
+
+#: classes/autoptimizeConfig.php:203
+msgid "Save Changes and Empty Cache"
+msgstr "儲存變更並清除快取"
+
+#: classes/autoptimizeConfig.php:224
+msgid ""
+"Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check "
+"out the FAQ</a> or post your question on <a href='http://wordpress.org/"
+"support/plugin/autoptimize'>the support-forum</a>."
+msgstr ""
+"需要協助嗎？<a href='https://wordpress.org/plugins/autoptimize/faq/'>查看問與"
+"答</a>或把你的問題發佈到<a href='http://wordpress.org/support/plugin/"
+"autoptimize'>支援論壇</a>。"
+
+#: classes/autoptimizeConfig.php:225
+msgid "Happy with Autoptimize?"
+msgstr "使用 Autoptimize 愉快嗎？"
+
+#: classes/autoptimizeConfig.php:225
+msgid "Try my other plugins!"
+msgstr "試試我的其他外掛！"
+
+#: classes/autoptimizeConfig.php:231
+msgid "futtta about"
+msgstr "關於 futtta"
+
+#. Plugin Name of the plugin/theme
+#: classes/autoptimizeConfig.php:233
+msgid "Autoptimize"
+msgstr "Autoptimize"
+
+#: classes/autoptimizeConfig.php:234
+msgid "WordPress"
+msgstr "WordPress"
+
+#: classes/autoptimizeConfig.php:235
+msgid "Web Technology"
+msgstr "網頁技術"
+
+#: classes/autoptimizeConfig.php:250
+msgid "Do not donate for this plugin!"
+msgstr "別贊助這個外掛！"
+
+#: classes/autoptimizeConfig.php:370
+msgid "Autoptimize Options"
+msgstr "Autoptimize 選項"
+
+#: classes/autoptimizeConfig.php:419 classes/autoptimizeConfig.php:425
+msgid "Settings"
+msgstr "設定"
+
+#: classes/autoptimizeConfig.php:488
+msgid "No items"
+msgstr "沒有項目"
+
+#: classes/autoptimizeConfig.php:493
+msgid "Posted %s"
+msgstr "發佈於 %s"
+
+#: classlesses/autoptimizeCacheChecker.php:50
+msgid ""
+"Autoptimize's cache size is getting big, consider purging the cache.<br /"
+"><br />Have a look at <a href=\"https://wordpress.org/plugins/autoptimize/"
+"faq/\" target=\"_blank\">the Autoptimize FAQ</a> to see how you can keep the "
+"cache size under control."
+msgstr ""
+"Autoptimize 的快取大小越來越大，考慮清理快取。<br /><br />只找 <a href="
+"\"https://wordpress.org/plugins/autoptimize/faq/\" target=\"_blank"
+"\">Autoptimize 問與答</a>來看一下如何控制快取大小。"
+
+#. Plugin URI of the plugin/theme
+msgid "http://blog.futtta.be/autoptimize"
+msgstr "http://blog.futtta.be/autoptimize"
+
+#. Description of the plugin/theme
+msgid ""
+"Optimizes your website, concatenating the CSS and JavaScript code, and "
+"compressing it."
+msgstr "最佳化你的網站，串聯 CSS 和 JavaScript 程式碼並進行壓縮。"
+
+#. Author of the plugin/theme
+msgid "Frank Goossens (futtta)"
+msgstr "Frank Goossens (futtta)"
+
+#. Author URI of the plugin/theme
+msgid "http://blog.futtta.be/"
+msgstr "http://blog.futtta.be/"
+
+#~ msgid ""
+#~ "For performance reasons it is better to include JavaScript at the bottom "
+#~ "of HTML, but this sometimes breaks things. Especially useful for jQuery-"
+#~ "based themes."
+#~ msgstr ""
+#~ "為了更好的效能，最好讓 JavaScript 在 HTML 底部載入，但這有時候可能造成故"
+#~ "障。尤其是一些使用 jQuery 的佈景主題。"
+
+#~ msgid ""
+#~ "If your scripts break because of an script error, you might want to try "
+#~ "this."
+#~ msgstr "如果你的程式因為錯誤而損壞，你可能可以嘗試這項功能。"

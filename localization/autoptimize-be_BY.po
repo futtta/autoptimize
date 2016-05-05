@@ -1,0 +1,90 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Emilio Lpez
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: AO\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/autoptimize\n"
+"POT-Creation-Date: 2009-07-21 03:53+0000\n"
+"PO-Revision-Date: 2010-04-12 13:09+0300\n"
+"Last-Translator: FatCow <zhr@tut.by>\n"
+"Language-Team: Marcis G. <by.marcis@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Belarusian\n"
+"X-Poedit-Country: BELARUS\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: classes/autoptimizeConfig.php:44
+msgid "Autoptimize Settings"
+msgstr "Налады Autoptimize "
+
+#: classes/autoptimizeConfig.php:49
+msgid "HTML Options"
+msgstr "Налады HTML "
+
+#: classes/autoptimizeConfig.php:52
+msgid "Optimize HTML Code?"
+msgstr "Оптимищировать HTML-код?"
+
+#: classes/autoptimizeConfig.php:57
+msgid "JavaScript Options"
+msgstr "Налады JavaScript "
+
+#: classes/autoptimizeConfig.php:60
+msgid "Optimize JavaScript Code?"
+msgstr "Аптымiзаваць HTML-код?"
+
+#: classes/autoptimizeConfig.php:64
+msgid "Look for scripts only in &lt;head&gt;?"
+msgstr "Шукайце толькі ў сцэнарыях &lt;head&gt;?"
+
+#: classes/autoptimizeConfig.php:66
+#: classes/autoptimizeConfig.php:84
+msgid "Disabled by default. If the cache gets big, you might want to enable this."
+msgstr "Па змаўчанні выключана. Калі кэш вялікай, вы можаце ўключыць гэту опцыю."
+
+#: classes/autoptimizeConfig.php:69
+msgid "Add try-catch wrapping?"
+msgstr "Дадаць паспрабуй злавіць пакаванні?"
+
+#: classes/autoptimizeConfig.php:71
+msgid "Disabled by default. If your scripts break because of an script error, you might want to try this."
+msgstr "Па змаўчанні выключана. Калі вашы скрыпты перакопваюцца з-за памылкі сцэнара, вы можаце паспрабаваць гэта."
+
+#: classes/autoptimizeConfig.php:75
+msgid "CSS Options"
+msgstr "CSS налады"
+
+#: classes/autoptimizeConfig.php:78
+msgid "Optimize CSS Code?"
+msgstr "Оптимищировать CSS-код?"
+
+#: classes/autoptimizeConfig.php:82
+msgid "Look for styles on just &lt;head&gt;?"
+msgstr "Шукайце толькі ў сценарях &lt;head&gt;?"
+
+#: classes/autoptimizeConfig.php:91
+msgid "Save Changes"
+msgstr "Захаваць змены"
+
+#: classes/autoptimizeConfig.php:101
+msgid "Autoptimize Options"
+msgstr "Налады Autoptimize "
+
+#: classes/autoptimizeConfig.php:126
+#: classes/autoptimizeConfig.php:133
+msgid "Settings"
+msgstr "Налады"
+
+#. Plugin Name of an extension
+msgid "Autoptimize"
+msgstr "Autoptimize"
+
+#. Description of an extension
+msgid "Optimizes your website, concatenating the CSS and JavaScript code, and compressing it."
+msgstr "Аптымізацыя вашага сайта метадам аб'яднання CSS і JavaScript-кода і іх сціскі."
+
