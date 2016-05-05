@@ -6,7 +6,7 @@ class autoptimizeToolbar {
 	public function __construct()
 	{
 		// Load admin toolbar feature
-		add_action( 'plugins_loaded', array( $this, 'load_toolbar' ) );
+		add_action( 'wp_loaded', array( $this, 'load_toolbar' ) );
 	}
 
 	public function load_toolbar()
@@ -18,20 +18,46 @@ class autoptimizeToolbar {
 			
 			add_action( 'wp_ajax_autoptimize_delete_cache', array( $this, 'delete_cache' ) );
 
-			add_action( 'wp_before_admin_bar_render', array($this, 'add_toolbar') );
+			add_action( 'admin_bar_menu', array($this, 'add_toolbar'), 100 );
 		}
 	}
 
 	public function add_toolbar()
 	{
 		global $wp_admin_bar;
+		
+		if ( !is_user_logged_in() ) return;
 
-		$wp_admin_bar->add_menu( array(
+		$AOstatArr = autoptimizeCache::stats();
+
+		$max_size = 512 * 1024 * 1024;
+
+		$files = $AOstatArr[0];
+		$bytes = $AOstatArr[1];
+
+		$si_prefix = array( 'B', 'KB', 'MB', 'GB' );
+		$class = min( (int) log( $bytes , 1024 ), count( $si_prefix ) - 1 );
+		$size = sprintf( '%1.2f', $bytes / pow( 1024, $class ) ) . ' ' . $si_prefix[ $class ];
+
+		$color = ( $bytes > $max_size ) ? 'red' : ( ( $bytes > $max_size/1.25 ) ? 'orange' : 'green' );
+
+		$wp_admin_bar->add_node( array(
 			'id'    => 'autoptimize',
-			'title' => __("Autoptimize",'autoptimize')
+			'title' => '<span class="ab-icon"></span><span class="ab-label">' . __("Autoptimize",'autoptimize') . '</span>',
+			'meta'  => array( 'class' => 'bullet-' . $color )
 		));
 
-		$wp_admin_bar->add_menu( array(
+		$wp_admin_bar->add_node( array(
+			'id'    => 'autoptimize-cache-info',
+			'title' => '<p>' . __( "Cache Info", 'autoptimize' ) . '</p>' .
+				   '<table>' .
+				   '<tr><td>' . __( "Size", 'autoptimize' ) . ':</td><td class="size ' . $color . '">' . $size . '</td></tr>' .
+				   '<tr><td>' . __( "Files", 'autoptimize' ) . ':</td><td class="files white">' . $files . '</td></tr>' .
+				   '</table>',
+			'parent'=> 'autoptimize'
+		));
+		
+		$wp_admin_bar->add_node( array(
 			'id'    => 'autoptimize-delete-cache',
 			'title' => __("Delete Cache",'autoptimize'),
 			'parent'=> 'autoptimize'
@@ -45,9 +71,9 @@ class autoptimizeToolbar {
 
 	public function enqueue_scripts()
 	{
-		wp_enqueue_style( 'autoptimize-toolbar', plugins_url( 'autoptimize/classes/static/css/toolbar.css' ), array(), time(), "all" );
+		wp_enqueue_style( 'autoptimize-toolbar', plugins_url('/static/css/toolbar.css', __FILE__ ), array(), time(), "all" );
 
-		wp_enqueue_script( 'autoptimize-toolbar', plugins_url( 'autoptimize/classes/static/js/toolbar.js' ), array(), time(), true );
+		wp_enqueue_script( 'autoptimize-toolbar', plugins_url( '/static/js/toolbar.js', __FILE__ ), array(), time(), true );
 	}
 
 }
