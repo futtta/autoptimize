@@ -6,16 +6,14 @@ class autoptimizeConfig {
 	static private $instance = null;
 
 	//Singleton: private construct
-	private function __construct() {
+	private function __construct()
+	{
 		if( is_admin() ) {
-			
+
 			//Add the admin page and settings
 			add_action('admin_menu',array($this,'addmenu'));
 			add_action('admin_init',array($this,'registersettings'));
-			
-			//Add the admin toolbar
-			$toolbar = new autoptimizeToolbar();
-			
+
 			//Set meta info
 			if(function_exists('plugin_row_meta')) {
 				//2.8+
@@ -32,6 +30,9 @@ class autoptimizeConfig {
 				update_option('autoptimize_cache_clean',0);
 			}
 		}
+
+		//Add the admin toolbar (we loaded outsidethe verification of is_admin to also be displayed on the frontend toolbar)
+		$toolbar = new autoptimizeToolbar();
 	}
 	
 	static public function instance() {
@@ -216,8 +217,45 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 
 </form>
 </div>
-<style>.autoptimize_banner ul li {font-size:medium;text-align:center;} .unslider-arrow {left:unset;}</style>
-<div class="autoptimize_banner">
+<style>
+.autoptimize_banner {
+	margin: 0 38px;
+	padding-bottom: 5px;
+}
+.autoptimize_banner ul li {
+	font-size:medium;
+	text-align:center;
+}
+.unslider-arrow {
+	display: block;
+	left: unset;
+	margin-top: -35px;
+	margin-left: 7px;
+	margin-right: 7px;
+	border-radius: 32px;
+	background: rgba(0, 0, 0, 0.10) no-repeat 50% 50%;
+	color: rgba(255, 255, 255, 0.8);
+	font: normal 20px/1 dashicons;
+	speak: none;
+	padding: 3px 2px 3px 4px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.unslider-arrow:hover {
+	background-color: rgba(0, 0, 0, 0.20);
+	color: #FFF;
+}
+.unslider-arrow.prev {
+    padding: 3px 4px 3px 2px;
+}
+.unslider-arrow.prev::before {
+    content: "\f341";
+}
+.unslider-arrow.next::before {
+    content: "\f345";
+}
+</style>
+<div class="autoptimize_banner hidden">
 	<ul>
         <?php
         if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
@@ -238,7 +276,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
         <li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php _e("Try my other plugins!","autoptimize"); ?></a></li>
 	</ul>
 </div>
-<div style="float:right;width:30%" id="autoptimize_admin_feed">
+<div style="float:right;width:30%" id="autoptimize_admin_feed" class="hidden">
         <div style="margin-left:10px;margin-top:-5px;">
                 <h2>
                         <?php _e("futtta about","autoptimize") ?>
@@ -273,7 +311,13 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	jQuery(document).ready(function() {
 		check_ini_state();
 		
-		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:5000});
+		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:5000, infinite: true, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
+		jQuery('#autoptimize_admin_feed').fadeTo("slow",1).show();
+
+		jQuery( "#feed_dropdown" ).change(function() {
+			jQuery("#futtta_feed").fadeTo(0,0);
+			jQuery("#futtta_feed").fadeTo("slow",1);
+		});
 		
 		jQuery( "#ao_show_adv" ).click(function() {
 			jQuery( "#ao_show_adv" ).hide();
@@ -391,8 +435,8 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	}
 
 	public function autoptimize_admin_styles() {
-		wp_enqueue_style('unslider', plugins_url('/external/js/unslider.css', __FILE__));
-		wp_enqueue_style('unslider-dots', plugins_url('/external/js/unslider-dots.css', __FILE__));
+		wp_enqueue_style('unslider', plugins_url('/external/css/unslider.css', __FILE__));
+		wp_enqueue_style('unslider-dots', plugins_url('/external/css/unslider-dots.css', __FILE__));
 	}
 
 
