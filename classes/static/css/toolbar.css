@@ -2,7 +2,7 @@
 {
 	display: none;
 	position: fixed;
-	background-color: rgba(102, 102, 102, 0.9);
+	background-color: rgba(102, 102, 102, 0.8);
 	background-image: url('loading.gif');
 	background-position: center;
 	background-repeat: no-repeat;
@@ -11,15 +11,6 @@
 	width: 100%;
 	height: 100%;
 	z-index: 9000000000;
-}
-
-.ZebraDialogOverlay
-{
-	z-index: 9000000000 !important;
-}
-.ZebraDialog
-{
-	z-index: 9000000001 !important;
 }
 
 #wp-admin-bar-autoptimize .white
