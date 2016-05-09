@@ -70,6 +70,7 @@ class autoptimizeToolbar {
 		$wp_admin_bar->add_node( array(
 			'id'    => 'autoptimize',
 			'title' => '<span class="ab-icon"></span><span class="ab-label">' . __("Autoptimize",'autoptimize') . '</span>',
+			'href'  => admin_url( 'options-general.php?page=autoptimize' ),
 			'meta'  => array( 'class' => 'bullet-' . $color )
 		));
 
