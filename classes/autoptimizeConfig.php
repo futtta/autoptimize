@@ -6,10 +6,8 @@ class autoptimizeConfig {
 	static private $instance = null;
 
 	//Singleton: private construct
-	private function __construct()
-	{
+	private function __construct() {
 		if( is_admin() ) {
-
 			//Add the admin page and settings
 			add_action('admin_menu',array($this,'addmenu'));
 			add_action('admin_init',array($this,'registersettings'));
@@ -117,7 +115,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
 <td><label for="autoptimize_js_exclude"><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"s_sid,smowtion_size,sc_project,WAU_,wau_add,comment-form-quicktags,edToolbar,ch_client,seal.js"); ?>"/><br />
-<?php _e('A comma-seperated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated and minimized by Autoptimize.','autoptimize'); ?></label></td>
+<?php _e('A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated and minimized by Autoptimize.','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="hidden js_sub ao_adv">
 <th scope="row"><?php _e('Add try-catch wrapping?','autoptimize'); ?></th>
@@ -135,7 +133,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr class="hidden css_sub ao_adv" valign="top">
 <th scope="row"><?php _e('Generate data: URIs for images?','autoptimize'); ?></th>
 <td><label for="autoptimize_css_datauris"><input type="checkbox" name="autoptimize_css_datauris" <?php echo get_option('autoptimize_css_datauris')?'checked="checked" ':''; ?>/>
-<?php _e('Enable this to include small background-images in the CSS itself instead of as seperate downloads.','autoptimize'); ?></label></td>
+<?php _e('Enable this to include small background-images in the CSS itself instead of as separate downloads.','autoptimize'); ?></label></td>
 </tr>
 <tr class="hidden css_sub ao_adv" valign="top">
 <th scope="row"><?php _e('Remove Google Fonts?','autoptimize'); ?></th>
@@ -171,7 +169,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <tr valign="top" class="hidden ao_adv css_sub">
 <th scope="row"><?php _e('Exclude CSS from Autoptimize:','autoptimize'); ?></th>
 <td><label for="autoptimize_css_exclude"><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo get_option('autoptimize_css_exclude','admin-bar.min.css, dashicons.min.css'); ?>"/><br />
-<?php _e('A comma-seperated list of CSS you want to exclude from being optimized.','autoptimize'); ?></label></td>
+<?php _e('A comma-separated list of CSS you want to exclude from being optimized.','autoptimize'); ?></label></td>
 </tr>
 </table>
 
@@ -199,7 +197,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 <td><?php
 	$AOstatArr=autoptimizeCache::stats(); 
 	$AOcacheSize=round($AOstatArr[1]/1024);
-	echo $AOstatArr[0].' '.__(' files, totalling ','autoptimize').' '.$AOcacheSize.' '.__(' Kbytes (calculated at ','autoptimize').' '.date("H:i e", $AOstatArr[2]).')';
+	echo $AOstatArr[0].__(' files, totalling ','autoptimize').$AOcacheSize.__(' Kbytes (calculated at ','autoptimize').date("H:i e", $AOstatArr[2]).')';
 ?></td>
 </tr>
 <tr valign="top" class="hidden ao_adv">
@@ -217,45 +215,8 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 
 </form>
 </div>
-<style>
-.autoptimize_banner {
-	margin: 0 38px;
-	padding-bottom: 5px;
-}
-.autoptimize_banner ul li {
-	font-size:medium;
-	text-align:center;
-}
-.unslider-arrow {
-	display: block;
-	left: unset;
-	margin-top: -35px;
-	margin-left: 7px;
-	margin-right: 7px;
-	border-radius: 32px;
-	background: rgba(0, 0, 0, 0.10) no-repeat 50% 50%;
-	color: rgba(255, 255, 255, 0.8);
-	font: normal 20px/1 dashicons;
-	speak: none;
-	padding: 3px 2px 3px 4px;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-.unslider-arrow:hover {
-	background-color: rgba(0, 0, 0, 0.20);
-	color: #FFF;
-}
-.unslider-arrow.prev {
-    padding: 3px 4px 3px 2px;
-}
-.unslider-arrow.prev::before {
-    content: "\f341";
-}
-.unslider-arrow.next::before {
-    content: "\f345";
-}
-</style>
-<div class="autoptimize_banner hidden">
+<style>.autoptimize_banner ul li {font-size:medium;text-align:center;} .unslider-arrow {left:unset;}</style>
+<div class="autoptimize_banner">
 	<ul>
         <?php
         if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
@@ -276,7 +237,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
         <li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php _e("Try my other plugins!","autoptimize"); ?></a></li>
 	</ul>
 </div>
-<div style="float:right;width:30%" id="autoptimize_admin_feed" class="hidden">
+<div style="float:right;width:30%" id="autoptimize_admin_feed">
         <div style="margin-left:10px;margin-top:-5px;">
                 <h2>
                         <?php _e("futtta about","autoptimize") ?>
@@ -311,13 +272,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	jQuery(document).ready(function() {
 		check_ini_state();
 		
-		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:5000, infinite: true, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
-		jQuery('#autoptimize_admin_feed').fadeTo("slow",1).show();
-
-		jQuery( "#feed_dropdown" ).change(function() {
-			jQuery("#futtta_feed").fadeTo(0,0);
-			jQuery("#futtta_feed").fadeTo("slow",1);
-		});
+		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:5000});
 		
 		jQuery( "#ao_show_adv" ).click(function() {
 			jQuery( "#ao_show_adv" ).hide();
@@ -435,8 +390,8 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	}
 
 	public function autoptimize_admin_styles() {
-		wp_enqueue_style('unslider', plugins_url('/external/css/unslider.css', __FILE__));
-		wp_enqueue_style('unslider-dots', plugins_url('/external/css/unslider-dots.css', __FILE__));
+		wp_enqueue_style('unslider', plugins_url('/external/js/unslider.css', __FILE__));
+		wp_enqueue_style('unslider-dots', plugins_url('/external/js/unslider-dots.css', __FILE__));
 	}
 
 
@@ -587,5 +542,4 @@ if (get_option('autoptimize_show_adv','0')=='1') {
         
         return $tabContent;
     }
-
 }
