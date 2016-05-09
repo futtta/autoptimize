@@ -15,7 +15,7 @@ class autoptimizeToolbar {
 	public function load_toolbar()
 	{
 		// We check that the current user has the appropriate permissions
-		if( current_user_can( 'manage_options' ) )
+		if( current_user_can( 'manage_options' ) ) && apply_filters( 'autoptimize_filter_toolbar_show', true ) )
 		{
 			// Load custom styles and scripts
 			if( is_admin() ) {
@@ -104,8 +104,6 @@ class autoptimizeToolbar {
 	{
 		// We call the function for cleaning the Autoptimize cache
 		autoptimizeCache::clearall();
-		// Although this action is called from within the function: clearall() , for some reason we must run again.
-		do_action("autoptimize_action_cachepurged");
 
 		// NOTE: Remember that any return values of this function must be in JSON format
 	}
