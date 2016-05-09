@@ -64,15 +64,8 @@ if ($autoptimize_db_version !== $autoptimize_version) {
 	$autoptimize_db_version=$autoptimize_version;
 }
 
-// Load translations from the languages directory.
-$locale = get_locale();
-
-// This filter is documented in /wp-includes/l10n.php.
-$locale = apply_filters( 'plugin_locale', $locale, 'autoptimize' );
-load_textdomain( 'autoptimize', WP_LANG_DIR . '/plugins/autoptimize-' . $locale . '.mo' );
-
 // Load translations
-load_plugin_textdomain( 'autoptimize', false, dirname( plugin_basename( __FILE__ ) ) . '/localization/' );
+load_plugin_textdomain('autoptimize',false,plugin_basename(dirname( __FILE__ )).'/localization');
 
 function autoptimize_uninstall(){
 	autoptimizeCache::clearall();
