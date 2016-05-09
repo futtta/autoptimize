@@ -54,7 +54,7 @@ $autoptimize_db_version=get_option('autoptimize_version','none');
 
 if ($autoptimize_db_version !== $autoptimize_version) {
 	if ($autoptimize_db_version==="none") {
-		add_action('admin_notices', 'autoptimize_install_config_notice');
+    add_action('admin_notices', 'autoptimize_install_config_notice');
 	} else {
 		// updating, include the update-code
 		include(AUTOPTIMIZE_PLUGIN_DIR.'/classlesses/autoptimizeUpdateCode.php');
@@ -194,8 +194,8 @@ function autoptimize_start_buffering() {
 
 // Action on end, this is where the magic happens
 function autoptimize_end_buffering($content) {
-	if ( stripos($content,"<html") === false || stripos($content,"<html amp") !== false || stripos($content,"<html ⚡") !== false ||stripos($content,"<xsl:stylesheet") !== false ) { return $content;}
-
+	if ( stripos($content,"<html") === false || preg_match('/<html[^>]*(?:amp|⚡)/',$content) === 1 || stripos($content,"<xsl:stylesheet") !== false ) { return $content; }
+    
 	// load URL constants as late as possible to allow domain mapper to kick in
 	if (function_exists("domain_mapping_siteurl")) {
 		define('AUTOPTIMIZE_WP_SITE_URL',domain_mapping_siteurl(get_current_blog_id()));
