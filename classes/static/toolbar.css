@@ -22,7 +22,7 @@
 
 #wp-admin-bar-autoptimize .green
 {
-	color: #02CA02;
+	color: #26BD26;
 }
 
 #wp-admin-bar-autoptimize .orange
@@ -33,6 +33,21 @@
 #wp-admin-bar-autoptimize .red
 {
 	color: #EA1919;
+}
+
+#wp-admin-bar-autoptimize .bg-green
+{
+	background: #26BD26;
+}
+
+#wp-admin-bar-autoptimize .bg-orange
+{
+	background: #EC9103;
+}
+
+#wp-admin-bar-autoptimize .bg-red
+{
+	background: #EA1919;
 }
 
 /* Toolbar Bullet Icons */
@@ -113,8 +128,110 @@
 	display: block;
 }
 
-#wp-admin-bar-autoptimize-cache-info .ab-item * 
+#wp-admin-bar-autoptimize-cache-info .ab-item p,
+#wp-admin-bar-autoptimize-cache-info .ab-item td
 {
 	font-size: 11px !important;
 	line-height: 16px !important;
+}
+
+#wp-admin-bar-autoptimize-cache-info .ab-item table 
+{
+	display: inline-block !important;
+	margin-left: 10px !important;
+}
+
+/* Radial Bar */
+.autoptimize-radial-bar
+{
+	display: inline-block !important;
+	margin-top: 5px !important;
+}
+.autoptimize-radial-bar,
+.autoptimize-radial-bar	.mask, 
+.autoptimize-radial-bar .fill,
+.autoptimize-radial-bar .shadow
+{
+	width				: 36px !important;
+	height				: 36px !important;
+}
+.autoptimize-radial-bar
+{
+	background-color	: #d6dadc;
+}
+.autoptimize-radial-bar .fill
+{
+	background-color	: #02ca02;
+}
+.autoptimize-radial-bar .numbers
+{
+	color	: #02ca02;
+}
+.autoptimize-radial-bar .mask
+{
+	clip				: rect(0px, 36px, 36px, 18px);
+}
+.autoptimize-radial-bar .fill
+{
+	clip				: rect(0px, 18px, 36px, 0px);
+}
+.autoptimize-radial-bar .inset
+{
+	width				: 26px !important;
+	height				: 26px !important;
+
+	margin-left			: 5px !important;
+	margin-top			: 5px !important;
+
+	background-color	: #32373c;
+}
+.autoptimize-radial-bar .percentage
+{
+	width				: 26px !important;
+	height				: 16px !important;
+	line-height			: 11px !important;
+
+	top					: 7px !important;
+	left				: 0px !important;
+	
+	overflow			: hidden;
+}
+.autoptimize-radial-bar .numbers
+{
+	width				: 26px !important;
+	font-weight			: 600 !important;
+	font-size			: 9px !important;
+
+	margin-top			: -10px !important;
+	
+	display				: inline-block;
+	vertical-align		: top;
+	text-align			: center;
+}
+
+.autoptimize-radial-bar .inset
+{
+	box-shadow			: 3px 3px 5px rgba(0,0,0,0.3) !important;
+}
+.autoptimize-radial-bar .shadow
+{
+	box-shadow			: 3px 3px 5px rgba(0,0,0,0.3) inset !important;
+}
+
+.autoptimize-radial-bar	.mask, 
+.autoptimize-radial-bar .fill,
+.autoptimize-radial-bar .shadow,
+.autoptimize-radial-bar .inset,
+.autoptimize-radial-bar .percentage
+{
+	position			: absolute !important;
+}
+
+.autoptimize-radial-bar,
+.autoptimize-radial-bar .mask,
+.autoptimize-radial-bar .fill,
+.autoptimize-radial-bar .shadow,
+.autoptimize-radial-bar .inset
+{
+	border-radius		: 50% !important;
 }
