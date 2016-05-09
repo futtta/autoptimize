@@ -42,7 +42,7 @@ class autoptimizeToolbar {
 		$stats = autoptimizeCache::stats();
 
 		// Set the Max Size recommended for cache files
-		$max_size = 512 * 1024 * 1024;
+		$max_size = apply_filters('autoptimize_filter_cachecheck_maxsize', 512 * 1024 * 1024);
 
 		// Retrieve the current Total Files in cache
 		$files = $stats[0];
@@ -54,12 +54,16 @@ class autoptimizeToolbar {
 		$class = min( (int) log( $bytes , 1024 ), count( $si_prefix ) - 1 );
 		// We format the total bytes of cache as appropriate, either in B, KB, MB or GB
 		$size = sprintf( '%1.2f', $bytes / pow( 1024, $class ) ) . ' ' . $si_prefix[ $class ];
+		
+		// We calculated the percentage of cache used
+		$percentage = round( $bytes / $max_size * 100 );
+		if( $percentage > 100 ) $percentage = 100;
 
 		// We define the type of color indicator for the current state of cache size.
 		// "green" if the size is less than 80% of the total recommended 
 		// "orange" if over 80%
 		// "red" if over 100%
-		$color = ( $bytes > $max_size ) ? 'red' : ( ( $bytes > $max_size/1.25 ) ? 'orange' : 'green' );
+		$color = ( $percentage == 100 ) ? 'red' : ( ( $percentage > 80 ) ? 'orange' : 'green' );
 
 		// Create or add new items into the Admin Toolbar.
 		// Main Autoptimize node
@@ -73,6 +77,14 @@ class autoptimizeToolbar {
 		$wp_admin_bar->add_node( array(
 			'id'    => 'autoptimize-cache-info',
 			'title' => '<p>' . __( "Cache Info", 'autoptimize' ) . '</p>' .
+				   '<div class="autoptimize-radial-bar" percentage="' . $percentage . '">' .
+				   '<div class="circle">'.
+				   '<div class="mask full"><div class="fill bg-' . $color . '"></div></div>'.
+				   '<div class="mask half"><div class="fill bg-' . $color . '"></div></div>'.
+				   '<div class="shadow"></div>'.
+				   '</div>'.
+				   '<div class="inset"><div class="percentage"><div class="numbers ' . $color . '">' . $percentage . '%</div></div></div>'.
+				   '</div>' .
 				   '<table>' .
 				   '<tr><td>' . __( "Size", 'autoptimize' ) . ':</td><td class="size ' . $color . '">' . $size . '</td></tr>' .
 				   '<tr><td>' . __( "Files", 'autoptimize' ) . ':</td><td class="files white">' . $files . '</td></tr>' .
