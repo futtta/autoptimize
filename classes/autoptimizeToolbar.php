@@ -15,7 +15,7 @@ class autoptimizeToolbar {
 	public function load_toolbar()
 	{
 		// We check that the current user has the appropriate permissions
-		if( current_user_can( 'manage_options' ) ) && apply_filters( 'autoptimize_filter_toolbar_show', true ) )
+		if( current_user_can( 'manage_options' ) && apply_filters( 'autoptimize_filter_toolbar_show', true ) )
 		{
 			// Load custom styles and scripts
 			if( is_admin() ) {
