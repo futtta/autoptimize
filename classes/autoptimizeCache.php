@@ -94,7 +94,7 @@ class autoptimizeCache {
 				do_action("autoptimize_action_cachepurged");
 			}
 		}
-		add_action("init","autoptimize_do_cachepurged_action",11);
+		add_action("shutdown","autoptimize_do_cachepurged_action",11);
         
    		// try to purge caching plugins cache-files?
         include_once(AUTOPTIMIZE_PLUGIN_DIR.'classlesses/autoptimizePageCacheFlush.php');
@@ -258,4 +258,3 @@ class autoptimizeCache {
 		return true;
 	}
 }
-
