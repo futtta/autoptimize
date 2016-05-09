@@ -29,7 +29,8 @@ class autoptimizeConfig {
 			}
 		}
 
-		//Add the admin toolbar (we loaded outsidethe verification of is_admin to also be displayed on the frontend toolbar)
+		//Add the Autoptimize Toolbar to the Admin bar 
+		//(we loaded outside the verification of is_admin to also be displayed on the frontend toolbar)
 		$toolbar = new autoptimizeToolbar();
 	}
 	
