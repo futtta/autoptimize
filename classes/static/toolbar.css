@@ -82,6 +82,11 @@
 
 		
 /* Some cosmetic Toolbar things */
+#wp-admin-bar-autoptimize table th td 
+{
+    border: 0px;
+}
+
 #wp-admin-bar-autoptimize-default
 {
 	padding-top: 0 !important;
