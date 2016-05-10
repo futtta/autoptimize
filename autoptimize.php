@@ -19,6 +19,9 @@ define('AUTOPTIMIZE_PLUGIN_DIR',plugin_dir_path(__FILE__));
 // Load config class
 include(AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeConfig.php');
 
+// Load toolbar class
+include( AUTOPTIMIZE_PLUGIN_DIR . 'classes/autoptimizeToolbar.php' );
+
 // Do we gzip when caching (needed early to load autoptimizeCache.php)
 define('AUTOPTIMIZE_CACHE_NOGZIP',(bool) get_option('autoptimize_cache_nogzip'));
 

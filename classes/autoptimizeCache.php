@@ -258,4 +258,3 @@ class autoptimizeCache {
 		return true;
 	}
 }
-

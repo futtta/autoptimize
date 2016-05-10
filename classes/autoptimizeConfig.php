@@ -28,6 +28,10 @@ class autoptimizeConfig {
 				update_option('autoptimize_cache_clean',0);
 			}
 		}
+
+		//Add the Autoptimize Toolbar to the Admin bar 
+		//(we loaded outside the verification of is_admin to also be displayed on the frontend toolbar)
+		$toolbar = new autoptimizeToolbar();
 	}
 	
 	static public function instance() {
