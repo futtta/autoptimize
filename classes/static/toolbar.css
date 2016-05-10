@@ -82,9 +82,9 @@
 
 		
 /* Some cosmetic Toolbar things */
-#wp-admin-bar-autoptimize table th td 
+#wp-admin-bar-autoptimize table, #wp-admin-bar-autoptimize  th, #wp-admin-bar-autoptimize  td 
 {
-    border: 0px;
+    border: 0px !important;
 }
 
 #wp-admin-bar-autoptimize-default
