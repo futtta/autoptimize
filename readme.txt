@@ -74,7 +74,7 @@ Before Autoptimize 2.0.0, inline code was always optimized with all CSS pushed i
 
 = What can I do with the API? =
 
-A whole lot; there are filters you can use to conditionally disable Autoptimize per request, to change the CSS- and JS-excludes, to change the limit for CSS background-images to be inlined in the CSS, to define what JS-files are moved behing the aggregated on, to change the defer-attribute on the aggregated JS script-tag, ... There are examples for many filters in autoptimize_helper.php_example and in this FAQ.
+A whole lot; there are filters you can use to conditionally disable Autoptimize per request, to change the CSS- and JS-excludes, to change the limit for CSS background-images to be inlined in the CSS, to define what JS-files are moved behind the aggregated one, to change the defer-attribute on the aggregated JS script-tag, ... There are examples for many filters in autoptimize_helper.php_example and in this FAQ.
 
 = How can I use the code in autoptimize_helper.php_example? =
 
