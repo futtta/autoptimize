@@ -516,26 +516,26 @@ class autoptimizeStyles extends autoptimizeBase {
 				$defer_inline_code=$this->defer_inline;
 				$defer_inline_code=apply_filters( 'autoptimize_filter_css_defer_inline', $defer_inline_code );
 				if(!empty($defer_inline_code)){
-
-					$iCssHash=md5($defer_inline_code);
-					$iCssCache = new autoptimizeCache($iCssHash,'css');
-					if($iCssCache->check()) { 
-						// we have the optimized inline CSS in cache
-    						$defer_inline_code=$iCssCache->retrieve();
-					} else {
-					     if (class_exists('Minify_CSS_Compressor')) {
-						$tmp_code = trim(Minify_CSS_Compressor::process($this->defer_inline));
-					     } else if(class_exists('CSSmin')) {
-						$cssmin = new CSSmin();
-						$tmp_code = trim($cssmin->run($defer_inline_code));
-					     }
-			
-					     if (!empty($tmp_code)) {
-						$defer_inline_code = $tmp_code;
-						$iCssCache->cache($defer_inline_code,"text/css");
-						unset($tmp_code);
-					     }
-					}
+                    if ( apply_filters( 'autoptimize_filter_css_critcss_minify',true ) ) {
+                        $iCssHash=md5($defer_inline_code);
+                        $iCssCache = new autoptimizeCache($iCssHash,'css');
+                        if($iCssCache->check()) { 
+                            // we have the optimized inline CSS in cache
+                                $defer_inline_code=$iCssCache->retrieve();
+                        } else {
+                            if (class_exists('Minify_CSS_Compressor')) {
+                                $tmp_code = trim(Minify_CSS_Compressor::process($this->defer_inline_code));
+                            } else if(class_exists('CSSmin')) {
+                                $cssmin = new CSSmin();
+                                $tmp_code = trim($cssmin->run($defer_inline_code));
+                            }
+                            if (!empty($tmp_code)) {
+                                $defer_inline_code = $tmp_code;
+                                $iCssCache->cache($defer_inline_code,"text/css");
+                                unset($tmp_code);
+                            }
+                        }
+                    }
 					$code_out='<style type="text/css" id="aoatfcss" media="all">'.$defer_inline_code.'</style>';
 					$this->inject_in_html($code_out,$replaceTag);
 				}
