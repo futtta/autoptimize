@@ -524,7 +524,7 @@ class autoptimizeStyles extends autoptimizeBase {
                                 $defer_inline_code=$iCssCache->retrieve();
                         } else {
                             if (class_exists('Minify_CSS_Compressor')) {
-                                $tmp_code = trim(Minify_CSS_Compressor::process($this->defer_inline_code));
+                                $tmp_code = trim(Minify_CSS_Compressor::process($defer_inline_code));
                             } else if(class_exists('CSSmin')) {
                                 $cssmin = new CSSmin();
                                 $tmp_code = trim($cssmin->run($defer_inline_code));
