@@ -27,13 +27,16 @@ jQuery( document ).ready(function()
 
 		// Create and Show the Autoptimize Loading Modal
 		var modal_loading = jQuery( '<div class="autoptimize-loading"></div>' ).appendTo( 'body' ).show();
-
+        
+        // Get nonce from class-field (yeah, I know)
+        var ao_delcache_nonce = jQuery( '#wp-admin-bar-autoptimize-delete-cache' ).attr( 'class' );
+        
 		jQuery.ajax({
 			type	: 'GET',
 			url	: autoptimize_ajax_object.ajaxurl,
-			data	: {'action':action},
+			data	: {'action':action, 'nonce':ao_delcache_nonce},
 			dataType: 'json',
-			cache	: false, 
+			cache	: false,
 			success	: function( data )
 			{
 				// Remove the Autoptimize Loading Modal

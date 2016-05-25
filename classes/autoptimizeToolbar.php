@@ -97,15 +97,21 @@ class autoptimizeToolbar {
 		$wp_admin_bar->add_node( array(
 			'id'    => 'autoptimize-delete-cache',
 			'title' => __("Delete Cache",'autoptimize'),
-			'parent'=> 'autoptimize'
+			'parent'=> 'autoptimize',
+            'meta'  => array( 'class' => wp_create_nonce( "ao_delcache_nonce" ) )
 		));
 	}
 
 	public function delete_cache()
 	{
-		// We call the function for cleaning the Autoptimize cache
-		autoptimizeCache::clearall();
-
+        check_ajax_referer( 'ao_delcache_nonce', 'nonce' );
+        if( current_user_can( 'manage_options' ))
+        {
+            // We call the function for cleaning the Autoptimize cache
+            autoptimizeCache::clearall();
+        }
+        
+        wp_die();
 		// NOTE: Remember that any return values of this function must be in JSON format
 	}
 
