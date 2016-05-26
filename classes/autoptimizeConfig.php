@@ -216,8 +216,45 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 
 </form>
 </div>
-<style>.autoptimize_banner ul li {font-size:medium;text-align:center;} .unslider-arrow {left:unset;}</style>
-<div class="autoptimize_banner">
+<style>
+.autoptimize_banner {
+	margin: 0 38px;
+	padding-bottom: 5px;
+}
+.autoptimize_banner ul li {
+	font-size:medium;
+	text-align:center;
+}
+.unslider-arrow {
+	display: block;
+	left: unset;
+	margin-top: -35px;
+	margin-left: 7px;
+	margin-right: 7px;
+	border-radius: 32px;
+	background: rgba(0, 0, 0, 0.10) no-repeat 50% 50%;
+	color: rgba(255, 255, 255, 0.8);
+	font: normal 20px/1 dashicons;
+	speak: none;
+	padding: 3px 2px 3px 4px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.unslider-arrow:hover {
+	background-color: rgba(0, 0, 0, 0.20);
+	color: #FFF;
+}
+.unslider-arrow.prev {
+    padding: 3px 4px 3px 2px;
+}
+.unslider-arrow.prev::before {
+    content: "\f341";
+}
+.unslider-arrow.next::before {
+    content: "\f345";
+}
+</style>
+<div class="autoptimize_banner hidden">
 	<ul>
         <?php
         if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
@@ -238,7 +275,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
         <li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php _e("Try my other plugins!","autoptimize"); ?></a></li>
 	</ul>
 </div>
-<div style="float:right;width:30%" id="autoptimize_admin_feed">
+<div style="float:right;width:30%" id="autoptimize_admin_feed" class="hidden">
         <div style="margin-left:10px;margin-top:-5px;">
                 <h2>
                         <?php _e("futtta about","autoptimize") ?>
@@ -273,7 +310,13 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	jQuery(document).ready(function() {
 		check_ini_state();
 		
-		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:5000});
+		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:5000, infinite: true, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
+		jQuery('#autoptimize_admin_feed').fadeTo("slow",1).show();
+
+		jQuery( "#feed_dropdown" ).change(function() {
+			jQuery("#futtta_feed").fadeTo(0,0);
+			jQuery("#futtta_feed").fadeTo("slow",1);
+		});
 		
 		jQuery( "#ao_show_adv" ).click(function() {
 			jQuery( "#ao_show_adv" ).hide();
