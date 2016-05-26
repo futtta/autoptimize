@@ -27,13 +27,13 @@ jQuery( document ).ready(function()
 
 		// Create and Show the Autoptimize Loading Modal
 		var modal_loading = jQuery( '<div class="autoptimize-loading"></div>' ).appendTo( 'body' ).show();
-
+        
 		jQuery.ajax({
 			type	: 'GET',
 			url	: autoptimize_ajax_object.ajaxurl,
-			data	: {'action':action},
+			data	: {'action':action, 'nonce':autoptimize_ajax_object.nonce},
 			dataType: 'json',
-			cache	: false, 
+			cache	: false,
 			success	: function( data )
 			{
 				// Remove the Autoptimize Loading Modal
@@ -42,6 +42,7 @@ jQuery( document ).ready(function()
 				// Change the output values of size cache and files to zero
 				jQuery( '#wp-admin-bar-autoptimize-cache-info .size' ).html( '0.00 B' );
 				jQuery( '#wp-admin-bar-autoptimize-cache-info .files' ).html( '0' );
+				jQuery( '#wp-admin-bar-autoptimize-cache-info .percentage .numbers' ).html( '0%' );
 			}
 		});
 	});
