@@ -56,7 +56,7 @@ class autoptimizeToolbar {
 		$size = sprintf( '%1.2f', $bytes / pow( 1024, $class ) ) . ' ' . $si_prefix[ $class ];
 		
 		// We calculated the percentage of cache used
-		$percentage = round( $bytes / $max_size * 100 );
+		$percentage = floor( $bytes / $max_size * 100 );
 		if( $percentage > 100 ) $percentage = 100;
 
 		// We define the type of color indicator for the current state of cache size.
