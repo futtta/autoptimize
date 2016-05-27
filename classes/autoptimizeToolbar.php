@@ -97,8 +97,7 @@ class autoptimizeToolbar {
 		$wp_admin_bar->add_node( array(
 			'id'    => 'autoptimize-delete-cache',
 			'title' => __("Delete Cache",'autoptimize'),
-			'parent'=> 'autoptimize',
-            'meta'  => array( 'class' => wp_create_nonce( "ao_delcache_nonce" ) )
+			'parent'=> 'autoptimize'
 		));
 	}
 
@@ -125,7 +124,8 @@ class autoptimizeToolbar {
 
 		// Localizes a registered script with data for a JavaScript variable. (We need this for the AJAX work properly in the front-end mode)
 		wp_localize_script( 'autoptimize-toolbar', 'autoptimize_ajax_object', array(
-			'ajaxurl' => admin_url( 'admin-ajax.php' )
+			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			'nonce' => wp_create_nonce( 'ao_delcache_nonce' )
 		) );
 	}
 }
