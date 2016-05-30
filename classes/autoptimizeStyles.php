@@ -231,7 +231,6 @@ class autoptimizeStyles extends autoptimizeBase {
 			$fiximports = false;
 			$external_imports = "";
 
-			while(preg_match_all('#^(/*\s?)@import.*(?:;|$)#Um',$thiscss,$matches)) {
 				foreach($matches[0] as $import)	{
 					if ($this->isremovable($import,$this->cssremovables)) {
 						$thiscss = str_replace($import,'',$thiscss);
