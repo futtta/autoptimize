@@ -49,11 +49,15 @@ class autoptimizeToolbar {
 		// Retrieve the current Total Size of the cache
 		$bytes = $stats[1];
 
-		// Set the first commons International System of Units (SI) bytes Prefix 
-		$si_prefix = array( 'B', 'KB', 'MB', 'GB' );
-		$class = min( (int) log( $bytes , 1024 ), count( $si_prefix ) - 1 );
-		// We format the total bytes of cache as appropriate, either in B, KB, MB or GB
-		$size = sprintf( '%1.2f', $bytes / pow( 1024, $class ) ) . ' ' . $si_prefix[ $class ];
+		if ($bytes > 0) {
+			// Set the first commons International System of Units (SI) bytes Prefix
+			$si_prefix = array( 'B', 'KB', 'MB', 'GB' );
+			$class = min( (int) log( $bytes , 1024 ), count( $si_prefix ) - 1 );
+			// We format the total bytes of cache as appropriate, either in B, KB, MB or GB
+			$size = sprintf( '%1.2f', $bytes / pow( 1024, $class ) ) . ' ' . $si_prefix[ $class ];
+		} else {
+			$size = "0.0 B";
+		}
 		
 		// We calculated the percentage of cache used
 		$percentage = ceil( $bytes / $max_size * 100 );
