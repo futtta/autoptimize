@@ -231,6 +231,7 @@ class autoptimizeStyles extends autoptimizeBase {
 			$fiximports = false;
 			$external_imports = "";
 
+			// remove comments to avoid importing commented-out imports
 			$thiscss_nocomments=preg_replace('#/\*.*\*/#Um','',$thiscss);
 			while(preg_match_all('#@import.*(?:;|$)#Um',$thiscss_nocomments,$matches)) {
 				foreach($matches[0] as $import)	{
@@ -273,8 +274,11 @@ class autoptimizeStyles extends autoptimizeBase {
 				}
 				$thiscss = preg_replace('#/\*FILESTART\*/#','',$thiscss);
 				$thiscss = preg_replace('#/\*FILESTART2\*/#','/*FILESTART*/',$thiscss);
-				unset($thiscss_nocomments);
+                
+				// and update $thiscss_nocomments before going into next iteration in while loop
+				$thiscss_nocomments=preg_replace('#/\*.*\*/#Um','',$thiscss);
 			}
+			unset($thiscss_nocomments);
 			
 			// add external imports to top of aggregated CSS
 			if($fiximports)	{
