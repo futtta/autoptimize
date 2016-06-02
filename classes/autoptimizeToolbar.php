@@ -128,9 +128,7 @@ class autoptimizeToolbar {
 	public function format_filesize($bytes, $decimals = 2)
 	{
 		$units = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' );
-
 		for ($i = 0; ($bytes / 1024) > 0.9; $i++, $bytes /= 1024) {}
-
 		return sprintf( "%1.{$decimals}f %s", round( $bytes, $decimals ), $units[$i] );
 	}
 }
