@@ -49,16 +49,8 @@ class autoptimizeToolbar {
 		// Retrieve the current Total Size of the cache
 		$bytes = $stats[1];
 
-		if ($bytes > 0) {
-			// Set the first commons International System of Units (SI) bytes Prefix
-			$si_prefix = array( 'B', 'KB', 'MB', 'GB' );
-			$class = min( (int) log( $bytes , 1024 ), count( $si_prefix ) - 1 );
-			// We format the total bytes of cache as appropriate, either in B, KB, MB or GB
-			$size = sprintf( '%1.2f', $bytes / pow( 1024, $class ) ) . ' ' . $si_prefix[ $class ];
-		} else {
-			$size = "0.0 B";
-		}
-		
+		$size = $this->format_filesize($bytes);
+
 		// We calculated the percentage of cache used
 		$percentage = ceil( $bytes / $max_size * 100 );
 		if( $percentage > 100 ) $percentage = 100;
@@ -132,5 +124,13 @@ class autoptimizeToolbar {
 			'nonce' => wp_create_nonce( 'ao_delcache_nonce' )
 		) );
 	}
+
+	public function format_filesize($bytes, $decimals = 2)
+	{
+		$units = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' );
+
+		for ($i = 0; ($bytes / 1024) > 0.9; $i++, $bytes /= 1024) {}
+
+		return sprintf( "%1.{$decimals}f %s", round( $bytes, $decimals ), $units[$i] );
+	}
 }
-?>
