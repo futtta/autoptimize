@@ -29,6 +29,8 @@ abstract class autoptimizeBase {
 			$url=urldecode($url);
 		}
 
+		$siteHost=parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST);
+        
 		// normalize
 		if (strpos($url,'//')===0) {
 			if (is_ssl()) {
@@ -36,13 +38,18 @@ abstract class autoptimizeBase {
 			} else {
 				$url = "http:".$url;
 			}
-		} else if ((strpos($url,'//')===false) && (strpos($url,parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST))===false)) {
-			$url = AUTOPTIMIZE_WP_SITE_URL.$url;
+		} else if ((strpos($url,'//')===false) && (strpos($url,$siteHost)===false)) {
+			if (AUTOPTIMIZE_WP_SITE_URL === $siteHost) {
+                $url = AUTOPTIMIZE_WP_SITE_URL.$url;
+            } else {
+                $subdir_levels=substr_count(preg_replace("/https?:\/\//","",AUTOPTIMIZE_WP_SITE_URL),"/");
+                $url = AUTOPTIMIZE_WP_SITE_URL.str_repeat("/..",$subdir_levels).$url;
+            }
 		}
 
 		// first check; hostname wp site should be hostname of url
 		$thisHost=@parse_url($url,PHP_URL_HOST);
-		if ($thisHost!==parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST)) {
+		if ($thisHost !== $siteHost) {
 			/* 
 			* first try to get all domains from WPML (if available)
 			* then explicitely declare $this->cdn_url as OK as well
@@ -74,8 +81,8 @@ abstract class autoptimizeBase {
 		}
 		
 		// try to remove "wp root url" from url while not minding http<>https
-		$tmp_ao_root = preg_replace('/https?/','',AUTOPTIMIZE_WP_ROOT_URL);
-		$tmp_url = preg_replace('/https?/','',$url);
+		$tmp_ao_root = preg_replace('/https?:/','',AUTOPTIMIZE_WP_ROOT_URL);
+		$tmp_url = preg_replace('/https?:/','',$url);
 		$path = str_replace($tmp_ao_root,'',$tmp_url);
 		
 		// final check; if path starts with :// or //, this is not a URL in the WP context and we have to assume we can't aggregate
