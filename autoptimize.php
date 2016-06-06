@@ -187,7 +187,7 @@ function autoptimize_start_buffering() {
 
 // Action on end, this is where the magic happens
 function autoptimize_end_buffering($content) {
-	if ( stripos($content,"<html") === false || preg_match('/<html[^>]*(?:amp|⚡)/',$content) === 1 || stripos($content,"<xsl:stylesheet") !== false ) { return $content; }
+	if ( ((stripos($content,"<html") === false) && (stripos($content,"<!DOCTYPE html") === false)) || preg_match('/<html[^>]*(?:amp|⚡)/',$content) === 1 || stripos($content,"<xsl:stylesheet") !== false ) { return $content; }
     
 	// load URL constants as late as possible to allow domain mapper to kick in
 	if (function_exists("domain_mapping_siteurl")) {
