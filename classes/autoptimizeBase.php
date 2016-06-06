@@ -40,11 +40,11 @@ abstract class autoptimizeBase {
 			}
 		} else if ((strpos($url,'//')===false) && (strpos($url,$siteHost)===false)) {
 			if (AUTOPTIMIZE_WP_SITE_URL === $siteHost) {
-                $url = AUTOPTIMIZE_WP_SITE_URL.$url;
-            } else {
-                $subdir_levels=substr_count(preg_replace("/https?:\/\//","",AUTOPTIMIZE_WP_SITE_URL),"/");
-                $url = AUTOPTIMIZE_WP_SITE_URL.str_repeat("/..",$subdir_levels).$url;
-            }
+				$url = AUTOPTIMIZE_WP_SITE_URL.$url;
+			} else {
+				$subdir_levels=substr_count(preg_replace("/https?:\/\//","",AUTOPTIMIZE_WP_SITE_URL),"/");
+				$url = AUTOPTIMIZE_WP_SITE_URL.str_repeat("/..",$subdir_levels).$url;
+			}
 		}
 
 		// first check; hostname wp site should be hostname of url
