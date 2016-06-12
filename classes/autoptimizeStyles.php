@@ -518,8 +518,8 @@ class autoptimizeStyles extends autoptimizeBase {
 			}
 		} else {
 			if ($this->defer == true) {
-				$deferredCssBlock = "<script data-cfasync='false'>function lCss(url,media) {var d=document;var l=d.createElement('link');l.rel='stylesheet';l.type='text/css';l.href=url;l.media=media;aoin=d.getElementsByTagName('noscript')[0];aoin.parentNode.insertBefore(l,aoin.nextSibling);}function deferredCSS() {";
-				$noScriptCssBlock = "<noscript>";
+				$deferredCssBlock = "<script data-cfasync='false'>function lCss(url,media) {var d=document;var l=d.createElement('link');l.rel='stylesheet';l.type='text/css';l.href=url;l.media=media;aoin=d.getElementById('aonoscrcss');aoin.parentNode.insertBefore(l,aoin.nextSibling);}function deferredCSS() {";
+				$noScriptCssBlock = "<noscript id=\"aonoscrcss\">";
 				$defer_inline_code=$this->defer_inline;
 				if(!empty($defer_inline_code)){
                     if ( apply_filters( 'autoptimize_filter_css_critcss_minify',true ) ) {
