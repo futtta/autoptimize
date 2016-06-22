@@ -48,7 +48,7 @@ class autoptimizeHTML extends autoptimizeBase {
 				$options['xhtml'] = true;
 			}
 
-			if (@is_callable(array(new Minify_HTML,"minify"))) {
+			if (@is_callable(array("Minify_HTML","minify"))) {
 				$tmp_content = Minify_HTML::minify($this->content,$options);
 				if (!empty($tmp_content)) {
 					$this->content = $tmp_content;
