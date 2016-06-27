@@ -400,9 +400,9 @@ class autoptimizeScripts extends autoptimizeBase {
      */
     public function should_aggregate($tag) {
         preg_match('#<(script[^>]*)>#i',$tag,$scripttag);
-        if ( strpos($scripttag[1], 'type=')===false ) {
+        if ( strpos($scripttag[1], 'type')===false ) {
             return true;
-        } else if ( preg_match('/type=["\']?(?:text|application)\/(?:javascript|ecmascript)["\']?/i', $scripttag[1]) ) {
+        } else if ( preg_match('/type\s*=\s*["\']?(?:text|application)\/(?:javascript|ecmascript)["\']?/i', $scripttag[1]) ) {
             return true;
         } else {
             return false;
