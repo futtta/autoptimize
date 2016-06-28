@@ -211,7 +211,7 @@ class autoptimizeScripts extends autoptimizeBase {
 					if ( has_filter('autoptimize_js_individual_script') && !empty($tmpscriptsrc) ) {
 						$scriptsrc=$tmpscriptsrc;
 						$this->alreadyminified=true;
-					} else if ((strpos($script,"min.js")!==false) && ($this->inject_min_late===true)) {
+					} else if ((( strpos($script,"min.js") !== false ) || ( strpos($script,"wp-includes/js/jquery/jquery.js") !== false )) && ( $this->inject_min_late === true )) {
 						$scriptsrc="%%INJECTLATER%%".base64_encode($script)."|".md5($scriptsrc)."%%INJECTLATER%%";
 					}
 					$this->jscode .= "\n".$scriptsrc;
