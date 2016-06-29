@@ -153,7 +153,7 @@ function autoptimize_start_buffering() {
 				if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) {
 					@include(AUTOPTIMIZE_PLUGIN_DIR.'classes/external/php/jsmin-1.1.1.php');
 				} else {
-					@include(AUTOPTIMIZE_PLUGIN_DIR.'classes/external/php/minify-2.1.7-jsmin.php');
+					@include(AUTOPTIMIZE_PLUGIN_DIR.'classes/external/php/minify-2.3.1-jsmin.php');
 				}
 			}
 			if ( ! defined( 'CONCATENATE_SCRIPTS' )) {
