@@ -208,7 +208,7 @@ class JSMin {
                             // leave the newline
                         } elseif ($this->isEOF($this->a)) {
                             $byte = $this->inputIndex - 1;
-                            throw new UnterminatedStringException(
+                            throw new JSMin_UnterminatedStringException(
                                 "JSMin: Unterminated String at byte {$byte}: {$str}");
                         }
                         $str .= $this->a;
