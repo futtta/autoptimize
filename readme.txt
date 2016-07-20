@@ -141,6 +141,7 @@ Autoptimize does a number of checks before actually optimizing. When one of the 
 * if the output is a WordPress administration page (is_admin() function)
 * if the page is requested with ?ao_noptimize=1 appended to the URL
 * if code hooks into Autoptimize to disable optimization (see topic on Visual Composer)
+* if other plugins use the output buffer in an incompatible manner (disable other plugins selectively to identify the culprit)
 
 = Visual Composer, Beaver Builder and similar page builder solutions are broken!! =
 
@@ -156,6 +157,10 @@ function pagebuilder_noptimize() {
   }
 }
 `
+
+= Revolution Slider is broken! =
+
+You can fix this by adding `js/jquery/jquery.js` to the comma-separated list of JS optimization exclusion.
 
 = My Autoptimized CSS/ JS is broken after upgrading from 1.9.4 to 2.0! =
 
@@ -211,6 +216,11 @@ You can report problems on the [wordpress.org support forum](http://wordpress.or
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.0.3 =
+* new: Autoptimize now appears in admin-toolbar with an easy view on cache size and the possibility to purge the cache (pass `false` to `autoptimize_filter_toolbar_show` filter to disable), a big thanks to [Pablo Custo](https://github.com/pablocusto) for his hard work on this nice feature!
+* new: if cache size becomes too big, a mail will be sent to the site admin (pass `false` to `autoptimize_filter_cachecheck_sendmail` filter to disable or pass alternative email to the `autoptimize_filter_cachecheck_mailto` filter)
+* Misc. bugfixes & small improvements (see [commit-log on GitHub](https://github.com/futtta/autoptimize/commits/master))
 
 = 2.0.2 =
 * bugfix: disallow moving non-aggregated JS by default (can be re-enabled by passing false to the `autoptimize_filter_js_unmovable`)
