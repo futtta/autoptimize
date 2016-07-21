@@ -12,8 +12,7 @@ Autoptimize speeds up your website and helps you save bandwidth by aggregating a
 
 Autoptimize makes optimizing your site really easy. It concatenates all scripts and styles, minifies and compresses them, adds expires headers, caches them, and moves styles to the page head and can move scripts to the footer. It also minifies the HTML code itself, making your page really lightweight. There are advanced options and an extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
 
-If you consider performance important, you really should use a caching-plugin such as e.g. [WP Super Cache](http://wordpress.org/extend/plugins/wp-super-cache/) or 
-[HyperCache](http://wordpress.org/extend/plugins/hyper-cache/) to complement Autoptimize.
+If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [WP Super Cache](http://wordpress.org/extend/plugins/wp-super-cache/), [HyperCache](http://wordpress.org/extend/plugins/hyper-cache/), [Comet Cache](https://wordpress.org/plugins/comet-cache/) or [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler).
 
 (Speed-surfing image under creative commons [by LL Twistiti](https://www.flickr.com/photos/twistiti/818552808/))
 
