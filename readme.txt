@@ -162,6 +162,10 @@ function pagebuilder_noptimize() {
 
 You can fix this by adding `js/jquery/jquery.js` to the comma-separated list of JS optimization exclusion.
 
+= I'm getting "jQuery is not defined" errors =
+
+In that case you have un-aggregated JavaScript that requires jQuery to be loaded, so you'll have to either aggregate that JavaScript (ticking the "also aggregate inline JS"-option) or add `js/jquery/jquery.js` to the comma-separated list of JS optimization exclusions.
+
 = My Autoptimized CSS/ JS is broken after upgrading from 1.9.4 to 2.0! =
 
 One of the bigger changes in Autoptimize 2.0 is that files that have "min.js" or "min.css" in their name are considered already minified and are only injected into the aggregated code after the actual minification, because this has an important performance-benefit. Although this has been tested rather thoroughly, it is possible that this approach does not always work. You can turn this behavior off by hooking into Autoptimize's API, like this;
