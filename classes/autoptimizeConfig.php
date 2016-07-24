@@ -300,7 +300,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 			</div>
                 </div>
         </div>
-	<div style="float:right;margin:50px 15px;"><a href="http://blog.futtta.be/2013/10/21/do-not-donate-to-me/" target="_blank"><img width="100px" height="85px" src="<?php echo plugins_url().'/'.plugin_basename(__DIR__).'/external/do_not_donate_smallest.png'; ?>" title="<?php _e("Do not donate for this plugin!"); ?>"></a></div>
+	<div style="float:right;margin:50px 15px;"><a href="http://blog.futtta.be/2013/10/21/do-not-donate-to-me/" target="_blank"><img width="100px" height="85px" src="<?php echo plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/external/do_not_donate_smallest.png'; ?>" title="<?php _e("Do not donate for this plugin!"); ?>"></a></div>
 </div>
 
 <script type="text/javascript">
