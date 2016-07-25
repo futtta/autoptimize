@@ -27,8 +27,8 @@ function ao_partners() {
     <style>
 	.itemDetail {
 		background: #fff;
-		width: 280px;
-		height: 250px;
+		width: 250px;
+		height: 270px;
 		border: 1px solid #ccc;
 		float: left;
 		padding: 15px;
