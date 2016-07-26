@@ -94,15 +94,15 @@ function getAOPartnerFeed() {
 				foreach ( $rss_items as $item ) : 
 					$itemURL = esc_url( $item->get_permalink() ); ?>
 					<li class="itemDetail">
-						<h3 class="itemTitle"><a href="<?php echo $itemURL; ?>"><?php echo esc_html( $item->get_title() ); ?></a></h3>
+						<h3 class="itemTitle"><a href="<?php echo $itemURL; ?>" target="_blank"><?php echo esc_html( $item->get_title() ); ?></a></h3>
 						<?php
 						if (($enclosure = $item->get_enclosure()) && (strpos($enclosure->get_type(),"image")!==false) ) {
 							$itemImgURL=esc_url($enclosure->get_link());
-							echo "<a href=\"".$itemURL	."\"><img class=\"itemImage\" src=\"".$itemImgURL."\"/></a>";
+							echo "<a href=\"".$itemURL."\" target=\"_blank\"><img class=\"itemImage\" src=\"".$itemImgURL."\"/></a>";
 						}
 						?>
 						<div class="itemDescription"><?php echo wp_kses_post($item -> get_description() ); ?></div>
-						<div class="itemButtonRow"><div class="itemButton button-secondary"><a href="<?php echo $itemURL; ?>">More info</a></div></div>
+						<div class="itemButtonRow"><div class="itemButton button-secondary"><a href="<?php echo $itemURL; ?>" target="_blank">More info</a></div></div>
 					</li>
 				<?php endforeach; ?>
 			<?php } ?>
