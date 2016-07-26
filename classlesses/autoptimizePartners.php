@@ -28,7 +28,7 @@ function ao_partners() {
 	.itemDetail {
 		background: #fff;
 		width: 250px;
-		height: 270px;
+		min-height: 270px;
 		border: 1px solid #ccc;
 		float: left;
 		padding: 15px;
@@ -41,10 +41,17 @@ function ao_partners() {
 	.itemImage {
 		max-width: 95%;
 	}
+	.itemDescription {
+		margin-bottom:30px;
+	}
+	.itemButtonRow {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+		width:100%;
+	}
 	.itemButton {
-		position:absolute;
-		bottom: 20px;
-		right: 20px;
+		float:right;
 	}
 	.itemButton a {
 		text-decoration: none;
@@ -76,7 +83,7 @@ function getAOPartnerFeed() {
 		$maxitems = 0;
 
 		if ( ! is_wp_error( $rss ) ) {
-			$maxitems = $rss->get_item_quantity( 10 ); 
+			$maxitems = $rss->get_item_quantity( 20 ); 
 			$rss_items = $rss->get_items( 0, $maxitems );
 		} ?>
 		<ul>
@@ -84,17 +91,18 @@ function getAOPartnerFeed() {
 			if ( $maxitems == 0 ) {
 				echo $noFeedText;
 			} else {
-				foreach ( $rss_items as $item ) : ?>
+				foreach ( $rss_items as $item ) : 
+					$itemURL = esc_url( $item->get_permalink() ); ?>
 					<li class="itemDetail">
-						<h3 class="itemTitle"><a href="<?php echo esc_url( $item->get_permalink() ); ?>"><?php echo esc_html( $item->get_title() ); ?></a></h3>
+						<h3 class="itemTitle"><a href="<?php echo $itemURL; ?>"><?php echo esc_html( $item->get_title() ); ?></a></h3>
 						<?php
 						if (($enclosure = $item->get_enclosure()) && (strpos($enclosure->get_type(),"image")!==false) ) {
-							$img_url=esc_url($enclosure->get_link());
-							echo "<img class=\"itemImage\" src=\"".$img_url."\"/>";
+							$itemImgURL=esc_url($enclosure->get_link());
+							echo "<a href=\"".$itemURL	."\"><img class=\"itemImage\" src=\"".$itemImgURL."\"/></a>";
 						}
 						?>
 						<div class="itemDescription"><?php echo wp_kses_post($item -> get_description() ); ?></div>
-						<div class="itemButton button-secondary"><a href="<?php echo esc_url( $item->get_permalink() ); ?>">More info</a></div>
+						<div class="itemButtonRow"><div class="itemButton button-secondary"><a href="<?php echo $itemURL; ?>">More info</a></div></div>
 					</li>
 				<?php endforeach; ?>
 			<?php } ?>
