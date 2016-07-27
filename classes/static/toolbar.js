@@ -10,6 +10,9 @@ jQuery( document ).ready(function()
 		'transform'		: 'rotate(' + rotate + 'deg)'
 	});
 
+	// Fix Background color of circle percentage & delete cache to fit with the current color theme
+	jQuery( '#wp-admin-bar-autoptimize-cache-info .autoptimize-radial-bar .inset' ).css( 'background-color',  jQuery( '#wp-admin-bar-autoptimize .ab-sub-wrapper' ).css( 'background-color') );
+	jQuery( '#wp-admin-bar-autoptimize-delete-cache .ab-item' ).css( 'background-color',  jQuery( '#wpadminbar' ).css( 'background-color') );
 
 	jQuery( '#wp-admin-bar-autoptimize-default li' ).click(function(e)
 	{
