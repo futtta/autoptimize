@@ -37,9 +37,14 @@ function ao_partners() {
 	}
 	.itemTitle {
 		margin-top:0px;
+		margin-bottom:10px;
 	}
 	.itemImage {
+		text-align: center;		
+	}
+	.itemImage img {
 		max-width: 95%;
+		max-height: 150px;
 	}
 	.itemDescription {
 		margin-bottom:30px;
@@ -98,7 +103,7 @@ function getAOPartnerFeed() {
 						<?php
 						if (($enclosure = $item->get_enclosure()) && (strpos($enclosure->get_type(),"image")!==false) ) {
 							$itemImgURL=esc_url($enclosure->get_link());
-							echo "<a href=\"".$itemURL."\" target=\"_blank\"><img class=\"itemImage\" src=\"".$itemImgURL."\"/></a>";
+							echo "<div class=\"itemImage\"><a href=\"".$itemURL."\" target=\"_blank\"><img src=\"".$itemImgURL."\"/></a></div>";
 						}
 						?>
 						<div class="itemDescription"><?php echo wp_kses_post($item -> get_description() ); ?></div>
