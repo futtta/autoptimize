@@ -4,7 +4,6 @@ Classlessly add a "more tools" tab to promote (future) AO addons and/ or affilia
 */
 
 add_action('admin_init', 'ao_partner_tabs_preinit');
-
 function ao_partner_tabs_preinit() {
     if (apply_filters('autoptimize_filter_show_partner_tabs',true)) {
         add_filter('autoptimize_filter_settingsscreen_tabs','ao_add_partner_tabs');
@@ -12,14 +11,16 @@ function ao_partner_tabs_preinit() {
 }
 
 function ao_add_partner_tabs($in) {
-	$in=array_merge($in,array('ao_partners' => 'Optimize More!'));
+	$in=array_merge($in,array('ao_partners' => __('Optimize More!','autoptimize')));
 	return $in;
 }
 
 add_action('admin_menu','ao_partners_init');
 function ao_partners_init() {
-	$hook=add_submenu_page(NULL,'AO partner','AO partner','manage_options','ao_partners','ao_partners');
-	// register_settings here as well if needed
+    if (apply_filters('autoptimize_filter_show_partner_tabs',true)) {
+		$hook=add_submenu_page(NULL,'AO partner','AO partner','manage_options','ao_partners','ao_partners');
+		// register_settings here as well if needed
+	}
 }
 
 function ao_partners() {
