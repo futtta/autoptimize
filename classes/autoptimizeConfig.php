@@ -340,7 +340,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 	jQuery(document).ready(function() {
 		check_ini_state();
 		jQuery('#autoptimize_admin_feed').fadeTo("slow",1).show();		
-		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:5000, infinite: true, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
+		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:3500, infinite: false, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
 
 		jQuery( "#feed_dropdown" ).change(function() {
 			jQuery("#futtta_feed").fadeTo(0,0);
