@@ -46,7 +46,7 @@ class autoptimizeConfig {
 	public function show() {
 ?>
 <style>input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:100;} #futtta_feed ul{list-style:outside;} #futtta_feed {font-size:medium; margin:0px 20px;} #ao_hide_adv,#ao_show_adv{float:right;margin-top:-35px;margin-right:10px;}@media (min-width: 961px) {#autoptimize_main {float:left;width:69%;}#autoptimize_admin_feed{float:right;width:30%;}
-}@media (max-width: 960px) {#autoptimize_admin_feed {width:0%;}#autoptimize_main {width:100%;}}</style>
+}@media (max-width: 960px) {#autoptimize_admin_feed {width:0%;}#autoptimize_main {width:100%;}}@media (max-width: 782px) and (min-width: 601px){#ao_hide_adv,#ao_show_adv {margin-top:-42px; }}</style>
 
 <div class="wrap">
 
