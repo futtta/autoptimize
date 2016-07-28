@@ -55,7 +55,7 @@ class autoptimizeConfig {
 <div class="notice-error notice"><?php _e('<p><strong>You are using a very old version of PHP</strong> (5.2.x or older) which has <a href="http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/" target="_blank">serious security and performance issues</a>. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0</p>','autoptimize'); ?></div>
 <?php } ?>
 
-<div style="float:left;width:69%;">
+<div id="autoptimize_main">
 
 <?php echo $this->ao_admin_tabs(); ?>
 
@@ -231,6 +231,21 @@ if (get_option('autoptimize_show_adv','0')=='1') {
 </form>
 </div>
 <style>
+@media (min-width: 961px) {
+	#autoptimize_main {
+		float:left;
+		width:69%;
+	}
+	#autoptimize_admin_feed {
+		float:right;
+		width:30%;
+	}
+}
+@media (max-width: 960px) {
+	#autoptimize_admin_feed {width:0%;}
+	#autoptimize_main {width:100%;}
+}
+
 .autoptimize_banner {
 	margin: 0 38px;
 	padding-bottom: 5px;
@@ -283,7 +298,7 @@ if (get_option('autoptimize_show_adv','0')=='1') {
     content: "\f345";
 }
 </style>
-<div style="float:right;width:30%" id="autoptimize_admin_feed" class="hidden">
+<div id="autoptimize_admin_feed" class="hidden">
     <div class="autoptimize_banner hidden">
       <ul>
         <?php
