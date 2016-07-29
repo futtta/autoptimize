@@ -69,7 +69,7 @@ function ao_partners() {
 	}	
     </style>
 	<div class="wrap">
-		<h1 class="uglyhack sorry"></h1>
+		<h1 class="hidden uglyhack sorry"></h1>
 		<h1><?php _e('Autoptimize Settings','autoptimize'); ?></h1>
 		<?php echo autoptimizeConfig::ao_admin_tabs(); ?>
 		<?php
