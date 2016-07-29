@@ -54,7 +54,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 </style>
 
 <div class="wrap">
-
+<h1 class="hidden uglyhack sorry"></h1>
 
 <?php if (version_compare(PHP_VERSION, '5.3.0') < 0) { ?>
 <div class="notice-error notice"><?php _e('<p><strong>You are using a very old version of PHP</strong> (5.2.x or older) which has <a href="http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/" target="_blank">serious security and performance issues</a>. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0</p>','autoptimize'); ?></div>
