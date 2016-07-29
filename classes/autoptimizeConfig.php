@@ -45,34 +45,42 @@ class autoptimizeConfig {
 	
 	public function show() {
 ?>
-<style>input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:100;} #futtta_feed ul{list-style:outside;} #futtta_feed {font-size:medium; margin:0px 20px;} #ao_hide_adv,#ao_show_adv{float:right;margin-top:-35px;margin-right:10px;}@media (min-width: 961px) {#autoptimize_main {float:left;width:69%;}#autoptimize_admin_feed{float:right;width:30%;}
-}@media (max-width: 960px) {#autoptimize_admin_feed {width:0%;}#autoptimize_main {width:100%;}}@media (max-width: 782px) and (min-width: 601px){#ao_hide_adv,#ao_show_adv {margin-top:-42px; }}</style>
+<style>
+input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:100;}
+#futtta_feed ul{list-style:outside;} #futtta_feed {font-size:medium; margin:0px 20px;} 
+#ao_title_and_button:after {content:''; display:block; clear:both;}#ao_title{float:left;}#ao_adv_button{float:right;margin-top:10px;margin-right:10px;}
+@media (min-width: 961px) {#autoptimize_main {float:left;width:69%;}#autoptimize_admin_feed{float:right;width:30%;}}
+@media (max-width: 960px) {#autoptimize_admin_feed {width:0%;}#autoptimize_main {width:100%;}}
+</style>
 
 <div class="wrap">
 
-<h1><?php _e('Autoptimize Settings','autoptimize'); ?></h1>
 
 <?php if (version_compare(PHP_VERSION, '5.3.0') < 0) { ?>
 <div class="notice-error notice"><?php _e('<p><strong>You are using a very old version of PHP</strong> (5.2.x or older) which has <a href="http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/" target="_blank">serious security and performance issues</a>. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0</p>','autoptimize'); ?></div>
 <?php } ?>
 
 <div id="autoptimize_main">
+<div id="ao_title_and_button">
+	<h1 id="ao_title"><?php _e('Autoptimize Settings','autoptimize'); ?></h1>
+	<div id="ao_adv_button">
+	<?php 
+	if (get_option('autoptimize_show_adv','0')=='1') {
+		?>
+		<a href="javascript:void(0);" id="ao_show_adv" class="button" style="display:none;"><?php _e("Show advanced settings","autoptimize") ?></a>
+		<a href="javascript:void(0);" id="ao_hide_adv" class="button"><?php _e("Hide advanced settings","autoptimize") ?></a>
+		<?php
+	} else {
+		?>
+		<a href="javascript:void(0);" id="ao_show_adv" class="button"><?php _e("Show advanced settings","autoptimize") ?></a>
+		<a href="javascript:void(0);" id="ao_hide_adv" class="button" style="display:none;"><?php _e("Hide advanced settings","autoptimize") ?></a>
+		<?php
+	}
+		?>
+	</div>
+</div>
 
 <?php echo $this->ao_admin_tabs(); ?>
-
-<?php 
-if (get_option('autoptimize_show_adv','0')=='1') {
-	?>
-	<a href="javascript:void(0);" id="ao_show_adv" class="button" style="display:none;"><?php _e("Show advanced settings","autoptimize") ?></a>
-	<a href="javascript:void(0);" id="ao_hide_adv" class="button"><?php _e("Hide advanced settings","autoptimize") ?></a>
-	<?php
-} else {
-	?>
-	<a href="javascript:void(0);" id="ao_show_adv" class="button"><?php _e("Show advanced settings","autoptimize") ?></a>
-	<a href="javascript:void(0);" id="ao_hide_adv" class="button" style="display:none;"><?php _e("Hide advanced settings","autoptimize") ?></a>
-	<?php
-}
-?>
 
 <form method="post" action="options.php">
 <?php settings_fields('autoptimize'); ?>
