@@ -69,6 +69,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 		?>
 		<a href="javascript:void(0);" id="ao_show_adv" class="button" style="display:none;"><?php _e("Show advanced settings","autoptimize") ?></a>
 		<a href="javascript:void(0);" id="ao_hide_adv" class="button"><?php _e("Hide advanced settings","autoptimize") ?></a>
+		<style>tr.ao_adv{display:table-row;} li.ao_adv{display:list-item;}</style>
 		<?php
 	} else {
 		?>
@@ -453,13 +454,6 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 		jQuery("#feed_dropdown").val(id);
 		jQuery.cookie(cookiename,id,{ expires: 365 });
 	}
-<?php
-if (get_option('autoptimize_show_adv','0')=='1') {
-	?>
-	jQuery( ".ao_adv" ).show();
-<?php
-}
-?>
 </script>
 </div>
 
