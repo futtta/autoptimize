@@ -133,6 +133,7 @@ If you are running Apache, the htaccess file written by Autoptimize can in some 
 = I get no error, but my pages are not optimized at all? =
 
 Autoptimize does a number of checks before actually optimizing. When one of the following is true, your pages won't be optimized:
+* when in the customizer
 * if there is no opening `<html` tag
 * if there is `<xsl:stylesheet` in the response (indicating the output is not HTML but XML)
 * if there is `<html amp` in the response (as AMP-pages are optimized already)
@@ -221,9 +222,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.1.0 =
-* new: Autoptimize now appears in admin-toolbar with an easy view on cache size and the possibility to purge the cache (pass `false` to `autoptimize_filter_toolbar_show` filter to disable), a big thanks to [Pablo Custo](https://github.com/pablocusto) for his hard work on this nice feature and on the UI improvements of the settings-page!
+* new: Autoptimize now appears in admin-toolbar with an easy view on cache size and the possibility to purge the cache (pass `false` to `autoptimize_filter_toolbar_show` filter to disable), a big thanks to [Pablo Custo](https://github.com/pablocusto) for his hard work on this nice feature!
 * new: An extra "More Optimization"-tab is shown (can be hidden with ´autoptimize_filter_show_partner_tabs´-filter) with information about related optimization tools- and services.
 * new: If cache size becomes too big, a mail will be sent to the site admin (pass `false` to `autoptimize_filter_cachecheck_sendmail` filter to disable or pass alternative email to the `autoptimize_filter_cachecheck_mailto` filter to change email-address)
+* improvement: admin GUI updated (again; thanks Pablo!) with some responsiveness added in the mix (not showing the right hand column on smaller screen-sizes)
 * Misc. bugfixes & small improvements (see [commit-log on GitHub](https://github.com/futtta/autoptimize/commits/master))
 * Tested and confirmed working on WordPress 4.6 beta 4
 
