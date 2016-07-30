@@ -134,7 +134,7 @@ function autoptimize_start_buffering() {
 	// filter you can use to block autoptimization on your own terms
 	$ao_noptimize = (bool) apply_filters( 'autoptimize_filter_noptimize', $ao_noptimize );
 
-	if (!is_feed() && !$ao_noptimize && !is_admin()) {
+	if (!is_feed() && !$ao_noptimize && !is_admin() && !is_customize_preview()) {
 		// Config element
 		$conf = autoptimizeConfig::instance();
 
