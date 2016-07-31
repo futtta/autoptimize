@@ -46,192 +46,40 @@ class autoptimizeConfig {
 	public function show() {
 ?>
 <style>
-input[type=url]:invalid {
-	color: red;
-	border-color:red;
-}
-.form-table th{
-	font-weight:100;
-}
-#autoptimize_admin_header {
-	float: left;
-	width: 70%;
-}
-#autoptimize_admin_header:after {
-	content:'';
-	display:block;
-	clear:both;
-}
-#autoptimize_admin_main {
-	float: left;
-	width: 70%;
-}
-#autoptimize_admin_feed {
-	float: right;
-	width: 30%;
-}
-#futtta_feed ul {
-	list-style: outside;
-}
-#futtta_feed {
-	font-size:medium;
-	margin: 0px 20px;
-}
-#ao_title {
-	float: left;
-}
-#ao_adv_button {
-	float: right;
-	margin-top: 10px;
-	margin-right: 10px;
-}
-#ao_hide_adv,
-#ao_show_adv {
-	float: right;
-	margin-right: 10px;
-}
-#ao_hide_adv:before,
-#ao_show_adv:before {
-	display: inline-block;
-	float: left;
-	height: 20px;
-	width: 35px;
-	background: none;
-	color: #b4b9be;
-	font: normal 20px/26px dashicons;
-	letter-spacing: -4px;
-	text-align: left;
-	speak: none;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-#ao_hide_adv:before {
-	content: "\f108 \f142";
-}
-#ao_show_adv:before {
-	content: "\f108 \f140";
-}
-.autoptimize_banner {
-	margin: 0 38px;
-	padding-bottom: 5px;
-}
-.autoptimize_banner ul li {
-	font-size:medium;
-	text-align:center;
-}
-.itemDetail {
-	background: #fff;
-	border: 1px solid #ccc;
-	padding: 15px;
-	margin: 15px 10px 10px 0;
-}
-.itemTitle {
-	margin-top: 0;
-}
-.unslider {
-	position:relative;
-	margin-left: 10px;
-}
-.unslider-arrow {
-	display: block;
-	left: unset;
-	margin-top: -35px;
-	margin-left: 7px;
-	margin-right: 7px;
-	border-radius: 32px;
-	background: rgba(0, 0, 0, 0.10) no-repeat 50% 50%;
-	color: rgba(255, 255, 255, 0.8);
-	font: normal 20px/1 dashicons;
-	speak: none;
-	padding: 3px 2px 3px 4px;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-.unslider-arrow:hover {
-	background-color: rgba(0, 0, 0, 0.20);
-	color: #FFF;
-}
-.unslider-arrow.prev {
-	padding: 3px 4px 3px 2px;
-}
-.unslider-arrow.next {
-	right: 0px;
-}
-.unslider-arrow.prev::before {
-	content: "\f341";
-}
-.unslider-arrow.next::before {
-	content: "\f345";
-}
-@media (max-width: 1180px) {
-	#ao_hide_adv,
-	#ao_show_adv {
-		height: 34px;
-		padding: 4px 12px 8px 8px;
-	}
-	#ao_hide_adv:before,
-	#ao_show_adv:before {
-		font-size: 25px;
-	}
-	#ao_hide_adv span,
-	#ao_show_adv span {
-		display: none;
-	}
-}
-@media (max-width: 782px) {
-	#autoptimize_admin_header,
-	#autoptimize_admin_main,
-	#autoptimize_admin_feed {
-		float: left;
-		width: 100%;
-	}
-	#autoptimize_admin_feed {
-		margin-top: 20px;
-	}
-	#autoptimize_admin_main input {
-		margin-left: 10px;
-	}
-	#autoptimize_admin_main label {
-		display: inline-block;
-		padding-left: 42px;
-		text-indent: -43px;
-	}
-}
+input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:100;}
+#futtta_feed ul{list-style:outside;} #futtta_feed {font-size:medium; margin:0px 20px;} 
+#ao_title_and_button:after {content:''; display:block; clear:both;}#ao_title{float:left;}#ao_adv_button{float:right;margin-top:10px;margin-right:10px;}
+@media (min-width: 961px) {#autoptimize_main {float:left;width:69%;}#autoptimize_admin_feed{float:right;width:30%;}}
+@media (max-width: 960px) {#autoptimize_admin_feed {width:0%;}#autoptimize_main {width:100%;}}
 </style>
 
 <div class="wrap">
-
-<h1 class="hidden"></h1>
-
-<div id="autoptimize_admin_header">
-
-<h1 id="ao_title"><?php _e('Autoptimize Settings','autoptimize'); ?></h1>
-
-	<div id="ao_adv_button">
-
-	<?php 
-	if (get_option('autoptimize_show_adv','0')=='1') {
-		?>
-		<a href="javascript:void(0);" id="ao_show_adv" class="button" style="display:none;"><span><?php _e("Show advanced settings","autoptimize") ?></span></a>
-		<a href="javascript:void(0);" id="ao_hide_adv" class="button"><span><?php _e("Hide advanced settings","autoptimize") ?></span></a>
-		<style> tr.ao_adv {display:table-row} li.ao_adv {display:list-item} </style>
-	<?php
-} else {
-	?>
-		<a href="javascript:void(0);" id="ao_show_adv" class="button"><span><?php _e("Show advanced settings","autoptimize") ?></span></a>
-		<a href="javascript:void(0);" id="ao_hide_adv" class="button" style="display:none;"><span><?php _e("Hide advanced settings","autoptimize") ?></span></a>
-	<?php
-	}
-	?>
-	</div>
-
-</div>
+<h1 class="hidden uglyhack sorry"></h1>
 
 <?php if (version_compare(PHP_VERSION, '5.3.0') < 0) { ?>
 <div class="notice-error notice"><?php _e('<p><strong>You are using a very old version of PHP</strong> (5.2.x or older) which has <a href="http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/" target="_blank">serious security and performance issues</a>. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0</p>','autoptimize'); ?></div>
 <?php } ?>
 
-<div id="autoptimize_admin_main">
+<div id="autoptimize_main">
+<div id="ao_title_and_button">
+	<h1 id="ao_title"><?php _e('Autoptimize Settings','autoptimize'); ?></h1>
+	<div id="ao_adv_button">
+	<?php 
+	if (get_option('autoptimize_show_adv','0')=='1') {
+		?>
+		<a href="javascript:void(0);" id="ao_show_adv" class="button" style="display:none;"><?php _e("Show advanced settings","autoptimize") ?></a>
+		<a href="javascript:void(0);" id="ao_hide_adv" class="button"><?php _e("Hide advanced settings","autoptimize") ?></a>
+		<style>tr.ao_adv{display:table-row;} li.ao_adv{display:list-item;}</style>
+		<?php
+	} else {
+		?>
+		<a href="javascript:void(0);" id="ao_show_adv" class="button"><?php _e("Show advanced settings","autoptimize") ?></a>
+		<a href="javascript:void(0);" id="ao_hide_adv" class="button" style="display:none;"><?php _e("Hide advanced settings","autoptimize") ?></a>
+		<?php
+	}
+		?>
+	</div>
+</div>
 
 <?php echo $this->ao_admin_tabs(); ?>
 
@@ -392,6 +240,59 @@ input[type=url]:invalid {
 
 </form>
 </div>
+<style>
+.autoptimize_banner {
+	margin: 0 38px;
+	padding-bottom: 5px;
+}
+.autoptimize_banner ul li {
+	font-size:medium;
+	text-align:center;
+}
+.itemDetail {
+	background: #fff;
+	border: 1px solid #ccc;
+	padding: 15px;
+	margin: 15px 10px 10px 0;
+}
+.itemTitle {
+	margin-top: 0;
+}
+.unslider {
+	position:relative;
+}
+.unslider-arrow {
+	display: block;
+	left: unset;
+	margin-top: -35px;
+	margin-left: 7px;
+	margin-right: 7px;
+	border-radius: 32px;
+	background: rgba(0, 0, 0, 0.10) no-repeat 50% 50%;
+	color: rgba(255, 255, 255, 0.8);
+	font: normal 20px/1 dashicons;
+	speak: none;
+	padding: 3px 2px 3px 4px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.unslider-arrow:hover {
+	background-color: rgba(0, 0, 0, 0.20);
+	color: #FFF;
+}
+.unslider-arrow.prev {
+    padding: 3px 4px 3px 2px;
+}
+.unslider-arrow.next {
+    right: 0px;
+}
+.unslider-arrow.prev::before {
+    content: "\f341";
+}
+.unslider-arrow.next::before {
+    content: "\f345";
+}
+</style>
 <div id="autoptimize_admin_feed" class="hidden">
     <div class="autoptimize_banner hidden">
       <ul>
@@ -448,7 +349,7 @@ input[type=url]:invalid {
 	jQuery(document).ready(function() {
 		check_ini_state();
 		jQuery('#autoptimize_admin_feed').fadeTo("slow",1).show();		
-		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:5000, infinite: true, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
+		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:3500, infinite: false, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
 
 		jQuery( "#feed_dropdown" ).change(function() {
 			jQuery("#futtta_feed").fadeTo(0,0);
