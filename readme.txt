@@ -2,7 +2,7 @@
 Contributors: futtta, turl, optimizingmatters
 Tags: css, html, javascript, js, optimize, speed, cache, aggregate, minimize, minification, performance, pagespeed
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
-Requires at least: 2.7
+Requires at least: 4.0
 Tested up to: 4.6
 Stable tag: 2.0.2
 
@@ -227,6 +227,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * new: If cache size becomes too big, a mail will be sent to the site admin (pass `false` to `autoptimize_filter_cachecheck_sendmail` filter to disable or pass alternative email to the `autoptimize_filter_cachecheck_mailto` filter to change email-address)
 * improvement: admin GUI updated (again; thanks Pablo!) with some responsiveness added in the mix (not showing the right hand column on smaller screen-sizes)
 * Misc. bugfixes & small improvements (see [commit-log on GitHub](https://github.com/futtta/autoptimize/commits/master))
+* Minimal version updated from 2.7 (!) to 4.0
 * Tested and confirmed working on WordPress 4.6 beta 4
 
 = 2.0.2 =
