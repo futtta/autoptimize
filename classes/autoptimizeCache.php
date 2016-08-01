@@ -57,6 +57,10 @@ class autoptimizeCache {
 		} else {
 			// Write code to cache without doing anything else
 			file_put_contents($this->cachedir.$this->filename,$code, LOCK_EX);
+			if (apply_filters('autoptimize_filter_cache_create_static_gzip', false)) {
+				// Create an additional cached gzip file
+				file_put_contents($this->cachedir.$this->filename.'.gzip',gzencode($code,9,FORCE_GZIP), LOCK_EX);
+			}
 		}
 	}
 	
