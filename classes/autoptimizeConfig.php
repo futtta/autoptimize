@@ -50,8 +50,7 @@ class autoptimizeConfig {
 #ao_title_and_button:after {content:''; display:block; clear:both;}
 #ao_title{float:left;}
 #ao_adv_button{float:right;margin-top:10px;margin-right:10px;}
-#ao_hide_adv:before,
-#ao_show_adv:before {
+#ao_hide_adv:before, #ao_show_adv:before {
 	display: inline-block;
 	float: left;
 	height: 20px;
@@ -145,7 +144,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 	#ao_hide_adv span, #ao_show_adv span {display: none;}
 	#ao_hide_adv,#ao_show_adv {height: 34px;padding: 4px 12px 8px 8px;}
 	#ao_hide_adv:before,#ao_show_adv:before {font-size: 25px;}
-	}
+}
 </style>
 
 <div class="wrap">
