@@ -476,12 +476,14 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 	// validate cdn_url
 	var cdn_url=document.getElementById("cdn_url");
 	cdn_url_baseCSS=cdn_url.style.cssText;
-	jQuery("#cdn_url").focusout(function (event) {
-    if (cdn_url.validity.valid) {
-		cdn_url.style.cssText=cdn_url_baseCSS;
-	} else {
-		cdn_url.style.cssText=cdn_url_baseCSS+"border:1px solid #f00;color:#f00;box-shadow: 0 0 2px #f00;";
-	}});
+	if ("validity" in cdn_url) {
+		jQuery("#cdn_url").focusout(function (event) {
+		if (cdn_url.validity.valid) {
+			cdn_url.style.cssText=cdn_url_baseCSS;
+		} else {
+			cdn_url.style.cssText=cdn_url_baseCSS+"border:1px solid #f00;color:#f00;box-shadow: 0 0 2px #f00;";
+		}});
+	}
 
 	function check_ini_state() {
 		if (!jQuery("#autoptimize_css_defer").attr('checked')) {
