@@ -289,7 +289,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <table class="form-table"> 
 <tr valign="top">
 <th scope="row"><?php _e('CDN Base URL','autoptimize'); ?></th>
-<td><label for="autoptimize_url"><input id="cdn_url" type="url" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" value="<?php $it = get_option('autoptimize_cdn_url','');echo htmlentities($it); ?>" /><br />
+<td><label for="autoptimize_url"><input id="cdn_url" type="text" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" value="<?php $it = get_option('autoptimize_cdn_url','');echo htmlentities($it); ?>" /><br />
 <?php _e('Enter your CDN blog root directory URL if you want to enable CDN for images referenced in the CSS.','autoptimize'); ?></label></td>
 </tr>
 </table>
@@ -472,6 +472,16 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 		if(typeof(feedid) !== "string") feedid=1;
 		show_feed(feedid);
 	})
+	
+	// validate cdn_url
+	var cdn_url=document.getElementById("cdn_url");
+	cdn_url_baseCSS=cdn_url.style.cssText;
+	jQuery("#cdn_url").focusout(function (event) {
+    if (cdn_url.validity.valid) {
+		cdn_url.style.cssText=cdn_url_baseCSS;
+	} else {
+		cdn_url.style.cssText=cdn_url_baseCSS+"border:1px solid #f00;color:#f00;box-shadow: 0 0 2px #f00;";
+	}});
 
 	function check_ini_state() {
 		if (!jQuery("#autoptimize_css_defer").attr('checked')) {
