@@ -19,14 +19,14 @@ if (is_admin()) {
 function ao_cachechecker_setup() {
 	$doCacheCheck = (bool) apply_filters( 'autoptimize_filter_cachecheck_do', true);
 	$cacheCheckSchedule = wp_get_schedule( 'ao_cachechecker' );
-	if (!$cacheCheckSchedule && $doCacheCheck) {
-		$AOCCfreq = apply_filters('autoptimize_filter_cachecheck_frequency','daily');
-		if (!in_array($AOCCfreq,array('hourly','daily','monthly'))) {
+	$AOCCfreq = apply_filters('autoptimize_filter_cachecheck_frequency','daily');
+	if (!in_array($AOCCfreq,array('hourly','daily','monthly'))) {
 			$AOCCfreq='daily';
-		}
-		wp_schedule_event(time(), $AOCCfreq, 'ao_cachechecker');
-	} else if ($cacheCheckSchedule && !$doCacheCheck) {
-		wp_clear_scheduled_hook( 'ao_cachechecker' );
+	}
+	if ( $doCacheCheck && ( !$cacheCheckSchedule || $cacheCheckSchedule !== $AOCCfreq ) ) {
+			wp_schedule_event(time(), $AOCCfreq, 'ao_cachechecker');
+	} else if ( $cacheCheckSchedule && !$doCacheCheck ) {
+			wp_clear_scheduled_hook( 'ao_cachechecker' );
 	}
 }
 
