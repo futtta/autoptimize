@@ -61,14 +61,12 @@ jQuery( document ).ready(function()
 			},
 			error: function( jqXHR, textStatus )
 			{
-				if ( textStatus === 'timeout' )
-				{
-					// Remove the Autoptimize Loading Modal
-					modal_loading.remove();
+				// Remove the Autoptimize Loading Modal
+				modal_loading.remove();
 
-					// WordPress Admin Notice
-					jQuery( '<div id="ao-delete-cache-timeout" class="notice notice-error is-dismissible"><p><strong><span style="display:block; margin:0.5em 0.5em 0 0; clear:both;">' + autoptimize_ajax_object.error_msg + '</span></strong></p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' +  autoptimize_ajax_object.dismiss_msg + '</span></button></div><br>' ).insertAfter( '#wpbody .wrap h1:first-of-type' ).show();
-				}
+				// WordPress Admin Notice
+				jQuery( '<div id="ao-delete-cache-timeout" class="notice notice-error is-dismissible"><p><strong><span style="display:block;clear:both;">' + autoptimize_ajax_object.error_msg + '</span></strong></p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' +  autoptimize_ajax_object.dismiss_msg + '</span></button></div><br>' ).insertAfter( '#wpbody .wrap h1:first-of-type' ).show();
+
 			}
 		});
 	});
