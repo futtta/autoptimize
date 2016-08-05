@@ -56,9 +56,9 @@ function ao_cachechecker_cronjob() {
 add_action('admin_notices', 'autoptimize_cachechecker_notice');
 function autoptimize_cachechecker_notice() {
 	if ((bool) get_option("autoptimize_cachesize_notice",false)) {
-		echo '<div class="update-nag">';
-		_e('Autoptimize\'s cache size is getting big, consider purging the cache.<br /><br />Have a look at <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank">the Autoptimize FAQ</a> to see how you can keep the cache size under control.', 'autoptimize' );
-		echo '</div>';
+		echo '<div class="notice notice-warning"><p>';
+		_e('<strong>Autoptimize\'s cache size is getting big</strong>, consider purging the cache. Have a look at <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank">the Autoptimize FAQ</a> to see how you can keep the cache size under control.', 'autoptimize' );
+		echo '</p></div>';
 		update_option("autoptimize_cachesize_notice",false);
 	}
 }
