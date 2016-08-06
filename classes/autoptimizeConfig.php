@@ -291,7 +291,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <table class="form-table"> 
 <tr valign="top">
 <th scope="row"><?php _e('CDN Base URL','autoptimize'); ?></th>
-<td><label><input id="cdn_url" type="text" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" value="<?php echo esc_url(get_option('autoptimize_cdn_url',''),array("http","https")) ?>" /><br />
+<td><label><input id="cdn_url" type="text" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" value="<?php echo esc_url(get_option('autoptimize_cdn_url',''),array("http","https")); ?>" /><br />
 <?php _e('Enter your CDN blog root directory URL if you want to enable CDN for images referenced in the CSS.','autoptimize'); ?></label></td>
 </tr>
 </table>
