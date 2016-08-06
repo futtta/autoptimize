@@ -190,7 +190,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <th scope="row"><?php _e('Optimize HTML Code?','autoptimize'); ?></th>
 <td><input type="checkbox" id="autoptimize_html" name="autoptimize_html" <?php echo get_option('autoptimize_html')?'checked="checked" ':''; ?>/></td>
 </tr>
-<tr class="html_sub" valign="top">
+<tr class="html_sub ao_adv" valign="top">
 <th scope="row"><?php _e('Keep HTML comments?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_html_keepcomments" <?php echo get_option('autoptimize_html_keepcomments')?'checked="checked" ':''; ?>/>
 <?php _e('Enable this if you want HTML comments to remain in the page.','autoptimize'); ?></label></td>
