@@ -85,7 +85,7 @@ function getAOPartnerFeed() {
 	$noFeedText=__( 'Have a look at <a href="http://optimizingmatters.com/">optimizingmatters.com</a> for Autoptimize power-ups!', 'autoptimize' );
 
 	if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
-		$rss = fetch_feed( "http://optimizingmatters.com/downloads/feed/" );
+		$rss = fetch_feed( "http://feeds.feedburner.com/OptimizingMattersDownloads" );
 		$maxitems = 0;
 
 		if ( ! is_wp_error( $rss ) ) {
