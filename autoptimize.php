@@ -20,7 +20,7 @@ define('AUTOPTIMIZE_PLUGIN_DIR',plugin_dir_path(__FILE__));
 include(AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeConfig.php');
 
 // Load toolbar class
-include( AUTOPTIMIZE_PLUGIN_DIR . 'classes/autoptimizeToolbar.php' );
+include( AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeToolbar.php' );
 
 // Load partners tab if admin
 if (is_admin()) {
@@ -31,7 +31,7 @@ if (is_admin()) {
 define('AUTOPTIMIZE_CACHE_NOGZIP',(bool) get_option('autoptimize_cache_nogzip'));
 
 // Load cache class
-include(AUTOPTIMIZE_PLUGIN_DIR.'/classes/autoptimizeCache.php');
+include(AUTOPTIMIZE_PLUGIN_DIR.'classes/autoptimizeCache.php');
 
 // wp-content dir name (automagically set, should not be needed), dirname of AO cache dir and AO-prefix can be overridden in wp-config.php
 if (!defined('AUTOPTIMIZE_WP_CONTENT_NAME')) { define('AUTOPTIMIZE_WP_CONTENT_NAME','/'.wp_basename( WP_CONTENT_DIR )); }
@@ -54,7 +54,7 @@ $conf = autoptimizeConfig::instance();
 /* Check if we're updating, in which case we might need to do stuff and flush the cache
 to avoid old versions of aggregated files lingering around */
 
-$autoptimize_version="2.0.0";
+$autoptimize_version="2.1.0";
 $autoptimize_db_version=get_option('autoptimize_version','none');
 
 if ($autoptimize_db_version !== $autoptimize_version) {
@@ -62,7 +62,7 @@ if ($autoptimize_db_version !== $autoptimize_version) {
     add_action('admin_notices', 'autoptimize_install_config_notice');
 	} else {
 		// updating, include the update-code
-		include(AUTOPTIMIZE_PLUGIN_DIR.'/classlesses/autoptimizeUpdateCode.php');
+		include(AUTOPTIMIZE_PLUGIN_DIR.'classlesses/autoptimizeUpdateCode.php');
 	}
 
 	update_option('autoptimize_version',$autoptimize_version);
