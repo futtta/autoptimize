@@ -342,7 +342,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 		if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
 			$AO_banner=get_transient("autoptimize_banner");
 			if (empty($AO_banner)) {
-				$banner_resp = wp_remote_get("http://optimizingmatters.com/autoptimize_news.html");
+				$banner_resp = wp_remote_get("http://misc.optimizingmatters.com/autoptimize_news.html");
 				if (!is_wp_error($banner_resp)) {
 					if (wp_remote_retrieve_response_code($banner_resp)=="200") {
 						$AO_banner = wp_kses_post(wp_remote_retrieve_body($banner_resp));
