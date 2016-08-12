@@ -116,7 +116,7 @@ class autoptimizeToolbar {
 		wp_enqueue_style( 'autoptimize-toolbar', plugins_url('/static/toolbar.css', __FILE__ ), array(), time(), "all" );
 
 		// Autoptimize Toolbar Javascript
-		wp_enqueue_script( 'autoptimize-toolbar', plugins_url( '/static/toolbar.js', __FILE__ ), array(), time(), true );
+		wp_enqueue_script( 'autoptimize-toolbar', plugins_url( '/static/toolbar.js', __FILE__ ), array('jquery'), time(), true );
 
 		// Localizes a registered script with data for a JavaScript variable. (We need this for the AJAX work properly in the front-end mode)
 		wp_localize_script( 'autoptimize-toolbar', 'autoptimize_ajax_object', array(
