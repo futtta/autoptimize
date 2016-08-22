@@ -262,7 +262,7 @@ abstract class autoptimizeBase {
 		} else {
 			$this->content .= $payload;
 			if (!$this->tagWarning) {
-				$this->content .= "<!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag ".$replaceTag[0]." missing --><!--/noptimize-->";
+				$this->content .= "<!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag \"".str_replace(array("<",">"),"",$replaceTag[0])."\" missing --><!--/noptimize-->";
 				$this->tagWarning=true;
 			}
 		}
