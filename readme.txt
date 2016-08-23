@@ -65,7 +65,7 @@ You can keep the cache size at an acceptable level by either:
 
 = Where is the "look only in head" option? =
 
-While "look only in head" still works, it is now (since Autoptimize 2.0.0) no longer visible on the settings-page if it is not active. As long as the option is active (for JS or CSS), it will however remain visible until you deactivate it. If you're comfortable with PHP, there however still are filters available to keep on using "look only in head".
+While "look only in head" still works, it is now (since Autoptimize 2.0.0) no longer visible on the settings-page if it is not active. As long as the option is active (for JS or CSS), it will however remain visible until you deactivate it. If you're comfortable with PHP, there still are filters available to keep on using "look only in head".
 
 = So should I aggregate inline CSS/ JS? =
 
@@ -78,6 +78,10 @@ A whole lot; there are filters you can use to conditionally disable Autoptimize 
 = How can I use the code in autoptimize_helper.php_example? =
 
 Although you could add the code to your theme's functions.php, it would get overwritten with your next theme update. Therefor it is better to either create a helper plugin of your own or to simply use [the Code Snippets plugin](https://wordpress.org/plugins/code-snippets/) to manage any custom code.
+
+= Why is jquery.js not optimized =
+
+Since AO 2.1 WordPress core's jquery.js is not optimized for the simple reason a lot of popular plugins inject inline JS that is not aggregated either (due to possible cache size issues with unique code in inline JS), so excluding jquery.js ensures that most blogs will work out of the box. If you want optimize jquery as well, you can remove it from the JS optimization exclusion-list (you might have to enable "also aggregate inline JS" as well or switch to "force JS in head").
 
 = How does CDN work? =
 
@@ -232,6 +236,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * new: power-users can enable Autoptimize to pre-gzip the autoptimized files by passing `true` to `autoptimize_filter_cache_create_static_gzip`, kudo's to (Draikin)[https://github.com/Draikin] for this!
 * improvement: admin GUI updated (again; thanks Pablo!) with some responsiveness added in the mix (not showing the right hand column on smaller screen-sizes)
 * improvement: settings-screen now accepts protocol-relative URL for CDN base URL
+* improvement: new (smarter) defaults for JS optimization (don't force in head + exclude jquery.js)
 * Misc. bugfixes & small improvements (see [commit-log on GitHub](https://github.com/futtta/autoptimize/commits/master))
 * Minimal version updated from 2.7 (!) to 4.0
 * Tested and confirmed working on WordPress 4.6 beta 4
