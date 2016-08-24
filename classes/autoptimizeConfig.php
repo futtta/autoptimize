@@ -261,7 +261,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <?php } ?>
 <tr valign="top" class="hidden css_sub ao_adv">
 <th scope="row"><?php _e('Also aggregate inline CSS?','autoptimize'); ?></th>
-<td><label class="cb_label"><input type="checkbox" name="autoptimize_css_include_inline" <?php echo get_option('autoptimize_css_include_inline')?'checked="checked" ':''; ?>/>
+<td><label class="cb_label"><input type="checkbox" name="autoptimize_css_include_inline" <?php echo get_option('autoptimize_css_include_inline','1')?'checked="checked" ':''; ?>/>
 <?php _e('Check this option for Autoptimize to also aggregate CSS in the HTML.','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="hidden css_sub ao_adv">
@@ -591,7 +591,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 				'autoptimize_css' => 0,
 				'autoptimize_css_exclude' => "admin-bar.min.css, dashicons.min.css",
 				'autoptimize_css_justhead' => 0,
-				'autoptimize_css_include_inline' => 0,
+				'autoptimize_css_include_inline' => 1,
 				'autoptimize_css_defer' => 0,
 				'autoptimize_css_defer_inline' => "",
 				'autoptimize_css_inline' => 0,
