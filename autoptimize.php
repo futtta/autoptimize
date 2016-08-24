@@ -188,6 +188,12 @@ function autoptimize_start_buffering() {
 			}
 		}
 
+		if (apply_filters('autoptimize_filter_obkiller',false)) {
+			while (ob_get_level() > 0) {
+				ob_end_clean();
+			}
+		}
+				
 		// Now, start the real thing!
 		ob_start('autoptimize_end_buffering');
 	}
