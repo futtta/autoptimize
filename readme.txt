@@ -236,10 +236,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * new: power-users can enable Autoptimize to pre-gzip the autoptimized files by passing `true` to `autoptimize_filter_cache_create_static_gzip`, kudo's to (Draikin)[https://github.com/Draikin] for this!
 * improvement: admin GUI updated (again; thanks Pablo!) with some responsiveness added in the mix (not showing the right hand column on smaller screen-sizes)
 * improvement: settings-screen now accepts protocol-relative URL for CDN base URL
-* improvement: new (smarter) defaults for JS optimization (don't force in head + exclude jquery.js)
+* improvement: new (smarter) defaults for JS (don't force in head + exclude jquery.js) and CSS optimization (include inline CSS)
 * Misc. bugfixes & small improvements (see [commit-log on GitHub](https://github.com/futtta/autoptimize/commits/master))
 * Minimal version updated from 2.7 (!) to 4.0
-* Tested and confirmed working on WordPress 4.6 beta 4
+* Tested and confirmed working on WordPress 4.6
 
 = 2.0.2 =
 * bugfix: disallow moving non-aggregated JS by default (can be re-enabled by passing false to the `autoptimize_filter_js_unmovable`)
