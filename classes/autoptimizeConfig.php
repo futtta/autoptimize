@@ -165,13 +165,15 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 		<a href="javascript:void(0);" id="ao_hide_adv" class="button"><span><?php _e("Hide advanced settings","autoptimize") ?></span></a>
 		<style>tr.ao_adv{display:table-row;} li.ao_adv{display:list-item;}</style>
 		<?php
+		$hiddenClass="";
 	} else {
 		?>
 		<a href="javascript:void(0);" id="ao_show_adv" class="button"><span><?php _e("Show advanced settings","autoptimize") ?></span></a>
 		<a href="javascript:void(0);" id="ao_hide_adv" class="button" style="display:none;"><span><?php _e("Hide advanced settings","autoptimize") ?></span></a>
 		<?php
+		$hiddenClass="hidden ";
 	}
-		?>
+	?>
 	</span>
 	</h1>
 </div>
@@ -190,7 +192,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <th scope="row"><?php _e('Optimize HTML Code?','autoptimize'); ?></th>
 <td><input type="checkbox" id="autoptimize_html" name="autoptimize_html" <?php echo get_option('autoptimize_html')?'checked="checked" ':''; ?>/></td>
 </tr>
-<tr class="hidden html_sub ao_adv" valign="top">
+<tr class="<?php echo $hiddenClass;?>html_sub ao_adv" valign="top">
 <th scope="row"><?php _e('Keep HTML comments?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_html_keepcomments" <?php echo get_option('autoptimize_html_keepcomments')?'checked="checked" ':''; ?>/>
 <?php _e('Enable this if you want HTML comments to remain in the page.','autoptimize'); ?></label></td>
@@ -205,29 +207,29 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <th scope="row"><?php _e('Optimize JavaScript Code?','autoptimize'); ?></th>
 <td><input type="checkbox" id="autoptimize_js" name="autoptimize_js" <?php echo get_option('autoptimize_js')?'checked="checked" ':''; ?>/></td>
 </tr>
-<tr valign="top" class="hidden js_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Force JavaScript in &lt;head&gt;?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_forcehead" <?php echo get_option('autoptimize_js_forcehead')?'checked="checked" ':''; ?>/>
 <?php _e('Load JavaScript early, reducing the chance of JS-errors but making it render blocking. You can disable this if you\'re not aggregating inline JS and you want JS to be deferred.','autoptimize'); ?></label></td>
 </tr>
 <?php if (get_option('autoptimize_js_justhead')) { ?>
-<tr valign="top" class="hidden js_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Look for scripts only in &lt;head&gt;?','autoptimize');  _e(' <i>(deprecated)</i>','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_justhead" <?php echo get_option('autoptimize_js_justhead')?'checked="checked" ':''; ?>/>
 <?php _e('Mostly useful in combination with previous option when using jQuery-based templates, but might help keeping cache size under control.','autoptimize'); ?></label></td>
 </tr>
 <?php } ?>
-<tr valign="top" class="hidden js_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Also aggregate inline JS?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_include_inline" <?php echo get_option('autoptimize_js_include_inline')?'checked="checked" ':''; ?>/>
 <?php _e('Check this option for Autoptimize to also aggregate JS in the HTML. If this option is not enabled, you might have to "force JavaScript in head".','autoptimize'); ?></label></td>
 </tr>
-<tr valign="top" class="hidden js_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"seal.js, js/jquery/jquery.js"); ?>"/><br />
 <?php _e('A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated and minimized by Autoptimize.','autoptimize'); ?></label></td>
 </tr>
-<tr valign="top" class="hidden js_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Add try-catch wrapping?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_trycatch" <?php echo get_option('autoptimize_js_trycatch')?'checked="checked" ':''; ?>/>
 <?php _e('If your scripts break because of a JS-error, you might want to try this.','autoptimize'); ?></label></td>
@@ -242,43 +244,43 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <th scope="row"><?php _e('Optimize CSS Code?','autoptimize'); ?></th>
 <td><input type="checkbox" id="autoptimize_css" name="autoptimize_css" <?php echo get_option('autoptimize_css')?'checked="checked" ':''; ?>/></td>
 </tr>
-<tr class="hidden css_sub ao_adv" valign="top">
+<tr class="<?php echo $hiddenClass;?>css_sub ao_adv" valign="top">
 <th scope="row"><?php _e('Generate data: URIs for images?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_datauris" <?php echo get_option('autoptimize_css_datauris')?'checked="checked" ':''; ?>/>
 <?php _e('Enable this to include small background-images in the CSS itself instead of as separate downloads.','autoptimize'); ?></label></td>
 </tr>
-<tr class="hidden css_sub ao_adv" valign="top">
+<tr class="<?php echo $hiddenClass;?>css_sub ao_adv" valign="top">
 <th scope="row"><?php _e('Remove Google Fonts?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_nogooglefont" <?php echo get_option('autoptimize_css_nogooglefont')?'checked="checked" ':''; ?>/>
 <?php _e('Check this if you don\'t need or want Google Fonts being loaded.','autoptimize'); ?></label></td>
 </tr>
 <?php if (get_option('autoptimize_css_justhead')) { ?>
-<tr valign="top" class="hidden css_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv">
 <th scope="row"><?php _e('Look for styles only in &lt;head&gt;?','autoptimize'); _e(' <i>(deprecated)</i>','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_justhead" <?php echo get_option('autoptimize_css_justhead')?'checked="checked" ':''; ?>/>
 <?php _e('Don\'t autoptimize CSS outside the head-section. If the cache gets big, you might want to enable this.','autoptimize'); ?></label></td>
 </tr>
 <?php } ?>
-<tr valign="top" class="hidden css_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv">
 <th scope="row"><?php _e('Also aggregate inline CSS?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_include_inline" <?php echo get_option('autoptimize_css_include_inline','1')?'checked="checked" ':''; ?>/>
 <?php _e('Check this option for Autoptimize to also aggregate CSS in the HTML.','autoptimize'); ?></label></td>
 </tr>
-<tr valign="top" class="hidden css_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv">
 <th scope="row"><?php _e('Inline and Defer CSS?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_defer" id="autoptimize_css_defer" <?php echo get_option('autoptimize_css_defer')?'checked="checked" ':''; ?>/>
 <?php _e('Inline "above the fold CSS" while loading the main autoptimized CSS only after page load. <a href="http://wordpress.org/plugins/autoptimize/faq/" target="_blank">Check the FAQ</a> before activating this option!','autoptimize'); ?></label></td>
 </tr>
-<tr valign="top" class="hidden css_sub ao_adv" id="autoptimize_css_defer_inline">
+<tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv" id="autoptimize_css_defer_inline">
 <th scope="row"></th>
 <td><label><textarea rows="10" cols="10" style="width:100%;" placeholder="<?php _e('Paste the above the fold CSS here.','autoptimize'); ?>" name="autoptimize_css_defer_inline"><?php echo get_option('autoptimize_css_defer_inline'); ?></textarea></label></td>
 </tr>
-<tr valign="top" class="hidden ao_adv css_sub">
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub">
 <th scope="row"><?php _e('Inline all CSS?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" id="autoptimize_css_inline" name="autoptimize_css_inline" <?php echo get_option('autoptimize_css_inline')?'checked="checked" ':''; ?>/>
 <?php _e('Inlining all CSS can improve performance for sites with a low pageviews/ visitor-rate, but may slow down performance otherwise.','autoptimize'); ?></label></td>
 </tr>
-<tr valign="top" class="hidden ao_adv css_sub">
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub">
 <th scope="row"><?php _e('Exclude CSS from Autoptimize:','autoptimize'); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo get_option('autoptimize_css_exclude','admin-bar.min.css, dashicons.min.css'); ?>"/><br />
 <?php _e('A comma-separated list of CSS you want to exclude from being optimized.','autoptimize'); ?></label></td>
@@ -297,18 +299,18 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 </table>
 </li>
 
-<li class="itemDetail hidden ao_adv">
+<li class="<?php echo $hiddenClass;?>itemDetail ao_adv">
 <h2 class="itemTitle"><?php _e('Cache Info','autoptimize'); ?></h2>
 <table class="form-table" > 
-<tr valign="top" class="hidden ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
 <th scope="row"><?php _e('Cache folder','autoptimize'); ?></th>
 <td><?php echo htmlentities(AUTOPTIMIZE_CACHE_DIR); ?></td>
 </tr>
-<tr valign="top" class="hidden ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
 <th scope="row"><?php _e('Can we write?','autoptimize'); ?></th>
 <td><?php echo (autoptimizeCache::cacheavail() ? __('Yes','autoptimize') : __('No','autoptimize')); ?></td>
 </tr>
-<tr valign="top" class="hidden ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
 <th scope="row"><?php _e('Cached styles and scripts','autoptimize'); ?></th>
 <td><?php
 	$AOstatArr=autoptimizeCache::stats(); 
@@ -316,7 +318,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 	echo $AOstatArr[0].__(' files, totalling ','autoptimize').$AOcacheSize.__(' Kbytes (calculated at ','autoptimize').date("H:i e", $AOstatArr[2]).')';
 ?></td>
 </tr>
-<tr valign="top" class="hidden ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
 <th scope="row"><?php _e('Save aggregated script/css as static files?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_nogzip" <?php echo get_option('autoptimize_cache_nogzip','1')?'checked="checked" ':''; ?>/>
 <?php _e('By default files saved are static css/js, uncheck this option if your webserver doesn\'t properly handle the compression and expiry.','autoptimize'); ?></label></td>
@@ -401,6 +403,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 		jQuery( "#ao_show_adv" ).click(function() {
 			jQuery( "#ao_show_adv" ).hide();
 			jQuery( "#ao_hide_adv" ).show();
+			jQuery( ".ao_adv" ).removeClass("hidden");
 			jQuery( ".ao_adv" ).show("slow");
 			if (jQuery("#autoptimize_css").attr('checked')) {
 				jQuery(".css_sub:visible").fadeTo("fast",1);
@@ -419,6 +422,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 			jQuery( "#ao_hide_adv" ).hide();
 			jQuery( "#ao_show_adv" ).show();
 			jQuery( ".ao_adv" ).hide("slow");
+			jQuery( ".ao_adv" ).addClass("hidden");
 			if (!jQuery("#autoptimize_css").attr('checked')) {
 				jQuery(".css_sub:visible").fadeTo("fast",.33);
 			}
