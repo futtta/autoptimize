@@ -2,83 +2,83 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class autoptimizeConfig {
-	private $config = null;
-	static private $instance = null;
+    private $config = null;
+    static private $instance = null;
 
-	//Singleton: private construct
-	private function __construct() {
-		if( is_admin() ) {
-			//Add the admin page and settings
-			add_action('admin_menu',array($this,'addmenu'));
-			add_action('admin_init',array($this,'registersettings'));
+    //Singleton: private construct
+    private function __construct() {
+        if( is_admin() ) {
+            //Add the admin page and settings
+            add_action('admin_menu',array($this,'addmenu'));
+            add_action('admin_init',array($this,'registersettings'));
 
-			//Set meta info
-			if(function_exists('plugin_row_meta')) {
-				//2.8+
-				add_filter('plugin_row_meta',array($this,'setmeta'),10,2);
-			} elseif(function_exists('post_class')) {
-				//2.7
-				$plugin = plugin_basename(AUTOPTIMIZE_PLUGIN_DIR.'autoptimize.php');
-				add_filter('plugin_action_links_'.$plugin,array($this,'setmeta'));
-			}
+            //Set meta info
+            if(function_exists('plugin_row_meta')) {
+                //2.8+
+                add_filter('plugin_row_meta',array($this,'setmeta'),10,2);
+            } elseif(function_exists('post_class')) {
+                //2.7
+                $plugin = plugin_basename(AUTOPTIMIZE_PLUGIN_DIR.'autoptimize.php');
+                add_filter('plugin_action_links_'.$plugin,array($this,'setmeta'));
+            }
 
-			//Clean cache?
-			if(get_option('autoptimize_cache_clean')) {
-				autoptimizeCache::clearall();
-				update_option('autoptimize_cache_clean',0);
-			}
-		}
+            //Clean cache?
+            if(get_option('autoptimize_cache_clean')) {
+                autoptimizeCache::clearall();
+                update_option('autoptimize_cache_clean',0);
+            }
+        }
 
-		//Add the Autoptimize Toolbar to the Admin bar 
-		//(we loaded outside the verification of is_admin to also be displayed on the frontend toolbar)
-		$toolbar = new autoptimizeToolbar();
-	}
-	
-	static public function instance() {
-		//Only one instance
-		if (self::$instance == null) {
-			self::$instance = new autoptimizeConfig();
-		}
-		
-		return self::$instance;
-    	}
-	
-	public function show() {
+        //Add the Autoptimize Toolbar to the Admin bar 
+        //(we loaded outside the verification of is_admin to also be displayed on the frontend toolbar)
+        $toolbar = new autoptimizeToolbar();
+    }
+    
+    static public function instance() {
+        //Only one instance
+        if (self::$instance == null) {
+            self::$instance = new autoptimizeConfig();
+        }
+        
+        return self::$instance;
+        }
+    
+    public function show() {
 ?>
 <style>
 /* title and button */
 #ao_title_and_button:after {content:''; display:block; clear:both;}
 #ao_adv_button{float:right;}
 #ao_hide_adv:before, #ao_show_adv:before {
-	display: inline-block;
-	float: left;
-	height: 20px;
-	width: 35px;
-	background: none;
-	color: #b4b9be;
-	font: normal 20px/26px dashicons;
-	letter-spacing: -4px;
-	text-align: left;
-	speak: none;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+    float: left;
+    height: 20px;
+    width: 35px;
+    background: none;
+    color: #b4b9be;
+    font: normal 20px/26px dashicons;
+    letter-spacing: -4px;
+    text-align: left;
+    speak: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 #ao_hide_adv:before {
-	content: "\f108 \f142";
+    content: "\f108 \f142";
 }
 #ao_show_adv:before {
-	content: "\f108 \f140";
+    content: "\f108 \f140";
 }
 
 /* form */
 .itemDetail {
-	background: #fff;
-	border: 1px solid #ccc;
-	padding: 15px;
-	margin: 15px 10px 10px 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 15px 10px 10px 0;
 }
 .itemTitle {
-	margin-top: 0;
+    margin-top: 0;
 }
 input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:100;}
 #autoptimize_main .cb_label {display: block; padding-left: 25px; text-indent: -25px;}
@@ -89,34 +89,34 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 
 /* banner + unslider */
 .autoptimize_banner {
-	margin: 0 38px;
-	padding-bottom: 5px;
+    margin: 0 38px;
+    padding-bottom: 5px;
 }
 .autoptimize_banner ul li {
-	font-size:medium;
-	text-align:center;
+    font-size:medium;
+    text-align:center;
 }
 .unslider {
-	position:relative;
+    position:relative;
 }
 .unslider-arrow {
-	display: block;
-	left: unset;
-	margin-top: -35px;
-	margin-left: 7px;
-	margin-right: 7px;
-	border-radius: 32px;
-	background: rgba(0, 0, 0, 0.10) no-repeat 50% 50%;
-	color: rgba(255, 255, 255, 0.8);
-	font: normal 20px/1 dashicons;
-	speak: none;
-	padding: 3px 2px 3px 4px;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+    display: block;
+    left: unset;
+    margin-top: -35px;
+    margin-left: 7px;
+    margin-right: 7px;
+    border-radius: 32px;
+    background: rgba(0, 0, 0, 0.10) no-repeat 50% 50%;
+    color: rgba(255, 255, 255, 0.8);
+    font: normal 20px/1 dashicons;
+    speak: none;
+    padding: 3px 2px 3px 4px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 .unslider-arrow:hover {
-	background-color: rgba(0, 0, 0, 0.20);
-	color: #FFF;
+    background-color: rgba(0, 0, 0, 0.20);
+    color: #FFF;
 }
 .unslider-arrow.prev {
     padding: 3px 4px 3px 2px;
@@ -132,19 +132,19 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 }
 /* responsive stuff: hide admin-feed on smaller screens */
 @media (min-width: 961px) {
-	#autoptimize_main {float:left;width:69%;}
-	#autoptimize_admin_feed{float:right;width:30%;display:block !important;}
-	}
+    #autoptimize_main {float:left;width:69%;}
+    #autoptimize_admin_feed{float:right;width:30%;display:block !important;}
+    }
 @media (max-width: 960px) {
-	#autoptimize_main {width:100%;}
-	#autoptimize_admin_feed {width:0%;display:none !important;}
+    #autoptimize_main {width:100%;}
+    #autoptimize_admin_feed {width:0%;display:none !important;}
 }
 @media (max-width: 782px) {
-	#ao_hide_adv span, #ao_show_adv span {display: none;}
-	#ao_hide_adv,#ao_show_adv {height: 34px;padding: 4px 12px 8px 8px;}
-	#ao_hide_adv:before,#ao_show_adv:before {font-size: 25px;}
-	#autoptimize_main input[type="checkbox"] {margin-left: 10px;}
-	#autoptimize_main .cb_label {display: block; padding-left: 45px; text-indent: -45px;}
+    #ao_hide_adv span, #ao_show_adv span {display: none;}
+    #ao_hide_adv,#ao_show_adv {height: 34px;padding: 4px 12px 8px 8px;}
+    #ao_hide_adv:before,#ao_show_adv:before {font-size: 25px;}
+    #autoptimize_main input[type="checkbox"] {margin-left: 10px;}
+    #autoptimize_main .cb_label {display: block; padding-left: 45px; text-indent: -45px;}
 }
 </style>
 
@@ -156,26 +156,26 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 
 <div id="autoptimize_main">
 <div id="ao_title_and_button">
-	<h1 id="ao_title"><?php _e('Autoptimize Settings','autoptimize'); ?>
-	<span id="ao_adv_button">
-	<?php 
-	if (get_option('autoptimize_show_adv','0')=='1') {
-		?>
-		<a href="javascript:void(0);" id="ao_show_adv" class="button" style="display:none;"><span><?php _e("Show advanced settings","autoptimize") ?></span></a>
-		<a href="javascript:void(0);" id="ao_hide_adv" class="button"><span><?php _e("Hide advanced settings","autoptimize") ?></span></a>
-		<style>tr.ao_adv{display:table-row;} li.ao_adv{display:list-item;}</style>
-		<?php
-		$hiddenClass="";
-	} else {
-		?>
-		<a href="javascript:void(0);" id="ao_show_adv" class="button"><span><?php _e("Show advanced settings","autoptimize") ?></span></a>
-		<a href="javascript:void(0);" id="ao_hide_adv" class="button" style="display:none;"><span><?php _e("Hide advanced settings","autoptimize") ?></span></a>
-		<?php
-		$hiddenClass="hidden ";
-	}
-	?>
-	</span>
-	</h1>
+    <h1 id="ao_title"><?php _e('Autoptimize Settings','autoptimize'); ?>
+    <span id="ao_adv_button">
+    <?php 
+    if (get_option('autoptimize_show_adv','0')=='1') {
+        ?>
+        <a href="javascript:void(0);" id="ao_show_adv" class="button" style="display:none;"><span><?php _e("Show advanced settings","autoptimize") ?></span></a>
+        <a href="javascript:void(0);" id="ao_hide_adv" class="button"><span><?php _e("Hide advanced settings","autoptimize") ?></span></a>
+        <style>tr.ao_adv{display:table-row;} li.ao_adv{display:list-item;}</style>
+        <?php
+        $hiddenClass="";
+    } else {
+        ?>
+        <a href="javascript:void(0);" id="ao_show_adv" class="button"><span><?php _e("Show advanced settings","autoptimize") ?></span></a>
+        <a href="javascript:void(0);" id="ao_hide_adv" class="button" style="display:none;"><span><?php _e("Hide advanced settings","autoptimize") ?></span></a>
+        <?php
+        $hiddenClass="hidden ";
+    }
+    ?>
+    </span>
+    </h1>
 </div>
 
 <?php echo $this->ao_admin_tabs(); ?>
@@ -313,9 +313,9 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
 <th scope="row"><?php _e('Cached styles and scripts','autoptimize'); ?></th>
 <td><?php
-	$AOstatArr=autoptimizeCache::stats(); 
-	$AOcacheSize=round($AOstatArr[1]/1024);
-	echo $AOstatArr[0].__(' files, totalling ','autoptimize').$AOcacheSize.__(' Kbytes (calculated at ','autoptimize').date("H:i e", $AOstatArr[2]).')';
+    $AOstatArr=autoptimizeCache::stats(); 
+    $AOcacheSize=round($AOstatArr[1]/1024);
+    echo $AOstatArr[0].__(' files, totalling ','autoptimize').$AOcacheSize.__(' Kbytes (calculated at ','autoptimize').date("H:i e", $AOstatArr[2]).')';
 ?></td>
 </tr>
 <tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
@@ -338,345 +338,345 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 </form>
 </div>
 <div id="autoptimize_admin_feed" class="hidden">
-	<div class="autoptimize_banner hidden">
-		<ul>
-		<?php
-		if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
-			$AO_banner=get_transient("autoptimize_banner");
-			if (empty($AO_banner)) {
-				$banner_resp = wp_remote_get("http://misc.optimizingmatters.com/autoptimize_news.html");
-				if (!is_wp_error($banner_resp)) {
-					if (wp_remote_retrieve_response_code($banner_resp)=="200") {
-						$AO_banner = wp_kses_post(wp_remote_retrieve_body($banner_resp));
-						set_transient("autoptimize_banner",$AO_banner,DAY_IN_SECONDS);
-					}
-				}
-			}
-			echo $AO_banner;
-		}
-		?>
-		<li><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>.","autoptimize"); ?></li>
-		<li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php _e("Try my other plugins!","autoptimize"); ?></a></li>
-		</ul>
-	</div>
-	<div style="margin-left:10px;margin-top:-5px;">
-		<h2>
-			<?php _e("futtta about","autoptimize") ?>
-			<select id="feed_dropdown" >
-				<option value="1"><?php _e("Autoptimize","autoptimize") ?></option>
-				<option value="2"><?php _e("WordPress","autoptimize") ?></option>
-				<option value="3"><?php _e("Web Technology","autoptimize") ?></option>
-			</select>
-		</h2>
-		<div id="futtta_feed">
-       			<div id="autoptimizefeed">
-				<?php $this->getFutttaFeeds("http://feeds.feedburner.com/futtta_autoptimize"); ?>
-			</div>
-			<div id="wordpressfeed">
-				<?php $this->getFutttaFeeds("http://feeds.feedburner.com/futtta_wordpress"); ?>
-			</div>
-			<div id="webtechfeed">
-				<?php $this->getFutttaFeeds("http://feeds.feedburner.com/futtta_webtech"); ?>
-			</div>
-		</div>
-	</div>
-	<div style="float:right;margin:50px 15px;"><a href="http://blog.futtta.be/2013/10/21/do-not-donate-to-me/" target="_blank"><img width="100px" height="85px" src="<?php echo plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/external/do_not_donate_smallest.png'; ?>" title="<?php _e("Do not donate for this plugin!"); ?>"></a></div>
+    <div class="autoptimize_banner hidden">
+        <ul>
+        <?php
+        if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
+            $AO_banner=get_transient("autoptimize_banner");
+            if (empty($AO_banner)) {
+                $banner_resp = wp_remote_get("http://misc.optimizingmatters.com/autoptimize_news.html");
+                if (!is_wp_error($banner_resp)) {
+                    if (wp_remote_retrieve_response_code($banner_resp)=="200") {
+                        $AO_banner = wp_kses_post(wp_remote_retrieve_body($banner_resp));
+                        set_transient("autoptimize_banner",$AO_banner,DAY_IN_SECONDS);
+                    }
+                }
+            }
+            echo $AO_banner;
+        }
+        ?>
+        <li><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>.","autoptimize"); ?></li>
+        <li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php _e("Try my other plugins!","autoptimize"); ?></a></li>
+        </ul>
+    </div>
+    <div style="margin-left:10px;margin-top:-5px;">
+        <h2>
+            <?php _e("futtta about","autoptimize") ?>
+            <select id="feed_dropdown" >
+                <option value="1"><?php _e("Autoptimize","autoptimize") ?></option>
+                <option value="2"><?php _e("WordPress","autoptimize") ?></option>
+                <option value="3"><?php _e("Web Technology","autoptimize") ?></option>
+            </select>
+        </h2>
+        <div id="futtta_feed">
+            <div id="autoptimizefeed">
+                <?php $this->getFutttaFeeds("http://feeds.feedburner.com/futtta_autoptimize"); ?>
+            </div>
+            <div id="wordpressfeed">
+                <?php $this->getFutttaFeeds("http://feeds.feedburner.com/futtta_wordpress"); ?>
+            </div>
+            <div id="webtechfeed">
+                <?php $this->getFutttaFeeds("http://feeds.feedburner.com/futtta_webtech"); ?>
+            </div>
+        </div>
+    </div>
+    <div style="float:right;margin:50px 15px;"><a href="http://blog.futtta.be/2013/10/21/do-not-donate-to-me/" target="_blank"><img width="100px" height="85px" src="<?php echo plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/external/do_not_donate_smallest.png'; ?>" title="<?php _e("Do not donate for this plugin!"); ?>"></a></div>
 </div>
 
 <script type="text/javascript">
-	var feed = new Array;
-	feed[1]="autoptimizefeed";
-	feed[2]="wordpressfeed";
-	feed[3]="webtechfeed";
-	cookiename="autoptimize_feed";
+    var feed = new Array;
+    feed[1]="autoptimizefeed";
+    feed[2]="wordpressfeed";
+    feed[3]="webtechfeed";
+    cookiename="autoptimize_feed";
 
-	jQuery(document).ready(function() {
-		check_ini_state();
-		jQuery('#autoptimize_admin_feed').fadeTo("slow",1).show();		
-		jQuery('.autoptimize_banner').unslider({autoplay:true, delay:3500, infinite: false, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
+    jQuery(document).ready(function() {
+        check_ini_state();
+        jQuery('#autoptimize_admin_feed').fadeTo("slow",1).show();        
+        jQuery('.autoptimize_banner').unslider({autoplay:true, delay:3500, infinite: false, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
 
-		jQuery( "#feed_dropdown" ).change(function() {
-			jQuery("#futtta_feed").fadeTo(0,0);
-			jQuery("#futtta_feed").fadeTo("slow",1);
-		});
+        jQuery( "#feed_dropdown" ).change(function() {
+            jQuery("#futtta_feed").fadeTo(0,0);
+            jQuery("#futtta_feed").fadeTo("slow",1);
+        });
 
-		jQuery( "#ao_show_adv" ).click(function() {
-			jQuery( "#ao_show_adv" ).hide();
-			jQuery( "#ao_hide_adv" ).show();
-			jQuery( ".ao_adv" ).removeClass("hidden");
-			jQuery( ".ao_adv" ).show("slow");
-			if (jQuery("#autoptimize_css").attr('checked')) {
-				jQuery(".css_sub:visible").fadeTo("fast",1);
-				if (!jQuery("#autoptimize_css_defer").attr('checked')) {
-					jQuery("#autoptimize_css_defer_inline").hide();
-				}
-			}
-			if (jQuery("#autoptimize_js").attr('checked')) {
-				jQuery(".js_sub:visible").fadeTo("fast",1);
-			}
-			check_ini_state()
-			jQuery( "input#autoptimize_show_adv" ).val("1");
-		});
+        jQuery( "#ao_show_adv" ).click(function() {
+            jQuery( "#ao_show_adv" ).hide();
+            jQuery( "#ao_hide_adv" ).show();
+            jQuery( ".ao_adv" ).removeClass("hidden");
+            jQuery( ".ao_adv" ).show("slow");
+            if (jQuery("#autoptimize_css").attr('checked')) {
+                jQuery(".css_sub:visible").fadeTo("fast",1);
+                if (!jQuery("#autoptimize_css_defer").attr('checked')) {
+                    jQuery("#autoptimize_css_defer_inline").hide();
+                }
+            }
+            if (jQuery("#autoptimize_js").attr('checked')) {
+                jQuery(".js_sub:visible").fadeTo("fast",1);
+            }
+            check_ini_state()
+            jQuery( "input#autoptimize_show_adv" ).val("1");
+        });
 
-		jQuery( "#ao_hide_adv" ).click(function() {
-			jQuery( "#ao_hide_adv" ).hide();
-			jQuery( "#ao_show_adv" ).show();
-			jQuery( ".ao_adv" ).hide("slow");
-			jQuery( ".ao_adv" ).addClass("hidden");
-			if (!jQuery("#autoptimize_css").attr('checked')) {
-				jQuery(".css_sub:visible").fadeTo("fast",.33);
-			}
-			if (!jQuery("#autoptimize_js").attr('checked')) {
-				jQuery(".js_sub:visible").fadeTo("fast",.33);
-			}
-			check_ini_state()
-			jQuery( "input#autoptimize_show_adv" ).val("0");
-		});
+        jQuery( "#ao_hide_adv" ).click(function() {
+            jQuery( "#ao_hide_adv" ).hide();
+            jQuery( "#ao_show_adv" ).show();
+            jQuery( ".ao_adv" ).hide("slow");
+            jQuery( ".ao_adv" ).addClass("hidden");
+            if (!jQuery("#autoptimize_css").attr('checked')) {
+                jQuery(".css_sub:visible").fadeTo("fast",.33);
+            }
+            if (!jQuery("#autoptimize_js").attr('checked')) {
+                jQuery(".js_sub:visible").fadeTo("fast",.33);
+            }
+            check_ini_state()
+            jQuery( "input#autoptimize_show_adv" ).val("0");
+        });
 
-		jQuery( "#autoptimize_html" ).change(function() {
-			if (this.checked) {
-				jQuery(".html_sub:visible").fadeTo("fast",1);
-			} else {
-				jQuery(".html_sub:visible").fadeTo("fast",.33);
-			}
-		});
+        jQuery( "#autoptimize_html" ).change(function() {
+            if (this.checked) {
+                jQuery(".html_sub:visible").fadeTo("fast",1);
+            } else {
+                jQuery(".html_sub:visible").fadeTo("fast",.33);
+            }
+        });
 
-		jQuery( "#autoptimize_js" ).change(function() {
-			if (this.checked) {
-				jQuery(".js_sub:visible").fadeTo("fast",1);
-			} else {
-				jQuery(".js_sub:visible").fadeTo("fast",.33);
-			}
-		});
+        jQuery( "#autoptimize_js" ).change(function() {
+            if (this.checked) {
+                jQuery(".js_sub:visible").fadeTo("fast",1);
+            } else {
+                jQuery(".js_sub:visible").fadeTo("fast",.33);
+            }
+        });
 
-		jQuery( "#autoptimize_css" ).change(function() {
-			if (this.checked) {
-				jQuery(".css_sub:visible").fadeTo("fast",1);
-			} else {
-				jQuery(".css_sub:visible").fadeTo("fast",.33);
-			}
-		});
+        jQuery( "#autoptimize_css" ).change(function() {
+            if (this.checked) {
+                jQuery(".css_sub:visible").fadeTo("fast",1);
+            } else {
+                jQuery(".css_sub:visible").fadeTo("fast",.33);
+            }
+        });
 
-		jQuery( "#autoptimize_css_inline" ).change(function() {
-			if (this.checked) {
-				jQuery("#autoptimize_css_defer").prop("checked",false);
-				jQuery("#autoptimize_css_defer_inline").hide("slow");
-			}
-		});
+        jQuery( "#autoptimize_css_inline" ).change(function() {
+            if (this.checked) {
+                jQuery("#autoptimize_css_defer").prop("checked",false);
+                jQuery("#autoptimize_css_defer_inline").hide("slow");
+            }
+        });
 
-		jQuery( "#autoptimize_css_defer" ).change(function() {
-			if (this.checked) {
-				jQuery("#autoptimize_css_inline").prop("checked",false);
-				jQuery("#autoptimize_css_defer_inline").show("slow");
-			} else {
-				jQuery("#autoptimize_css_defer_inline").hide("slow");
-			}
-		});
+        jQuery( "#autoptimize_css_defer" ).change(function() {
+            if (this.checked) {
+                jQuery("#autoptimize_css_inline").prop("checked",false);
+                jQuery("#autoptimize_css_defer_inline").show("slow");
+            } else {
+                jQuery("#autoptimize_css_defer_inline").hide("slow");
+            }
+        });
 
-		jQuery("#feed_dropdown").change(function() { show_feed(jQuery("#feed_dropdown").val()) });
-		feedid=jQuery.cookie(cookiename);
-		if(typeof(feedid) !== "string") feedid=1;
-		show_feed(feedid);
-	})
+        jQuery("#feed_dropdown").change(function() { show_feed(jQuery("#feed_dropdown").val()) });
+        feedid=jQuery.cookie(cookiename);
+        if(typeof(feedid) !== "string") feedid=1;
+        show_feed(feedid);
+    })
 
-	// validate cdn_url
-	var cdn_url=document.getElementById("cdn_url");
-	cdn_url_baseCSS=cdn_url.style.cssText;
-	if ("validity" in cdn_url) {
-		jQuery("#cdn_url").focusout(function (event) {
-		if (cdn_url.validity.valid) {
-			cdn_url.style.cssText=cdn_url_baseCSS;
-		} else {
-			cdn_url.style.cssText=cdn_url_baseCSS+"border:1px solid #f00;color:#f00;box-shadow: 0 0 2px #f00;";
-		}});
-	}
+    // validate cdn_url
+    var cdn_url=document.getElementById("cdn_url");
+    cdn_url_baseCSS=cdn_url.style.cssText;
+    if ("validity" in cdn_url) {
+        jQuery("#cdn_url").focusout(function (event) {
+        if (cdn_url.validity.valid) {
+            cdn_url.style.cssText=cdn_url_baseCSS;
+        } else {
+            cdn_url.style.cssText=cdn_url_baseCSS+"border:1px solid #f00;color:#f00;box-shadow: 0 0 2px #f00;";
+        }});
+    }
 
-	function check_ini_state() {
-		if (!jQuery("#autoptimize_css_defer").attr('checked')) {
-			jQuery("#autoptimize_css_defer_inline").hide();
-		}
-		if (!jQuery("#autoptimize_html").attr('checked')) {
-			jQuery(".html_sub:visible").fadeTo('fast',.33);
-		}
-		if (!jQuery("#autoptimize_css").attr('checked')) {
-			jQuery(".css_sub:visible").fadeTo('fast',.33);
-		}
-		if (!jQuery("#autoptimize_js").attr('checked')) {
-			jQuery(".js_sub:visible").fadeTo('fast',.33);
-		}
-	}
+    function check_ini_state() {
+        if (!jQuery("#autoptimize_css_defer").attr('checked')) {
+            jQuery("#autoptimize_css_defer_inline").hide();
+        }
+        if (!jQuery("#autoptimize_html").attr('checked')) {
+            jQuery(".html_sub:visible").fadeTo('fast',.33);
+        }
+        if (!jQuery("#autoptimize_css").attr('checked')) {
+            jQuery(".css_sub:visible").fadeTo('fast',.33);
+        }
+        if (!jQuery("#autoptimize_js").attr('checked')) {
+            jQuery(".js_sub:visible").fadeTo('fast',.33);
+        }
+    }
 
-	function show_feed(id) {
-		jQuery('#futtta_feed').children().hide();
-		jQuery('#'+feed[id]).show();
-		jQuery("#feed_dropdown").val(id);
-		jQuery.cookie(cookiename,id,{ expires: 365 });
-	}
+    function show_feed(id) {
+        jQuery('#futtta_feed').children().hide();
+        jQuery('#'+feed[id]).show();
+        jQuery("#feed_dropdown").val(id);
+        jQuery.cookie(cookiename,id,{ expires: 365 });
+    }
 </script>
 </div>
 
 <?php
-	}
+    }
 
-	public function addmenu() {
-		$hook=add_options_page(__('Autoptimize Options','autoptimize'),'Autoptimize','manage_options','autoptimize',array($this,'show'));
-		add_action( 'admin_print_scripts-'.$hook,array($this,'autoptimize_admin_scripts'));
-		add_action( 'admin_print_styles-'.$hook,array($this,'autoptimize_admin_styles'));
-	}
+    public function addmenu() {
+        $hook=add_options_page(__('Autoptimize Options','autoptimize'),'Autoptimize','manage_options','autoptimize',array($this,'show'));
+        add_action( 'admin_print_scripts-'.$hook,array($this,'autoptimize_admin_scripts'));
+        add_action( 'admin_print_styles-'.$hook,array($this,'autoptimize_admin_styles'));
+    }
 
-	public function autoptimize_admin_scripts() {
-		wp_enqueue_script('jqcookie', plugins_url('/external/js/jquery.cookie.min.js', __FILE__), array('jquery'),null,true);
-		wp_enqueue_script('unslider', plugins_url('/external/js/unslider-min.js', __FILE__), array('jquery'),null,true);
-	}
+    public function autoptimize_admin_scripts() {
+        wp_enqueue_script('jqcookie', plugins_url('/external/js/jquery.cookie.min.js', __FILE__), array('jquery'),null,true);
+        wp_enqueue_script('unslider', plugins_url('/external/js/unslider-min.js', __FILE__), array('jquery'),null,true);
+    }
 
-	public function autoptimize_admin_styles() {
-		wp_enqueue_style('unslider', plugins_url('/external/js/unslider.css', __FILE__));
-		wp_enqueue_style('unslider-dots', plugins_url('/external/js/unslider-dots.css', __FILE__));
-	}
+    public function autoptimize_admin_styles() {
+        wp_enqueue_style('unslider', plugins_url('/external/js/unslider.css', __FILE__));
+        wp_enqueue_style('unslider-dots', plugins_url('/external/js/unslider-dots.css', __FILE__));
+    }
 
-	public function registersettings() {
-		register_setting('autoptimize','autoptimize_html');
-		register_setting('autoptimize','autoptimize_html_keepcomments');
-		register_setting('autoptimize','autoptimize_js');
-		register_setting('autoptimize','autoptimize_js_exclude');
-		register_setting('autoptimize','autoptimize_js_trycatch');
-		register_setting('autoptimize','autoptimize_js_justhead');
-		register_setting('autoptimize','autoptimize_js_forcehead');
-		register_setting('autoptimize','autoptimize_js_include_inline');
-		register_setting('autoptimize','autoptimize_css');
-		register_setting('autoptimize','autoptimize_css_exclude');
-		register_setting('autoptimize','autoptimize_css_justhead');
-		register_setting('autoptimize','autoptimize_css_datauris');
-		register_setting('autoptimize','autoptimize_css_defer');
-		register_setting('autoptimize','autoptimize_css_defer_inline');
-		register_setting('autoptimize','autoptimize_css_inline');
-		register_setting('autoptimize','autoptimize_css_include_inline');
-		register_setting('autoptimize','autoptimize_css_nogooglefont');
-		register_setting('autoptimize','autoptimize_cdn_url');
-		register_setting('autoptimize','autoptimize_cache_clean');
-		register_setting('autoptimize','autoptimize_cache_nogzip');
-		register_setting('autoptimize','autoptimize_show_adv');
-	}
+    public function registersettings() {
+        register_setting('autoptimize','autoptimize_html');
+        register_setting('autoptimize','autoptimize_html_keepcomments');
+        register_setting('autoptimize','autoptimize_js');
+        register_setting('autoptimize','autoptimize_js_exclude');
+        register_setting('autoptimize','autoptimize_js_trycatch');
+        register_setting('autoptimize','autoptimize_js_justhead');
+        register_setting('autoptimize','autoptimize_js_forcehead');
+        register_setting('autoptimize','autoptimize_js_include_inline');
+        register_setting('autoptimize','autoptimize_css');
+        register_setting('autoptimize','autoptimize_css_exclude');
+        register_setting('autoptimize','autoptimize_css_justhead');
+        register_setting('autoptimize','autoptimize_css_datauris');
+        register_setting('autoptimize','autoptimize_css_defer');
+        register_setting('autoptimize','autoptimize_css_defer_inline');
+        register_setting('autoptimize','autoptimize_css_inline');
+        register_setting('autoptimize','autoptimize_css_include_inline');
+        register_setting('autoptimize','autoptimize_css_nogooglefont');
+        register_setting('autoptimize','autoptimize_cdn_url');
+        register_setting('autoptimize','autoptimize_cache_clean');
+        register_setting('autoptimize','autoptimize_cache_nogzip');
+        register_setting('autoptimize','autoptimize_show_adv');
+    }
 
-	public function setmeta($links,$file=null) {
-		//Inspired on http://wpengineer.com/meta-links-for-wordpress-plugins/
-		//Do it only once - saves time
-		static $plugin;
-		if(empty($plugin))
-			$plugin = plugin_basename(AUTOPTIMIZE_PLUGIN_DIR.'autoptimize.php');
-		
-		if($file===null) {
-			//2.7
-			$settings_link = sprintf('<a href="options-general.php?page=autoptimize">%s</a>', __('Settings'));
-			array_unshift($links,$settings_link);
-		} else {
-			//2.8
-			//If it's us, add the link
-			if($file === $plugin) {
-				$newlink = array(sprintf('<a href="options-general.php?page=autoptimize">%s</a>',__('Settings')));
-				$links = array_merge($links,$newlink);
-			}
-		}
+    public function setmeta($links,$file=null) {
+        //Inspired on http://wpengineer.com/meta-links-for-wordpress-plugins/
+        //Do it only once - saves time
+        static $plugin;
+        if(empty($plugin))
+            $plugin = plugin_basename(AUTOPTIMIZE_PLUGIN_DIR.'autoptimize.php');
+        
+        if($file===null) {
+            //2.7
+            $settings_link = sprintf('<a href="options-general.php?page=autoptimize">%s</a>', __('Settings'));
+            array_unshift($links,$settings_link);
+        } else {
+            //2.8
+            //If it's us, add the link
+            if($file === $plugin) {
+                $newlink = array(sprintf('<a href="options-general.php?page=autoptimize">%s</a>',__('Settings')));
+                $links = array_merge($links,$newlink);
+            }
+        }
 
-		return $links;
-	}
+        return $links;
+    }
 
-	public function get($key) {		
-		if(!is_array($this->config)) {
-			//Default config
-			$config = array('autoptimize_html' => 0,
-				'autoptimize_html_keepcomments' => 0,
-				'autoptimize_js' => 0,
-				'autoptimize_js_exclude' => "seal.js, js/jquery/jquery.js",
-				'autoptimize_js_trycatch' => 0,
-				'autoptimize_js_justhead' => 0,
-				'autoptimize_js_include_inline' => 0,
-				'autoptimize_js_forcehead' => 0,
-				'autoptimize_css' => 0,
-				'autoptimize_css_exclude' => "admin-bar.min.css, dashicons.min.css",
-				'autoptimize_css_justhead' => 0,
-				'autoptimize_css_include_inline' => 1,
-				'autoptimize_css_defer' => 0,
-				'autoptimize_css_defer_inline' => "",
-				'autoptimize_css_inline' => 0,
-				'autoptimize_css_datauris' => 0,
-				'autoptimize_css_nogooglefont' => 0,
-				'autoptimize_cdn_url' => "",
-				'autoptimize_cache_nogzip' => 1,
-				'autoptimize_show_adv' => 0
-				);
+    public function get($key) {        
+        if(!is_array($this->config)) {
+            //Default config
+            $config = array('autoptimize_html' => 0,
+                'autoptimize_html_keepcomments' => 0,
+                'autoptimize_js' => 0,
+                'autoptimize_js_exclude' => "seal.js, js/jquery/jquery.js",
+                'autoptimize_js_trycatch' => 0,
+                'autoptimize_js_justhead' => 0,
+                'autoptimize_js_include_inline' => 0,
+                'autoptimize_js_forcehead' => 0,
+                'autoptimize_css' => 0,
+                'autoptimize_css_exclude' => "admin-bar.min.css, dashicons.min.css",
+                'autoptimize_css_justhead' => 0,
+                'autoptimize_css_include_inline' => 1,
+                'autoptimize_css_defer' => 0,
+                'autoptimize_css_defer_inline' => "",
+                'autoptimize_css_inline' => 0,
+                'autoptimize_css_datauris' => 0,
+                'autoptimize_css_nogooglefont' => 0,
+                'autoptimize_cdn_url' => "",
+                'autoptimize_cache_nogzip' => 1,
+                'autoptimize_show_adv' => 0
+                );
 
-			//Override with user settings
-			foreach(array_keys($config) as $name) {
-				$conf = get_option($name);
-				if($conf!==false) {
-					//It was set before!
-					$config[$name] = $conf;
-				}
-			}
+            //Override with user settings
+            foreach(array_keys($config) as $name) {
+                $conf = get_option($name);
+                if($conf!==false) {
+                    //It was set before!
+                    $config[$name] = $conf;
+                }
+            }
 
-			//Save for next question
-			$this->config = $config;
-		}
+            //Save for next question
+            $this->config = $config;
+        }
 
-		if(isset($this->config[$key]))
-			return $this->config[$key];
+        if(isset($this->config[$key]))
+            return $this->config[$key];
 
-		return false;
-	}
+        return false;
+    }
 
-	private function getFutttaFeeds($url) {
-		if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
-			$rss = fetch_feed( $url );
-			$maxitems = 0;
+    private function getFutttaFeeds($url) {
+        if (apply_filters('autoptimize_settingsscreen_remotehttp',true)) {
+            $rss = fetch_feed( $url );
+            $maxitems = 0;
 
-			if ( ! is_wp_error( $rss ) ) {
-				$maxitems = $rss->get_item_quantity( 7 ); 
-				$rss_items = $rss->get_items( 0, $maxitems );
-			}
-			?>
-			<ul>
-				<?php if ( $maxitems == 0 ) : ?>
-					<li><?php _e( 'No items', 'autoptimize' ); ?></li>
-				<?php else : ?>
-					<?php foreach ( $rss_items as $item ) : ?>
-						<li>
-							<a href="<?php echo esc_url( $item->get_permalink() ); ?>"
-								title="<?php printf( __( 'Posted %s', 'autoptimize' ), $item->get_date('j F Y | g:i a') ); ?>">
-								<?php echo esc_html( $item->get_title() ); ?>
-							</a>
-						</li>
-					<?php endforeach; ?>
-				<?php endif; ?>
-			</ul>
-			<?php
-		}
-	}
+            if ( ! is_wp_error( $rss ) ) {
+                $maxitems = $rss->get_item_quantity( 7 ); 
+                $rss_items = $rss->get_items( 0, $maxitems );
+            }
+            ?>
+            <ul>
+                <?php if ( $maxitems == 0 ) : ?>
+                    <li><?php _e( 'No items', 'autoptimize' ); ?></li>
+                <?php else : ?>
+                    <?php foreach ( $rss_items as $item ) : ?>
+                        <li>
+                            <a href="<?php echo esc_url( $item->get_permalink() ); ?>"
+                                title="<?php printf( __( 'Posted %s', 'autoptimize' ), $item->get_date('j F Y | g:i a') ); ?>">
+                                <?php echo esc_html( $item->get_title() ); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </ul>
+            <?php
+        }
+    }
 
-	// based on http://wordpress.stackexchange.com/a/58826
-	static function ao_admin_tabs(){
-		$tabs = apply_filters('autoptimize_filter_settingsscreen_tabs',array('autoptimize' => __('Main','autoptimize')));
-		$tabContent="";
-		if (count($tabs)>1) {
-			if(isset($_GET['page'])){
-				$currentId = $_GET['page'];
-			} else {
-				$currentId = "autoptimize";
-			}
-			$tabContent .= "<h2 class=\"nav-tab-wrapper\">";
-			foreach($tabs as $tabId => $tabName){
-				if($currentId == $tabId){
-					$class = " nav-tab-active";
-				} else{
-					$class = "";
-				}
-				$tabContent .= '<a class="nav-tab'.$class.'" href="?page='.$tabId.'">'.$tabName.'</a>';
-			}
-			$tabContent .= "</h2>";
-		} else {
-			$tabContent = "<hr/>";
-		}
+    // based on http://wordpress.stackexchange.com/a/58826
+    static function ao_admin_tabs(){
+        $tabs = apply_filters('autoptimize_filter_settingsscreen_tabs',array('autoptimize' => __('Main','autoptimize')));
+        $tabContent="";
+        if (count($tabs)>1) {
+            if(isset($_GET['page'])){
+                $currentId = $_GET['page'];
+            } else {
+                $currentId = "autoptimize";
+            }
+            $tabContent .= "<h2 class=\"nav-tab-wrapper\">";
+            foreach($tabs as $tabId => $tabName){
+                if($currentId == $tabId){
+                    $class = " nav-tab-active";
+                } else{
+                    $class = "";
+                }
+                $tabContent .= '<a class="nav-tab'.$class.'" href="?page='.$tabId.'">'.$tabName.'</a>';
+            }
+            $tabContent .= "</h2>";
+        } else {
+            $tabContent = "<hr/>";
+        }
 
-		return $tabContent;
-	}
+        return $tabContent;
+    }
 }
