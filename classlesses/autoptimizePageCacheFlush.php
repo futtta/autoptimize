@@ -37,6 +37,8 @@ function autoptimize_flush_pagecache() {
         if ( method_exists( "WpeCommon", "purge_varnish_cache" ) ) {
             WpeCommon::purge_varnish_cache();   
         }
+    } else if ( function_exists('sg_cachepress_purge_cache') ) {
+        sg_cachepress_purge_cache();
     } else if(file_exists(WP_CONTENT_DIR.'/wp-cache-config.php') && function_exists('prune_super_cache')){
         // fallback for WP-Super-Cache
         global $cache_path;
