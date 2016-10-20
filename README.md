@@ -188,6 +188,27 @@ function my_ao_js_include_inline() {
 }
 ```
 
+### Filter: `autoptimize_js_move_inline`
+
+```php
+add_filter('autoptimize_js_move_inline','my_ao_js_move_inline',10,1);
+/**
+ * When 'Also aggregate inline JS?' option is not used, this filter moves
+ * all of the inline script tags at the end.
+ * Example usage: when the inline scripts contain variables changing on all
+ * pages, aggregating them causes each page to have its own separate concattenated
+ * file, which is less than ideal because it doesn't leverage caching.
+ * Moving them at the end can significantly improve the browser's parser performance.
+ * The passed string values of 'first' / 'last' controls whether the inline scripts 
+ * are moved directly before or after the concattendated file.
+ *
+ * @return: string 'first', 'last'
+ */
+function my_ao_js_move_inline() {
+	return 'first';
+}
+```
+
 ### Filter: `autoptimize_css_include_inline`
 
 ```php
