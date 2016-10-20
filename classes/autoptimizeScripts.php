@@ -154,7 +154,7 @@ class autoptimizeScripts extends autoptimizeBase {
                         $this->scripts[] = 'INLINE;'.$code;
                     } else {
                         // Can we move this?
-                        if($this->ismovable($tag)) {
+                        if( $this->ismovable($tag) || apply_filters( 'autoptimize_js_move_inline', 'false' ) ) {
                             if($this->movetolast($tag))    {
                                 $this->move['last'][] = $tag;
                             } else {
