@@ -154,9 +154,9 @@ class autoptimizeScripts extends autoptimizeBase {
                         $this->scripts[] = 'INLINE;'.$code;
                     } else {
                         // Can we move this?
-                        $autoptimize_js_move_inline = apply_filters( 'autoptimize_js_move_inline', '' );
-                        if( $this->ismovable($tag) || $autoptimize_js_move_inline !== '' ) {
-                            if( $this->movetolast($tag) || $autoptimize_js_move_inline === 'last' ) {
+                        $autoptimize_js_moveable = apply_filters( 'autoptimize_js_moveable', '', $tag );
+                        if( $this->ismovable($tag) || $autoptimize_js_moveable !== '' ) {
+                            if( $this->movetolast($tag) || $autoptimize_js_moveable === 'last' ) {
                                 $this->move['last'][] = $tag;
                             } else {
                                 $this->move['first'][] = $tag;
