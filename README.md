@@ -98,7 +98,7 @@ function my_ao_override_cssexclude($exclude) {
 }
 ```
 
-## Filter: `autoptimize_filter_js_movelast`
+### Filter: `autoptimize_filter_js_movelast`
 
 ```php
 add_filter('autoptimize_filter_js_movelast','my_ao_override_movelast',10,1);
@@ -185,6 +185,27 @@ add_filter('autoptimize_js_include_inline','my_ao_js_include_inline',10,1);
  */
 function my_ao_js_include_inline() {
 	return false;
+}
+```
+
+### Filter: `autoptimize_js_moveable`
+
+```php
+add_filter('autoptimize_js_moveable','my_ao_js_js_moveable',10,1);
+/**
+ * When 'Also aggregate inline JS?' option is not used, this filter moves
+ * all of the movable script tags at the end.
+ * Example usage: when the inline scripts contain variables changing on all
+ * pages, aggregating them causes each page to have its own separate 
+ * concattenated file, which is less than ideal because it doesn't leverage
+ * caching. Moving them at the end can significantly improve the browser's
+ * parser performance. The passed string values of 'first' / 'last' controls
+ * whether the inline and 3rd party movable scripts are added directly before
+ * or after the concattendated file.
+ * @return: string 'first', 'last'
+ */
+function my_ao_js_js_moveable() {
+	return 'first';
 }
 ```
 
