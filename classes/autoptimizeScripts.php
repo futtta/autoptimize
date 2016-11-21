@@ -60,7 +60,17 @@ class autoptimizeScripts extends autoptimizeBase {
         $excludeJS = $options['js_exclude'];
         $excludeJS = apply_filters( 'autoptimize_filter_js_exclude', $excludeJS );
         if ($excludeJS!=="") {
-            $exclJSArr = array_filter(array_map('trim',explode(",",$excludeJS)));
+            if (is_array($excludeJS)) {
+                if(($removeKeys = array_keys($excludeJS,"remove")) !== false) {
+                    foreach ($removeKeys as $removeKey) {
+                        unset($excludeJS[$removeKey]);
+                        $this->jsremovables[]=$removeKey;
+                    }
+                }
+                $exclJSArr = array_keys($excludeJS);
+            } else {
+                $exclJSArr = array_filter(array_map('trim',explode(",",$excludeJS)));
+            }
             $this->dontmove = array_merge($exclJSArr,$this->dontmove);
         }
 
@@ -88,53 +98,52 @@ class autoptimizeScripts extends autoptimizeBase {
         // comments
         $this->content = $this->hide_comments($this->content);
 
-        //Get script files
-        if(preg_match_all('#<script.*</script>#Usmi',$this->content,$matches)) {
+        // Get script files
+        if (preg_match_all('#<script.*</script>#Usmi',$this->content,$matches)) {
             foreach($matches[0] as $tag) {
-                // only consider aggregation whitelisted in should_aggregate-function
+                // only consider script aggregation for types whitelisted in should_aggregate-function
                 if( !$this->should_aggregate($tag) ) {
                     $tag='';
                     continue;
                 }
-                if(preg_match('#<script[^>]*src=("|\')([^>]*)("|\')#Usmi',$tag,$source)) {
+
+                if (preg_match('#<script[^>]*src=("|\')([^>]*)("|\')#Usmi',$tag,$source)) {
+                    // non-inline script
                     if ($this->isremovable($tag,$this->jsremovables)) {
                         $this->content = str_replace($tag,'',$this->content);
                         continue;
                     }
                     
-                    // External script
                     $url = current(explode('?',$source[2],2));
                     $path = $this->getpath($url);
-                    if($path !== false && preg_match('#\.js$#',$path)) {
-                        //Inline
-                        if($this->ismergeable($tag)) {
-                            //We can merge it
-                            $this->scripts[] = $path;
-                        } else {
-                            //No merge, but maybe we can move it
-                            if($this->ismovable($tag)) {
-                                //Yeah, move it
-                                if($this->movetolast($tag)) {
-                                    $this->move['last'][] = $tag;
-                                } else {
-                                    $this->move['first'][] = $tag;
+                    if($path !== false && preg_match('#\.js$#',$path) && $this->ismergeable($tag)) {
+                        // ok to optimize, add to array
+                        $this->scripts[] = $path;
+                    } else {
+                        // non-mergeable script (excluded or dynamic or external)
+                        if (is_array($excludeJS)) {
+                            // should we add flags?
+                            $origTag = $tag;
+                            foreach ($excludeJS as $exclTag => $exclFlags) {
+                                if ( strpos($origTag,$exclTag)!==false && in_array($exclFlags,array("async","defer")) ) {
+                                   $tag = str_replace('<script ','<script '.$exclFlags.' ',$tag);
                                 }
-                            } else {
-                                //We shouldn't touch this
-                                $tag = '';
                             }
                         }
-                    } else {
-                        //External script (example: google analytics)
-                        //OR Script is dynamic (.php etc)
                         if($this->ismovable($tag)) {
+                            // can be moved, flags and all
                             if($this->movetolast($tag))    {
                                 $this->move['last'][] = $tag;
                             } else {
                                 $this->move['first'][] = $tag;
                             }
                         } else {
-                            //We shouldn't touch this
+                            // cannot be moved, so if flag was added re-inject altered tag immediately
+                            if ($origTag && $origTag !== $tag) {
+                                $this->content = str_replace($origTag,$tag,$this->content);
+                                $origTag = '';
+                            }
+                            // and forget about the $tag (not to be touched any more)
                             $tag = '';
                         }
                     }
