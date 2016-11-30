@@ -112,7 +112,12 @@ function autoptimize_update_config_notice() {
 
 function autoptimize_cache_unavailable_notice() {
     echo '<div class="error"><p>';
-    _e('Autoptimize cannot write to the cache directory (default: /wp-content/cache/autoptimize), please fix to enable CSS/ JS optimization!', 'autoptimize' );
+    _e(
+        'Autoptimize cannot write to the cache directory ('
+        . AUTOPTIMIZE_CACHE_DIR
+        . '), please fix to enable CSS/ JS optimization!',
+        'autoptimize'
+    );
     echo '</p></div>';
 }
 
