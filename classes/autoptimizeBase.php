@@ -30,6 +30,7 @@ abstract class autoptimizeBase {
         }
 
         $siteHost=parse_url(AUTOPTIMIZE_WP_SITE_URL,PHP_URL_HOST);
+        $contentHost=parse_url(AUTOPTIMIZE_WP_ROOT_URL,PHP_URL_HOST);
         
         // normalize
         if (strpos($url,'//')===0) {
@@ -45,6 +46,10 @@ abstract class autoptimizeBase {
                 $subdir_levels=substr_count(preg_replace("/https?:\/\//","",AUTOPTIMIZE_WP_SITE_URL),"/");
                 $url = AUTOPTIMIZE_WP_SITE_URL.str_repeat("/..",$subdir_levels).$url;
             }
+        }
+        
+        if ($siteHost !== $contentHost) {
+            $url=str_replace(AUTOPTIMIZE_WP_CONTENT_URL,AUTOPTIMIZE_WP_SITE_URL.AUTOPTIMIZE_WP_CONTENT_NAME,$url);
         }
 
         // first check; hostname wp site should be hostname of url
@@ -82,17 +87,28 @@ abstract class autoptimizeBase {
         
         // try to remove "wp root url" from url while not minding http<>https
         $tmp_ao_root = preg_replace('/https?:/','',AUTOPTIMIZE_WP_ROOT_URL);
+        if ($siteHost !== $contentHost) {
+            // as we replaced the content-domain with the site-domain, we should match against that 
+            $tmp_ao_root = preg_replace('/https?:/','',AUTOPTIMIZE_WP_SITE_URL);
+        }
         $tmp_url = preg_replace('/https?:/','',$url);
         $path = str_replace($tmp_ao_root,'',$tmp_url);
         
-        // final check; if path starts with :// or //, this is not a URL in the WP context and we have to assume we can't aggregate
+        // if path starts with :// or //, this is not a URL in the WP context and we have to assume we can't aggregate
         if (preg_match('#^:?//#',$path)) {
             /** External script/css (adsense, etc) */
             return false;
         }
 
+        // prepend with WP_ROOT_DIR to have full path to file
         $path = str_replace('//','/',WP_ROOT_DIR.$path);
-        return $path;
+        
+        // final check: does file exist and is it readable
+        if (file_exists($path) && is_readable($path)) {
+            return $path;
+        } else {
+            return false;
+        }
     }
 
     // needed for WPML-filter
