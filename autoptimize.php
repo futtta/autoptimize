@@ -286,7 +286,8 @@ if ( autoptimizeCache::cacheavail() ) {
         if (defined('AUTOPTIMIZE_INIT_EARLIER')) {
             add_action('init','autoptimize_start_buffering',-1);
         } else {
-            add_action('template_redirect','autoptimize_start_buffering',2);
+            if (!defined('AUTOPTIMIZE_HOOK_INTO')) { define('AUTOPTIMIZE_HOOK_INTO', 'template_redirect'); }
+            add_action(constant("AUTOPTIMIZE_HOOK_INTO"),'autoptimize_start_buffering',2);
         }
     }
 } else {
