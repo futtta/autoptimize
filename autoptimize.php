@@ -294,7 +294,11 @@ if ( autoptimizeCache::cacheavail() ) {
     add_action('admin_notices', 'autoptimize_cache_unavailable_notice');
 }
 
-register_uninstall_hook(__FILE__, "autoptimize_uninstall");
+function autoptimize_activate() {
+    register_uninstall_hook( __FILE__, 'autoptimize_uninstall' );
+}
+register_activation_hook( __FILE__, 'autoptimize_activate' );
+
 include_once('classlesses/autoptimizeCacheChecker.php');
 
 // Do not pollute other plugins
