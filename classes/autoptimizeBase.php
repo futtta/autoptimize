@@ -104,7 +104,7 @@ abstract class autoptimizeBase {
         $path = str_replace('//','/',WP_ROOT_DIR.$path);
         
         // final check: does file exist and is it readable
-        if (file_exists($path) && is_readable($path)) {
+        if (file_exists($path) && is_file($path) && is_readable($path)) {
             return $path;
         } else {
             return false;
