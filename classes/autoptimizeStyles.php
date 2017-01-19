@@ -589,6 +589,9 @@ class autoptimizeStyles extends autoptimizeBase {
                 // Remove quotes
                 $url = trim($url," \t\n\r\0\x0B\"'");
                 $noQurl = trim($url,"\"'");
+                
+                if ($noQurl === '') { continue; }
+                
                 if ($url!==$noQurl) {
                     $removedQuotes=true;
                 } else {
