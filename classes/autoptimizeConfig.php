@@ -210,7 +210,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Force JavaScript in &lt;head&gt;?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_forcehead" <?php echo get_option('autoptimize_js_forcehead')?'checked="checked" ':''; ?>/>
-<?php _e('Load JavaScript early, reducing the chance of JS-errors but making it render blocking. You can disable this if you\'re not aggregating inline JS and you want JS to be deferred.','autoptimize'); ?></label></td>
+<?php _e('Load JavaScript early, this can potentially fix some JS-errors, but makes the JS render blocking.','autoptimize'); ?></label></td>
 </tr>
 <?php if (get_option('autoptimize_js_justhead')) { ?>
 <tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
@@ -222,7 +222,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Also aggregate inline JS?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_include_inline" <?php echo get_option('autoptimize_js_include_inline')?'checked="checked" ':''; ?>/>
-<?php _e('Check this option for Autoptimize to also aggregate JS in the HTML. If this option is not enabled, you might have to "force JavaScript in head".','autoptimize'); ?></label></td>
+<?php _e('Let Autoptimize also extract JS from the HTML. <strong>Warning</strong>: this can make Autoptimize\'s cache size grow quickly, so only enable this if you know what you\'re doing.','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
