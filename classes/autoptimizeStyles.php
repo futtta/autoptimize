@@ -168,6 +168,7 @@ class autoptimizeStyles extends autoptimizeBase {
     
     // Joins and optimizes CSS
     public function minify() {
+
         foreach($this->css as $group) {
             list($media,$css) = $group;
             if(preg_match('#^INLINE;#',$css)) {
@@ -304,99 +305,164 @@ class autoptimizeStyles extends autoptimizeBase {
             // Do the imaging!
             $imgreplace = array();
             preg_match_all('#(background[^;{}]*url\((?!\s?"?\'?\s?data)(.*)\)[^;}]*)(?:;|$|})#Usm',$code,$matches);
-            
-            if(($this->datauris == true) && (function_exists('base64_encode')) && (is_array($matches)))    {
-                foreach($matches[2] as $count => $quotedurl) {
-                    $iurl = trim($quotedurl," \t\n\r\0\x0B\"'");
 
-                    // if querystring, remove it from url
-                    if (strpos($iurl,'?') !== false) { $iurl = strtok($iurl,'?'); }
-                    
-                    $ipath = $this->getpath($iurl);
+            // Bug fixing by dtbaker. Support for multiple background images on CDN:
 
-                    $datauri_max_size = 4096;
-                    $datauri_max_size = (int) apply_filters( 'autoptimize_filter_css_datauri_maxsize', $datauri_max_size );
-                    $datauri_exclude = apply_filters( 'autoptimize_filter_css_datauri_exclude', "");
-                    if (!empty($datauri_exclude)) {
-                        $no_datauris=array_filter(array_map('trim',explode(",",$datauri_exclude)));
-                        foreach ($no_datauris as $no_datauri) {
-                            if (strpos($iurl,$no_datauri)!==false) {
-                                $ipath=false;
-                                break;
-                            }
-                        }
+            // matches[0] will contain something like:
+            // 'background-image: url(//localhost/images/1.jpg), url(//localhost/images/2.jpg), url(//localhost/images/3.jpg), url(//localhost/images/4.jpg);
+
+            // matches[1] will contain something like:
+            // 'background-image: url(//localhost/images/1.jpg), url(//localhost/images/2.jpg), url(//localhost/images/3.jpg), url(//localhost/images/4.jpg)
+
+            // but the bug is: matches[2] will only contain the first url:
+            // '//localhost/images/1.jpg'
+            // so the below code will only replace the first instance of this.
+
+            // instead of messing with the regex above, I'll do a second regex that will fire only when multiple image urls are detected in matches[0]:
+
+            $image_urls_to_replace = array();
+            $original_image_string = $matches[0];
+
+            // put everything into multi dimension arrays, to cover for the multi-image use case:
+            foreach( $matches[2] as $index => $url ){
+                // todo: this will fail if someone uses uppercase URL() in their CSS code, oh well. who does that anyway?
+                if( substr_count( $matches[0][$index] , 'url(' ) > 1 ) {
+                    // here is where we fire off the second regex.
+                    preg_match_all('#url\((?!\s?"?\'?\s?data)(.*)\)#Usm',$matches[0][$index],$multi_matches);
+                    if( $multi_matches ){
+                        $image_urls_to_replace[ $index ] = $multi_matches[1];
+                    }else{
+                        // my regex failed for some reason. default to single url matching like before.
+                        $image_urls_to_replace[ $index ] = array($url);
                     }
-
-                    if($ipath != false && preg_match('#\.(jpe?g|png|gif|bmp)$#i',$ipath) && file_exists($ipath) && is_readable($ipath) && filesize($ipath) <= $datauri_max_size) {
-                        $ihash=md5($ipath);
-                        $icheck = new autoptimizeCache($ihash,'img');
-                        if($icheck->check()) {
-                            // we have the base64 image in cache
-                            $headAndData=$icheck->retrieve();
-                            $_base64data=explode(";base64,",$headAndData);
-                            $base64data=$_base64data[1];
-                        } else {
-                            // It's an image and we don't have it in cache, get the type
-                            $explA=explode('.',$ipath);
-                            $type=end($explA);
-
-                            switch($type) {
-                                case 'jpeg':
-                                    $dataurihead = 'data:image/jpeg;base64,';
-                                    break;
-                                case 'jpg':
-                                    $dataurihead = 'data:image/jpeg;base64,';
-                                    break;
-                                case 'gif':
-                                    $dataurihead = 'data:image/gif;base64,';
-                                    break;
-                                case 'png':
-                                    $dataurihead = 'data:image/png;base64,';
-                                    break;
-                                case 'bmp':
-                                    $dataurihead = 'data:image/bmp;base64,';
-                                    break;
-                                default:
-                                    $dataurihead = 'data:application/octet-stream;base64,';
-                            }
-                        
-                            // Encode the data
-                            $base64data = base64_encode(file_get_contents($ipath));
-                            $headAndData=$dataurihead.$base64data;
-
-                            // Save in cache
-                            $icheck->cache($headAndData,"text/plain");
-                        }
-                        unset($icheck);
-
-                        // Add it to the list for replacement
-                        $imgreplace[$matches[1][$count]] = str_replace($quotedurl,$headAndData,$matches[1][$count]).";\n*".str_replace($quotedurl,'mhtml:%%MHTML%%!'.$mhtmlcount,$matches[1][$count]).";\n_".$matches[1][$count].';';
-                        
-                        // Store image on the mhtml document
-                        $this->mhtml .= "--_\r\nContent-Location:{$mhtmlcount}\r\nContent-Transfer-Encoding:base64\r\n\r\n{$base64data}\r\n";
-                        $mhtmlcount++;
-                    } else {
-                        // just cdn the URL if applicable
-                        if (!empty($this->cdn_url)) {
-                            $url = trim($quotedurl," \t\n\r\0\x0B\"'");
-                            $cdn_url=$this->url_replace_cdn($url);
-                            $imgreplace[$matches[1][$count]] = str_replace($quotedurl,$cdn_url,$matches[1][$count]);
-                        }
-                    }
-                }
-            } else if ((is_array($matches)) && (!empty($this->cdn_url))) {
-                // change background image urls to cdn-url
-                foreach($matches[2] as $count => $quotedurl) {
-                    $url = trim($quotedurl," \t\n\r\0\x0B\"'");
-                    $cdn_url=$this->url_replace_cdn($url);
-                    $imgreplace[$matches[1][$count]] = str_replace($quotedurl,$cdn_url,$matches[1][$count]);
+                }else{
+                    // just a single image to replace this time:
+                    $image_urls_to_replace[ $index ] = array($url);
                 }
             }
-            
+
+            /*
+             * $image_urls_to_replace will look like this now:
+             *
+             * array(
+             *   array(
+             *     '//localhost/images/single.jpg'
+             *   ),
+             *   array(
+             *     '//localhost/images/1.jpg',
+             *     '//localhost/images/2.jpg',
+             *     '//localhost/images/3.jpg',
+             *     '//localhost/images/4.jpg'
+             *   ),
+             * )
+             */
+
+            if(($this->datauris == true) && (function_exists('base64_encode')) && $image_urls_to_replace) {
+
+                foreach ($image_urls_to_replace as $count => $image_urls){
+                    foreach ($image_urls as $quotedurl) {
+                        $iurl = trim($quotedurl, " \t\n\r\0\x0B\"'");
+
+                        // if querystring, remove it from url
+                        if (strpos($iurl, '?') !== false) {
+                            $iurl = strtok($iurl, '?');
+                        }
+
+                        $ipath = $this->getpath($iurl);
+
+                        $datauri_max_size = 4096;
+                        $datauri_max_size = (int)apply_filters('autoptimize_filter_css_datauri_maxsize', $datauri_max_size);
+                        $datauri_exclude = apply_filters('autoptimize_filter_css_datauri_exclude', "");
+                        if (!empty($datauri_exclude)) {
+                            $no_datauris = array_filter(array_map('trim', explode(",", $datauri_exclude)));
+                            foreach ($no_datauris as $no_datauri) {
+                                if (strpos($iurl, $no_datauri) !== false) {
+                                    $ipath = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if ($ipath != false && preg_match('#\.(jpe?g|png|gif|bmp)$#i', $ipath) && file_exists($ipath) && is_readable($ipath) && filesize($ipath) <= $datauri_max_size) {
+                            $ihash = md5($ipath);
+                            $icheck = new autoptimizeCache($ihash, 'img');
+                            if ($icheck->check()) {
+                                // we have the base64 image in cache
+                                $headAndData = $icheck->retrieve();
+                                $_base64data = explode(";base64,", $headAndData);
+                                $base64data = $_base64data[1];
+                            } else {
+                                // It's an image and we don't have it in cache, get the type
+                                $explA = explode('.', $ipath);
+                                $type = end($explA);
+
+                                switch ($type) {
+                                    case 'jpeg':
+                                        $dataurihead = 'data:image/jpeg;base64,';
+                                        break;
+                                    case 'jpg':
+                                        $dataurihead = 'data:image/jpeg;base64,';
+                                        break;
+                                    case 'gif':
+                                        $dataurihead = 'data:image/gif;base64,';
+                                        break;
+                                    case 'png':
+                                        $dataurihead = 'data:image/png;base64,';
+                                        break;
+                                    case 'bmp':
+                                        $dataurihead = 'data:image/bmp;base64,';
+                                        break;
+                                    default:
+                                        $dataurihead = 'data:application/octet-stream;base64,';
+                                }
+
+                                // Encode the data
+                                $base64data = base64_encode(file_get_contents($ipath));
+                                $headAndData = $dataurihead . $base64data;
+
+                                // Save in cache
+                                $icheck->cache($headAndData, "text/plain");
+                            }
+                            unset($icheck);
+
+                            // Add it to the list for replacement
+                            // replace it in original $matches url in case of multiple image urls
+                            $matches[0][$count] = str_replace($quotedurl, $headAndData, $matches[0][$count]) . ";\n*" . str_replace($quotedurl, 'mhtml:%%MHTML%%!' . $mhtmlcount, $matches[0][$count]) . ";\n_" . $matches[0][$count] . ';';
+                            $imgreplace[$original_image_string[$count]] = $matches[0][$count];
+
+                            // Store image on the mhtml document
+                            $this->mhtml .= "--_\r\nContent-Location:{$mhtmlcount}\r\nContent-Transfer-Encoding:base64\r\n\r\n{$base64data}\r\n";
+                            $mhtmlcount++;
+                        } else {
+                            // just cdn the URL if applicable
+                            if (!empty($this->cdn_url)) {
+                                $url = trim($quotedurl, " \t\n\r\0\x0B\"'");
+                                $cdn_url = $this->url_replace_cdn($url);
+                                // replace it in original $matches url in case of multiple image urls
+                                $matches[0][$count] = str_replace($quotedurl,$cdn_url,$matches[0][$count]);
+                                $imgreplace[$original_image_string[$count]] = $matches[0][$count];
+                            }
+                        }
+                    }
+                }
+            } else if ( $image_urls_to_replace && (!empty($this->cdn_url)) ) {
+                // change background image urls to cdn-url
+
+                foreach ($image_urls_to_replace as $count => $image_urls) {
+                    foreach ($image_urls as $quotedurl) {
+                        $url = trim($quotedurl," \t\n\r\0\x0B\"'");
+                        $cdn_url=$this->url_replace_cdn($url);
+                        // replace it in original $matches url in case of multiple image urls
+                        $matches[0][$count] = str_replace($quotedurl,$cdn_url,$matches[0][$count]);
+                        $imgreplace[$original_image_string[$count]] = $matches[0][$count];
+                    }
+                }
+            }
+
             if(!empty($imgreplace)) {
                 $code = str_replace(array_keys($imgreplace),array_values($imgreplace),$code);
             }
-            
+
             // CDN the fonts!
             if ( (!empty($this->cdn_url)) && (apply_filters('autoptimize_filter_css_fonts_cdn',false)) && (version_compare(PHP_VERSION, '5.3.0') >= 0) ) {
                 $fontreplace = array();
