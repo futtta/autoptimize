@@ -303,10 +303,15 @@ class autoptimizeStyles extends autoptimizeBase {
 
             // Do the imaging!
             $imgreplace = array();
-            preg_match_all('#(background[^;{}]*url\((?!\s?"?\'?\s?data)(.*)\)[^;}]*)(?:;|$|})#Usm',$code,$matches);
+            // dtbaker update. Instead of searching for the entire `background: url(), url(), url();` string we just search for the individual url() elements.
+            // this allows us to find/replace multiple background images with minimal code changes below.
+            // this is the old regex that searched for the entire background css rule, but it wouldn't match multiple background image url css rules.
+            // preg_match_all('#(background[^;{}]*url\((?!\s?"?\'?\s?data)(.*)\)[^;}]*)(?:;|$|})#Usm',$code,$matches);
+            // this new regex will be slightly faster too:
+            preg_match_all('#url\((?!\s?"?\'?\s?data)(.*)\)#Usm',$code,$matches); 
             
             if(($this->datauris == true) && (function_exists('base64_encode')) && (is_array($matches)))    {
-                foreach($matches[2] as $count => $quotedurl) {
+                foreach($matches[1] as $count => $quotedurl) {
                     $iurl = trim($quotedurl," \t\n\r\0\x0B\"'");
 
                     // if querystring, remove it from url
@@ -370,7 +375,7 @@ class autoptimizeStyles extends autoptimizeBase {
                         unset($icheck);
 
                         // Add it to the list for replacement
-                        $imgreplace[$matches[1][$count]] = str_replace($quotedurl,$headAndData,$matches[1][$count]).";\n*".str_replace($quotedurl,'mhtml:%%MHTML%%!'.$mhtmlcount,$matches[1][$count]).";\n_".$matches[1][$count].';';
+                        $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$headAndData,$matches[0][$count]).";\n*".str_replace($quotedurl,'mhtml:%%MHTML%%!'.$mhtmlcount,$matches[0][$count]).";\n_".$matches[0][$count].';';
                         
                         // Store image on the mhtml document
                         $this->mhtml .= "--_\r\nContent-Location:{$mhtmlcount}\r\nContent-Transfer-Encoding:base64\r\n\r\n{$base64data}\r\n";
@@ -380,16 +385,16 @@ class autoptimizeStyles extends autoptimizeBase {
                         if (!empty($this->cdn_url)) {
                             $url = trim($quotedurl," \t\n\r\0\x0B\"'");
                             $cdn_url=$this->url_replace_cdn($url);
-                            $imgreplace[$matches[1][$count]] = str_replace($quotedurl,$cdn_url,$matches[1][$count]);
+                            $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$cdn_url,$matches[0][$count]);
                         }
                     }
                 }
             } else if ((is_array($matches)) && (!empty($this->cdn_url))) {
                 // change background image urls to cdn-url
-                foreach($matches[2] as $count => $quotedurl) {
+                foreach($matches[1] as $count => $quotedurl) {
                     $url = trim($quotedurl," \t\n\r\0\x0B\"'");
                     $cdn_url=$this->url_replace_cdn($url);
-                    $imgreplace[$matches[1][$count]] = str_replace($quotedurl,$cdn_url,$matches[1][$count]);
+                    $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$cdn_url,$matches[0][$count]);
                 }
             }
             
