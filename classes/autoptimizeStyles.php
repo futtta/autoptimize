@@ -2,6 +2,9 @@
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class autoptimizeStyles extends autoptimizeBase {
+
+    const ASSETS_REGEX = '/url\s*\(\s*(?!["\']?data:)([^)]+)\s*\)/i';
+
     private $css = array();
     private $csscode = array();
     private $url = array();
@@ -308,8 +311,8 @@ class autoptimizeStyles extends autoptimizeBase {
             // this is the old regex that searched for the entire background css rule, but it wouldn't match multiple background image url css rules.
             // preg_match_all('#(background[^;{}]*url\((?!\s?"?\'?\s?data)(.*)\)[^;}]*)(?:;|$|})#Usm',$code,$matches);
             // this new regex will be slightly faster too:
-            preg_match_all('#url\((?!\s?"?\'?\s?data)(.*)\)#Usm',$code,$matches); 
-            
+            preg_match_all( self::ASSETS_REGEX, $code, $matches );
+
             if(($this->datauris == true) && (function_exists('base64_encode')) && (is_array($matches)))    {
                 foreach($matches[1] as $count => $quotedurl) {
                     $iurl = trim($quotedurl," \t\n\r\0\x0B\"'");
@@ -588,7 +591,7 @@ class autoptimizeStyles extends autoptimizeBase {
         // quick fix for import-troubles in e.g. arras theme
         $code=preg_replace('#@import ("|\')(.+?)\.css("|\')#','@import url("${2}.css")',$code);
 
-        if(preg_match_all('#url\((?!data)(?!\#)(?!"\#)(.*)\)#Usi',$code,$matches)) {
+        if( preg_match_all( self::ASSETS_REGEX, $code, $matches ) ) {
             $replace = array();
             foreach($matches[1] as $k => $url) {
                 // Remove quotes
