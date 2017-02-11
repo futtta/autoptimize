@@ -518,7 +518,7 @@ class autoptimizeStyles extends autoptimizeBase {
             }
         } else {
             if ($this->defer == true) {
-                $deferredCssBlock = "<script data-cfasync='false'>function lCss(url,media) {var d=document;var l=d.createElement('link');l.rel='stylesheet';l.type='text/css';l.href=url;l.media=media;aoin=d.getElementById('aonoscrcss');aoin.parentNode.insertBefore(l,aoin.nextSibling);}function deferredCSS() {";
+                $deferredCssBlock = "<script data-cfasync='false'>function lCss(url,media) {var d=document;var l=d.createElement('link');l.rel='stylesheet';l.type='text/css';l.href=url;l.media=media;aoin=d.getElementById('aonoscrcss');if(window.location.href.indexOf('ao_nodeferredcss=1') === -1){aoin.parentNode.insertBefore(l,aoin.nextSibling);}}function deferredCSS() {";
                 $noScriptCssBlock = "<noscript id=\"aonoscrcss\">";
                 $defer_inline_code=$this->defer_inline;
                 if(!empty($defer_inline_code)){
@@ -589,6 +589,9 @@ class autoptimizeStyles extends autoptimizeBase {
                 // Remove quotes
                 $url = trim($url," \t\n\r\0\x0B\"'");
                 $noQurl = trim($url,"\"'");
+                
+                if ($noQurl === '') { continue; }
+                
                 if ($url!==$noQurl) {
                     $removedQuotes=true;
                 } else {

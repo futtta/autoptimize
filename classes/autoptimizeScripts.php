@@ -139,7 +139,7 @@ class autoptimizeScripts extends autoptimizeBase {
                             }
                         } else {
                             // cannot be moved, so if flag was added re-inject altered tag immediately
-                            if ($origTag && $origTag !== $tag) {
+                            if ( !empty($origTag) && $origTag !== $tag ) {
                                 $this->content = str_replace($origTag,$tag,$this->content);
                                 $origTag = '';
                             }
