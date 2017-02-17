@@ -580,8 +580,8 @@ class autoptimizeStyles extends autoptimizeBase {
         $file = str_replace(AUTOPTIMIZE_WP_CONTENT_NAME,'',$file);
         $dir = dirname($file); // Like /themes/expound/css
 
-        // quick fix for import-troubles in e.g. arras theme
-        $code=preg_replace('#@import ("|\')(.+?)\.css("|\')#','@import url("${2}.css")',$code);
+        // swith all imports to the url() syntax
+        $code=preg_replace('#@import ("|\')(.+?)\.css.*("|\')#','@import url("${2}.css")',$code);
 
         if(preg_match_all('#url\((?!data)(?!\#)(?!"\#)(.*)\)#Usi',$code,$matches)) {
             $replace = array();
