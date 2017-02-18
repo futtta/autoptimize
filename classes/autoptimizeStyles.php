@@ -233,7 +233,8 @@ class autoptimizeStyles extends autoptimizeBase {
             $external_imports = "";
 
             // remove comments to avoid importing commented-out imports
-            $thiscss_nocomments=preg_replace('#/\*.*\*/#Us','',$thiscss);
+            $thiscss_nocomments = preg_replace('#/\*.*\*/#Us','',$thiscss);
+
             while(preg_match_all('#@import.*(?:;|$)#Um',$thiscss_nocomments,$matches)) {
                 foreach($matches[0] as $import)    {
                     if ($this->isremovable($import,$this->cssremovables)) {
@@ -580,7 +581,7 @@ class autoptimizeStyles extends autoptimizeBase {
         $file = str_replace(AUTOPTIMIZE_WP_CONTENT_NAME,'',$file);
         $dir = dirname($file); // Like /themes/expound/css
 
-        // swith all imports to the url() syntax
+        // switch all imports to the url() syntax
         $code=preg_replace('#@import ("|\')(.+?)\.css.*("|\')#','@import url("${2}.css")',$code);
 
         if(preg_match_all('#url\((?!data)(?!\#)(?!"\#)(.*)\)#Usi',$code,$matches)) {
