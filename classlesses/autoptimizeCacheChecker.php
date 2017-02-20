@@ -42,7 +42,7 @@ function ao_cachechecker_cronjob() {
             $saniSiteUrl=esc_url(site_url());
             $ao_mailto=apply_filters('autoptimize_filter_cachecheck_mailto',get_option('admin_email',''));
             $ao_mailsubject=__('Autoptimize cache size warning','autoptimize')." (".$saniSiteUrl.")";
-            $ao_mailbody=__('Autoptimize\'s cache size is getting big, consider purging the cache. Have a look at https://wordpress.org/plugins/autoptimize/faq/ to see how you can keep the cache size under control.', 'autoptimize')." (site: ".$saniSiteUrl.")";
+            $ao_mailbody=__('<strong>Autoptimize\'s cache size is getting big</strong>, consider purging the cache. Have a look at <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank">the Autoptimize FAQ</a> to see how you can keep the cache size under control.', 'autoptimize')." (site: ".$saniSiteUrl.")";
 
             if (!empty($ao_mailto)) {
                 $ao_mailresult=wp_mail($ao_mailto,$ao_mailsubject,$ao_mailbody);
