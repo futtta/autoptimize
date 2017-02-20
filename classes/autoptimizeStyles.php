@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class autoptimizeStyles extends autoptimizeBase {
 
-    const ASSETS_REGEX = '/url\s*\(\s*(?!["\']?data:)([^)]+)\s*\)/i';
+    const ASSETS_REGEX = '/url\s*\(\s*(?!["\']?data:)(?!"\#)([^)]+)\s*\)/i';
 
     private $css = array();
     private $csscode = array();
