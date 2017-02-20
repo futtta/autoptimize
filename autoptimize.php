@@ -112,12 +112,7 @@ function autoptimize_update_config_notice() {
 
 function autoptimize_cache_unavailable_notice() {
     echo '<div class="error"><p>';
-    _e(
-        'Autoptimize cannot write to the cache directory ('
-        . AUTOPTIMIZE_CACHE_DIR
-        . '), please fix to enable CSS/ JS optimization!',
-        'autoptimize'
-    );
+    printf( __( 'Autoptimize cannot write to the cache directory (%s), please fix to enable CSS/ JS optimization!', 'autoptimize' ), AUTOPTIMIZE_CACHE_DIR );
     echo '</p></div>';
 }
 

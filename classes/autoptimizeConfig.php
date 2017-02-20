@@ -151,7 +151,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <div class="wrap">
 
 <?php if (version_compare(PHP_VERSION, '5.3.0') < 0) { ?>
-<div class="notice-error notice"><?php _e('<p><strong>You are using a very old version of PHP</strong> (5.2.x or older) which has <a href="http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/" target="_blank">serious security and performance issues</a>. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0</p>','autoptimize'); ?></div>
+<div class="notice-error notice"><?php echo '<p>' . sprintf( __('<strong>You are using a very old version of PHP</strong> (5.2.x or older) which has <a href=%s>serious security and performance issues</a>. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0.','autoptimize'), '"http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/" target="_blank"') . '</p>'; ?></div>
 <?php } ?>
 
 <div id="autoptimize_main">
@@ -214,7 +214,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 </tr>
 <?php if (get_option('autoptimize_js_justhead')) { ?>
 <tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
-<th scope="row"><?php _e('Look for scripts only in &lt;head&gt;?','autoptimize');  _e(' <i>(deprecated)</i>','autoptimize'); ?></th>
+<th scope="row"><?php _e('Look for scripts only in &lt;head&gt;?','autoptimize'); echo ' <i>'. __('(deprecated)','autoptimize') . '</i>'; ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_justhead" <?php echo get_option('autoptimize_js_justhead')?'checked="checked" ':''; ?>/>
 <?php _e('Mostly useful in combination with previous option when using jQuery-based templates, but might help keeping cache size under control.','autoptimize'); ?></label></td>
 </tr>
@@ -256,7 +256,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 </tr>
 <?php if (get_option('autoptimize_css_justhead')) { ?>
 <tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv">
-<th scope="row"><?php _e('Look for styles only in &lt;head&gt;?','autoptimize'); _e(' <i>(deprecated)</i>','autoptimize'); ?></th>
+<th scope="row"><?php _e('Look for styles only in &lt;head&gt;?','autoptimize'); echo ' <i>'. __('(deprecated)','autoptimize') . '</i>'; ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_justhead" <?php echo get_option('autoptimize_css_justhead')?'checked="checked" ':''; ?>/>
 <?php _e('Don\'t autoptimize CSS outside the head-section. If the cache gets big, you might want to enable this.','autoptimize'); ?></label></td>
 </tr>
@@ -315,7 +315,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <td><?php
     $AOstatArr=autoptimizeCache::stats(); 
     $AOcacheSize=round($AOstatArr[1]/1024);
-    echo $AOstatArr[0].__(' files, totalling ','autoptimize').$AOcacheSize.__(' Kbytes (calculated at ','autoptimize').date("H:i e", $AOstatArr[2]).')';
+    printf( __( '%1$s files, totalling %2$s Kbytes (calculated at %3$s)', 'autoptimize'), $AOstatArr[0], $AOcacheSize, date("H:i e", $AOstatArr[2]) );
 ?></td>
 </tr>
 <tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
