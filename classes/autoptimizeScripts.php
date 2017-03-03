@@ -120,6 +120,45 @@ class autoptimizeScripts extends autoptimizeBase {
                         // ok to optimize, add to array
                         $this->scripts[] = $path;
                     } else {
+						// should we minify the script?
+						if (apply_filters('autoptimize_filter_js_minify_excluded',false)) {
+							if ($path) { // also check if file not minified already!!!
+								$_MinifiedJSName="";
+								
+								// read file
+								$_toMinifyJS = file_get_contents($path);
+								
+								// check cache
+						        $_md5hash = "single_".md5($_toMinifyJS);
+								$_cache = new autoptimizeCache($_md5hash,'js');
+								if ($_cache->check() ) {
+									$_CachedMinifiedUrl = AUTOPTIMIZE_CACHE_URL.$_cache->getname();
+								} else {
+									// if not in cache minify
+									if (empty($_CachedMinifiedJSName)) {
+										if (class_exists('JSMin') && apply_filters( 'autoptimize_js_do_minify' , true)) {
+											if (@is_callable(array("JSMin","minify"))) {
+												$_MinfiedJS = $_toMinifyJS;
+												$tmp_jscode = trim(JSMin::minify($_toMinifyJS));
+												if (!empty($tmp_jscode)) {
+													$_MinifiedJS = $tmp_jscode;
+													unset($tmp_jscode);
+												}
+											}
+										}
+										// and cache
+										$_cache->cache($_MinifiedJS,'text/javascript');
+										$_CachedMinifiedUrl = AUTOPTIMIZE_CACHE_URL.$_cache->getname();
+									}
+								}
+								$_CachedMinfiedUrl = $this->url_replace_cdn($_CachedMinifiedUrl);									
+								unset($_cache);
+
+								// replace orig URL with URL to cache
+								$newTag = str_replace($url, $_CachedMinifiedUrl, $tag);
+								$this->content = str_replace($tag,$newTag,$this->content);
+							}
+						}
                         // non-mergeable script (excluded or dynamic or external)
                         if (is_array($excludeJS)) {
                             // should we add flags?
