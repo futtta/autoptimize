@@ -339,4 +339,56 @@ abstract class autoptimizeBase {
         }
         return $out;
     }
+    
+    protected function minify_single($pathIn) {
+		$_MinifiedName="";
+
+		// determine JS or CSS and set var (also mimetype), return false if neither
+		// todo: improve checks to only check end of path
+		if (strpos($pathIn,".js")!==false) {
+			$codeType="js";
+			$codeMime="text/javascript";
+		} else if (strpos($pathIn,".css")!==false) {
+			$codeType="css";
+			$codeMime="text/css";			
+		} else {
+			return false;
+		}
+		
+		// if min.js or min.css return false
+		// TODO: improve check to only check end of path
+		if (strpos($pathIn,"min.")!==false) return false;
+		
+		// read file, return false if empty
+		$_toMinify = file_get_contents($pathIn);
+		if (empty($_toMinify)) return false;
+		
+		// check cache
+		$_md5hash = "single_".md5($_toMinify);
+		$_cache = new autoptimizeCache($_md5hash,$codeType);
+		if ($_cache->check() ) {
+			$_CachedMinifiedUrl = AUTOPTIMIZE_CACHE_URL.$_cache->getname();
+		} else {
+			// if not in cache first minify
+			if (class_exists('JSMin') && apply_filters( 'autoptimize_js_do_minify' , true)) {
+				if (@is_callable(array("JSMin","minify"))) {
+					$_Minified = $_toMinify;
+					$tmp_code = trim(JSMin::minify($_toMinify));
+					if (!empty($tmp_code)) {
+						$_Minified = $tmp_code;
+						unset($tmp_code);
+					}
+				}
+			}
+			// and then cache
+			$_cache->cache($_Minified,$codeMime);
+			$_CachedMinifiedUrl = AUTOPTIMIZE_CACHE_URL.$_cache->getname();
+		}
+		unset($_cache);
+	
+		// if CDN, then CDN
+		$_CachedMinfiedUrl = $this->url_replace_cdn($_CachedMinifiedUrl);									
+
+		return $_CachedMinifiedUrl;
+	}
 }
