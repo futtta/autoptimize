@@ -370,15 +370,28 @@ abstract class autoptimizeBase {
 			$_CachedMinifiedUrl = AUTOPTIMIZE_CACHE_URL.$_cache->getname();
 		} else {
 			// if not in cache first minify
-			if (class_exists('JSMin') && apply_filters( 'autoptimize_js_do_minify' , true)) {
-				if (@is_callable(array("JSMin","minify"))) {
-					$_Minified = $_toMinify;
-					$tmp_code = trim(JSMin::minify($_toMinify));
-					if (!empty($tmp_code)) {
-						$_Minified = $tmp_code;
-						unset($tmp_code);
+			$_Minified = $_toMinify;
+			if ($codeType === "js") {
+				if (class_exists('JSMin') && apply_filters( 'autoptimize_js_do_minify' , true)) {
+					if (@is_callable(array("JSMin","minify"))) {
+						$tmp_code = trim(JSMin::minify($_toMinify));
 					}
 				}
+			} else if ($codeType === "css") {
+                if (class_exists('Minify_CSS_Compressor')) {
+					$tmp_code = trim(Minify_CSS_Compressor::process($_toMinify));
+                } else if(class_exists('CSSmin')) {
+                    $cssmin = new CSSmin();
+                    if (method_exists($cssmin,"run")) {
+                        $tmp_code = trim($cssmin->run($_toMinify));
+                    } elseif (@is_callable(array($cssmin,"minify"))) {
+                        $tmp_code = trim(CssMin::minify($_toMinify));
+                    }
+                }
+			}
+			if (!empty($tmp_code)) {
+				$_Minified = $tmp_code;
+				unset($tmp_code);
 			}
 			// and then cache
 			$_cache->cache($_Minified,$codeMime);
