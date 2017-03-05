@@ -121,6 +121,7 @@ class autoptimizeScripts extends autoptimizeBase {
                         $this->scripts[] = $path;
                     } else {
 						// should we minify the script?
+						// TODO: determine when we need to do this, maybe first add flags + check if can be moved?
 						if ($path && apply_filters('autoptimize_filter_js_minify_excluded',false)) {
 							$_CachedMinifiedUrl = $this->minify_single($path);
 

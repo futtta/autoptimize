@@ -341,14 +341,11 @@ abstract class autoptimizeBase {
     }
     
     protected function minify_single($pathIn) {
-		$_MinifiedName="";
-
 		// determine JS or CSS and set var (also mimetype), return false if neither
-		// todo: improve checks to only check end of path
-		if (strpos($pathIn,".js")!==false) {
+		if ( $this->str_ends_in($pathIn,".js") === true ) {
 			$codeType="js";
 			$codeMime="text/javascript";
-		} else if (strpos($pathIn,".css")!==false) {
+		} else if ( $this->str_ends_in($pathIn,".css") === true ) {
 			$codeType="css";
 			$codeMime="text/css";			
 		} else {
@@ -356,12 +353,13 @@ abstract class autoptimizeBase {
 		}
 		
 		// if min.js or min.css return false
-		// TODO: improve check to only check end of path
-		if (strpos($pathIn,"min.")!==false) return false;
+		if (( $this->str_ends_in($pathIn,"-min.".$codeType) === true ) || ( $this->str_ends_in($pathIn,".min.".$codeType) === true )) {
+			return false;
+		}
 		
 		// read file, return false if empty
 		$_toMinify = file_get_contents($pathIn);
-		if (empty($_toMinify)) return false;
+		if ( empty($_toMinify) ) return false;
 		
 		// check cache
 		$_md5hash = "single_".md5($_toMinify);
@@ -403,5 +401,16 @@ abstract class autoptimizeBase {
 		$_CachedMinfiedUrl = $this->url_replace_cdn($_CachedMinifiedUrl);									
 
 		return $_CachedMinifiedUrl;
+	}
+	
+	protected function str_ends_in($haystack,$needle) {
+		$needleLength = strlen($needle);
+		$haystackLength = strlen($haystack);
+		$lastPos=strrpos($haystack,$needle);
+		if ($lastPos === $haystackLength - $needleLength) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

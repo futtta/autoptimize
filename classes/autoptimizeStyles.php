@@ -293,6 +293,8 @@ class autoptimizeStyles extends autoptimizeBase {
                         $thiscss = str_replace($import,'',$thiscss);
                         $fiximports = true;
                     }
+                    
+                    // TODO: minify_single for non-aggregated files (but update import url in orig. css!!)
                 }
                 $thiscss = preg_replace('#/\*FILESTART\*/#','',$thiscss);
                 $thiscss = preg_replace('#/\*FILESTART2\*/#','/*FILESTART*/',$thiscss);
