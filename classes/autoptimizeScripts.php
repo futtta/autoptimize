@@ -120,44 +120,45 @@ class autoptimizeScripts extends autoptimizeBase {
                         // ok to optimize, add to array
                         $this->scripts[] = $path;
                     } else {
-						// should we minify the script?
-						// TODO: determine when we need to do this, maybe first add flags + check if can be moved?
-						if ($path && apply_filters('autoptimize_filter_js_minify_excluded',false)) {
-							$_CachedMinifiedUrl = $this->minify_single($path);
-
-							if (!empty($_CachedMinifiedUrl)) {
-								// replace orig URL with URL to cache
-								$newTag = str_replace($url, $_CachedMinifiedUrl, $tag);
-							} else {
-								$newTag = $tag;
-							}
-							// remove querystring from URL in newTag
-							$_querystr = next(explode('?',$source[2],2));
-							$newTag = str_replace("?".$_querystr,"",$newTag);
-							// and replace
-							$this->content = str_replace($tag,$newTag,$this->content);
-						}
+                        $origTag = $tag;
+                        $newTag = $tag;
+                        
                         // non-mergeable script (excluded or dynamic or external)
                         if (is_array($excludeJS)) {
                             // should we add flags?
-                            $origTag = $tag;
                             foreach ($excludeJS as $exclTag => $exclFlags) {
                                 if ( strpos($origTag,$exclTag)!==false && in_array($exclFlags,array("async","defer")) ) {
-                                   $tag = str_replace('<script ','<script '.$exclFlags.' ',$tag);
+                                   $newTag = str_replace('<script ','<script '.$exclFlags.' ',$newTag);
                                 }
                             }
                         }
-                        if($this->ismovable($tag)) {
+                        
+   						// should we minify the non-aggregated script?
+						if ($path && apply_filters('autoptimize_filter_js_minify_excluded',false)) {
+							$_CachedMinifiedUrl = $this->minify_single($path);
+
+							// replace orig URL with minified URL from cache if so
+							if (!empty($_CachedMinifiedUrl)) {
+								$newTag = str_replace($url, $_CachedMinifiedUrl, $newTag);
+							}
+							
+							// remove querystring from URL in newTag
+							$_querystr = next(explode('?',$source[2],2));
+							$newTag = str_replace("?".$_querystr,"",$newTag);
+						}
+
+						// should we move the non-aggregated script?
+                        if( $this->ismovable($newTag) ) {
                             // can be moved, flags and all
-                            if($this->movetolast($tag))    {
-                                $this->move['last'][] = $tag;
+                            if( $this->movetolast($newTag) )    {
+                                $this->move['last'][] = $newTag;
                             } else {
-                                $this->move['first'][] = $tag;
+                                $this->move['first'][] = $newTag;
                             }
                         } else {
                             // cannot be moved, so if flag was added re-inject altered tag immediately
-                            if ( !empty($origTag) && $origTag !== $tag ) {
-                                $this->content = str_replace($origTag,$tag,$this->content);
+                            if ( $origTag !== $newTag ) {
+                                $this->content = str_replace($origTag,$newTag,$this->content);
                                 $origTag = '';
                             }
                             // and forget about the $tag (not to be touched any more)
