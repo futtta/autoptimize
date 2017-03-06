@@ -339,4 +339,78 @@ abstract class autoptimizeBase {
         }
         return $out;
     }
+    
+    protected function minify_single($pathIn) {
+		// determine JS or CSS and set var (also mimetype), return false if neither
+		if ( $this->str_ends_in($pathIn,".js") === true ) {
+			$codeType="js";
+			$codeMime="text/javascript";
+		} else if ( $this->str_ends_in($pathIn,".css") === true ) {
+			$codeType="css";
+			$codeMime="text/css";			
+		} else {
+			return false;
+		}
+		
+		// if min.js or min.css return false
+		if (( $this->str_ends_in($pathIn,"-min.".$codeType) === true ) || ( $this->str_ends_in($pathIn,".min.".$codeType) === true ) || ( $this->str_ends_in($pathIn,"js/jquery/jquery.js") === true ) ) {
+			return false;
+		}
+		
+		// read file, return false if empty
+		$_toMinify = file_get_contents($pathIn);
+		if ( empty($_toMinify) ) return false;
+		
+		// check cache
+		$_md5hash = "single_".md5($_toMinify);
+		$_cache = new autoptimizeCache($_md5hash,$codeType);
+		if ($_cache->check() ) {
+			$_CachedMinifiedUrl = AUTOPTIMIZE_CACHE_URL.$_cache->getname();
+		} else {
+			// if not in cache first minify
+			$_Minified = $_toMinify;
+			if ($codeType === "js") {
+				if (class_exists('JSMin') && apply_filters( 'autoptimize_js_do_minify' , true)) {
+					if (@is_callable(array("JSMin","minify"))) {
+						$tmp_code = trim(JSMin::minify($_toMinify));
+					}
+				}
+			} else if ($codeType === "css") {
+                if (class_exists('Minify_CSS_Compressor')) {
+					$tmp_code = trim(Minify_CSS_Compressor::process($_toMinify));
+                } else if(class_exists('CSSmin')) {
+                    $cssmin = new CSSmin();
+                    if (method_exists($cssmin,"run")) {
+                        $tmp_code = trim($cssmin->run($_toMinify));
+                    } elseif (@is_callable(array($cssmin,"minify"))) {
+                        $tmp_code = trim(CssMin::minify($_toMinify));
+                    }
+                }
+			}
+			if (!empty($tmp_code)) {
+				$_Minified = $tmp_code;
+				unset($tmp_code);
+			}
+			// and then cache
+			$_cache->cache($_Minified,$codeMime);
+			$_CachedMinifiedUrl = AUTOPTIMIZE_CACHE_URL.$_cache->getname();
+		}
+		unset($_cache);
+	
+		// if CDN, then CDN
+		$_CachedMinfiedUrl = $this->url_replace_cdn($_CachedMinifiedUrl);									
+
+		return $_CachedMinifiedUrl;
+	}
+	
+	protected function str_ends_in($haystack,$needle) {
+		$needleLength = strlen($needle);
+		$haystackLength = strlen($haystack);
+		$lastPos=strrpos($haystack,$needle);
+		if ($lastPos === $haystackLength - $needleLength) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

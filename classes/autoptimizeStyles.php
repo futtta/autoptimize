@@ -161,7 +161,30 @@ class autoptimizeStyles extends autoptimizeBase {
                     
                     // Remove the original style tag
                     $this->content = str_replace($tag,'',$this->content);
-                }
+                } else {
+					// excluded CSS, minify if getpath 
+					if (preg_match('#<link.*href=("|\')(.*)("|\')#Usmi',$tag,$source)) {
+						$url = current(explode('?',$source[2],2));
+                        $path = $this->getpath($url);
+ 					
+						if ($path && apply_filters('autoptimize_filter_css_minify_excluded',false)) {
+							$_CachedMinifiedUrl = $this->minify_single($path);
+
+							if (!empty($_CachedMinifiedUrl)) {
+								// replace orig URL with URL to cache
+								$newTag = str_replace($url, $_CachedMinifiedUrl, $tag);
+							} else {
+								$newTag = $tag;
+							}
+							
+							// remove querystring from URL
+							$_querystr = next(explode('?',$source[2],2));
+							$newTag = str_replace("?".$_querystr,"",$newTag);
+							// and replace
+							$this->content = str_replace($tag,$newTag,$this->content);
+						}
+					}					
+				}
             }
             return true;
         }
@@ -634,7 +657,9 @@ class autoptimizeStyles extends autoptimizeBase {
     }
     
     private function ismovable($tag) {
-        if (!empty($this->whitelist)) {
+		if (apply_filters('autoptimize_filter_css_dontaggregate',false)) {
+			return false;
+        } else if (!empty($this->whitelist)) {
             foreach ($this->whitelist as $match) {
                 if(strpos($tag,$match)!==false) {
                     return true;
