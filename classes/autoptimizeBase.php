@@ -398,7 +398,7 @@ abstract class autoptimizeBase {
 		unset($_cache);
 	
 		// if CDN, then CDN
-		$_CachedMinfiedUrl = $this->url_replace_cdn($_CachedMinifiedUrl);									
+		$_CachedMinifiedUrl = $this->url_replace_cdn($_CachedMinifiedUrl);									
 
 		return $_CachedMinifiedUrl;
 	}
