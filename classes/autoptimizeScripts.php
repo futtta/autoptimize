@@ -128,9 +128,14 @@ class autoptimizeScripts extends autoptimizeBase {
 							if (!empty($_CachedMinifiedUrl)) {
 								// replace orig URL with URL to cache
 								$newTag = str_replace($url, $_CachedMinifiedUrl, $tag);
-								// TODO: remove querystring from URL in newTag
-								$this->content = str_replace($tag,$newTag,$this->content);
+							} else {
+								$newTag = $tag;
 							}
+							// remove querystring from URL in newTag
+							$_querystr = next(explode('?',$source[2],2));
+							$newTag = str_replace("?".$_querystr,"",$newTag);
+							// and replace
+							$this->content = str_replace($tag,$newTag,$this->content);
 						}
                         // non-mergeable script (excluded or dynamic or external)
                         if (is_array($excludeJS)) {

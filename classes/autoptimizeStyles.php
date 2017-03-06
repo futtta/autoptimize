@@ -173,9 +173,15 @@ class autoptimizeStyles extends autoptimizeBase {
 							if (!empty($_CachedMinifiedUrl)) {
 								// replace orig URL with URL to cache
 								$newTag = str_replace($url, $_CachedMinifiedUrl, $tag);
-								// TODO: remove querystring from URL in newTag
-								$this->content = str_replace($tag,$newTag,$this->content);
+							} else {
+								$newTag = $tag;
 							}
+							
+							// remove querystring from URL
+							$_querystr = next(explode('?',$source[2],2));
+							$newTag = str_replace("?".$_querystr,"",$newTag);
+							// and replace
+							$this->content = str_replace($tag,$newTag,$this->content);
 						}
 					}					
 				}
@@ -293,8 +299,6 @@ class autoptimizeStyles extends autoptimizeBase {
                         $thiscss = str_replace($import,'',$thiscss);
                         $fiximports = true;
                     }
-                    
-                    // TODO: minify_single for non-aggregated files (but update import url in orig. css!!)
                 }
                 $thiscss = preg_replace('#/\*FILESTART\*/#','',$thiscss);
                 $thiscss = preg_replace('#/\*FILESTART2\*/#','/*FILESTART*/',$thiscss);
