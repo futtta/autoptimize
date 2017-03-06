@@ -113,8 +113,8 @@ class autoptimizeScripts extends autoptimizeBase {
                         $this->content = str_replace($tag,'',$this->content);
                         continue;
                     }
-                    
-                    $url = current(explode('?',$source[2],2));
+                    $explUrl = explode('?',$source[2],2);
+                    $url = $explUrl[0];
                     $path = $this->getpath($url);
                     if($path !== false && preg_match('#\.js$#',$path) && $this->ismergeable($tag)) {
                         // ok to optimize, add to array
@@ -143,8 +143,9 @@ class autoptimizeScripts extends autoptimizeBase {
 							}
 							
 							// remove querystring from URL in newTag
-							$_querystr = next(explode('?',$source[2],2));
-							$newTag = str_replace("?".$_querystr,"",$newTag);
+							if ( !empty($explUrl[1]) ) {
+								$newTag = str_replace("?".$explUrl[1],"",$newTag);
+							}
 						}
 
 						// should we move the non-aggregated script?

@@ -133,7 +133,8 @@ class autoptimizeStyles extends autoptimizeBase {
                 
                     if(preg_match('#<link.*href=("|\')(.*)("|\')#Usmi',$tag,$source)) {
                         // <link>
-                        $url = current(explode('?',$source[2],2));
+                        $explUrl = explode('?',$source[2],2);
+                        $url = $explUrl[0];
                         $path = $this->getpath($url);
                         
                         if($path!==false && preg_match('#\.css$#',$path)) {
@@ -164,7 +165,8 @@ class autoptimizeStyles extends autoptimizeBase {
                 } else {
 					// excluded CSS, minify if getpath 
 					if (preg_match('#<link.*href=("|\')(.*)("|\')#Usmi',$tag,$source)) {
-						$url = current(explode('?',$source[2],2));
+						$explUrl = explode('?',$source[2],2);
+                        $url = $explUrl[0];
                         $path = $this->getpath($url);
  					
 						if ($path && apply_filters('autoptimize_filter_css_minify_excluded',false)) {
@@ -178,8 +180,10 @@ class autoptimizeStyles extends autoptimizeBase {
 							}
 							
 							// remove querystring from URL
-							$_querystr = next(explode('?',$source[2],2));
-							$newTag = str_replace("?".$_querystr,"",$newTag);
+							if ( !empty($explUrl[1]) ) {
+								$newTag = str_replace("?".$explUrl[1],"",$newTag);
+							}
+
 							// and replace
 							$this->content = str_replace($tag,$newTag,$this->content);
 						}
