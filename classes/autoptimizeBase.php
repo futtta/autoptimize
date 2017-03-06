@@ -353,7 +353,7 @@ abstract class autoptimizeBase {
 		}
 		
 		// if min.js or min.css return false
-		if (( $this->str_ends_in($pathIn,"-min.".$codeType) === true ) || ( $this->str_ends_in($pathIn,".min.".$codeType) === true )) {
+		if (( $this->str_ends_in($pathIn,"-min.".$codeType) === true ) || ( $this->str_ends_in($pathIn,".min.".$codeType) === true ) || ( $this->str_ends_in($pathIn,"js/jquery/jquery.js") === true ) ) {
 			return false;
 		}
 		
