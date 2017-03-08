@@ -3,13 +3,12 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class autoptimizeStyles extends autoptimizeBase {
 
-    const ASSETS_REGEX = '/url\s*\(\s*(?!["\']?data:)(?![\'|\"]?[\#|\%])([^)]+)\s*\)/i';
+    const ASSETS_REGEX = '/url\s*\(\s*(?!["\']?data:)(?![\'|\"]?[\#|\%|])([^)]+)\s*\)([^;},]*)/i';
 
     private $css = array();
     private $csscode = array();
     private $url = array();
     private $restofcontent = '';
-    private $mhtml = '';
     private $datauris = false;
     private $hashmap = array();
     private $alreadyminified = false;
@@ -320,7 +319,6 @@ class autoptimizeStyles extends autoptimizeBase {
         unset($thiscss);
         
         // $this->csscode has all the uncompressed code now. 
-        $mhtmlcount = 0;
         foreach($this->csscode as &$code) {
             // Check for already-minified code
             $hash = md5($code);
@@ -406,11 +404,8 @@ class autoptimizeStyles extends autoptimizeBase {
                         unset($icheck);
 
                         // Add it to the list for replacement
-                        $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$headAndData,$matches[0][$count]).";\n*".str_replace($quotedurl,'mhtml:%%MHTML%%!'.$mhtmlcount,$matches[0][$count]).";\n_".$matches[0][$count].';';
+                        $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$headAndData,$matches[0][$count]).';';
                         
-                        // Store image on the mhtml document
-                        $this->mhtml .= "--_\r\nContent-Location:{$mhtmlcount}\r\nContent-Transfer-Encoding:base64\r\n\r\n{$base64data}\r\n";
-                        $mhtmlcount++;
                     } else {
                         // just cdn the URL if applicable
                         if (!empty($this->cdn_url)) {
@@ -485,26 +480,9 @@ class autoptimizeStyles extends autoptimizeBase {
     
     //Caches the CSS in uncompressed, deflated and gzipped form.
     public function cache() {
-        if($this->datauris) {
-            // MHTML Preparation
-            $this->mhtml = "/*\r\nContent-Type: multipart/related; boundary=\"_\"\r\n\r\n".$this->mhtml."*/\r\n";
-            $md5 = md5($this->mhtml);
-            $cache = new autoptimizeCache($md5,'txt');
-            if(!$cache->check()) {
-                // Cache our images for IE
-                $cache->cache($this->mhtml,'text/plain');
-            }
-            $mhtml = AUTOPTIMIZE_CACHE_URL.$cache->getname();
-        }
-        
         // CSS cache
         foreach($this->csscode as $media => $code) {
             $md5 = $this->hashmap[md5($code)];
-
-            if($this->datauris)    {
-                // Images for ie! Get the right url
-                $code = str_replace('%%MHTML%%',$mhtml,$code);
-            }
                 
             $cache = new autoptimizeCache($md5,'css');
             if(!$cache->check()) {
