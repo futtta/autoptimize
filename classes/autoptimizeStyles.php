@@ -339,7 +339,7 @@ class autoptimizeStyles extends autoptimizeBase {
             // this new regex will be slightly faster too:
             preg_match_all( self::ASSETS_REGEX, $code, $matches );
 
-            if(($this->datauris == true) && (function_exists('base64_encode')) && (is_array($matches)))    {
+            if ( ($this->datauris == true) && (function_exists('base64_encode')) && (is_array($matches)) ) {
                 foreach($matches[1] as $count => $quotedurl) {
                     $iurl = trim($quotedurl," \t\n\r\0\x0B\"'");
 
@@ -404,8 +404,7 @@ class autoptimizeStyles extends autoptimizeBase {
                         unset($icheck);
 
                         // Add it to the list for replacement
-                        $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$headAndData,$matches[0][$count]).';';
-                        
+                        $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$headAndData,$matches[0][$count]);
                     } else {
                         // just cdn the URL if applicable
                         if (!empty($this->cdn_url)) {
