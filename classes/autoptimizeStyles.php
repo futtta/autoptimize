@@ -426,7 +426,7 @@ class autoptimizeStyles extends autoptimizeBase {
             if(!empty($imgreplace)) {
                 $code = str_replace(array_keys($imgreplace),array_values($imgreplace),$code);
             }
-            
+
             // CDN the fonts!
             if ( (!empty($this->cdn_url)) && (apply_filters('autoptimize_filter_css_fonts_cdn',false)) && (version_compare(PHP_VERSION, '5.3.0') >= 0) ) {
                 $fontreplace = array();
@@ -625,9 +625,9 @@ class autoptimizeStyles extends autoptimizeBase {
                     $code = str_replace($matches[0][$k],$hash,$code);
 
                     if (!empty($removedQuotes)) {
-                        $replace[$hash] = 'url(\''.$newurl.'\')';
+                        $replace[$hash] = 'url(\''.$newurl.'\')'.$matches[2][$k];
                     } else {
-                        $replace[$hash] = 'url('.$newurl.')';
+                        $replace[$hash] = 'url('.$newurl.')'.$matches[2][$k];
                     }
                 }
             }    
