@@ -326,6 +326,17 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 </table>
 </li>
 
+<li class="<?php echo $hiddenClass;?>itemDetail ao_adv">
+<h2 class="itemTitle"><?php _e('Misc Options','autoptimize'); ?></h2>
+<table class="form-table"> 
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
+<th scope="row"><?php _e('Also optimize for logged in users?','autoptimize'); ?></th>
+<td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo get_option('autoptimize_optimize_logged','1')?'checked="checked" ':''; ?>/>
+<?php _e('By default Autoptimize is also active for logged on users, uncheck not to optimize when logged in e.g. to use a pagebuilder.','autoptimize'); ?></label></td>
+</tr>
+</table>
+</li>
+
 </ul>
 
 <input type="hidden" id="autoptimize_show_adv" name="autoptimize_show_adv" value="<?php echo get_option('autoptimize_show_adv','0'); ?>">
@@ -556,6 +567,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
         register_setting('autoptimize','autoptimize_cache_clean');
         register_setting('autoptimize','autoptimize_cache_nogzip');
         register_setting('autoptimize','autoptimize_show_adv');
+        register_setting('autoptimize','autoptimize_optimize_logged');
     }
 
     public function setmeta($links,$file=null) {
@@ -603,7 +615,8 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
                 'autoptimize_css_nogooglefont' => 0,
                 'autoptimize_cdn_url' => "",
                 'autoptimize_cache_nogzip' => 1,
-                'autoptimize_show_adv' => 0
+                'autoptimize_show_adv' => 0,
+                'autoptimize_optimize_logged' => 1
                 );
 
             //Override with user settings
