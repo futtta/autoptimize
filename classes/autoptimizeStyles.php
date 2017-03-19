@@ -332,11 +332,6 @@ class autoptimizeStyles extends autoptimizeBase {
 
             // Do the imaging!
             $imgreplace = array();
-            // dtbaker update. Instead of searching for the entire `background: url(), url(), url();` string we just search for the individual url() elements.
-            // this allows us to find/replace multiple background images with minimal code changes below.
-            // this is the old regex that searched for the entire background css rule, but it wouldn't match multiple background image url css rules.
-            // preg_match_all('#(background[^;{}]*url\((?!\s?"?\'?\s?data)(.*)\)[^;}]*)(?:;|$|})#Usm',$code,$matches);
-            // this new regex will be slightly faster too:
             preg_match_all( self::ASSETS_REGEX, $code, $matches );
 
             if ( ($this->datauris == true) && (function_exists('base64_encode')) && (is_array($matches)) ) {
@@ -408,41 +403,19 @@ class autoptimizeStyles extends autoptimizeBase {
                     } else {
                         // just cdn the URL if applicable
                         if (!empty($this->cdn_url)) {
-                            $url = trim($quotedurl," \t\n\r\0\x0B\"'");
-                            $cdn_url=$this->url_replace_cdn($url);
-                            $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$cdn_url,$matches[0][$count]);
-                        }
+                            $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$this->maybe_cdn_urls($quotedurl),$matches[0][$count]);
+						}
                     }
                 }
             } else if ((is_array($matches)) && (!empty($this->cdn_url))) {
-                // change background image urls to cdn-url
+                // change urls to cdn-url
                 foreach($matches[1] as $count => $quotedurl) {
-                    $url = trim($quotedurl," \t\n\r\0\x0B\"'");
-                    $cdn_url=$this->url_replace_cdn($url);
-                    $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$cdn_url,$matches[0][$count]);
+                    $imgreplace[$matches[0][$count]] = str_replace($quotedurl,$this->maybe_cdn_urls($quotedurl),$matches[0][$count]);
                 }
             }
             
             if(!empty($imgreplace)) {
                 $code = str_replace(array_keys($imgreplace),array_values($imgreplace),$code);
-            }
-
-            // CDN the fonts!
-            if ( (!empty($this->cdn_url)) && (apply_filters('autoptimize_filter_css_fonts_cdn',false)) && (version_compare(PHP_VERSION, '5.3.0') >= 0) ) {
-                $fontreplace = array();
-                include_once(AUTOPTIMIZE_PLUGIN_DIR.'classlesses/autoptimizeFontRegex.php');
-                
-                preg_match_all($fonturl_regex,$code,$matches);
-                if (is_array($matches)) {
-                    foreach($matches[8] as $count => $quotedurl) {
-                        $url = trim($quotedurl," \t\n\r\0\x0B\"'");
-                        $cdn_url=$this->url_replace_cdn($url);
-                        $fontreplace[$matches[8][$count]] = str_replace($quotedurl,$cdn_url,$matches[8][$count]);
-                    }
-                    if(!empty($fontreplace)) {
-                        $code = str_replace(array_keys($fontreplace),array_values($fontreplace),$code);
-                    }
-                }
             }
             
             // Minify
@@ -680,5 +653,16 @@ class autoptimizeStyles extends autoptimizeBase {
             // phew, all is safe, we can late-inject
             return true;
         }
+    }
+    
+    private function maybe_cdn_urls($inUrl) {
+        $url = trim($inUrl," \t\n\r\0\x0B\"'");
+        // exclude fonts from CDN except if filter returns true
+        if ( !preg_match('#\.(woff2?|eot|ttf|otf|svg)$#i',$url) || apply_filters('autoptimize_filter_css_fonts_cdn',false) ) {
+            $cdn_url = $this->url_replace_cdn($url);
+        } else {
+            $cdn_url = $url;
+        }
+        return $cdn_url;
     }
 }
