@@ -219,7 +219,7 @@ class autoptimizeStyles extends autoptimizeBase {
                         $css=$tmpstyle;
                         $this->alreadyminified=true;
                     } else if ($this->can_inject_late($cssPath,$css)) {
-                        $css="%%INJECTLATER%%".base64_encode($cssPath)."|".md5($css)."%%INJECTLATER%%";
+                        $css="/*!%%INJECTLATER%%".base64_encode($cssPath)."|".md5($css)."%%INJECTLATER%%*/";
                     }
                 } else {
                     // Couldn't read CSS. Maybe getpath isn't working?
@@ -281,7 +281,7 @@ class autoptimizeStyles extends autoptimizeBase {
                                 $code=$tmpstyle;
                                 $this->alreadyminified=true;
                             } else if ($this->can_inject_late($path,$code)) {
-                                $code="%%INJECTLATER%%".base64_encode($path)."|".md5($code)."%%INJECTLATER%%";
+                                $code="/*!%%INJECTLATER%%".base64_encode($path)."|".md5($code)."%%INJECTLATER%%*/";
                             }
                             
                             if(!empty($code)) {

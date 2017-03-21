@@ -299,7 +299,7 @@ abstract class autoptimizeBase {
     protected function inject_minified($in) {
         if ( strpos( $in, '%%INJECTLATER%%' ) !== false ) {
             $out = preg_replace_callback(
-                '#%%INJECTLATER%%(.*?)%%INJECTLATER%%#is',
+                '#\/\*\!%%INJECTLATER%%(.*?)%%INJECTLATER%%\*\/#is',
                 create_function(
                     '$matches',
                     '$filepath=base64_decode(strtok($matches[1],"|"));
