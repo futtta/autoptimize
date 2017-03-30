@@ -641,7 +641,7 @@ class autoptimizeStyles extends autoptimizeBase {
         if ( $this->inject_min_late !== true ) {
             // late-inject turned off
             return false;
-        } else if ( (strpos($cssPath,"min.css") === false) && (str_replace($consider_minified_array, '', $cssPath) === $cssPath) ) {
+        } else if ( (strpos($cssPath,"min.css") === false) && ( str_replace($consider_minified_array, '', $cssPath) === $cssPath ) ) {
 			// file not minified based on filename & filter
 			return false;
         } else if ( strpos($css,"@import") !== false ) {
