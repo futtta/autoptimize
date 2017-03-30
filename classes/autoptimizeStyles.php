@@ -637,10 +637,14 @@ class autoptimizeStyles extends autoptimizeBase {
     }
     
     private function can_inject_late($cssPath,$css) {
-        if ((strpos($cssPath,"min.css")===false) || ($this->inject_min_late!==true)) {
-            // late-inject turned off or file not minified based on filename
+		$consider_minified_array = apply_filters('autoptimize_filter_css_consider_minified',false);
+        if ( $this->inject_min_late !== true ) {
+            // late-inject turned off
             return false;
-        } else if (strpos($css,"@import")!==false) {
+        } else if ( (strpos($cssPath,"min.css") === false) && (str_replace($consider_minified_array, '', $cssPath) === $cssPath) ) {
+			// file not minified based on filename & filter
+			return false;
+        } else if ( strpos($css,"@import") !== false ) {
             // can't late-inject files with imports as those need to be aggregated 
             return false;
         } else if ( (strpos($css,"@font-face")!==false ) && ( apply_filters("autoptimize_filter_css_fonts_cdn",false)===true) && (!empty($this->cdn_url)) ) {
