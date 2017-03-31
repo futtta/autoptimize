@@ -294,7 +294,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <tr valign="top">
 <th scope="row"><?php _e('CDN Base URL','autoptimize'); ?></th>
 <td><label><input id="cdn_url" type="text" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" value="<?php echo esc_url(get_option('autoptimize_cdn_url',''),array("http","https")); ?>" /><br />
-<?php _e('Enter your CDN root URL to enable CDN for Autoptimized files. The URL can be http, https or protocol-relative (e.g. <code>//cdn.example.com/</code>).','autoptimize'); ?></label></td>
+<?php _e('Enter your CDN root URL to enable CDN for Autoptimized files. The URL can be http, https or protocol-relative (e.g. <code>//cdn.example.com/</code>). This is not needed for Cloudflare.','autoptimize'); ?></label></td>
 </tr>
 </table>
 </li>
