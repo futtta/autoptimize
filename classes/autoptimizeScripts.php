@@ -240,7 +240,7 @@ class autoptimizeScripts extends autoptimizeBase {
                     if ( has_filter('autoptimize_js_individual_script') && !empty($tmpscriptsrc) ) {
                         $scriptsrc=$tmpscriptsrc;
                         $this->alreadyminified=true;
-                    } else if ((( strpos($script,"min.js") !== false ) || ( strpos($script,"wp-includes/js/jquery/jquery.js") !== false )) && ( $this->inject_min_late === true )) {
+                    } else if ($this->can_inject_late($script)) {
                         $scriptsrc="/*!%%INJECTLATER%%".base64_encode($script)."|".md5($scriptsrc)."%%INJECTLATER%%*/";
                     }
                     $this->jscode .= "\n".$scriptsrc;
@@ -437,6 +437,30 @@ class autoptimizeScripts extends autoptimizeBase {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Determines wheter a <script> $tag can be excluded from minification (as already minified) based on:
+     * - inject_min_late being active
+     * - filename ending in `min.js`
+     * - filename matching `js/jquery/jquery.js` (wordpress core jquery, is minified)
+     * - filename matching one passed in the consider minified filter
+     * 
+     * @param string $jsPath
+     * @return bool
+	 */
+	private function can_inject_late($jsPath) {
+		$consider_minified_array = apply_filters('autoptimize_filter_js_consider_minified',false);
+        if ( $this->inject_min_late !== true ) {
+            // late-inject turned off
+            return false;
+        } else if ( (strpos($jsPath,"min.js") === false) && ( strpos($jsPath,"wp-includes/js/jquery/jquery.js") === false ) && ( str_replace($consider_minified_array, '', $jsPath) === $jsPath ) ) {
+			// file not minified based on filename & filter
+			return false;
+        } else {
+            // phew, all is safe, we can late-inject
+            return true;
         }
     }
 }
