@@ -326,22 +326,24 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
     printf( __( '%1$s files, totalling %2$s Kbytes (calculated at %3$s)', 'autoptimize'), $AOstatArr[0], $AOcacheSize, date("H:i e", $AOstatArr[2]) );
 ?></td>
 </tr>
-<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
-<th scope="row"><?php _e('Save aggregated script/css as static files?','autoptimize'); ?></th>
-<td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_nogzip" <?php echo get_option('autoptimize_cache_nogzip','1')?'checked="checked" ':''; ?>/>
-<?php _e('By default files saved are static css/js, uncheck this option if your webserver doesn\'t properly handle the compression and expiry.','autoptimize'); ?></label></td>
-</tr>
 </table>
 </li>
 
 <li class="<?php echo $hiddenClass;?>itemDetail ao_adv">
 <h2 class="itemTitle"><?php _e('Misc Options','autoptimize'); ?></h2>
 <table class="form-table"> 
-<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
-<th scope="row"><?php _e('Also optimize for logged in users?','autoptimize'); ?></th>
-<td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo get_option('autoptimize_optimize_logged','1')?'checked="checked" ':''; ?>/>
-<?php _e('By default Autoptimize is also active for logged on users, uncheck not to optimize when logged in e.g. to use a pagebuilder.','autoptimize'); ?></label></td>
-</tr>
+	<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
+		<th scope="row"><?php _e('Save aggregated script/css as static files?','autoptimize'); ?></th>
+		<td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_nogzip" <?php echo get_option('autoptimize_cache_nogzip','1')?'checked="checked" ':''; ?>/>
+			<?php _e('By default files saved are static css/js, uncheck this option if your webserver doesn\'t properly handle the compression and expiry.','autoptimize'); ?></label>
+		</td>
+	</tr>
+	<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
+		<th scope="row"><?php _e('Also optimize for logged in users?','autoptimize'); ?></th>
+		<td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo get_option('autoptimize_optimize_logged','1')?'checked="checked" ':''; ?>/>
+			<?php _e('By default Autoptimize is also active for logged on users, uncheck not to optimize when logged in e.g. to use a pagebuilder.','autoptimize'); ?></label>
+		</td>
+	</tr>
 </table>
 </li>
 
