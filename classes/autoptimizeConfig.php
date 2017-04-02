@@ -71,11 +71,11 @@ class autoptimizeConfig {
 }
 
 /* animate "show adv" button */
-#ao_show_adv { animation: watchmenow 3s linear 0s 10; }
+#ao_show_adv { animation: watchmenow 3s linear 5s 10; }
 #ao_show_adv:hover { animation: none; }
 @keyframes watchmenow {
   0% { box-shadow: unset; }
-  100% { box-shadow: 0px 0px 20px #008ec2; }
+  100% { box-shadow: 0px 0px 20px yellow; }
 }
 
 /* form */
