@@ -66,6 +66,12 @@ class autoptimizeHTML extends autoptimizeBase {
                 }
             }
 
+			// revslider data attribs somehow suffer from HTML optimization, this fixes that
+            if ( class_exists('RevSlider') || apply_filters('autoptimize_filter_html_dataattrib_cleanup', false) ) {
+				$this->content = preg_replace('#\n(data-.*$)\n#Um',' $1 ', $this->content);
+				$this->content = preg_replace('#(=\"[^"]*\")(\w)#','$1 $2', $this->content);
+			}
+
             return true;
         }
         
