@@ -27,6 +27,9 @@ if (is_admin()) {
     include AUTOPTIMIZE_PLUGIN_DIR.'classlesses/autoptimizePartners.php';
 }
 
+// load speedupper
+include(AUTOPTIMIZE_PLUGIN_DIR.'classlesses/autoptimizeSpeedupper.php');
+
 // Do we gzip when caching (needed early to load autoptimizeCache.php)
 define('AUTOPTIMIZE_CACHE_NOGZIP',(bool) get_option('autoptimize_cache_nogzip'));
 
@@ -197,7 +200,6 @@ function autoptimize_start_buffering() {
                 ob_end_clean();
             }
         }
-                
         // Now, start the real thing!
         ob_start('autoptimize_end_buffering');
     }
