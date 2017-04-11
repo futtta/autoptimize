@@ -104,6 +104,13 @@ class autoptimizeCache {
         include_once(AUTOPTIMIZE_PLUGIN_DIR.'classlesses/autoptimizePageCacheFlush.php');
         add_action("autoptimize_action_cachepurged","autoptimize_flush_pagecache",10,0);
 
+        // warm cache (part of speedupper)?
+        if ( apply_filters('autoptimize_filter_speedupper', true) ) {
+            $warmCacheUrl = site_url()."/?ao_speedup_cachebuster=".rand(1,100000);
+            $warmCache = @wp_remote_get($warmCacheUrl);
+            unset($warmCache);
+        }
+
         return true;
     }
 

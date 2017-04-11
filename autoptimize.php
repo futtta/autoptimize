@@ -27,9 +27,6 @@ if (is_admin()) {
     include AUTOPTIMIZE_PLUGIN_DIR.'classlesses/autoptimizePartners.php';
 }
 
-// load speedupper
-include(AUTOPTIMIZE_PLUGIN_DIR.'classlesses/autoptimizeSpeedupper.php');
-
 // Do we gzip when caching (needed early to load autoptimizeCache.php)
 define('AUTOPTIMIZE_CACHE_NOGZIP',(bool) get_option('autoptimize_cache_nogzip'));
 
@@ -144,6 +141,11 @@ function autoptimize_start_buffering() {
     $ao_noptimize = (bool) apply_filters( 'autoptimize_filter_noptimize', $ao_noptimize );
 
     if (!is_feed() && !$ao_noptimize && !is_admin() && ( !function_exists('is_customize_preview') || !is_customize_preview() ) ) {
+        // load speedupper conditionally (true by default?)
+        if ( apply_filters('autoptimize_filter_speedupper', true) ) {
+            include(AUTOPTIMIZE_PLUGIN_DIR.'classlesses/autoptimizeSpeedupper.php');
+        }
+
         // Config element
         $conf = autoptimizeConfig::instance();
 
