@@ -65,9 +65,6 @@ switch($autoptimize_major_version) {
             switch_to_blog( $original_blog_id );    
         }
         $majorUp = true;
-    case "2.0":
-    case "2.1":
-		$majorUp = true;
     }
 
 if ( $majorUp === true ) {
