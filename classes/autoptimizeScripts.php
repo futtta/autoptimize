@@ -58,7 +58,7 @@ class autoptimizeScripts extends autoptimizeBase {
 
         // get extra exclusions settings or filter
         $excludeJS = $options['js_exclude'];
-        $excludeJS = apply_filters( 'autoptimize_filter_js_exclude', $excludeJS );
+        $excludeJS = apply_filters( 'autoptimize_filter_js_exclude', $excludeJS, $this->content );
         if ($excludeJS!=="") {
             if (is_array($excludeJS)) {
                 if(($removeKeys = array_keys($excludeJS,"remove")) !== false) {
