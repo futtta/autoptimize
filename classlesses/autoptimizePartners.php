@@ -29,7 +29,7 @@ function ao_partners() {
     .itemDetail {
         background: #fff;
         width: 250px;
-        min-height: 280px;
+        min-height: 290px;
         border: 1px solid #ccc;
         float: left;
         padding: 15px;
