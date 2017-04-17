@@ -25,26 +25,26 @@ class autoptimizeScripts extends autoptimizeBase {
         if ($noptimizeJS) return false;
 
         // only optimize known good JS?
-        $whitelistJS = apply_filters( 'autoptimize_filter_js_whitelist', "" );
+        $whitelistJS = apply_filters( 'autoptimize_filter_js_whitelist', '', $this->content );
         if (!empty($whitelistJS)) {
             $this->whitelist = array_filter(array_map('trim',explode(",",$whitelistJS)));
         }
 
         // is there JS we should simply remove
-        $removableJS = apply_filters( 'autoptimize_filter_js_removables', '');
+        $removableJS = apply_filters( 'autoptimize_filter_js_removables', '', $this->content );
         if (!empty($removableJS)) {
             $this->jsremovables = array_filter(array_map('trim',explode(",",$removableJS)));
         }
 
         // only header?
-        if( apply_filters('autoptimize_filter_js_justhead',$options['justhead']) == true ) {
+        if( apply_filters('autoptimize_filter_js_justhead', $options['justhead']) == true ) {
             $content = explode('</head>',$this->content,2);
             $this->content = $content[0].'</head>';
             $this->restofcontent = $content[1];
         }
         
         // include inline?
-        if( apply_filters('autoptimize_js_include_inline',$options['include_inline']) == true ) {
+        if( apply_filters('autoptimize_js_include_inline', $options['include_inline']) == true ) {
             $this->include_inline = true;
         }
 
@@ -220,7 +220,7 @@ class autoptimizeScripts extends autoptimizeBase {
                 if($this->trycatch) {
                     $script = 'try{'.$script.'}catch(e){}';
                 }
-                $tmpscript = apply_filters( 'autoptimize_js_individual_script', $script, "" );
+                $tmpscript = apply_filters( 'autoptimize_js_individual_script', $script, '' );
                 if ( has_filter('autoptimize_js_individual_script') && !empty($tmpscript) ) {
                     $script=$tmpscript;
                     $this->alreadyminified=true;
