@@ -31,8 +31,8 @@ function ao_js_snippetcache($jsin,$jsfilename) {
                 $scriptsrc.=";";
             }
         }
-        if (!empty($jsfilename)) {
-            // don't cache inline CSS to avoid risk of cache-explosion
+        if ( !empty($jsfilename) && str_replace( apply_filters('autoptimize_filter_js_speedup_cache',false), '', $jsfilename ) === $jsfilename ) {
+            // don't cache inline CSS or if filter says no
             $ccheck->cache($scriptsrc,'text/javascript');
         }
     }
@@ -75,8 +75,8 @@ function ao_css_snippetcache($cssin,$cssfilename) {
             $stylesrc=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $stylesrc);
             $stylesrc=autoptimizeStyles::fixurls($cssfilename,$stylesrc);
         }
-        if (!empty($cssfilename)) {
-            // don't cache inline CSS to avoid risk of cache-explosion
+        if ( !empty($cssfilename) && ( str_replace( apply_filters('autoptimize_filter_css_speedup_cache',false), '', $cssfilename ) === $cssfilename ) ) {
+            // only cache CSS if not inline and allowed by filter
             $ccheck->cache($stylesrc,'text/css');
         }
     }
