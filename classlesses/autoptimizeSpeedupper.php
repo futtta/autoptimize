@@ -1,53 +1,57 @@
 <?php
 /*
-Autoptimize SpeedUp; minify & cache each JS/ CSS separately + warm the cache
+Autoptimize SpeedUp; minify & cache each JS/ CSS separately
 */
 
-function ao_js_snippetcache($jsin,$scriptname) {
-    if (strpos($scriptname,"min.js")===false) {
-        $md5hash = "snippet_".md5($jsin);
-        $ccheck = new autoptimizeCache($md5hash,'js');
-        if($ccheck->check()) {
-                $scriptsrc = $ccheck->retrieve();
-        } else {
+function ao_js_snippetcache($jsin,$jsfilename) {
+    $md5hash = "snippet_".md5($jsin);
+    $ccheck = new autoptimizeCache($md5hash,'js');
+    if($ccheck->check()) {
+        $scriptsrc = $ccheck->retrieve();
+    } else {
+        if ( (strpos($jsfilename,"min.js") === false) && ( strpos($jsfilename,"js/jquery/jquery.js") === false ) && ( str_replace(apply_filters('autoptimize_filter_js_consider_minified',false), '', $jsfilename) === $jsfilename ) ) {
             if(class_exists('JSMin')) {
-                    $tmp_jscode = trim(JSMin::minify($jsin));
-                    if (!empty($tmp_jscode)) {
-                            $scriptsrc = $tmp_jscode;
-                            unset($tmp_jscode);
-                            $ccheck->cache($scriptsrc,'text/javascript');
-                    } else {
-                            $scriptsrc=$jsin;
-                    }
+                $tmp_jscode = trim(JSMin::minify($jsin));
+                if (!empty($tmp_jscode)) {
+                        $scriptsrc = $tmp_jscode;
+                        unset($tmp_jscode);
+                } else {
+                        $scriptsrc=$jsin;
+                }
             } else {
-                    $scriptsrc=$jsin;
+                $scriptsrc=$jsin;
+            }
+        } else {
+            // do some housekeeping here to remove comments & linebreaks and stuff
+            $scriptsrc=preg_replace("#^\s*\/\/.*$#Um","",$jsin);
+            $scriptsrc=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Us","",$scriptsrc);
+            $scriptsrc=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $scriptsrc);
+
+            if ((substr($scriptsrc,-1,1)!==";")&&(substr($scriptsrc,-1,1)!=="}")) {
+                $scriptsrc.=";";
             }
         }
-        unset($ccheck);
-    } else {
-        // do some housekeeping here to remove comments & linebreaks and stuff
-        $scriptsrc=preg_replace("#^\s*\/\/.*$#Um","",$jsin);
-        $scriptsrc=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Us","",$scriptsrc);
-        $scriptsrc=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $scriptsrc);
-
-        if ((substr($scriptsrc,-1,1)!==";")&&(substr($scriptsrc,-1,1)!=="}")) {
-            $scriptsrc.=";";
-        }
-
-        if (get_option("autoptimize_js_trycatch")==="on") {
-            $scriptsrc="try{".$scriptsrc."}catch(e){}";
+        if (!empty($jsfilename)) {
+            // don't cache inline CSS to avoid risk of cache-explosion
+            $ccheck->cache($scriptsrc,'text/javascript');
         }
     }
+    unset($ccheck);
+
+    if (get_option("autoptimize_js_trycatch")==="on") {
+        $scriptsrc="try{".$scriptsrc."}catch(e){}";
+    }
+
     return $scriptsrc;
 }
 
-function ao_css_snippetcache($cssin,$filename) {
+function ao_css_snippetcache($cssin,$cssfilename) {
     $md5hash = "snippet_".md5($cssin);
     $ccheck = new autoptimizeCache($md5hash,'css');
     if($ccheck->check()) {
         $stylesrc = $ccheck->retrieve();
     } else {
-        if (strpos($filename,"min.css")===false) {
+        if ( ( strpos($cssfilename,"min.css") === false ) && ( str_replace( apply_filters('autoptimize_filter_css_consider_minified',false), '', $cssfilename ) === $cssfilename ) ) {
             if (class_exists('Minify_CSS_Compressor')) {
                 $tmp_code = trim(Minify_CSS_Compressor::process($cssin));
             } else if(class_exists('CSSmin')) {
@@ -69,14 +73,14 @@ function ao_css_snippetcache($cssin,$filename) {
             // .min.css -> no heavy-lifting, just some cleanup
             $stylesrc=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Us","",$cssin);
             $stylesrc=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $stylesrc);
-            $stylesrc=autoptimizeStyles::fixurls($filename,$stylesrc);
+            $stylesrc=autoptimizeStyles::fixurls($cssfilename,$stylesrc);
         }
-        if (!empty($filename)) {
+        if (!empty($cssfilename)) {
             // don't cache inline CSS to avoid risk of cache-explosion
             $ccheck->cache($stylesrc,'text/css');
         }
-        unset($ccheck);
     }
+    unset($ccheck);
     return $stylesrc;
 }
 
