@@ -26,7 +26,7 @@ class autoptimizeStyles extends autoptimizeBase {
         $noptimizeCSS = apply_filters( 'autoptimize_filter_css_noptimize', false, $this->content );
         if ($noptimizeCSS) return false;
 
-        $whitelistCSS = apply_filters( 'autoptimize_filter_css_whitelist', '' );
+        $whitelistCSS = apply_filters( 'autoptimize_filter_css_whitelist', '', $this->content );
         if (!empty($whitelistCSS)) {
             $this->whitelist = array_filter(array_map('trim',explode(",",$whitelistCSS)));
         }
@@ -60,7 +60,7 @@ class autoptimizeStyles extends autoptimizeBase {
         
         // what CSS shouldn't be autoptimized
         $excludeCSS = $options['css_exclude'];
-        $excludeCSS = apply_filters( 'autoptimize_filter_css_exclude', $excludeCSS );
+        $excludeCSS = apply_filters( 'autoptimize_filter_css_exclude', $excludeCSS, $this->content );
         if ($excludeCSS!=="") {
             $this->dontmove = array_filter(array_map('trim',explode(",",$excludeCSS)));
         } else {
@@ -70,17 +70,17 @@ class autoptimizeStyles extends autoptimizeBase {
         // should we defer css?
         // value: true/ false
         $this->defer = $options['defer'];
-        $this->defer = apply_filters( 'autoptimize_filter_css_defer', $this->defer );
+        $this->defer = apply_filters( 'autoptimize_filter_css_defer', $this->defer, $this->content );
 
         // should we inline while deferring?
         // value: inlined CSS
         $this->defer_inline = $options['defer_inline'];
-        $this->defer_inline = apply_filters( 'autoptimize_filter_css_defer_inline', $this->defer_inline );
+        $this->defer_inline = apply_filters( 'autoptimize_filter_css_defer_inline', $this->defer_inline, $this->content );
 
         // should we inline?
         // value: true/ false
         $this->inline = $options['inline'];
-        $this->inline = apply_filters( 'autoptimize_filter_css_inline', $this->inline );
+        $this->inline = apply_filters( 'autoptimize_filter_css_inline', $this->inline, $this->content );
         
         // get cdn url
         $this->cdn_url = $options['cdn_url'];
@@ -438,7 +438,7 @@ class autoptimizeStyles extends autoptimizeBase {
             
             $code = $this->inject_minified($code);
             
-            $tmp_code = apply_filters( 'autoptimize_css_after_minify',$code );
+            $tmp_code = apply_filters( 'autoptimize_css_after_minify', $code );
             if (!empty($tmp_code)) {
                 $code = $tmp_code;
                 unset($tmp_code);
@@ -496,7 +496,7 @@ class autoptimizeStyles extends autoptimizeBase {
         
         // Inject the new stylesheets
         $replaceTag = array("<title","before");
-        $replaceTag = apply_filters( 'autoptimize_filter_css_replacetag', $replaceTag );
+        $replaceTag = apply_filters( 'autoptimize_filter_css_replacetag', $replaceTag, $this->content );
 
         if ($this->inline == true) {
             foreach($this->csscode as $media => $code) {
@@ -508,8 +508,8 @@ class autoptimizeStyles extends autoptimizeBase {
                 $noScriptCssBlock = "<noscript id=\"aonoscrcss\">";
                 $defer_inline_code=$this->defer_inline;
                 if(!empty($defer_inline_code)){
-                    if ( apply_filters( 'autoptimize_filter_css_critcss_minify',true ) ) {
-                        $iCssHash=md5($defer_inline_code);
+                    if ( apply_filters( 'autoptimize_filter_css_critcss_minify', true ) ) {
+                        $iCssHash = md5($defer_inline_code);
                         $iCssCache = new autoptimizeCache($iCssHash,'css');
                         if($iCssCache->check()) { 
                             // we have the optimized inline CSS in cache
@@ -611,7 +611,7 @@ class autoptimizeStyles extends autoptimizeBase {
     }
     
     private function ismovable($tag) {
-		if (apply_filters('autoptimize_filter_css_dontaggregate',false)) {
+		if ( apply_filters('autoptimize_filter_css_dontaggregate', false) ) {
 			return false;
         } else if (!empty($this->whitelist)) {
             foreach ($this->whitelist as $match) {
@@ -637,7 +637,7 @@ class autoptimizeStyles extends autoptimizeBase {
     }
     
     private function can_inject_late($cssPath,$css) {
-		$consider_minified_array = apply_filters('autoptimize_filter_css_consider_minified',false);
+		$consider_minified_array = apply_filters('autoptimize_filter_css_consider_minified', false, $cssPath);
         if ( $this->inject_min_late !== true ) {
             // late-inject turned off
             return false;
