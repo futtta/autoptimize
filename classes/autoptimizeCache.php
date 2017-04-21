@@ -186,11 +186,7 @@ class autoptimizeCache {
             if (is_file($htaccess_tmpl)) { 
                 $htAccessContent=file_get_contents($htaccess_tmpl);
             } else if (is_multisite() || AUTOPTIMIZE_CACHE_NOGZIP == false) {
-                $htAccessContent='<IfModule mod_headers.c>
-        Header set Vary "Accept-Encoding"
-        Header set Cache-Control "max-age=10672000, must-revalidate"
-</IfModule>
-<IfModule mod_expires.c>
+                $htAccessContent='<IfModule mod_expires.c>
         ExpiresActive On
         ExpiresByType text/css A30672000
         ExpiresByType text/javascript A30672000
@@ -213,11 +209,7 @@ class autoptimizeCache {
     </Files>
 </IfModule>';
             } else {
-                $htAccessContent='<IfModule mod_headers.c>
-        Header set Vary "Accept-Encoding"
-        Header set Cache-Control "max-age=10672000, must-revalidate"
-</IfModule>
-<IfModule mod_expires.c>
+                $htAccessContent='<IfModule mod_expires.c>
         ExpiresActive On
         ExpiresByType text/css A30672000
         ExpiresByType text/javascript A30672000
