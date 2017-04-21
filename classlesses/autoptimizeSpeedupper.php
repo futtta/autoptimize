@@ -1,6 +1,9 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /*
-Autoptimize SpeedUp; minify & cache each JS/ CSS separately
+* Autoptimize SpeedUp; minify & cache each JS/ CSS separately
+* new in Autoptimize 2.2
 */
 
 function ao_js_snippetcache($jsin,$jsfilename) {
