@@ -87,5 +87,11 @@ function ao_css_snippetcache($cssin,$cssfilename) {
     return $stylesrc;
 }
 
+function ao_css_snippet_filestartremover($cssin) {
+	// speedupper results in aggregated CSS not being minified, so the filestart-marker AO adds when aggregating need to be removed
+	return str_replace(array('/*FILESTART*/','/*FILESTART2*/'),'',$cssin);
+}
+
 add_filter('autoptimize_css_individual_style','ao_css_snippetcache',10,2);
 add_filter('autoptimize_js_individual_script','ao_js_snippetcache',10,2);
+add_filter('autoptimize_css_after_minify','ao_css_snippet_filestartremover',10,2);
