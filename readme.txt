@@ -10,7 +10,7 @@ Autoptimize speeds up your website and helps you save bandwidth by aggregating a
 
 == Description ==
 
-Autoptimize makes optimizing your site really easy. It concatenates all scripts and styles, minifies and compresses them, adds expires headers, caches them, and moves styles to the page head and can move scripts to the footer. It also minifies the HTML code itself, making your page really lightweight. There are advanced options and an extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
+Autoptimize makes optimizing your site really easy. It can aggregate, minify and cache scripts and styles, injects CSS in the page head by default and can move and defer scripts to the footer. It also minifies the HTML code itself, making your page really lightweight. There are advanced options and an extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
 
 If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [WP Super Cache](http://wordpress.org/extend/plugins/wp-super-cache/), [HyperCache](http://wordpress.org/extend/plugins/hyper-cache/), [Comet Cache](https://wordpress.org/plugins/comet-cache/) or [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler).
 
@@ -29,6 +29,10 @@ Just install from your WordPress "Plugins > Add New" screen and all will be well
 = What does the plugin do to help speed up my site? =
 
 It concatenates all scripts and styles, minifies and compresses them, adds expires headers, caches them, and moves styles to the page head, and scripts (optionally) to the footer. It also minifies the HTML code itself, making your page really lightweight.
+
+= But I'm on HTTP/2, so I don't need Autoptimize? =
+
+HTTP/2 is a great step forward for sure, reducing the impact of multiple requests from the same server significantly by using the same connection to perform several concurrent requests. That being said, concatenation of CSS/ JS can still make sense, as described in [this css-tricks.com article](https://css-tricks.com/http2-real-world-performance-test-analysis/) and this [blogpost from one of the Ebay engineers](http://calendar.perfplanet.com/2015/packaging-for-performance/). The conclusion; configure, test, reconfigure, retest, tweak and look what works best in your context. Maybe it's just HTTP/2, maybe it's HTTP/2 + aggregation and minification, maybe it's HTTP/2 + minification (which AO can do as well).
 
 = Will this work with my blog? =
 
@@ -71,7 +75,7 @@ Despite above objections, there are 3rd party solutions to automatically purge t
 
 = So should I aggregate inline CSS/ JS? =
 
-Before Autoptimize 2.0.0, inline code was always optimized with all CSS pushed in the head-section and all JS at the end with a defer-flag. This often caused 2 problems; the priority of inline CSS got lost and inline JS could contain page- or request-specific code which broke Autoptimize's caching mechanism leading to too many cached files and the minification running over and over. This is why as from 2.0.0 by default inline code is not optimized (except for those upgrading from previous versions). Additionally, to avoid inline JS breaking because the optimized JS is not available, JS is forced in head by default. If you want to squeeze out as much performance as possible, you should indeed tick the "aggregate inline"-options and disable "force JS into head", while off course keeping an eye out for the disadvantages listed above.
+Before Autoptimize 2.0.0, inline code was always optimized with all CSS pushed in the head-section and all JS at the end with a defer-flag. This often caused 2 problems; the priority of inline CSS got lost and inline JS could contain page- or request-specific code which broke Autoptimize's caching mechanism leading to too many cached files and the minification running over and over. This is why as from AQ 2.0 by default inline code is not optimized (except for those upgrading from previous versions). Additionally, to avoid inline JS breaking because jquery is not available, `js/jquery/jquery.js` is excluded by default.
 
 = What can I do with the API? =
 
@@ -160,11 +164,11 @@ Disable the option to have Autoptimize active for logged on users and go crazy d
 
 = Revolution Slider is broken! =
 
-You can fix this by adding `js/jquery/jquery.js` to the comma-separated list of JS optimization exclusion (this is excluded in the default configuration).
+Make sure `js/jquery/jquery.js` is in the comma-separated list of JS optimization exclusions (this is excluded in the default configuration).
 
 = I'm getting "jQuery is not defined" errors =
 
-In that case you have un-aggregated JavaScript that requires jQuery to be loaded, so you'll have to either aggregate that JavaScript (ticking the "also aggregate inline JS"-option) or add `js/jquery/jquery.js` to the comma-separated list of JS optimization exclusions.
+In that case you have un-aggregated JavaScript that requires jQuery to be loaded, so you'll have to add `js/jquery/jquery.js` to the comma-separated list of JS optimization exclusions.
 
 = My Autoptimized CSS/ JS is broken after upgrading from 2.1 to 2.2! =
 
@@ -176,7 +180,7 @@ add_filter('autoptimize_filter_speedupper','__return_false');
 
 = I use NextGen Galleries and a lot of JS is not aggregated/ minified? =
 
-NextGen Galleries does some nifty stuff to add JavaScript. In order for Autoptimize to be able to aggregate that, you can either disable Nextgen Gallery's resourced manager with this code snippet `add_filter( 'run_ngg_resource_manager', '__return_false' );` or you can tell Autoptimize to initialize earlier, by adding this to your wp-config.php: `define("AUTOPTIMIZE_INIT_EARLIER","true");`
+NextGen Galleries does some nifty stuff to add JavaScript. In order for Autoptimize to be able to aggregate that, you can either disable Nextgen Gallery's resourced manage with this code snippet `add_filter( 'run_ngg_resource_manager', '__return_false' );` or you can tell Autoptimize to initialize earlier, by adding this to your wp-config.php: `define("AUTOPTIMIZE_INIT_EARLIER","true");`
 
 = What is noptimize? =
 
@@ -200,14 +204,6 @@ Yes, but this is off by default. You can enable this by passing ´true´ to ´au
 = Where can I get help? =
 
 You can get help on the [wordpress.org support forum](http://wordpress.org/support/plugin/autoptimize). If you are 100% sure this your problem cannot be solved using Autoptimize configuration and that you in fact discovered a bug in the code, you can [create an issue on GitHub](https://github.com/futtta/autoptimize/issues).
-
-= What information should I include when requesting support =
-
-* A description of the problem, including screenshots and information from your browser's Error/ debug console
-* URL of your blog (you can turn Autoptimize off, but should be willing to turn it briefly on to have the error visible)
-* your Autoptimize settings (including a description of changes you made to the configuration to try to troubleshoot yourself)
-* the Theme used (including the Theme's download link)
-* optionally plugins used (if you suspect one or more plugins are raising havoc)
 
 = I want out, how should I remove Autoptimize? =
 
