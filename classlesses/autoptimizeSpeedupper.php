@@ -87,11 +87,17 @@ function ao_css_snippetcache($cssin,$cssfilename) {
     return $stylesrc;
 }
 
-function ao_css_snippet_filestartremover($cssin) {
+function ao_css_speedup_cleanup($cssin) {
 	// speedupper results in aggregated CSS not being minified, so the filestart-marker AO adds when aggregating need to be removed
-	return str_replace(array('/*FILESTART*/','/*FILESTART2*/'),'',$cssin);
+	return trim(str_replace(array('/*FILESTART*/','/*FILESTART2*/'),'',$cssin));
+}
+
+function ao_js_speedup_cleanup($jsin) {
+	// cleanup
+	return trim($jsin);
 }
 
 add_filter('autoptimize_css_individual_style','ao_css_snippetcache',10,2);
 add_filter('autoptimize_js_individual_script','ao_js_snippetcache',10,2);
-add_filter('autoptimize_css_after_minify','ao_css_snippet_filestartremover',10,2);
+add_filter('autoptimize_css_after_minify','ao_css_speedup_cleanup',10,1);
+add_filter('autoptimize_js_after_minify','ao_js_speedup_cleanup',10,1);
