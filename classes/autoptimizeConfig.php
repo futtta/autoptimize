@@ -376,7 +376,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
             echo $AO_banner;
         }
         ?>
-        <li><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ</a> or post your question on <a href='http://wordpress.org/support/plugin/autoptimize'>the support-forum</a>.","autoptimize"); ?></li>
+        <li><?php _e("Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ here</a>.","autoptimize"); ?></li>
         <li><?php _e("Happy with Autoptimize?","autoptimize"); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php _e("Try my other plugins!","autoptimize"); ?></a></li>
         </ul>
     </div>
