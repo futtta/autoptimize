@@ -3,6 +3,8 @@
 * below code handles updates and is only included by autoptimize.php if/ when needed
 */
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 $majorUp = false;        
 $autoptimize_major_version=substr($autoptimize_db_version,0,3);
 

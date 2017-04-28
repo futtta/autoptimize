@@ -3,6 +3,8 @@
 Classlessly add a "more tools" tab to promote (future) AO addons and/ or affiliate services
 */
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 add_action('admin_init', 'ao_partner_tabs_preinit');
 function ao_partner_tabs_preinit() {
     if (apply_filters('autoptimize_filter_show_partner_tabs',true)) {

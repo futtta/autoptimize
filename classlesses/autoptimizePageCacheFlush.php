@@ -2,6 +2,8 @@
 // flush as many page cache plugin's caches as possible
 // hyper cache and gator cache hook into AO, so we don't need to :-)
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 function autoptimize_flush_pagecache() {
     if(function_exists('wp_cache_clear_cache')) {
         if (is_multisite()) {

@@ -1,10 +1,10 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
 /*
 * Autoptimize SpeedUp; minify & cache each JS/ CSS separately
 * new in Autoptimize 2.2
 */
+
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 function ao_js_snippetcache($jsin,$jsfilename) {
     $md5hash = "snippet_".md5($jsin);
