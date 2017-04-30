@@ -78,17 +78,17 @@ add_action( 'init', 'autoptimize_load_plugin_textdomain' );
 function autoptimize_uninstall(){
     autoptimizeCache::clearall();
 
-    $delete_options=array("autoptimize_cache_clean", "autoptimize_cache_nogzip", "autoptimize_css", "autoptimize_css_datauris", "autoptimize_css_justhead", "autoptimize_css_defer", "autoptimize_css_defer_inline", "autoptimize_css_inline", "autoptimize_css_exclude", "autoptimize_html", "autoptimize_html_keepcomments", "autoptimize_js", "autoptimize_js_exclude", "autoptimize_js_forcehead", "autoptimize_js_justhead", "autoptimize_js_trycatch", "autoptimize_version", "autoptimize_show_adv", "autoptimize_cdn_url", "autoptimize_cachesize_notice","autoptimize_css_include_inline","autoptimize_js_include_inline","autoptimize_css_nogooglefont","autoptimize_optimize_logged");
+    $delete_options=array("autoptimize_cache_clean", "autoptimize_cache_nogzip", "autoptimize_css", "autoptimize_css_datauris", "autoptimize_css_justhead", "autoptimize_css_defer", "autoptimize_css_defer_inline", "autoptimize_css_inline", "autoptimize_css_exclude", "autoptimize_html", "autoptimize_html_keepcomments", "autoptimize_js", "autoptimize_js_exclude", "autoptimize_js_forcehead", "autoptimize_js_justhead", "autoptimize_js_trycatch", "autoptimize_version", "autoptimize_show_adv", "autoptimize_cdn_url", "autoptimize_cachesize_notice","autoptimize_css_include_inline","autoptimize_js_include_inline","autoptimize_css_nogooglefont","autoptimize_optimize_logged","autoptimize_optimize_checkout");
 
     if ( !is_multisite() ) {
-        foreach ($delete_options as $del_opt) {    delete_option( $del_opt ); }
+        foreach ($delete_options as $del_opt) { delete_option( $del_opt ); }
     } else {
         global $wpdb;
         $blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
         $original_blog_id = get_current_blog_id();
         foreach ( $blog_ids as $blog_id ) {
             switch_to_blog( $blog_id );
-            foreach ($delete_options as $del_opt) {    delete_option( $del_opt ); }
+            foreach ($delete_options as $del_opt) { delete_option( $del_opt ); }
         }
         switch_to_blog( $original_blog_id );
     }
@@ -133,8 +133,19 @@ function autoptimize_start_buffering() {
     }
 
 	// if setting says not to optimize logged in user and user is logged in
-	if (get_option('autoptimize_optimize_logged','on') !== 'on' && is_user_logged_in() && current_user_can('edit_posts') ) {
+	if ( get_option('autoptimize_optimize_logged','on') !== 'on' && is_user_logged_in() && current_user_can('edit_posts') ) {
 		$ao_noptimize = true;
+	}
+
+	// if setting says not to optimize cart/ checkout
+	if ( get_option('autoptimize_optimize_checkout','on') !== 'on' ) {
+		// checking for woocommerce, easy digital downloads and wp ecommerce
+		foreach ( array("is_checkout","is_cart","edd_is_checkout","wpsc_is_cart","wpsc_is_checkout") as $shopCond ) {
+			if ( function_exists($shopCond) && $shopCond() ) {
+				$ao_noptimize = true;
+				break;
+			}
+		}
 	}
 
     // filter you can use to block autoptimization on your own terms

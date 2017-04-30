@@ -344,6 +344,18 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 			<?php _e('By default Autoptimize is also active for logged on users, uncheck not to optimize when logged in e.g. to use a pagebuilder.','autoptimize'); ?></label>
 		</td>
 	</tr>
+	<?php
+		if ( function_exists("is_checkout") || function_exists("is_cart") || function_exists("edd_is_checkout") || function_exists("wpsc_is_cart") || function_exists("wpsc_is_checkout") ) {
+			?>
+				<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
+					<th scope="row"><?php _e('Also optimize shop cart/ checkout?','autoptimize'); ?></th>
+					<td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_checkout" <?php echo get_option('autoptimize_optimize_checkout','1')?'checked="checked" ':''; ?>/>
+						<?php _e('By default Autoptimize is also active on your shop\'s cart/ checkout, uncheck not to optimize those.','autoptimize'); ?></label>
+					</td>
+				</tr>
+			<?php
+		}
+	?>
 </table>
 </li>
 
@@ -578,6 +590,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
         register_setting('autoptimize','autoptimize_cache_nogzip');
         register_setting('autoptimize','autoptimize_show_adv');
         register_setting('autoptimize','autoptimize_optimize_logged');
+        register_setting('autoptimize','autoptimize_optimize_checkout');
     }
 
     public function setmeta($links,$file=null) {
@@ -626,7 +639,8 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
                 'autoptimize_cdn_url' => "",
                 'autoptimize_cache_nogzip' => 1,
                 'autoptimize_show_adv' => 0,
-                'autoptimize_optimize_logged' => 1
+                'autoptimize_optimize_logged' => 1,
+                'autoptimize_optimize_checkout' => 1
                 );
 
             //Override with user settings
