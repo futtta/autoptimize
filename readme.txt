@@ -162,6 +162,10 @@ Autoptimize does a number of checks before actually optimizing. When one of the 
 
 Disable the option to have Autoptimize active for logged on users and go crazy dragging and dropping ;-)
 
+= Help, my shop checkout/ payment don't work!! =
+
+Disable the option to optimize cart/ checkout pages (works for WooCommerce, Easy Digital Downloads and WP eCommerce).
+
 = Revolution Slider is broken! =
 
 Make sure `js/jquery/jquery.js` is in the comma-separated list of JS optimization exclusions (this is excluded in the default configuration).
@@ -219,7 +223,8 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 = 2.2.0 =
 * new: Autoptimize minifies first (caching the individual snippets) and aggregrates the minified snippets, resulting in huge performance improvements for uncached JS/ CSS.
-* new: option to enable/ disable AO for logged in users
+* new: option to enable/ disable AO for logged in users (on by default)
+* new: option to enable/ disable AO on WooCommerce, Easy Digital Downloads or WP eCommerce cart/ checkout page (on by default)
 * improvement: switched to [rel=preload + Filamentgroup’s loadCSS for CSS deferring](http://blog.futtta.be/2017/02/24/autoptimize-css-defer-switching-to-loadcss-soon/)
 * improvement: switched to YUI CSS minifier PHP-port 2.8.4-p10 (so not to the 3.x branch yet)
 * improvements to the logic of which JS/ CSS can be optimized (getPath function) increasing reliability of the aggregation process
