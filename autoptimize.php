@@ -133,7 +133,7 @@ function autoptimize_start_buffering() {
     }
 
 	// if setting says not to optimize logged in user and user is logged in
-	if (get_option('autoptimize_optimize_logged','on') !== 'on' && is_user_logged_in()) {
+	if (get_option('autoptimize_optimize_logged','on') !== 'on' && is_user_logged_in() && current_user_can('edit_posts') ) {
 		$ao_noptimize = true;
 	}
 
