@@ -14,7 +14,8 @@ Autoptimize makes optimizing your site really easy. It can aggregate, minify and
 
 If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [WP Super Cache](http://wordpress.org/plugins/wp-super-cache/), [HyperCache](http://wordpress.org/plugins/hyper-cache/), [Comet Cache](https://wordpress.org/plugins/comet-cache/) or [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler).
 
-We also provide great [Autoptimize Pro Support and Web Performance Optimization services](http://autoptimize.com/).
+> <strong>Premium Support</strong><br>
+> We provide great [Autoptimize Pro Support and Web Performance Optimization services](http://autoptimize.com/), check out our offering on (http://autoptimize.com/)!
 
 (Speed-surfing image under creative commons [by LL Twistiti](https://www.flickr.com/photos/twistiti/818552808/))
 

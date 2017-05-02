@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Autoptimize
-Plugin URI: http:///autoptimize.com/
+Plugin URI: http://autoptimize.com/
 Description: Optimizes your website, concatenating the CSS and JavaScript code, and compressing it.
 Version: 2.1.99
 Author: Frank Goossens (futtta)
