@@ -192,7 +192,7 @@ NextGen Galleries does some nifty stuff to add JavaScript. In order for Autoptim
 = What is noptimize? =
 
 Starting with version 1.6.6 Autoptimize excludes everything inside noptimize tags, e.g.:
-`<!--noptimize--><script>alert('this will not get autoptimized');</script><!--/noptimize-->`
+`&lt;!--noptimize-->&lt;script>alert('this will not get autoptimized');&lt;/script>&lt;!--/noptimize-->`
 
 You can do this in your page/ post content, in widgets and in your theme files (consider creating [a child theme](http://codex.wordpress.org/Child_Themes) to avoid your work being overwritten by theme updates).
 
