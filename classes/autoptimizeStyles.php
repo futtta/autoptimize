@@ -566,7 +566,9 @@ class autoptimizeStyles extends autoptimizeBase {
     
     static function fixurls($file,$code) {
         $file = str_replace(WP_ROOT_DIR,'',$file);
-        $file = str_replace(AUTOPTIMIZE_WP_CONTENT_NAME,'',$file);
+        /* rollback as per https://github.com/futtta/autoptimize/issues/94
+        * $file = str_replace(AUTOPTIMIZE_WP_CONTENT_NAME,'',$file);
+        */
         $dir = dirname($file); // Like /themes/expound/css
 
         // switch all imports to the url() syntax
@@ -592,7 +594,10 @@ class autoptimizeStyles extends autoptimizeBase {
                     continue;
                 } else {
                     // relative URL
-                    $newurl = preg_replace('/https?:/','',str_replace(" ","%20",AUTOPTIMIZE_WP_CONTENT_URL.str_replace('//','/',$dir.'/'.$url)));
+                    /* rollback as per https://github.com/futtta/autoptimize/issues/94
+                    * $newurl = preg_replace('/https?:/','',str_replace(" ","%20",AUTOPTIMIZE_WP_CONTENT_URL.str_replace('//','/',$dir.'/'.$url)));
+                    */
+                    $newurl = preg_replace('/https?:/','',str_replace(" ","%20",AUTOPTIMIZE_WP_ROOT_URL.str_replace('//','/',$dir.'/'.$url)));
 
                     $hash = md5($url);
                     $code = str_replace($matches[0][$k],$hash,$code);
