@@ -192,6 +192,9 @@ class autoptimizeCache {
         ExpiresByType text/javascript A30672000
         ExpiresByType application/javascript A30672000
 </IfModule>
+<IfModule mod_headers.c>
+    Header append Cache-Control "public, immutable"
+</IfModule>
 <IfModule mod_deflate.c>
         <FilesMatch "\.(js|css)$">
         SetOutputFilter DEFLATE
@@ -214,6 +217,9 @@ class autoptimizeCache {
         ExpiresByType text/css A30672000
         ExpiresByType text/javascript A30672000
         ExpiresByType application/javascript A30672000
+</IfModule>
+<IfModule mod_headers.c>
+    Header append Cache-Control "public, immutable"
 </IfModule>
 <IfModule mod_deflate.c>
     <FilesMatch "\.(js|css)$">

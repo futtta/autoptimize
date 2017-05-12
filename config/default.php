@@ -54,7 +54,7 @@ if (($modTimeMatch)||($eTagMatch)) {
 	header('Vary: Accept-Encoding');
 	header('Content-Length: '.strlen($contents));
 	header('Content-type: %%CONTENT%%; charset=utf-8');
-	header('Cache-Control: max-age='.$expireTime.', public, must-revalidate');
+	header('Cache-Control: max-age='.$expireTime.', public, immutable');
 	header('Expires: '.gmdate('D, d M Y H:i:s', time() + $expireTime).' GMT'); //10 years
 	header('ETag: ' . $eTag);
 	header('Last-Modified: '.gmdate('D, d M Y H:i:s', $modTime).' GMT');
