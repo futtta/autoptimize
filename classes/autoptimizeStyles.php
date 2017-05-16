@@ -573,8 +573,11 @@ class autoptimizeStyles extends autoptimizeBase {
 
         // switch all imports to the url() syntax
         $code=preg_replace('#@import ("|\')(.+?)\.css.*("|\')#','@import url("${2}.css")',$code);
+        
+        // avoid ASSETS_REGEX eating closing comment */ if it preceeds the semi-colon
+        $code_nocomments = preg_replace('#/\*.*\*/#Us','',$code);
 
-        if( preg_match_all( self::ASSETS_REGEX, $code, $matches ) ) {
+        if( preg_match_all( self::ASSETS_REGEX, $code_nocomments, $matches ) ) {
             $replace = array();
             foreach($matches[1] as $k => $url) {
                 // Remove quotes
@@ -611,6 +614,7 @@ class autoptimizeStyles extends autoptimizeBase {
             }    
             //Do the replacing here to avoid breaking URLs
             $code = str_replace(array_keys($replace),array_values($replace),$code);
+            unset($code_nocomments);
         }    
         return $code;
     }
