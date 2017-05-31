@@ -670,12 +670,15 @@ class autoptimizeStyles extends autoptimizeBase {
     
     private function maybe_cdn_urls($inUrl) {
         $url = trim($inUrl," \t\n\r\0\x0B\"'");
+        $urlPath = parse_url($url,PHP_URL_PATH);
+
         // exclude fonts from CDN except if filter returns true
-        if ( !preg_match('#\.(woff2?|eot|ttf|otf)$#i',$url) || apply_filters('autoptimize_filter_css_fonts_cdn',false) ) {
+        if ( !preg_match('#\.(woff2?|eot|ttf|otf)$#i',$urlPath) || apply_filters('autoptimize_filter_css_fonts_cdn',false) ) {
             $cdn_url = $this->url_replace_cdn($url);
         } else {
             $cdn_url = $url;
         }
+                
         return $cdn_url;
     }
 }
