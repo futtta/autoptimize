@@ -564,58 +564,67 @@ class autoptimizeStyles extends autoptimizeBase {
         return $this->content;
     }
     
-    static function fixurls($file,$code) {
-        $file = str_replace(WP_ROOT_DIR,'',$file);
-        /* rollback as per https://github.com/futtta/autoptimize/issues/94
-        * $file = str_replace(AUTOPTIMIZE_WP_CONTENT_NAME,'',$file);
-        */
-        $dir = dirname($file); // Like /themes/expound/css
+    static function fixurls($file, $code) {
+        // Switch all imports to the url() syntax
+        $code = preg_replace( '#@import ("|\')(.+?)\.css.*("|\')#', '@import url("${2}.css")', $code );
 
-        // switch all imports to the url() syntax
-        $code=preg_replace('#@import ("|\')(.+?)\.css.*("|\')#','@import url("${2}.css")',$code);
-        
-        // avoid ASSETS_REGEX eating closing comment */ if it preceeds the semi-colon
-        $code_nocomments = preg_replace('#/\*.*\*/#Us','',$code);
+        if ( preg_match_all( self::ASSETS_REGEX, $code, $matches ) ) {
+            $file = str_replace( WP_ROOT_DIR, '/', $file );
+            $dir = dirname( $file ); // Like /themes/expound/css
 
-        if( preg_match_all( self::ASSETS_REGEX, $code_nocomments, $matches ) ) {
+            // $dir should not contain backslashes, since it's used to replace
+            // urls, but it can contain them when running on Windows because
+            // fixurls() is sometimes called with `ABSPATH . 'index.php'`
+            $dir = str_replace( '\\', '/', $dir );
+            unset( $file ); // not used below at all
+
             $replace = array();
-            foreach($matches[1] as $k => $url) {
+            foreach ( $matches[1] as $k => $url ) {
                 // Remove quotes
-                $url = trim($url," \t\n\r\0\x0B\"'");
-                $noQurl = trim($url,"\"'");
-                
-                if ($noQurl === '') { continue; }
-                
-                if ($url!==$noQurl) {
-                    $removedQuotes=true;
+                $url    = trim( $url," \t\n\r\0\x0B\"'" );
+                $noQurl = trim( $url, "\"'" );
+                if ( $url !== $noQurl ) {
+                    $removedQuotes = true;
                 } else {
-                    $removedQuotes=false;
+                    $removedQuotes = false;
                 }
-                $url=$noQurl;
-                if(substr($url,0,1)=='/' || preg_match('#^(https?://|ftp://|data:)#i',$url)) {
-                    //URL is absolute
+
+                if ( '' === $noQurl ) {
+                    continue;
+                }
+
+                $url = $noQurl;
+                if ( '/' === $url{0} || preg_match( '#^(https?://|ftp://|data:)#i', $url ) ) {
+                    // URL is protocol-relative, host-relative or something we don't touch
                     continue;
                 } else {
-                    // relative URL
-                    /* rollback as per https://github.com/futtta/autoptimize/issues/94
-                    * $newurl = preg_replace('/https?:/','',str_replace(" ","%20",AUTOPTIMIZE_WP_CONTENT_URL.str_replace('//','/',$dir.'/'.$url)));
-                    */
-                    $newurl = preg_replace('/https?:/','',str_replace(" ","%20",AUTOPTIMIZE_WP_ROOT_URL.str_replace('//','/',$dir.'/'.$url)));
+                    // Relative URL
+                    $newurl = preg_replace( '/https?:/', '', str_replace( ' ', '%20', AUTOPTIMIZE_WP_ROOT_URL . str_replace( '//', '/', $dir . '/' . $url ) ) );
 
-                    $hash = md5($url);
-                    $code = str_replace($matches[0][$k],$hash,$code);
+                    // Hash the url + whatever was behind potentially for replacement
+                    // We must do this, or different css classes referencing the same bg image (but
+                    // different parts of it, say, in sprites and such) loose their stuff...
+                    $hash = md5( $url . $matches[2][$k] );
+                    $code = str_replace( $matches[0][$k], $hash, $code );
 
-                    if (!empty($removedQuotes)) {
-                        $replace[$hash] = 'url(\''.$newurl.'\')'.$matches[2][$k];
+                    if ( $removedQuotes ) {
+                        $replace[$hash] = "url('" . $newurl . "')" . $matches[2][$k];
                     } else {
-                        $replace[$hash] = 'url('.$newurl.')'.$matches[2][$k];
+                        $replace[$hash] = 'url(' . $newurl . ')' . $matches[2][$k];
                     }
                 }
-            }    
-            //Do the replacing here to avoid breaking URLs
-            $code = str_replace(array_keys($replace),array_values($replace),$code);
-            unset($code_nocomments);
-        }    
+            }
+
+            if ( ! empty( $replace ) ) {
+                // Sort the replacements array by key length in desc order (so that the longest strings are replaced first)
+                $keys = array_map( 'strlen', array_keys( $replace ) );
+                array_multisort( $keys, SORT_DESC, $replace );
+
+                // Replace URLs found within $code
+                $code = str_replace( array_keys( $replace ), array_values( $replace ), $code );
+            }
+        }
+
         return $code;
     }
     
