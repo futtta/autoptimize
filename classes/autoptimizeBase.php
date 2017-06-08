@@ -307,7 +307,6 @@ abstract class autoptimizeBase {
                     $filecontent=file_get_contents($filepath);
                     
                     if ( md5($filecontent) === $filehash ) {
-                        error_log("hash ".$filehash." matches calculated ".md5($filecontent)." for ".$filepath.", proceeding");
                         // remove BOM
                         $filecontent = preg_replace("#\x{EF}\x{BB}\x{BF}#","",$filecontent);
 
@@ -334,7 +333,6 @@ abstract class autoptimizeBase {
                             $filecontent="";
                         }
                     } else {
-                        error_log("hash ".$filehash." does not match calculated ".md5($filecontent)." for ".$filepath.", proceeding");
                         $filecontent="";
                     }
 
