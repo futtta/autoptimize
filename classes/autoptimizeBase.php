@@ -316,7 +316,7 @@ abstract class autoptimizeBase {
                     $filecontent=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Um","",$filecontent);
                     $filecontent=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $filecontent);
 
-                    // specific stuff for JS-files
+                    // differentiate between JS, CSS and other files
                     if (substr($filepath,-3,3)===".js") {
                         if ((substr($filecontent,-1,1)!==";")&&(substr($filecontent,-1,1)!=="}")) {
                             $filecontent.=";";
@@ -327,6 +327,8 @@ abstract class autoptimizeBase {
                         }
                     } else if ((substr($filepath,-4,4)===".css")) {
                         $filecontent=autoptimizeStyles::fixurls($filepath,$filecontent);
+                    } else {
+                        $filecontent="";
                     }
 
                     // return 
