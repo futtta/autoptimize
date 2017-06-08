@@ -212,14 +212,16 @@ class autoptimizeStyles extends autoptimizeBase {
                 //<link>
                 if($css !== false && file_exists($css) && is_readable($css)) {
                     $cssPath = $css;
-                    $css = $this->fixurls($cssPath,file_get_contents($cssPath));
+                    $cssContents = file_get_contents($cssPath);
+                    $cssHash = md5($cssContents);
+                    $css = $this->fixurls($cssPath,$cssContents);
                     $css = preg_replace('/\x{EF}\x{BB}\x{BF}/','',$css);
                     $tmpstyle = apply_filters( 'autoptimize_css_individual_style', $css, $cssPath );
                     if (has_filter('autoptimize_css_individual_style') && !empty($tmpstyle)) {
                         $css=$tmpstyle;
                         $this->alreadyminified=true;
                     } else if ($this->can_inject_late($cssPath,$css)) {
-                        $css="/*!%%INJECTLATER%%".base64_encode($cssPath)."|".md5($css)."%%INJECTLATER%%*/";
+                        $css="/*!%%INJECTLATER%%".base64_encode($cssPath)."|".$cssHash."%%INJECTLATER%%*/";
                     }
                 } else {
                     // Couldn't read CSS. Maybe getpath isn't working?

@@ -303,31 +303,38 @@ abstract class autoptimizeBase {
                 create_function(
                     '$matches',
                     '$filepath=base64_decode(strtok($matches[1],"|"));
+                    $filehash=strtok("|");
                     $filecontent=file_get_contents($filepath);
+                    
+                    if ( md5($filecontent) === $filehash ) {
+                        error_log("hash ".$filehash." matches calculated ".md5($filecontent)." for ".$filepath.", proceeding");
+                        // remove BOM
+                        $filecontent = preg_replace("#\x{EF}\x{BB}\x{BF}#","",$filecontent);
 
-                    // remove BOM
-                    $filecontent = preg_replace("#\x{EF}\x{BB}\x{BF}#","",$filecontent);
-
-                    // remove comments and blank lines
-                    if (substr($filepath,-3,3)===".js") {
-                        $filecontent=preg_replace("#^\s*\/\/.*$#Um","",$filecontent);
-                    }
-
-                    $filecontent=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Um","",$filecontent);
-                    $filecontent=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $filecontent);
-
-                    // differentiate between JS, CSS and other files
-                    if (substr($filepath,-3,3)===".js") {
-                        if ((substr($filecontent,-1,1)!==";")&&(substr($filecontent,-1,1)!=="}")) {
-                            $filecontent.=";";
+                        // remove comments and blank lines
+                        if (substr($filepath,-3,3)===".js") {
+                            $filecontent=preg_replace("#^\s*\/\/.*$#Um","",$filecontent);
                         }
 
-                        if (get_option("autoptimize_js_trycatch")==="on") {
-                            $filecontent="try{".$filecontent."}catch(e){}";
+                        $filecontent=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Um","",$filecontent);
+                        $filecontent=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $filecontent);
+
+                        // differentiate between JS, CSS and other files
+                        if (substr($filepath,-3,3)===".js") {
+                            if ((substr($filecontent,-1,1)!==";")&&(substr($filecontent,-1,1)!=="}")) {
+                                $filecontent.=";";
+                            }
+
+                            if (get_option("autoptimize_js_trycatch")==="on") {
+                                $filecontent="try{".$filecontent."}catch(e){}";
+                            }
+                        } else if ((substr($filepath,-4,4)===".css")) {
+                            $filecontent=autoptimizeStyles::fixurls($filepath,$filecontent);
+                        } else {
+                            $filecontent="";
                         }
-                    } else if ((substr($filepath,-4,4)===".css")) {
-                        $filecontent=autoptimizeStyles::fixurls($filepath,$filecontent);
                     } else {
+                        error_log("hash ".$filehash." does not match calculated ".md5($filecontent)." for ".$filepath.", proceeding");
                         $filecontent="";
                     }
 

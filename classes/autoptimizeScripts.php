@@ -230,8 +230,10 @@ class autoptimizeScripts extends autoptimizeBase {
                 //External script
                 if($script !== false && file_exists($script) && is_readable($script)) {
                     $scriptsrc = file_get_contents($script);
+                    $scripthash = md5($scriptsrc);
                     $scriptsrc = preg_replace('/\x{EF}\x{BB}\x{BF}/','',$scriptsrc);
                     $scriptsrc = rtrim($scriptsrc,";\n\t\r").';';
+
                     //Add try-catch?
                     if($this->trycatch) {
                         $scriptsrc = 'try{'.$scriptsrc.'}catch(e){}';
@@ -241,7 +243,7 @@ class autoptimizeScripts extends autoptimizeBase {
                         $scriptsrc=$tmpscriptsrc;
                         $this->alreadyminified=true;
                     } else if ($this->can_inject_late($script)) {
-                        $scriptsrc="/*!%%INJECTLATER%%".base64_encode($script)."|".md5($scriptsrc)."%%INJECTLATER%%*/";
+                        $scriptsrc="/*!%%INJECTLATER%%".base64_encode($script)."|".$scripthash."%%INJECTLATER%%*/";
                     }
                     $this->jscode .= "\n".$scriptsrc;
                 }/*else{
