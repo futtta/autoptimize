@@ -222,9 +222,6 @@ function autoptimize_start_buffering() {
 function autoptimize_end_buffering($content) {
     if ( ((stripos($content,"<html") === false) && (stripos($content,"<!DOCTYPE html") === false)) || preg_match('/<html[^>]*(?:amp|⚡)/',$content) === 1 || stripos($content,"<xsl:stylesheet") !== false ) { return $content; }
 
-    // we need clean HTML before optimization
-    $content=preg_replace("#%%(?:INJECTLATER|COMMENTS|IEHACK|NOPTIMIZE)%%.*?%%(?:INJECTLATER|COMMENTS|IEHACK|NOPTIMIZE)%%#is","",$content);
-    
     // load URL constants as late as possible to allow domain mapper to kick in
     if (function_exists("domain_mapping_siteurl")) {
         define('AUTOPTIMIZE_WP_SITE_URL',domain_mapping_siteurl(get_current_blog_id()));
@@ -241,6 +238,7 @@ function autoptimize_end_buffering($content) {
         define('AUTOPTIMIZE_CACHE_URL',AUTOPTIMIZE_WP_CONTENT_URL.AUTOPTIMIZE_CACHE_CHILD_DIR);
     }
     define('AUTOPTIMIZE_WP_ROOT_URL',str_replace(AUTOPTIMIZE_WP_CONTENT_NAME,'',AUTOPTIMIZE_WP_CONTENT_URL));
+    define('AUTOPTIMIZE_HASH',wp_hash(AUTOPTIMIZE_CACHE_URL.microtime()));
 
     // Config element
     $conf = autoptimizeConfig::instance();

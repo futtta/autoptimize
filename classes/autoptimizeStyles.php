@@ -97,7 +97,7 @@ class autoptimizeStyles extends autoptimizeBase {
                 '#<(?:no)?script.*?<\/(?:no)?script>#is',
                 create_function(
                     '$matches',
-                    'return "%%SCRIPT%%".base64_encode($matches[0])."%%SCRIPT%%";'
+                    'return "%%SCRIPT".AUTOPTIMIZE_HASH."%%".base64_encode($matches[0])."%%SCRIPT%%";'
                 ),
                 $this->content
             );
@@ -283,7 +283,7 @@ class autoptimizeStyles extends autoptimizeBase {
                                 $code=$tmpstyle;
                                 $this->alreadyminified=true;
                             } else if ($this->can_inject_late($path,$code)) {
-                                $code="/*!%%INJECTLATER%%".base64_encode($path)."|".md5($code)."%%INJECTLATER%%*/";
+                                $code="/*!%%INJECTLATER".AUTOPTIMIZE_HASH."%%".base64_encode($path)."|".md5($code)."%%INJECTLATER%%*/";
                             }
                             
                             if(!empty($code)) {
@@ -478,7 +478,7 @@ class autoptimizeStyles extends autoptimizeBase {
         // restore (no)script
         if ( strpos( $this->content, '%%SCRIPT%%' ) !== false ) { 
             $this->content = preg_replace_callback(
-                '#%%SCRIPT%%(.*?)%%SCRIPT%%#is',
+                '#%%SCRIPT'.AUTOPTIMIZE_HASH.'%%(.*?)%%SCRIPT%%#is',
                 create_function(
                     '$matches',
                     'return base64_decode($matches[1]);'

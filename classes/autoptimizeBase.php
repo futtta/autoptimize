@@ -145,7 +145,7 @@ abstract class autoptimizeBase {
                 '#<!--\s?noptimize\s?-->.*?<!--\s?/\s?noptimize\s?-->#is',
                 create_function(
                     '$matches',
-                    'return "%%NOPTIMIZE%%".base64_encode($matches[0])."%%NOPTIMIZE%%";'
+                    'return "%%NOPTIMIZE".AUTOPTIMIZE_HASH."%%".base64_encode($matches[0])."%%NOPTIMIZE%%";'
                 ),
                 $noptimize_in
             );
@@ -159,7 +159,7 @@ abstract class autoptimizeBase {
     protected function restore_noptimize($noptimize_in) {
         if ( strpos( $noptimize_in, '%%NOPTIMIZE%%' ) !== false ) { 
             $noptimize_out = preg_replace_callback(
-                '#%%NOPTIMIZE%%(.*?)%%NOPTIMIZE%%#is',
+                '#%%NOPTIMIZE'.AUTOPTIMIZE_HASH.'%%(.*?)%%NOPTIMIZE%%#is',
                 create_function(
                     '$matches',
                     'return base64_decode($matches[1]);'
@@ -178,7 +178,7 @@ abstract class autoptimizeBase {
                 '#<!--\[if.*?\[endif\]-->#is',
                 create_function(
                     '$matches',
-                    'return "%%IEHACK%%".base64_encode($matches[0])."%%IEHACK%%";'
+                    'return "%%IEHACK".AUTOPTIMIZE_HASH."%%".base64_encode($matches[0])."%%IEHACK%%";'
                 ),
                 $iehacks_in
             );
@@ -191,7 +191,7 @@ abstract class autoptimizeBase {
     protected function restore_iehacks($iehacks_in) {
         if ( strpos( $iehacks_in, '%%IEHACK%%' ) !== false ) { 
             $iehacks_out = preg_replace_callback(
-                '#%%IEHACK%%(.*?)%%IEHACK%%#is',
+                '#%%IEHACK'.AUTOPTIMIZE_HASH.'%%(.*?)%%IEHACK%%#is',
                 create_function(
                     '$matches',
                     'return base64_decode($matches[1]);'
@@ -210,7 +210,7 @@ abstract class autoptimizeBase {
                 '#<!--.*?-->#is',
                 create_function(
                     '$matches',
-                    'return "%%COMMENTS%%".base64_encode($matches[0])."%%COMMENTS%%";'
+                    'return "%%COMMENTS".AUTOPTIMIZE_HASH."%%".base64_encode($matches[0])."%%COMMENTS%%";'
                 ),
                 $comments_in
             );
@@ -223,7 +223,7 @@ abstract class autoptimizeBase {
     protected function restore_comments($comments_in) {
         if ( strpos( $comments_in, '%%COMMENTS%%' ) !== false ) {
             $comments_out = preg_replace_callback(
-                '#%%COMMENTS%%(.*?)%%COMMENTS%%#is',
+                '#%%COMMENTS'.AUTOPTIMIZE_HASH.'%%(.*?)%%COMMENTS%%#is',
                 create_function(
                     '$matches',
                     'return base64_decode($matches[1]);'
@@ -299,7 +299,7 @@ abstract class autoptimizeBase {
     protected function inject_minified($in) {
         if ( strpos( $in, '%%INJECTLATER%%' ) !== false ) {
             $out = preg_replace_callback(
-                '#\/\*\!%%INJECTLATER%%(.*?)%%INJECTLATER%%\*\/#is',
+                '#\/\*\!%%INJECTLATER'.AUTOPTIMIZE_HASH.'%%(.*?)%%INJECTLATER%%\*\/#is',
                 create_function(
                     '$matches',
                     '$filepath=base64_decode(strtok($matches[1],"|"));

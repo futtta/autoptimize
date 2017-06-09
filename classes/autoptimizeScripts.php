@@ -243,7 +243,7 @@ class autoptimizeScripts extends autoptimizeBase {
                         $scriptsrc=$tmpscriptsrc;
                         $this->alreadyminified=true;
                     } else if ($this->can_inject_late($script)) {
-                        $scriptsrc="/*!%%INJECTLATER%%".base64_encode($script)."|".$scripthash."%%INJECTLATER%%*/";
+                        $scriptsrc="/*!%%INJECTLATER".AUTOPTIMIZE_HASH."%%".base64_encode($script)."|".$scripthash."%%INJECTLATER%%*/";
                     }
                     $this->jscode .= "\n".$scriptsrc;
                 }/*else{
