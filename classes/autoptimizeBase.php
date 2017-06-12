@@ -420,4 +420,121 @@ abstract class autoptimizeBase {
 			return false;
 		}
 	}
+
+    /**
+     * Specialized method to create the INJECTLATER marker.
+     * These are somewhat "special", in the sense that they're additionally wrapped
+     * within an "exclamation mark style" comment, so that they're not stripped out by minifiers.
+     * They also currently contain the hash of the file's contents too (unlike other markers).
+     *
+     * @param string $filepath
+     * @param string $hash
+     * @return string
+     */
+    public static function build_injectlater_marker($filepath, $hash)
+    {
+        $contents = '/*!' . self::build_marker('INJECTLATER', $filepath, $hash) . '*/';
+        return $contents;
+    }
+
+    /**
+     * Creates and returns a `%%`-style named marker which holds
+     * the base64 encoded `$data`.
+     * If `$hash` is provided, it's appended to the base64 encoded string
+     * using `|` as the separator (in order to support building the
+     * somewhat special/different INJECTLATER marker).
+     *
+     * @param string $name Marker name
+     * @param string $data Marker data which will be encoded in base64
+     * @param string|null $hash Optional.
+     *
+     * @return string
+     */
+    public static function build_marker($name, $data, $hash = null)
+    {
+        // $name = strtoupper($name);
+        // Start the marker, add the data
+        $marker = '%%' . $name . AUTOPTIMIZE_HASH . '%%' . base64_encode( $data );
+        // Add the hash if provided
+        if ( null !== $hash ) {
+            $marker .= '|' . $hash;
+        }
+        // Close the marker
+        $marker .= '%%' . $name . '%%';
+        return $marker;
+    }
+
+    /**
+     * Returns true if the string is a valid regex.
+     *
+     * @param string $string
+     *
+     * @return bool
+     */
+    protected function str_is_valid_regex($string)
+    {
+        set_error_handler( function() {}, E_WARNING );
+        $is_regex = ( false !== preg_match( $string, '' ) );
+        restore_error_handler();
+        return $is_regex;
+    }
+
+    /**
+     * Searches for `$search` in `$content` (using either `preg_match()`
+     * or `strpos()`, depending on whether `$search` is a valid regex pattern or not).
+     * If something is found, it replaces `$content` using `$re_replace_pattern`,
+     * effectively creating our named markers (`%%{$marker}%%`.
+     * These are then at some point replaced back to their actual/original/modified
+     * contents using `autoptimizeBase::restore_marked_content()`.
+     *
+     * @param string $marker Marker name (without percent characters)
+     * @param string $search A string or full blown regex pattern to search for in $content. Uses `strpos()` or `preg_match()`
+     * @param string $re_replace_pattern Regex pattern to use when replacing contents
+     * @param string $content Content to work on
+     *
+     * @return string
+     */
+    protected function replace_contents_with_marker_if_exists($marker, $search, $re_replace_pattern, $content)
+    {
+        $found = false;
+        $is_regex = $this->str_is_valid_regex($search);
+        if ( $is_regex ) {
+            $found = preg_match( $search, $content );
+        } else {
+            $found = ( false !== strpos( $content, $search ) );
+        }
+        if ( $found ) {
+            $content = preg_replace_callback(
+                $re_replace_pattern,
+                create_function(
+                    '$matches',
+                    'return autoptimizeBase::build_marker("' . $marker . '", $matches[0]);'
+                ),
+                $content
+            );
+        }
+        return $content;
+    }
+
+    /**
+     * Complements `autoptimizeBase::replace_contents_with_marker_if_exists()`
+     *
+     * @param string $marker
+     * @param string $content
+     * @return string
+     */
+    protected function restore_marked_content($marker, $content)
+    {
+        if ( false !== strpos( $content, $marker ) ) {
+            $content = preg_replace_callback(
+                '#%%' . $marker . AUTOPTIMIZE_HASH . '%%(.*?)%%' . $marker . '%%#is',
+                create_function(
+                    '$matches',
+                    'return base64_decode($matches[1]);'
+                ),
+                $content
+            );
+        }
+        return $content;
+    }
 }
