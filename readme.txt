@@ -3,7 +3,7 @@ Contributors: futtta, optimizingmatters, turl
 Tags: css, html, javascript, js, optimize, speed, cache, aggregate, minimize, minification, performance, pagespeed
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
-Tested up to: 4.7
+Tested up to: 4.8
 Stable tag: 2.1.0
 
 Autoptimize speeds up your website and helps you save bandwidth by aggregating and minimizing JS, CSS and HTML.
@@ -233,6 +233,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * improvements to the logic of which JS/ CSS can be optimized (getPath function) increasing reliability of the aggregation process
 * API: Lots of extra filters, making AO (even) more flexible.
 * Lots of bugfixes and smaller improvements (see [GitHub commit log](https://github.com/futtta/autoptimize/commits/master))
+* tested and confirmed working in WordPress 4.8
 
 = 2.1.0 =
 * new: Autoptimize now appears in admin-toolbar with an easy view on cache size and the possibility to purge the cache (pass `false` to `autoptimize_filter_toolbar_show` filter to disable), a big thanks to [Pablo Custo](https://github.com/pablocusto) for his hard work on this nice feature!
