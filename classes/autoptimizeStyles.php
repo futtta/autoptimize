@@ -66,6 +66,9 @@ class autoptimizeStyles extends autoptimizeBase {
         } else {
             $this->dontmove = "";
         }
+        
+        // forcefully exclude CSS with data-noptimize attrib
+        $this->dontmove[]="data-noptimize";
 
         // should we defer css?
         // value: true/ false
