@@ -64,7 +64,7 @@ class autoptimizeStyles extends autoptimizeBase {
         if ($excludeCSS!=="") {
             $this->dontmove = array_filter(array_map('trim',explode(",",$excludeCSS)));
         } else {
-            $this->dontmove = "";
+            $this->dontmove = array();
         }
         
         // forcefully exclude CSS with data-noptimize attrib
