@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class autoptimizeStyles extends autoptimizeBase {
 
-    const ASSETS_REGEX = '/url\s*\(\s*(?!["\']?data:)(?![\'|\"]?[\#|\%|])([^)]+)\s*\)([^;},]*)/iU';
+    const ASSETS_REGEX = '/url\s*\(\s*(?!["\']?data:)(?![\'|\"]?[\#|\%|])([^)]+)\s*\)([^;},\s]*)/i';
 
     private $css = array();
     private $csscode = array();
@@ -64,7 +64,7 @@ class autoptimizeStyles extends autoptimizeBase {
         if ($excludeCSS!=="") {
             $this->dontmove = array_filter(array_map('trim',explode(",",$excludeCSS)));
         } else {
-            $this->dontmove = array();
+            $this->dontmove = a;
         }
         
         // forcefully exclude CSS with data-noptimize attrib
