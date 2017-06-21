@@ -4,7 +4,7 @@ Tags: css, html, javascript, js, optimize, speed, cache, aggregate, minimize, mi
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 
 Autoptimize speeds up your website and helps you save bandwidth by aggregating and minimizing JS, CSS and HTML.
 
