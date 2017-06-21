@@ -3,7 +3,7 @@
 Plugin Name: Autoptimize
 Plugin URI: http://autoptimize.com/
 Description: Optimizes your website, concatenating the CSS and JavaScript code, and compressing it.
-Version: 2.2.0
+Version: 2.2.1
 Author: Frank Goossens (futtta)
 Author URI: http://blog.futtta.be/
 Domain Path: localization/
