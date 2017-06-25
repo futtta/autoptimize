@@ -6,7 +6,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-function ao_js_snippetcache($jsin,$jsfilename) {
+function ao_js_snippetcacher($jsin,$jsfilename) {
     $md5hash = "snippet_".md5($jsin);
     $ccheck = new autoptimizeCache($md5hash,'js');
     if($ccheck->check()) {
@@ -48,7 +48,7 @@ function ao_js_snippetcache($jsin,$jsfilename) {
     return $scriptsrc;
 }
 
-function ao_css_snippetcache($cssin,$cssfilename) {
+function ao_css_snippetcacher($cssin,$cssfilename) {
     $md5hash = "snippet_".md5($cssin);
     $ccheck = new autoptimizeCache($md5hash,'css');
     if($ccheck->check()) {
@@ -97,7 +97,7 @@ function ao_js_speedup_cleanup($jsin) {
 	return trim($jsin);
 }
 
-add_filter('autoptimize_css_individual_style','ao_css_snippetcache',10,2);
-add_filter('autoptimize_js_individual_script','ao_js_snippetcache',10,2);
+add_filter('autoptimize_css_individual_style','ao_css_snippetcacher',10,2);
+add_filter('autoptimize_js_individual_script','ao_js_snippetcacher',10,2);
 add_filter('autoptimize_css_after_minify','ao_css_speedup_cleanup',10,1);
 add_filter('autoptimize_js_after_minify','ao_js_speedup_cleanup',10,1);
