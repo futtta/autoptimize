@@ -199,7 +199,7 @@ function autoptimize_start_buffering() {
                 }
             } else {
                 if (!class_exists('CSSmin')) {
-                    @include(AUTOPTIMIZE_PLUGIN_DIR.'classes/external/php/yui-php-cssmin-2.4.8-p10/cssmin.php');
+                    @include(AUTOPTIMIZE_PLUGIN_DIR.'classes/external/php/yui-php-cssmin-2.4.8-4_fgo.php');
                 }
             }
             if ( ! defined( 'COMPRESS_CSS' )) {
