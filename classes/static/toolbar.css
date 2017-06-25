@@ -240,3 +240,7 @@
 {
 	border-radius		: 50% !important;
 }
+
+/* fixes for toolbar on frontend for other themes messing things up */
+#wp-admin-bar-autoptimize tr{border:0 !important}
+#wp-admin-bar-autoptimize td{background-color:#32373c !important}
