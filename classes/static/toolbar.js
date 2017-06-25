@@ -58,7 +58,7 @@ jQuery( document ).ready(function()
 			data     : {'action':action, 'nonce':autoptimize_ajax_object.nonce},
 			dataType : 'json',
 			cache    : false,
-			timeout  : 5000,
+			timeout  : 9000,
 			success  : function( cleared )
 			{
 				// Remove the Autoptimize Loading Modal
