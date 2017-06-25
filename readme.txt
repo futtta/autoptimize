@@ -76,6 +76,24 @@ Instead you can keep the cache size at an acceptable level by either:
 
 Despite above objections, there are 3rd party solutions to automatically purge the AO cache, e.g. using [this code](https://wordpress.org/support/topic/contribution-autoptimize-cache-size-under-control-by-schedule-auto-cache-purge/) or [this plugin](https://wordpress.org/plugins/bi-clean-cache/), but for reasons above these are to be used only if you really know what you're doing.
 
+= "Clear cache" doesn't seem to work? =
+
+When clicking the "Delete Cache" link in the Autoptimize dropdown in the admin toolbar, you might to get a "Your cache might not have been purged successfully". In that case go to Autoptimizes setting page and click the "Save changes & clear cache"-button.
+
+Moreover don't worry if your cache never is down to 0 files/ 0KB, as Autoptimize (as from version 2.2) will automatically preload the cache immediately after it has been cleared to speed further minification significantly up.
+
+= Inline & defer does not work with CloudFlare's RocketLoader =
+
+At the moment (June 2017) when using "inline & defer", CloudFlare's RocketLoader changes the onload-JavaScript on the linked CSS (cfr. [Filamentgroup’s loadCSS](https://github.com/filamentgroup/loadCSS)), resulting in the deferred CSS not loading. [A support thread is open for this at CloudFlare's](https://wordpress.org/support/topic/rocket-loader-breaking-onload-js-on-linked-css/).
+
+= Autoptimized JS is render blocking? =
+
+If not forced in head, Autoptimized JS is not render blocking, except when you're also using Speed Booster Pack, which seems to be removing the "defer"-flag. [A support thread is open for this with the Speed Booster Pack developers](https://wordpress.org/support/topic/speed-booster-pack-autoptimized-js-defer-flag/).
+
+= I tried Autoptimize but my Google Pagespeed Scored barely improved =
+
+Autoptimize is not a simple "fix my Pagespeed-problems" plugin; it "only" aggregates & minifies (local) JS & CSS and allows for some nice extra's as removing Google Fonts and deferring the loading of the CSS. As such Autoptimize will allow you to improve your performance (load time measured in seconds) and will probably also help you tackle some specific Pagespeed warnings. If you want to improve further, you will probably also have to look into e.g. page caching, image optimization and your webserver configuration, which will improve real performance (again, load time as measured by e.g. https://webpagetest.org) and your "performance best practise" pagespeed ratings.
+
 = So should I aggregate inline CSS/ JS? =
 
 Before Autoptimize 2.0.0, inline code was always optimized with all CSS pushed in the head-section and all JS at the end with a defer-flag. This often caused 2 problems; the priority of inline CSS got lost and inline JS could contain page- or request-specific code which broke Autoptimize's caching mechanism leading to too many cached files and the minification running over and over. This is why as from AO 2.0 by default inline code is not optimized (except for those upgrading from previous versions). Additionally, to avoid inline JS breaking because jquery is not available, `js/jquery/jquery.js` is excluded by default.
@@ -223,6 +241,11 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.2.2 =
+* roll-back to previous battle-tested version of the CSS minifier
+* tweaks to Autoptimize toolbar menu (visual + timeout of "delete cache" AJAX call)
+* readme update
 
 = 2.2.1 =
 * fix for images being referenced in CSS not all being translated to correct path, leading to 404’s as reported by Jeff Inho
