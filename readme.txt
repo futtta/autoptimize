@@ -84,6 +84,10 @@ Instead you can keep the cache size at an acceptable level by either:
 
 Despite above objections, there are 3rd party solutions to automatically purge the AO cache, e.g. using [this code](https://wordpress.org/support/topic/contribution-autoptimize-cache-size-under-control-by-schedule-auto-cache-purge/) or [this plugin](https://wordpress.org/plugins/bi-clean-cache/), but for reasons above these are to be used only if you really know what you're doing.
 
+= Upon updating Autoptimize can't be reactivated =
+
+I have not been able to reproduce this, but had 2 users reporting that they had to temporarily disable W3 Total Cache to be able to re-activate the updated Autoptimize. No idea why this is happening, but this might help if you encounter that problem.
+
 = "Clear cache" doesn't seem to work? =
 
 When clicking the "Delete Cache" link in the Autoptimize dropdown in the admin toolbar, you might to get a "Your cache might not have been purged successfully". In that case go to Autoptimizes setting page and click the "Save changes & clear cache"-button.
