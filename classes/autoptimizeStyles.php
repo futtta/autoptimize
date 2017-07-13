@@ -571,7 +571,7 @@ class autoptimizeStyles extends autoptimizeBase {
     
     static function fixurls($file, $code) {
         // Switch all imports to the url() syntax
-        $code = preg_replace( '#@import ("|\')(.+?)\.css.*("|\')#', '@import url("${2}.css")', $code );
+        $code = preg_replace( '#@import ("|\')(.+?)\.css.*?("|\')#', '@import url("${2}.css")', $code );
 
         if ( preg_match_all( self::ASSETS_REGEX, $code, $matches ) ) {
             $file = str_replace( WP_ROOT_DIR, '/', $file );
