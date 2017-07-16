@@ -193,7 +193,7 @@ class autoptimizeCache {
         ExpiresByType application/javascript A30672000
 </IfModule>
 <IfModule mod_headers.c>
-    Header append Cache-Control "public, immutable"
+    Header set Cache-Control "public, immutable"
 </IfModule>
 <IfModule mod_deflate.c>
         <FilesMatch "\.(js|css)$">
