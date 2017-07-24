@@ -543,8 +543,13 @@ class autoptimizeStyles extends autoptimizeBase {
                 
                 //Add the stylesheet either deferred (import at bottom) or normal links in head
                 if($this->defer == true) {
-                    $preloadCssBlock .= '<link rel="preload" as="style" media="'.$media.'" href="'.$url.'" onload="this.rel=\'stylesheet\'" />';
+                    
+                    // Filter to modify the onload attribute - passes value and the stylesheet url
+                    $preloadOnLoad = apply_filters('autoptimize_filter_css_preload_onload', "this.rel=\'stylesheet\'", $url);
+                    
+                    $preloadCssBlock .= '<link rel="preload" as="style" media="'.$media.'" href="'.$url.'" onload="'.$preloadOnLoad.'" />';
                     $noScriptCssBlock .= '<link type="text/css" media="'.$media.'" href="'.$url.'" rel="stylesheet" />';
+                    
                 } else {
                     if (strlen($this->csscode[$media]) > $this->cssinlinesize) {
                         $this->inject_in_html('<link type="text/css" media="'.$media.'" href="'.$url.'" rel="stylesheet" />',$replaceTag);
@@ -561,7 +566,12 @@ class autoptimizeStyles extends autoptimizeBase {
 !function(a){if(a.loadCSS){var b=loadCSS.relpreload={};if(b.support=function(){try{return a.document.createElement("link").relList.supports("preload")}catch(b){return!1}},b.poly=function(){for(var b=a.document.getElementsByTagName("link"),c=0;c<b.length;c++){var d=b[c];"preload"===d.rel&&"style"===d.getAttribute("as")&&(a.loadCSS(d.href,d,d.getAttribute("media")),d.rel=null)}},!b.support()){b.poly();var c=a.setInterval(b.poly,300);a.addEventListener&&a.addEventListener("load",function(){b.poly(),a.clearInterval(c)}),a.attachEvent&&a.attachEvent("onload",function(){a.clearInterval(c)})}}}(this);</script>';
                 $noScriptCssBlock .= "</noscript>";
                 $this->inject_in_html($preloadCssBlock.$noScriptCssBlock,$replaceTag);
-                $this->inject_in_html($preloadPolyfill,array('</body>','before'));
+                
+                // Adds preload polyfill at end of body tag
+                $this->inject_in_html(
+                    apply_filters('autoptimize_css_preload_polyfill', $preloadPolyfill),
+                    array('</body>','before')
+                );
             }
         }
 
