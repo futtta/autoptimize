@@ -326,7 +326,8 @@ class CSSmin
 
         // Put the space back in some cases, to support stuff like
         // @media screen and (-webkit-min-device-pixel-ratio:0){
-        $css = preg_replace('/\band\(/i', 'and (', $css);
+        // based on regex from https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port/blob/v3.2.0/src/Minifier.php#L479
+        $css = preg_replace('/(\s|\)\s)(and|not|or)\(/i', '$1$2 (', $css);
 
         // Remove the spaces after the things that should not have spaces after them.
         $css = preg_replace('/([\!\{\}\:;\>\+\(\[\~\=,])\s+/S', '$1', $css);
