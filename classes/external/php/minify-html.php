@@ -136,8 +136,8 @@ class Minify_HTML {
             ,$this->_html);
         
         // trim each line.
-        // @todo take into account attribute values that span multiple lines.
-        $this->_html = preg_replace('/^\\s+|\\s+$/m', '', $this->_html);
+        // replace by space instead of '' to avoid newline after opening tag getting zapped
+        $this->_html = preg_replace('/^\s+|\s+$/m', ' ', $this->_html);
         
         // remove ws around block/undisplayed elements
         $this->_html = preg_replace('/\\s+(<\\/?(?:area|article|aside|base(?:font)?|blockquote|body'
