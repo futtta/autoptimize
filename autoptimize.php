@@ -46,7 +46,7 @@ if (is_multisite() && apply_filters( 'autoptimize_separate_blog_caches' , true )
     define('AUTOPTIMIZE_CACHE_DIR', WP_CONTENT_DIR.AUTOPTIMIZE_CACHE_CHILD_DIR);
 }
 define('AUTOPTIMIZE_CACHE_DELAY',true);
-define('WP_ROOT_DIR',str_replace(AUTOPTIMIZE_WP_CONTENT_NAME,'',WP_CONTENT_DIR));
+define('WP_ROOT_DIR',substr(WP_CONTENT_DIR, 0, strlen(WP_CONTENT_DIR)-strlen(AUTOPTIMIZE_WP_CONTENT_NAME)));
 
 // Initialize the cache at least once
 $conf = autoptimizeConfig::instance();
