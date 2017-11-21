@@ -34,7 +34,7 @@ class autoptimizeCLI extends WP_CLI_Command {
 		global $wp_filesystem;
 		$wp_filesystem->rmdir( AUTOPTIMIZE_CACHE_DIR . $clear, true );
 
-		WP_CLI::success( esc_html__( sprintf( '%s cache cleared.', strtoupper( $clear ) ),'autoptimize' ) );
+		WP_CLI::success( esc_html__( sprintf( '%s cache cleared.', strtoupper( $clear ) ), 'autoptimize' ) );
 	}
 
 }
