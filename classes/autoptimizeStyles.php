@@ -327,7 +327,7 @@ class autoptimizeStyles extends autoptimizeBase {
         foreach($this->csscode as &$code) {
             // Check for already-minified code
             $hash = md5($code);
-            apply_filters('autoptimize_filter_css_hash', $hash);
+            do_action( 'autoptimize_action_css_hash', $hash );
             $ccheck = new autoptimizeCache($hash,'css');
             if($ccheck->check()) {
                 $code = $ccheck->retrieve();
