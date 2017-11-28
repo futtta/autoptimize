@@ -32,7 +32,7 @@ function ao_cachechecker_setup() {
 
 add_action('ao_cachechecker', 'ao_cachechecker_cronjob');
 function ao_cachechecker_cronjob() {
-    $maxSize = (int) apply_filters( "autoptimize_filter_cachecheck_maxsize", 524288000);
+    $maxSize = (int) apply_filters( "autoptimize_filter_cachecheck_maxsize", 536870912);
     $doCacheCheck = (bool) apply_filters( "autoptimize_filter_cachecheck_do", true);
     $statArr=autoptimizeCache::stats(); 
     $cacheSize=round($statArr[1]);
