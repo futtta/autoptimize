@@ -32,10 +32,10 @@ function ao_cachechecker_setup() {
 
 add_action('ao_cachechecker', 'ao_cachechecker_cronjob');
 function ao_cachechecker_cronjob() {
-    $maxSize = (int) apply_filters( "autoptimize_filter_cachecheck_maxsize", 512000);
+    $maxSize = (int) apply_filters( "autoptimize_filter_cachecheck_maxsize", 524288000);
     $doCacheCheck = (bool) apply_filters( "autoptimize_filter_cachecheck_do", true);
     $statArr=autoptimizeCache::stats(); 
-    $cacheSize=round($statArr[1]/1024);
+    $cacheSize=round($statArr[1]);
     if (($cacheSize>$maxSize) && ($doCacheCheck)) {
         update_option("autoptimize_cachesize_notice",true);
         if (apply_filters('autoptimize_filter_cachecheck_sendmail',true)) {
