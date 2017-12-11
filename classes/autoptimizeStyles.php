@@ -269,7 +269,7 @@ class autoptimizeStyles extends autoptimizeBase {
             // remove comments to avoid importing commented-out imports
             $thiscss_nocomments = preg_replace('#/\*.*\*/#Us','',$thiscss);
 
-            while(preg_match_all('#@import.*(?:;|$)#Um',$thiscss_nocomments,$matches)) {
+            while(preg_match_all('#@import +(?:url)?(?:(?:\\(([\"\']?)(?:[^\"\')]+)\\1\\)|([\"\'])(?:[^\"\']+)\\2)(?:[^,;\"\']+(?:,[^,;\"\']+)*)?)(?:;)#m',$thiscss_nocomments,$matches)) {
                 foreach($matches[0] as $import)    {
                     if ($this->isremovable($import,$this->cssremovables)) {
                         $thiscss = str_replace($import,'',$thiscss);
