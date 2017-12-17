@@ -257,11 +257,6 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_datauris" <?php echo get_option('autoptimize_css_datauris')?'checked="checked" ':''; ?>/>
 <?php _e('Enable this to include small background-images in the CSS itself instead of as separate downloads.','autoptimize'); ?></label></td>
 </tr>
-<tr class="<?php echo $hiddenClass;?>css_sub ao_adv" valign="top">
-<th scope="row"><?php _e('Remove Google Fonts?','autoptimize'); ?></th>
-<td><label class="cb_label"><input type="checkbox" name="autoptimize_css_nogooglefont" <?php echo get_option('autoptimize_css_nogooglefont')?'checked="checked" ':''; ?>/>
-<?php _e('Check this if you don\'t need or want Google Fonts being loaded.','autoptimize'); ?></label></td>
-</tr>
 <?php if (get_option('autoptimize_css_justhead')) { ?>
 <tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv">
 <th scope="row"><?php _e('Look for styles only in &lt;head&gt;?','autoptimize'); echo ' <i>'. __('(deprecated)','autoptimize') . '</i>'; ?></th>
@@ -584,7 +579,6 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
         register_setting('autoptimize','autoptimize_css_defer_inline');
         register_setting('autoptimize','autoptimize_css_inline');
         register_setting('autoptimize','autoptimize_css_include_inline');
-        register_setting('autoptimize','autoptimize_css_nogooglefont');
         register_setting('autoptimize','autoptimize_cdn_url');
         register_setting('autoptimize','autoptimize_cache_clean');
         register_setting('autoptimize','autoptimize_cache_nogzip');
@@ -635,7 +629,6 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
                 'autoptimize_css_defer_inline' => "",
                 'autoptimize_css_inline' => 0,
                 'autoptimize_css_datauris' => 0,
-                'autoptimize_css_nogooglefont' => 0,
                 'autoptimize_cdn_url' => "",
                 'autoptimize_cache_nogzip' => 1,
                 'autoptimize_show_adv' => 0,
