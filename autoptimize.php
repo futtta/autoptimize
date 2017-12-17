@@ -322,5 +322,12 @@ register_activation_hook( __FILE__, 'autoptimize_activate' );
 
 include_once('classlesses/autoptimizeCacheChecker.php');
 
+add_action('plugins_loaded','includeAutoptimizeExtra');
+function includeAutoptimizeExtra() {
+    if ( apply_filters('autoptimize_filter_extra_activate',true) ) {
+        include_once('classlesses/autoptimizeExtra.php');
+    }
+}
+
 // Do not pollute other plugins
 unset($conf);
