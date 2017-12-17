@@ -189,18 +189,20 @@ function autoptimize_extra_gfonts($in) {
         $i++;
     }
 
+    $_fontsOut="";
     if ( $autoptimize_extra_options['autoptimize_extra_radio_field_4'] == "3" ) {
         // aggregate & link
         $_fontsString="";
+        $_subsetString="";
         foreach ($fontsCollection as $font) {
             $_fontsString .= '|'.trim( implode( '|' , $font["fonts"] ), '|' );
             if ( !empty( $font["subsets"] ) ) {
-                $subsetString .= implode( ',', $font["subsets"] ); 
+                $_subsetString .= implode( ',', $font["subsets"] ); 
             }
         }
                     
-        if (!empty($subsetString)) {
-            $_fontsString = $_fontsString."#038;subset=".$subsetString;
+        if (!empty($_subsetString)) {
+            $_fontsString = $_fontsString."#038;subset=".$_subsetString;
         }
 
         $_fontsString = str_replace( '|', '%7C', ltrim($_fontsString,'|') );
