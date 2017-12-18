@@ -275,42 +275,42 @@ function autoptimize_extra_options_page() {
     <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
     <form id='ao_settings_form' action='options.php' method='post'>
         <?php settings_fields('autoptimize_extra_settings'); ?>
-        <h2>Extra Auto-Optimizations</h2>
-        <span id='autoptimize_extra_descr'>The following settings can improve your site's performance even more.</span>
+        <h2><?php _e('Extra Auto-Optimizations','autoptimize'); ?></h2>
+        <span id='autoptimize_extra_descr'><?php _e('The following settings can improve your site\'s performance even more.','autoptimize'); ?></span>
         <table class="form-table">
             <tr>
-                <th scope="row">Remove emojis</th>
+                <th scope="row"><?php _e('Remove emojis','autoptimize'); ?></th>
                 <td>
-                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_1]' <?php checked( $autoptimize_extra_options['autoptimize_extra_checkbox_field_1'], 1 ); ?> value='1'>Removes WordPress' core emojis' inline CSS, inline JavaScript, and an otherwise un-autoptimized JavaScript file.</label>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_1]' <?php checked( $autoptimize_extra_options['autoptimize_extra_checkbox_field_1'], 1 ); ?> value='1'><?php _e('Removes WordPress\' core emojis\' inline CSS, inline JavaScript, and an otherwise un-autoptimized JavaScript file.','autoptimize'); ?></label>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Remove query strings from static resources</th>
+                <th scope="row"><?php _e('Remove query strings from static resources','autoptimize'); ?></th>
                 <td>
-                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_0]' <?php checked( $autoptimize_extra_options['autoptimize_extra_checkbox_field_0'], 1 ); ?> value='1'>Removing query strings (or more specificaly the <code>ver</code> parameter) will not improve load time, but might improve performance scores.</label>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_0]' <?php checked( $autoptimize_extra_options['autoptimize_extra_checkbox_field_0'], 1 ); ?> value='1'><?php _e('Removing query strings (or more specificaly the <code>ver</code> parameter) will not improve load time, but might improve performance scores.','autoptimize'); ?></label>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Google Fonts</th>
+                <th scope="row"><?php _e('Google Fonts','autoptimize'); ?></th>
                 <td>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="1" <?php if (!in_array($_googlef,array(2,3,4))) {echo "checked"; }  ?>>Leave as is<br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="2" <?php checked(2, $_googlef, true); ?> >Remove Google Fonts<br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="3" <?php checked(3, $_googlef, true); ?>>Combine and link in head<br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked(4, $_googlef, true); ?>>Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="1" <?php if (!in_array($_googlef,array(2,3,4))) {echo "checked"; } ?> ><?php _e('Leave as is','autoptimize'); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="2" <?php checked(2, $_googlef, true); ?> ><?php _e('Remove Google Fonts','autoptimize'); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="3" <?php checked(3, $_googlef, true); ?> ><?php _e('Combine and link in head','autoptimize'); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked(4, $_googlef, true); ?> ><?php _e('Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>','autoptimize'); ?><br/>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Preconnect to 3rd party domains <em>(advanced users)</em></th>
+                <th scope="row"><?php _e('Preconnect to 3rd party domains <em>(advanced users)</em>','autoptimize'); ?></th>
                 <td>
-                    <label><input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_2]' value='<?php echo $autoptimize_extra_options['autoptimize_extra_text_field_2']; ?>'><br />Add 3rd party domains you want the browser to <a href="https://www.keycdn.com/support/preconnect/#primary" target="_blank">preconnect</a> to, separated by comma's. Make sure to include the correct protocol (HTTP or HTTPS).</label>
+                    <label><input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_2]' value='<?php echo $autoptimize_extra_options['autoptimize_extra_text_field_2']; ?>'><br /><?php _e('Add 3rd party domains you want the browser to <a href="https://www.keycdn.com/support/preconnect/#primary" target="_blank">preconnect</a> to, separated by comma\'s. Make sure to include the correct protocol (HTTP or HTTPS).','autoptimize'); ?></label>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Async Javascript-files <em>(advanced users)</em></th>
+                <th scope="row"><?php _e('Async Javascript-files <em>(advanced users)</em>','autoptimize'); ?></th>
                 <td>
                     <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php echo $autoptimize_extra_options['autoptimize_extra_text_field_3']; ?>'>
                     <br />
-                    Comma-separated list of local or 3rd party JS-files that should loaded with the <code>async</code> flag. JS-files from your own site will be automatically excluded if added here.
+                    <?php _e('Comma-separated list of local or 3rd party JS-files that should loaded with the <code>async</code> flag. JS-files from your own site will be automatically excluded if added here.','autoptimize'); ?>
                 </td>
             </tr>
         </table>
