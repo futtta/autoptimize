@@ -84,10 +84,6 @@ Instead you can keep the cache size at an acceptable level by either:
 
 Despite above objections, there are 3rd party solutions to automatically purge the AO cache, e.g. using [this code](https://wordpress.org/support/topic/contribution-autoptimize-cache-size-under-control-by-schedule-auto-cache-purge/) or [this plugin](https://wordpress.org/plugins/bi-clean-cache/), but for reasons above these are to be used only if you really know what you're doing.
 
-= Upon updating Autoptimize can't be reactivated =
-
-I have not been able to reproduce this, but had 2 users reporting that they had to temporarily disable W3 Total Cache to be able to re-activate the updated Autoptimize. No idea why this is happening, but this might help if you encounter that problem.
-
 = "Clear cache" doesn't seem to work? =
 
 When clicking the "Delete Cache" link in the Autoptimize dropdown in the admin toolbar, you might to get a "Your cache might not have been purged successfully". In that case go to Autoptimizes setting page and click the "Save changes & clear cache"-button.
@@ -104,17 +100,9 @@ At the moment (June 2017) it seems RocketLoader might break AO's "inline & defer
 
 Autoptimize is not a simple "fix my Pagespeed-problems" plugin; it "only" aggregates & minifies (local) JS & CSS and allows for some nice extra's as removing Google Fonts and deferring the loading of the CSS. As such Autoptimize will allow you to improve your performance (load time measured in seconds) and will probably also help you tackle some specific Pagespeed warnings. If you want to improve further, you will probably also have to look into e.g. page caching, image optimization and your webserver configuration, which will improve real performance (again, load time as measured by e.g. https://webpagetest.org) and your "performance best practise" pagespeed ratings.
 
-= So should I aggregate inline CSS/ JS? =
-
-Before Autoptimize 2.0.0, inline code was always optimized with all CSS pushed in the head-section and all JS at the end with a defer-flag. This often caused 2 problems; the priority of inline CSS got lost and inline JS could contain page- or request-specific code which broke Autoptimize's caching mechanism leading to too many cached files and the minification running over and over. This is why as from AO 2.0 by default inline code is not optimized (except for those upgrading from previous versions). Additionally, to avoid inline JS breaking because jquery is not available, `js/jquery/jquery.js` is excluded by default.
-
 = What can I do with the API? =
 
 A whole lot; there are filters you can use to conditionally disable Autoptimize per request, to change the CSS- and JS-excludes, to change the limit for CSS background-images to be inlined in the CSS, to define what JS-files are moved behind the aggregated one, to change the defer-attribute on the aggregated JS script-tag, ... There are examples for some filters in autoptimize_helper.php_example and in this FAQ.
-
-= How can I use the code in autoptimize_helper.php_example? =
-
-Although you could add the code to your theme's functions.php, it would get overwritten with your next theme update. Therefor it is better to either create a helper plugin of your own or to simply use [the Code Snippets plugin](https://wordpress.org/plugins/code-snippets/) to manage any custom code.
 
 = How does CDN work? =
 
@@ -200,14 +188,6 @@ Make sure `js/jquery/jquery.js` is in the comma-separated list of JS optimizatio
 = I'm getting "jQuery is not defined" errors =
 
 In that case you have un-aggregated JavaScript that requires jQuery to be loaded, so you'll have to add `js/jquery/jquery.js` to the comma-separated list of JS optimization exclusions.
-
-= My Autoptimized CSS/ JS is broken after upgrading from 2.1 to 2.2! =
-
-One of the bigger changes in Autoptimize 2.2 it that it minifies first and aggregates second, which has important performance-benefits. Although this has been tested rather thoroughly, it is possible that this approach does not always work. You can turn this behavior off by hooking into Autoptimize's API, like this;
-
-`
-add_filter('autoptimize_filter_speedupper','__return_false');
-`
 
 = I use NextGen Galleries and a lot of JS is not aggregated/ minified? =
 
