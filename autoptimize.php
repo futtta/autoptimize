@@ -83,7 +83,7 @@ add_action( 'init', 'autoptimize_load_plugin_textdomain' );
 function autoptimize_uninstall(){
     autoptimizeCache::clearall();
 
-    $delete_options=array("autoptimize_cache_clean", "autoptimize_cache_nogzip", "autoptimize_css", "autoptimize_css_datauris", "autoptimize_css_justhead", "autoptimize_css_defer", "autoptimize_css_defer_inline", "autoptimize_css_inline", "autoptimize_css_exclude", "autoptimize_html", "autoptimize_html_keepcomments", "autoptimize_js", "autoptimize_js_exclude", "autoptimize_js_forcehead", "autoptimize_js_justhead", "autoptimize_js_trycatch", "autoptimize_version", "autoptimize_show_adv", "autoptimize_cdn_url", "autoptimize_cachesize_notice","autoptimize_css_include_inline","autoptimize_js_include_inline","autoptimize_css_nogooglefont","autoptimize_optimize_logged","autoptimize_optimize_checkout","autoptimize_extra_settings");
+    $delete_options=array("autoptimize_cache_clean", "autoptimize_cache_nogzip", "autoptimize_css", "autoptimize_css_datauris", "autoptimize_css_justhead", "autoptimize_css_defer", "autoptimize_css_defer_inline", "autoptimize_css_inline", "autoptimize_css_exclude", "autoptimize_html", "autoptimize_html_keepcomments", "autoptimize_js", "autoptimize_js_exclude", "autoptimize_js_forcehead", "autoptimize_js_justhead", "autoptimize_js_trycatch", "autoptimize_version", "autoptimize_show_adv", "autoptimize_cdn_url", "autoptimize_cachesize_notice","autoptimize_css_include_inline","autoptimize_js_include_inline","autoptimize_optimize_logged","autoptimize_optimize_checkout","autoptimize_extra_settings");
 
     if ( !is_multisite() ) {
         foreach ($delete_options as $del_opt) { delete_option( $del_opt ); }
