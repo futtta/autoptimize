@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Autoptimize
-Plugin URI: http://autoptimize.com/
+Plugin URI: https://autoptimize.com/
 Description: Optimizes your website, concatenating the CSS and JavaScript code, and compressing it.
 Version: 2.2.2
 Author: Frank Goossens (futtta)
-Author URI: http://autoptimize.com/
+Author URI: https://autoptimize.com/
 Domain Path: localization/
 Text Domain: autoptimize
 Released under the GNU General Public License (GPL)
