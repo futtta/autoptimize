@@ -1,6 +1,6 @@
 === Autoptimize ===
 Contributors: futtta, optimizingmatters, turl
-Tags: css, html, javascript, js, optimize, speed, cache, aggregate, minimize, minification, performance, pagespeed
+Tags: css, javascript, optimize, minify, performance
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
 Tested up to: 4.9
