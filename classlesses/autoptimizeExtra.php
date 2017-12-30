@@ -257,7 +257,7 @@ function autoptimize_extra_admin() {
 }
 
 function add_autoptimize_extra_tab($in) {
-    $in=array_merge($in,array('autoptimize_extra' => 'Extra'));
+    $in=array_merge($in,array('autoptimize_extra' => __('Extra','autoptimize')));
     return $in;
 }
 
