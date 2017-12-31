@@ -24,12 +24,12 @@ function autoptimize_extra_init() {
     $autoptimize_extra_options = autoptimize_extra_get_options();
 
     /* disable emojis */
-    if ($autoptimize_extra_options['autoptimize_extra_checkbox_field_1']) {
+    if ( !empty($autoptimize_extra_options['autoptimize_extra_checkbox_field_1']) ) {
         autoptimize_extra_disable_emojis();
     }
     
     /* remove version from query string */
-    if ($autoptimize_extra_options['autoptimize_extra_checkbox_field_0']) {
+    if ( !empty($autoptimize_extra_options['autoptimize_extra_checkbox_field_0']) ) {
         add_filter( 'script_loader_src', 'autoptimize_extra_remove_qs', 15, 1 );
         add_filter( 'style_loader_src', 'autoptimize_extra_remove_qs', 15, 1 );
     }
