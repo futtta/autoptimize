@@ -72,7 +72,9 @@ switch($autoptimize_major_version) {
          * 2.3 has no "remove google fonts" in main screen, moved to "extra"
          */
         if ( !is_multisite() ) {
-            if ( (get_option('autoptimize_css_nogooglefont','') == 1) && ( empty(get_option('autoptimize_extra_settings','')) ) ) {
+            $_nogooglefont = get_option('autoptimize_css_nogooglefont','');
+            $_ao_extrasetting = get_option('autoptimize_extra_settings','');
+            if ( ($_nogooglefont == 1) && ( empty($_ao_extrasetting) ) ) {
                 $_aoextra_removegfonts = array("autoptimize_extra_checkbox_field_1"=>"0","autoptimize_extra_checkbox_field_0"=>"0","autoptimize_extra_radio_field_4"=>"1","autoptimize_extra_text_field_2"=>"","autoptimize_extra_text_field_3"=>"");
                 update_option( 'autoptimize_extra_settings', $_aoextra_removegfonts );
             }
@@ -83,7 +85,9 @@ switch($autoptimize_major_version) {
             $original_blog_id = get_current_blog_id();
             foreach ( $blog_ids as $blog_id ) {
                 switch_to_blog( $blog_id );
-                if ( (get_option('autoptimize_css_nogooglefont','') == 1) && ( empty(get_option('autoptimize_extra_settings','')) ) ) {
+                    $_nogooglefont = get_option('autoptimize_css_nogooglefont','');
+                    $_ao_extrasetting = get_option('autoptimize_extra_settings','');
+                    if ( ($_nogooglefont == 1) && ( empty($_ao_extrasetting) ) ) {
                     $_aoextra_removegfonts = array("autoptimize_extra_checkbox_field_1"=>"0","autoptimize_extra_checkbox_field_0"=>"0","autoptimize_extra_radio_field_4"=>"1","autoptimize_extra_text_field_2"=>"","autoptimize_extra_text_field_3"=>"");
                     update_option( 'autoptimize_extra_settings', $_aoextra_removegfonts );
                 }

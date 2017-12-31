@@ -4,7 +4,7 @@ Tags: css, javascript, optimize, minify, performance
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 
 Autoptimize speeds up your website and helps you save bandwidth by aggregating and minimizing JS, CSS and HTML.
 
@@ -247,6 +247,9 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.3.1 =
+* fix for issue with update-code in some circumstances, thanks to [Rajendra Zore](https://rajendrazore.com/) to report & help fix!
 
 = 2.3.0 =
 * new: optimize Google fonts with “combine & link” and “combine and load async” (with webload.js), intelligently preconnecting to Google’s domains to limit performance impact even further
