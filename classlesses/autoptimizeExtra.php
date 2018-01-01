@@ -68,6 +68,9 @@ function autoptimize_extra_disable_emojis() {
 
     // filter to remove TinyMCE emojis
     add_filter( 'tiny_mce_plugins', 'autoptimize_extra_disable_emojis_tinymce' );
+
+    // and remove dns-prefetch for emoji
+    add_filter( 'wp_resource_hints', 'disable_emojis_remove_dns_prefetch', 10, 2 );
 }
 
 function autoptimize_extra_disable_emojis_tinymce( $plugins ) {
@@ -76,6 +79,21 @@ function autoptimize_extra_disable_emojis_tinymce( $plugins ) {
     } else {
         return array();
     }
+}
+
+function disable_emojis_remove_dns_prefetch( $urls, $relation_type ) {
+    if ( 'dns-prefetch' == $relation_type ) {
+        $_count=0;
+        $_emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/' );
+        foreach ($urls as $_url) {
+            if ( strpos($_url,$_emoji_svg_url) !== false ) {
+                unset($urls[$_count]);
+            }
+            $_count++;
+        }
+    }
+
+    return $urls;
 }
 
 // remove query string function
