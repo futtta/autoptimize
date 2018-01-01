@@ -281,13 +281,13 @@ function autoptimize_extra_options_page() {
             <tr>
                 <th scope="row"><?php _e('Remove emojis','autoptimize'); ?></th>
                 <td>
-                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_1]' <?php checked( $autoptimize_extra_options['autoptimize_extra_checkbox_field_1'], 1 ); ?> value='1'><?php _e('Removes WordPress\' core emojis\' inline CSS, inline JavaScript, and an otherwise un-autoptimized JavaScript file.','autoptimize'); ?></label>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_1]' <?php if (!empty($autoptimize_extra_options['autoptimize_extra_checkbox_field_1']) && 1 == $autoptimize_extra_options['autoptimize_extra_checkbox_field_1']) echo 'checked="checked"'; ?> value='1'><?php _e('Removes WordPress\' core emojis\' inline CSS, inline JavaScript, and an otherwise un-autoptimized JavaScript file.','autoptimize'); ?></label>
                 </td>
             </tr>
             <tr>
                 <th scope="row"><?php _e('Remove query strings from static resources','autoptimize'); ?></th>
                 <td>
-                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_0]' <?php checked( $autoptimize_extra_options['autoptimize_extra_checkbox_field_0'], 1 ); ?> value='1'><?php _e('Removing query strings (or more specificaly the <code>ver</code> parameter) will not improve load time, but might improve performance scores.','autoptimize'); ?></label>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_0]' <?php if (!empty( $autoptimize_extra_options['autoptimize_extra_checkbox_field_0']) && 1 == $autoptimize_extra_options['autoptimize_extra_checkbox_field_0']) echo 'checked="checked"'; ?> value='1'><?php _e('Removing query strings (or more specificaly the <code>ver</code> parameter) will not improve load time, but might improve performance scores.','autoptimize'); ?></label>
                 </td>
             </tr>
             <tr>
