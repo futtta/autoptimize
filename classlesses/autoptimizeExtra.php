@@ -41,6 +41,7 @@ function autoptimize_extra_init() {
 
     /* optimize google fonts */
     if ( !empty( $autoptimize_extra_options['autoptimize_extra_radio_field_4'] ) && ( $autoptimize_extra_options['autoptimize_extra_radio_field_4'] != "1" ) ) {
+        // TODO: we should also check if there are any dns-prefetches or other resource hints for google fonts and if so remove them
         if ( $autoptimize_extra_options['autoptimize_extra_radio_field_4'] == "2" ) {
             add_filter('autoptimize_filter_css_removables','autoptimize_extra_remove_gfonts',10,1);
         } else {
