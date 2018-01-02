@@ -41,7 +41,7 @@ function autoptimize_extra_init() {
 
     /* optimize google fonts */
     if ( !empty( $autoptimize_extra_options['autoptimize_extra_radio_field_4'] ) && ( $autoptimize_extra_options['autoptimize_extra_radio_field_4'] != "1" ) ) {
-        // TODO: we should also check if there are any dns-prefetches or other resource hints for google fonts and if so remove them
+        add_filter( 'wp_resource_hints', 'autoptimize_extra_gfonts_remove_dnsprefetch', 10, 2 );        
         if ( $autoptimize_extra_options['autoptimize_extra_radio_field_4'] == "2" ) {
             add_filter('autoptimize_filter_css_removables','autoptimize_extra_remove_gfonts',10,1);
         } else {
@@ -71,7 +71,7 @@ function autoptimize_extra_disable_emojis() {
     add_filter( 'tiny_mce_plugins', 'autoptimize_extra_disable_emojis_tinymce' );
 
     // and remove dns-prefetch for emoji
-    add_filter( 'wp_resource_hints', 'disable_emojis_remove_dns_prefetch', 10, 2 );
+    add_filter( 'wp_resource_hints', 'autoptimize_extra_emojis_remove_dns_prefetch', 10, 2 );
 }
 
 function autoptimize_extra_disable_emojis_tinymce( $plugins ) {
@@ -82,19 +82,10 @@ function autoptimize_extra_disable_emojis_tinymce( $plugins ) {
     }
 }
 
-function disable_emojis_remove_dns_prefetch( $urls, $relation_type ) {
-    if ( 'dns-prefetch' == $relation_type ) {
-        $_count=0;
-        $_emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/' );
-        foreach ($urls as $_url) {
-            if ( strpos($_url,$_emoji_svg_url) !== false ) {
-                unset($urls[$_count]);
-            }
-            $_count++;
-        }
-    }
+function autoptimize_extra_emojis_remove_dns_prefetch( $urls, $relation_type ) {
+    $_emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/' );
 
-    return $urls;
+    return autoptimize_extra_remove_dns_prefetch( $urls, $relation_type, $_emoji_svg_url );
 }
 
 // remove query string function
@@ -166,6 +157,12 @@ function autoptimize_extra_preconnect($hints, $relation_type) {
 }
 
 // google font functions
+function autoptimize_extra_gfonts_remove_dnsprefetch ( $urls, $relation_type ) {
+    $_gfonts_url = "fonts.googleapis.com";
+    
+    return autoptimize_extra_remove_dns_prefetch( $urls, $relation_type, $_gfonts_url );
+}
+
 function autoptimize_extra_remove_gfonts($in) { 
     // simply remove google fonts
     return $in.", fonts.googleapis.com"; 
@@ -263,10 +260,24 @@ function autoptimize_extra_preconnectgooglefonts($in) {
     $in[] = "https://fonts.gstatic.com";
     if ( $autoptimize_extra_options['autoptimize_extra_radio_field_4'] == "4" ) {
         // and more preconnects for webfont.js
-        $in[] = "https://ajax.googleapis.com/";
+        $in[] = "https://ajax.googleapis.com";
         $in[] = "https://fonts.googleapis.com";
     }
     return $in;
+}
+
+function autoptimize_extra_remove_dns_prefetch( $urls, $relation_type, $_remove_url ) {
+        if ( 'dns-prefetch' == $relation_type ) {
+        $_count=0;
+        foreach ($urls as $_url) {
+            if ( strpos($_url, $_remove_url) !== false ) {
+                unset($urls[$_count]);
+            }
+            $_count++;
+        }
+    }
+
+    return $urls;
 }
 
 /* admin page functions */
