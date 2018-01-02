@@ -106,7 +106,7 @@ class autoptimizeCache {
 
         // warm cache (part of speedupper)?
         if ( apply_filters('autoptimize_filter_speedupper', true) && get_transient('autoptimize_warmcache_buster') == false ) {
-            set_transient('autoptimize_warmcache_buster', 'please bust me next time', HOUR_IN_SECONDS);
+            set_transient('autoptimize_warmcache_buster', 'Mamsie & Liessie zehhe: ZWIJH!', HOUR_IN_SECONDS);
             $warmCacheUrl = site_url()."/?ao_speedup_cachebuster=".rand(1,100000);
             $warmCache = @wp_remote_get($warmCacheUrl);
             unset($warmCache);
