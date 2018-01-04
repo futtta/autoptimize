@@ -245,7 +245,7 @@ function autoptimize_extra_gfonts($in) {
             $_fontsOut .= $_font."','";
         }
         $_fontsOut = trim(trim($_fontsOut,"'"),",");
-        $_fontsOut .= '] },classes:false, events:false, timeout:1500};(function() {var wf = document.createElement(\'script\');wf.src=\'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js\';wf.type=\'text/javascript\';wf.async=\'true\';var s=document.getElementsByTagName(\'script\')[0];s.parentNode.insertBefore(wf, s);})();</script>';
+        $_fontsOut .= '] },classes:false, events:false, timeout:1500};(function() {var wf = document.createElement(\'script\');wf.src=\'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js\';wf.type=\'text/javascript\';wf.defer=\'true\';var s=document.getElementsByTagName(\'script\')[0];s.parentNode.insertBefore(wf, s);})();</script>';
     }
  
     // inject in HTML
