@@ -60,8 +60,13 @@ $conf = autoptimizeConfig::instance();
 to avoid old versions of aggregated files lingering around */
 
 $autoptimize_version="2.3.0";
-$autoptimize_db_version=get_option('autoptimize_version','none');
 
+global $wpdb;
+$autoptimize_db_version = $wpdb->get_var( ' SELECT option_value FROM '.$wpdb->prefix.'options WHERE option_name = "autoptimize_version" ' );
+if (!$autoptimize_db_version) {
+    $autoptimize_db_version="none";
+    }
+    
 if ($autoptimize_db_version !== $autoptimize_version) {
     if ($autoptimize_db_version==="none") {
         add_action('admin_notices', 'autoptimize_install_config_notice');
