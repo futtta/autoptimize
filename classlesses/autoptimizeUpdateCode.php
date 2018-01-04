@@ -98,8 +98,9 @@ switch($autoptimize_major_version) {
         $majorUp = true;
     }
 
-if ( $majorUp === true ) {
+if ( $majorUp === true && get_transient('autoptimize_stale_option_buster') == false ) {
     // clear cache and notify user to check result if major upgrade
+    set_transient('autoptimize_stale_option_buster', 'Mamsie & Liessie zehhe: ZWIJH!', HOUR_IN_SECONDS);
     autoptimizeCache::clearall();
     add_action('admin_notices', 'autoptimize_update_config_notice');
 }
