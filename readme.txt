@@ -1,16 +1,16 @@
 === Autoptimize ===
 Contributors: futtta, optimizingmatters, turl
-Tags: css, javascript, optimize, minify, performance
+Tags: optimize, minify, performance, pagespeed, async
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
 Tested up to: 4.9
 Stable tag: 2.3.2
 
-Autoptimize speeds up your website and helps you save bandwidth by aggregating and minimizing JS, CSS and HTML.
+Autoptimize speeds up your website by optimizing JS, CSS and HTML, async-ing JavaScript, removing emoji cruft, optimizing Google Fonts and more.
 
 == Description ==
 
-Autoptimize makes optimizing your site really easy. It can aggregate, minify and cache scripts and styles, injects CSS in the page head by default and can move and defer scripts to the footer. It also minifies the HTML code itself, making your page really lightweight. There are advanced options and an extensive API available to enable you to tailor Autoptimize to each and every site's specific needs. And it can even improve your site's performance when on HTTP/2!
+Autoptimize makes optimizing your site really easy. It can aggregate, minify and cache scripts and styles, injects CSS in the page head by default (but can also defer), moves and defers scripts to the footer and minifies HTML. The "Extra" options allow you to async non-aggregated JavaScript, remove WordPress core emoji cruft, optimize Google Fonts and more. As such it can improve your site's performance even when already on HTTP/2! There is extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
 
 If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [WP Super Cache](http://wordpress.org/plugins/wp-super-cache/), [HyperCache](http://wordpress.org/plugins/hyper-cache/), [Comet Cache](https://wordpress.org/plugins/comet-cache/) or [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler).
 
