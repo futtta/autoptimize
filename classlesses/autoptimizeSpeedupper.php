@@ -29,11 +29,12 @@ function ao_js_snippetcacher($jsin,$jsfilename) {
             $scriptsrc=preg_replace("#^\s*\/\/.*$#Um","",$jsin);
             $scriptsrc=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Us","",$scriptsrc);
             $scriptsrc=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $scriptsrc);
-
-            if ((substr($scriptsrc,-1,1)!==";")&&(substr($scriptsrc,-1,1)!=="}")) {
-                $scriptsrc.=";";
-            }
         }
+
+        if ( (substr($scriptsrc,-1,1)!==";") && (substr($scriptsrc,-1,1)!=="}") ) {
+            $scriptsrc.=";";
+        }
+
         if ( !empty($jsfilename) && str_replace( apply_filters('autoptimize_filter_js_speedup_cache',false), '', $jsfilename ) === $jsfilename ) {
             // don't cache inline CSS or if filter says no
             $ccheck->cache($scriptsrc,'text/javascript');
