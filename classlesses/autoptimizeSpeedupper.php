@@ -94,7 +94,12 @@ function ao_js_speedup_cleanup($jsin) {
 	return trim($jsin);
 }
 
-add_filter('autoptimize_css_individual_style','ao_css_snippetcacher',10,2);
-add_filter('autoptimize_js_individual_script','ao_js_snippetcacher',10,2);
-add_filter('autoptimize_css_after_minify','ao_css_speedup_cleanup',10,1);
-add_filter('autoptimize_js_after_minify','ao_js_speedup_cleanup',10,1);
+// conditionally attach filters
+if ( apply_filters('autoptimize_css_do_minify',true) ) {
+    add_filter('autoptimize_css_individual_style','ao_css_snippetcacher',10,2);
+    add_filter('autoptimize_css_after_minify','ao_css_speedup_cleanup',10,1);
+}
+if ( apply_filters('autoptimize_js_do_minify',true) ) {
+    add_filter('autoptimize_js_individual_script','ao_js_snippetcacher',10,2);
+    add_filter('autoptimize_js_after_minify','ao_js_speedup_cleanup',10,1);
+}
