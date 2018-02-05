@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class autoptimizeHTML extends autoptimizeBase {
     private $keepcomments = false;
-    private $exclude = array('<!-- ngg_resource_manager_marker -->');
+    private $exclude = array('<!-- ngg_resource_manager_marker -->', '<!--noindex-->', '<!--/noindex-->');
     
     public function read($options) {
         // Remove the HTML comments?
