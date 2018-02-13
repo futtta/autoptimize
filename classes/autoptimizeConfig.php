@@ -159,7 +159,11 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <div class="wrap">
 
 <?php if (version_compare(PHP_VERSION, '5.3.0') < 0) { ?>
-<div class="notice-error notice"><?php echo '<p>' . sprintf( __('<strong>You are using a very old version of PHP</strong> (5.2.x or older) which has <a href=%s>serious security and performance issues</a>. Support for PHP 5.5 and below will be removed in one of the next AO released, please ask your hoster to provide you with an upgrade path to 7.x.','autoptimize'), '"http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/" target="_blank"') . '</p>'; ?></div>
+<div class="notice-error notice"><?php echo '<p>' . __('<strong>You are using a very old version of PHP</strong> (5.2.x or older) which will not be supported as from the upcoming Autoptimize 2.4 any more. please ask your hoster to provide you with an upgrade path to 7.x.','autoptimize') . '</p>'; ?></div>
+<?php } ?>
+
+<?php if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) { ?>
+<div class="notice-error notice"><?php echo '<p>' . __('You are forcing Autoptimize to use the "legacy minifiers" as the AUTOPTIMIZE_LEGACY_MINFIERS constant in /wp-config.php. The "legacy minifiers" will not be supported as from the upcoming Autoptimize 2.4 any more.','autoptimize') . '</p>'; ?></div>
 <?php } ?>
 
 <div id="autoptimize_main">
