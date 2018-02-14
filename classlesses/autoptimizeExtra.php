@@ -109,8 +109,9 @@ function autoptimize_extra_async_js($in) {
     // get asyncs
     $_fromSetting = $autoptimize_extra_options['autoptimize_extra_text_field_3'];
     $AO_asynced_JS = array_fill_keys(array_filter(array_map('trim',explode(",",$_fromSetting))),"");
+    $AO_async_flag = apply_filters('autoptimize_filter_extra_async',"async");
     foreach ($AO_asynced_JS as $JSkey => $JSvalue) {
-        $AO_asynced_JS[$JSkey] = "async";
+        $AO_asynced_JS[$JSkey] = $AO_async_flag;
     }
     
     // merge exclusions & asyncs in one array and return to AO API
