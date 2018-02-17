@@ -64,7 +64,7 @@ class autoptimizeMain
 
     public function on_activate()
     {
-        register_uninstall_hook( $this->filepath, array( $this, 'on_uninstall' ) );
+        register_uninstall_hook( $this->filepath, 'autoptimizeMain::on_uninstall' );
     }
 
     public function load_textdomain()
