@@ -233,32 +233,32 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 </tr>
 <tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e( 'Aggregate JS-files?', 'autoptimize' ); ?></th>
-<td><label class="cb_label"><input type="checkbox" name="autoptimize_js_aggregate" <?php echo $conf->get( 'autoptimize_js_aggregate' ) ? 'checked="checked" ':''; ?>/>
+<td><label class="cb_label"><input type="checkbox" id="autoptimize_js_aggregate" name="autoptimize_js_aggregate" <?php echo $conf->get( 'autoptimize_js_aggregate' ) ? 'checked="checked" ':''; ?>/>
 <?php _e( 'Aggregate all linked JS-files to have them loaded non-render blocking? If this option is off, the individual JS-files will remain in place but will be minified.', 'autoptimize' ); ?></label></td>
 </tr>
-<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv js_aggregate">
 <th scope="row"><?php _e('Also aggregate inline JS?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_include_inline" <?php echo get_option('autoptimize_js_include_inline')?'checked="checked" ':''; ?>/>
 <?php _e('Let Autoptimize also extract JS from the HTML. <strong>Warning</strong>: this can make Autoptimize\'s cache size grow quickly, so only enable this if you know what you\'re doing.','autoptimize'); ?></label></td>
 </tr>
-<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv js_aggregate">
 <th scope="row"><?php _e('Force JavaScript in &lt;head&gt;?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_forcehead" <?php echo get_option('autoptimize_js_forcehead')?'checked="checked" ':''; ?>/>
 <?php _e('Load JavaScript early, this can potentially fix some JS-errors, but makes the JS render blocking.','autoptimize'); ?></label></td>
 </tr>
 <?php if (get_option('autoptimize_js_justhead')) { ?>
-<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv js_aggregate">
 <th scope="row"><?php _e('Look for scripts only in &lt;head&gt;?','autoptimize'); echo ' <i>'. __('(deprecated)','autoptimize') . '</i>'; ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_justhead" <?php echo get_option('autoptimize_js_justhead')?'checked="checked" ':''; ?>/>
 <?php _e('Mostly useful in combination with previous option when using jQuery-based templates, but might help keeping cache size under control.','autoptimize'); ?></label></td>
 </tr>
 <?php } ?>
-<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv js_aggregate">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"seal.js, js/jquery/jquery.js"); ?>"/><br />
 <?php _e('A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated and minimized by Autoptimize.','autoptimize'); ?></label></td>
 </tr>
-<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv js_aggregate">
 <th scope="row"><?php _e('Add try-catch wrapping?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_trycatch" <?php echo get_option('autoptimize_js_trycatch')?'checked="checked" ':''; ?>/>
 <?php _e('If your scripts break because of a JS-error, you might want to try this.','autoptimize'); ?></label></td>
@@ -275,21 +275,21 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 </tr>
 <tr class="<?php echo $hiddenClass;?>css_sub ao_adv" valign="top">
 <th scope="row"><?php _e( 'Aggregate CSS-files?', 'autoptimize' ); ?></th>
-<td><label class="cb_label"><input type="checkbox" name="autoptimize_css_aggregate" <?php echo $conf->get( 'autoptimize_css_aggregate' ) ? 'checked="checked" ' : ''; ?>/>
+<td><label class="cb_label"><input type="checkbox" id="autoptimize_css_aggregate" name="autoptimize_css_aggregate" <?php echo $conf->get( 'autoptimize_css_aggregate' ) ? 'checked="checked" ' : ''; ?>/>
 <?php _e('Aggregate all linked CSS-files? If this option is off, the individual CSS-files will remain in place but will be minified.', 'autoptimize' ); ?></label></td>
 </tr>
-<tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv css_aggregate">
 <th scope="row"><?php _e('Also aggregate inline CSS?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_include_inline" <?php echo get_option('autoptimize_css_include_inline','1')?'checked="checked" ':''; ?>/>
 <?php _e('Check this option for Autoptimize to also aggregate CSS in the HTML.','autoptimize'); ?></label></td>
 </tr>
-<tr class="<?php echo $hiddenClass;?>css_sub ao_adv" valign="top">
+<tr class="<?php echo $hiddenClass;?>css_sub ao_adv css_aggregate" valign="top">
 <th scope="row"><?php _e('Generate data: URIs for images?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_datauris" <?php echo get_option('autoptimize_css_datauris')?'checked="checked" ':''; ?>/>
 <?php _e('Enable this to include small background-images in the CSS itself instead of as separate downloads.','autoptimize'); ?></label></td>
 </tr>
 <?php if (get_option('autoptimize_css_justhead')) { ?>
-<tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv">
+<tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv css_aggregate">
 <th scope="row"><?php _e('Look for styles only in &lt;head&gt;?','autoptimize'); echo ' <i>'. __('(deprecated)','autoptimize') . '</i>'; ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_justhead" <?php echo get_option('autoptimize_css_justhead')?'checked="checked" ':''; ?>/>
 <?php _e('Don\'t autoptimize CSS outside the head-section. If the cache gets big, you might want to enable this.','autoptimize'); ?></label></td>
@@ -304,12 +304,12 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <th scope="row"></th>
 <td><label><textarea rows="10" cols="10" style="width:100%;" placeholder="<?php _e('Paste the above the fold CSS here.','autoptimize'); ?>" name="autoptimize_css_defer_inline"><?php echo get_option('autoptimize_css_defer_inline'); ?></textarea></label></td>
 </tr>
-<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub">
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub css_aggregate">
 <th scope="row"><?php _e('Inline all CSS?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" id="autoptimize_css_inline" name="autoptimize_css_inline" <?php echo get_option('autoptimize_css_inline')?'checked="checked" ':''; ?>/>
 <?php _e('Inlining all CSS can improve performance for sites with a low pageviews/ visitor-rate, but may slow down performance otherwise.','autoptimize'); ?></label></td>
 </tr>
-<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub">
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub css_aggregate">
 <th scope="row"><?php _e('Exclude CSS from Autoptimize:','autoptimize'); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo get_option('autoptimize_css_exclude','wp-content/cache/, wp-content/uploads/, admin-bar.min.css, dashicons.min.css'); ?>"/><br />
 <?php _e('A comma-separated list of CSS you want to exclude from being optimized.','autoptimize'); ?></label></td>
@@ -506,11 +506,27 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
             }
         });
 
+        jQuery( "#autoptimize_js_aggregate" ).change(function() {
+            if (this.checked && jQuery("#autoptimize_js").attr('checked')) {
+                jQuery(".js_aggregate:visible").fadeTo("fast",1);
+            } else {
+                jQuery(".js_aggregate:visible").fadeTo("fast",.33);
+            }
+        });
+
         jQuery( "#autoptimize_css" ).change(function() {
             if (this.checked) {
                 jQuery(".css_sub:visible").fadeTo("fast",1);
             } else {
                 jQuery(".css_sub:visible").fadeTo("fast",.33);
+            }
+        });
+
+        jQuery( "#autoptimize_css_aggregate" ).change(function() {
+            if (this.checked && jQuery("#autoptimize_css").attr('checked')) {
+                jQuery(".css_aggregate:visible").fadeTo("fast",1);
+            } else {
+                jQuery(".css_aggregate:visible").fadeTo("fast",.33);
             }
         });
 
@@ -558,8 +574,14 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
         if (!jQuery("#autoptimize_css").attr('checked')) {
             jQuery(".css_sub:visible").fadeTo('fast',.33);
         }
+        if (!jQuery("#autoptimize_css_aggregate").attr('checked')) {
+            jQuery(".css_aggregate:visible").fadeTo('fast',.33);
+        }
         if (!jQuery("#autoptimize_js").attr('checked')) {
             jQuery(".js_sub:visible").fadeTo('fast',.33);
+        }
+        if (!jQuery("#autoptimize_js_aggregate").attr('checked')) {
+            jQuery(".js_aggregate:visible").fadeTo('fast',.33);
         }
     }
 
