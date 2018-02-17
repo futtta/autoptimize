@@ -80,9 +80,9 @@
 @-webkit-keyframes blink { 50% { visibility: hidden; }}
         @keyframes blink { 50% { visibility: hidden; }}
 
-		
+
 /* Some cosmetic Toolbar things */
-#wp-admin-bar-autoptimize table, #wp-admin-bar-autoptimize  th, #wp-admin-bar-autoptimize  td 
+#wp-admin-bar-autoptimize table, #wp-admin-bar-autoptimize  th, #wp-admin-bar-autoptimize  td
 {
     border: 0px !important;
 }
@@ -140,7 +140,7 @@
 	line-height: 16px !important;
 }
 
-#wp-admin-bar-autoptimize-cache-info .ab-item table 
+#wp-admin-bar-autoptimize-cache-info .ab-item table
 {
 	display: inline-block !important;
 	margin-left: 10px !important;
@@ -153,7 +153,7 @@
 	margin-top: 5px !important;
 }
 .autoptimize-radial-bar,
-.autoptimize-radial-bar	.mask, 
+.autoptimize-radial-bar	.mask,
 .autoptimize-radial-bar .fill,
 .autoptimize-radial-bar .shadow
 {
@@ -198,7 +198,7 @@
 
 	top					: 7px !important;
 	left				: 0px !important;
-	
+
 	overflow			: hidden;
 }
 .autoptimize-radial-bar .numbers
@@ -208,7 +208,7 @@
 	font-size			: 9px !important;
 
 	margin-top			: -10px !important;
-	
+
 	display				: inline-block;
 	vertical-align		: top;
 	text-align			: center;
@@ -223,7 +223,7 @@
 	box-shadow			: 3px 3px 5px rgba(0,0,0,0.3) inset !important;
 }
 
-.autoptimize-radial-bar	.mask, 
+.autoptimize-radial-bar	.mask,
 .autoptimize-radial-bar .fill,
 .autoptimize-radial-bar .shadow,
 .autoptimize-radial-bar .inset,

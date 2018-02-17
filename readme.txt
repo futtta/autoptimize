@@ -4,6 +4,7 @@ Tags: optimize, minify, performance, pagespeed, async
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
 Tested up to: 4.9
+Requires PHP: 5.3
 Stable tag: 2.3.2
 
 Autoptimize speeds up your website by optimizing JS, CSS and HTML, async-ing JavaScript, removing emoji cruft, optimizing Google Fonts and more.
@@ -134,7 +135,7 @@ Both CSS and JS optimization can skip code from being aggregated and minimized b
 
 = Configuring & Troubleshooting Autoptimize =
 
-After having installed and activated the plugin, you'll have access to an admin page where you can to enable HTML, CSS and JavaScript optimization. According to your liking, you can start of just enabling all of them, or if you're more cautious one at a time. 
+After having installed and activated the plugin, you'll have access to an admin page where you can to enable HTML, CSS and JavaScript optimization. According to your liking, you can start of just enabling all of them, or if you're more cautious one at a time.
 
 If your blog doesn't function normally after having turned on Autoptimize, here are some pointers to identify & solve such issues using "advanced settings":
 
@@ -202,7 +203,7 @@ You can do this in your page/ post content, in widgets and in your theme files (
 
 = Can I change the directory & filename of cached autoptimize files? =
 
-Yes, if you want to serve files from e.g. /wp-content/resources/aggregated_12345.css instead of the default /wp-content/cache/autoptimize/autoptimize_12345.css, then add this to wp-config.php: 
+Yes, if you want to serve files from e.g. /wp-content/resources/aggregated_12345.css instead of the default /wp-content/cache/autoptimize/autoptimize_12345.css, then add this to wp-config.php:
 `
 define('AUTOPTIMIZE_CACHE_CHILD_DIR','/resources/');
 define('AUTOPTIMIZE_CACHEFILE_PREFIX','aggregated_');
@@ -536,7 +537,7 @@ First of all; Happy holidays, all the best for 2015!!
 
 = 1.0 =
 * Add workaround for whos.among.us
-* Support preserving HTML Comments. 
+* Support preserving HTML Comments.
 * Implement "delayed cache compression"
 * French translation
 * Update Spanish translation
@@ -544,7 +545,7 @@ First of all; Happy holidays, all the best for 2015!!
 = 0.9 =
 * Add workaround for networkedblogs.
 * Add workarounds for histats and statscounter
-* Add workaround for smowtion and infolinks. 
+* Add workaround for smowtion and infolinks.
 * Add workaround for Featured Content Gallery
 * Simplified Chinese translation
 * Update Spanish Translation
@@ -565,7 +566,7 @@ First of all; Happy holidays, all the best for 2015!!
 * Add fix for DISQUS Comment System.
 
 = 0.6 =
-* Add workaround for mybloglog, blogcatalog, tweetmeme and Google CSE 
+* Add workaround for mybloglog, blogcatalog, tweetmeme and Google CSE
 
 = 0.5 =
 * Support localization
