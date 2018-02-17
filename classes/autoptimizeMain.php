@@ -424,7 +424,7 @@ class autoptimizeMain
         return $content;
     }
 
-    public function on_uninstall()
+    static function on_uninstall()
     {
         autoptimizeCache::clearall();
 
