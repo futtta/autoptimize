@@ -172,7 +172,7 @@ class autoptimizeScripts extends autoptimizeBase
                         }
 
                         // Should we minify the non-aggregated script?
-                        if ( $path && apply_filters( 'autoptimize_filter_js_minify_excluded', true ) ) {
+                        if ( $path && apply_filters( 'autoptimize_filter_js_minify_excluded', true, $url ) ) {
                             $minified_url = $this->minify_single( $path );
                             // replace orig URL with minified URL from cache if so
                             if ( ! empty( $minified_url ) ) {
