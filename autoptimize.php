@@ -1,8 +1,4 @@
 <?php
-/**
- * Autoptimize main plugin file.
- */
-
 /*
 Plugin Name: Autoptimize
 Plugin URI: https://autoptimize.com/
@@ -14,6 +10,11 @@ Text Domain: autoptimize
 Released under the GNU General Public License (GPL)
 http://www.gnu.org/licenses/gpl.txt
 */
+
+/**
+ * Autoptimize main plugin file.
+ */
+
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
