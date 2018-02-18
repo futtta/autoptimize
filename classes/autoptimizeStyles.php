@@ -214,11 +214,13 @@ class autoptimizeStyles extends autoptimizeBase
                             
                             // Defer single CSS if "inline & defer" is on.
                             if ( $this->defer ) {
+                                // Get/ set (via filter) the JS to be triggers onload of the preloaded CSS.
                                 $_preload_onload = apply_filters(
                                     'autoptimize_filter_css_preload_onload',
                                     "this.onload=null;this.rel='stylesheet'",
                                     $url
                                 );
+                                // Adapt original <link> element for CSS to be preloaded.
                                 $new_tag = str_replace(
                                     array(
                                         "rel='stylesheet'",
