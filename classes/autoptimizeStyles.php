@@ -213,9 +213,9 @@ class autoptimizeStyles extends autoptimizeBase
                             }
                             
                             // defer single CSS if "inline & defer" is on
-                            if ($this->defer) {
+                            if ( $this->defer ) {
                                 $_preload_onload = apply_filters( 'autoptimize_filter_css_preload_onload', "this.onload=null;this.rel='stylesheet'", $url );
-                                $new_tag = str_replace( array("rel='stylesheet'","rel=\"stylesheet\""), "rel='preload' onload=\"".$_preload_onload."\"", $new_tag);
+                                $new_tag = str_replace( array("rel='stylesheet'","rel=\"stylesheet\""), "rel='preload' as='style' onload=\"".$_preload_onload."\"", $new_tag );
                             }
                             
                             // And replace!
