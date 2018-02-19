@@ -211,7 +211,7 @@ class autoptimizeStyles extends autoptimizeBase
                             if ( ! empty( $exploded_url[1] ) ) {
                                 $new_tag = str_replace( '?' . $exploded_url[1], '', $new_tag );
                             }
-                            
+
                             // Defer single CSS if "inline & defer" is on.
                             if ( $this->defer ) {
                                 // Get/ set (via filter) the JS to be triggers onload of the preloaded CSS.
@@ -230,7 +230,7 @@ class autoptimizeStyles extends autoptimizeBase
                                     $new_tag
                                 );
                             }
-                            
+
                             // And replace!
                             $this->content = str_replace( $tag, $new_tag, $this->content );
                         }
