@@ -682,6 +682,7 @@ abstract class autoptimizeBase
             if ( 'js' === $type ) {
                 $contents = trim( JSMin::minify( $contents ) );
             } elseif ( 'css' === $type ) {
+                $contents = autoptimizeStyles::fixurls( $filepath, $contents );
                 $cssmin   = new autoptimizeCSSmin();
                 $contents = trim( $cssmin->run( $contents ) );
             }
