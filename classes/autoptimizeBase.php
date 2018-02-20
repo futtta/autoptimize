@@ -379,7 +379,7 @@ abstract class autoptimizeBase {
 				}
 			} else if ($codeType === "css") {
                 // make sure paths to background images/ imported css/ fonts .. are OK
-                $_toMinify = $this->fixurls($pathIn,$_toMinify);
+                $_toMinify = autoptimizeStyles::fixurls($pathIn,$_toMinify);
                 if (class_exists('Minify_CSS_Compressor')) {
 					$tmp_code = trim(Minify_CSS_Compressor::process($_toMinify));
                 } else if(class_exists('CSSmin')) {
