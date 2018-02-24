@@ -163,7 +163,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <?php } ?>
 
 <?php if (defined('AUTOPTIMIZE_LEGACY_MINIFIERS')) { ?>
-<div class="notice-error notice"><?php echo '<p>' . sprintf( __('You are forcing Autoptimize to use the "legacy minifiers" by setting the AUTOPTIMIZE_LEGACY_MINFIERS constant in /wp-config.php. The "legacy minifiers" will not be supported as from the upcoming Autoptimize 2.4 any more, cfr. <a href=%s>this blogpost for more info</a>.','autoptimize'), '"https://blog.futtta.be/2018/02/13/introducing-zytzagoos-major-changes-for-autoptimize-2-4/" target="_blank"') . '</p>'; ?></div>
+<div class="notice-error notice"><?php echo '<p>' . sprintf( __('You are forcing Autoptimize to use the "legacy minifiers" by setting the AUTOPTIMIZE_LEGACY_MINIFIERS constant in /wp-config.php. The "legacy minifiers" will not be supported as from the upcoming Autoptimize 2.4 any more, cfr. <a href=%s>this blogpost for more info</a>.','autoptimize'), '"https://blog.futtta.be/2018/02/13/introducing-zytzagoos-major-changes-for-autoptimize-2-4/" target="_blank"') . '</p>'; ?></div>
 <?php } ?>
 
 <div id="autoptimize_main">
