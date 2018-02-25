@@ -42,6 +42,8 @@ class autoptimizeStyles extends autoptimizeBase
     private $include_inline  = false;
     private $inject_min_late = '';
 
+    // public $cdn_url; // Used all over the place implicitly, so will have to be either public or protected :/
+
     // Reads the page and collects style tags
     public function read($options)
     {
@@ -385,20 +387,19 @@ class autoptimizeStyles extends autoptimizeBase
 
     /**
      * Given an array of key/value pairs to replace in $string,
-     * it does so in a way that the longest strings are replaced first.
+     * it does so by replacing the longest-matching strings first.
      *
      * @param string $string
      * @param array $replacements
      *
      * @return string
      */
-    protected function replace_longest_matches_first($string, $replacements = array())
+    protected function replace_longest_matches_first( $string, $replacements = array() )
     {
         if ( ! empty( $replacements ) ) {
             // Sort the replacements array by key length in desc order (so that the longest strings are replaced first)
             $keys = array_map( 'strlen', array_keys( $replacements ) );
             array_multisort( $keys, SORT_DESC, $replacements );
-            // $this->debug_log($replacements);
             $string = str_replace( array_keys( $replacements ), array_values( $replacements ), $string );
         }
 
@@ -411,11 +412,14 @@ class autoptimizeStyles extends autoptimizeBase
      * `autoptimizeBase::url_replace_cdn()`.
      * Replacements are performed in a `longest-match-replaced-first` way.
      *
-     * @param string $code
+     * @param string $code CSS code.
+     *
      * @return string
      */
-    public function replace_urls($code = '')
+    public function replace_urls( $code = '' )
     {
+        $replacements = array();
+
         preg_match_all( self::ASSETS_REGEX, $code, $url_src_matches );
         if ( is_array( $url_src_matches ) && ! empty( $url_src_matches ) ) {
             foreach ( $url_src_matches[1] as $count => $original_url ) {
@@ -423,19 +427,21 @@ class autoptimizeStyles extends autoptimizeBase
                 $url = trim( $original_url, " \t\n\r\0\x0B\"'" );
 
                 // TODO/FIXME: Add a way for other code / callable to be called here
-                // and provide it's own results for the $replacements array for the "current" key.
+                // and provide it's own results for the $replacements array
+                // for the "current" key.
+                // If such a result is returned/provided, we sholud then avoid
+                // calling url_replace_cdn() here for the current iteration.
                 //
-                // If such a result is returned/provided, we sholud then avoid calling
-                // url_replace_cdn() here for the current iteration.
-                //
-                // This would maybe allow the inlining logic currently present in `rewrite_assets()` to be
-                // "pulled out" and given as a callable to this method or something... and then we
-                // could "just" call `replace_urls()` from within `rewrite_assets()` and avoid some
+                // This would maybe allow the inlining logic currently present
+                // in `autoptimizeStyles::rewrite_assets()` to be "pulled out"
+                // and given as a callable to this method or something... and
+                // then we could "just" call `replace_urls()` from within
+                // `autoptimizeStyles::rewrite_assets()` and avoid some
                 // (currently present) code/logic duplication.
 
                 // Do CDN replacement if needed
                 if ( ! empty( $this->cdn_url ) ) {
-                    $replacement_url = $this->url_replace_cdn($url);
+                    $replacement_url = $this->url_replace_cdn( $url );
                     // Prepare replacements array
                     $replacements[ $url_src_matches[1][ $count ] ] = str_replace(
                         $original_url, $replacement_url, $url_src_matches[1][$count]
