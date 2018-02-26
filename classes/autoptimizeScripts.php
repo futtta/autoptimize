@@ -531,4 +531,59 @@ class autoptimizeScripts extends autoptimizeBase
     {
         return $this->aggregate;
     }
+
+    /**
+     * Minifies a single local js file and returns its (cached) url.
+     *
+     * @param string $filepath Filepath.
+     *
+     * @return bool|string Url pointing to the minified js file or false.
+     */
+    public function minify_single( $filepath )
+    {
+        // Bail early if not .js file!
+        if ( ! $this->str_ends_in( $filepath, '.js' ) ) {
+            return false;
+        }
+
+        $type = 'js';
+        $mime = 'text/javascript';
+
+        // Bail if it looks like its already minifed (by having -min or .min
+        // in filename) or if it looks like WP jquery.js (which is minified).
+        $minified_variants = array(
+            '-min.' . $type,
+            '.min.' . $type,
+            'js/jquery/jquery.js',
+        );
+        foreach ( $minified_variants as $ending ) {
+            if ( $this->str_ends_in( $filepath, $ending ) ) {
+                return false;
+            }
+        }
+
+        // Get file contents, bail if empty.
+        $contents = file_get_contents( $filepath );
+        if ( empty( $contents ) ) {
+            return false;
+        }
+
+        // Check cache.
+        $hash  = 'single_' . md5( $contents );
+        $cache = new autoptimizeCache( $hash, $type );
+
+        // If not in cache already, minify...
+        if ( ! $cache->check() ) {
+            $contents = trim( JSMin::minify( $contents ) );
+            // Store in cache.
+            $cache->cache( $contents, $mime );
+        }
+        $url = AUTOPTIMIZE_CACHE_URL . $cache->getname();
+        unset( $cache );
+
+        // CDN-replace if needed...
+        $url = $this->url_replace_cdn( $url );
+
+        return $url;
+    }
 }

@@ -1660,4 +1660,25 @@ HTML;
         $this->assertFalse($styles->aggregating());
         remove_all_filters( 'autoptimize_filter_css_dontaggregate' );
     }
+
+    public function test_css_minify_single_with_cdning()
+    {
+        $pathname = dirname(__FILE__) . '/fixtures/minify-single.css';
+
+        $styles = new autoptimizeStyles( '' );
+        $opts = $this->getAoStylesDefaultOptions();
+        $styles->read( $opts );
+        $url = $styles->minify_single( $pathname );
+
+        // Minified url filename + its pointed to cdn
+        $this->assertContains( 'cache/autoptimize/', $url );
+        $this->assertContains( '/autoptimize_single_', $url );
+        $this->assertContains( $styles->cdn_url, $url );
+
+        // Actual minified css contents are minified and cdn-ed.
+        $path = $styles->getpath( $url );
+        $contents = file_get_contents( $path );
+        $this->assertContains( $styles->cdn_url, $contents );
+        $this->assertContains( '.bg{background:url(http://cdn.example.org/', $contents );
+    }
 }

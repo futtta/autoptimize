@@ -989,6 +989,67 @@ class autoptimizeStyles extends autoptimizeBase
     }
 
     /**
+     * Minifies (and cdn-replaces) a single local css file
+     * and returns its (cached) url.
+     *
+     * @param string $filepath Filepath.
+     *
+     * @return bool|string Url pointing to the minified css file or false.
+     */
+    public function minify_single( $filepath )
+    {
+        // Bail early if not .css file!
+        if ( ! $this->str_ends_in( $filepath, '.css' ) ) {
+            return false;
+        }
+
+        $type = 'css';
+        $mime = 'text/css';
+
+        // Bail if it looks like its already minifed (by having -min or .min
+        // in filename) or if it looks like WP jquery.js (which is minified).
+        $minified_variants = array(
+            '-min.' . $type,
+            '.min.' . $type
+        );
+        foreach ( $minified_variants as $ending ) {
+            if ( $this->str_ends_in( $filepath, $ending ) ) {
+                return false;
+            }
+        }
+
+        // Get file contents, bail if empty.
+        $contents = file_get_contents( $filepath );
+        if ( empty( $contents ) ) {
+            return false;
+        }
+
+        // Check cache.
+        $hash  = 'single_' . md5( $contents );
+        $cache = new autoptimizeCache( $hash, $type );
+
+        // If not in cache already, minify...
+        if ( ! $cache->check() ) {
+            // Fixurls...
+            $contents = self::fixurls( $filepath, $contents );
+            // CDN-replace any referenced assets if needed...
+            $contents = $this->replace_urls( $contents );
+            // Now minify...
+            $cssmin   = new autoptimizeCSSmin();
+            $contents = trim( $cssmin->run( $contents ) );
+            // Store in cache.
+            $cache->cache( $contents, $mime );
+        }
+        $url = AUTOPTIMIZE_CACHE_URL . $cache->getname();
+        unset( $cache );
+
+        // CDN-replace the resulting URL if needed...
+        $url = $this->url_replace_cdn( $url );
+
+        return $url;
+    }
+
+    /**
      * Returns whether we're doing aggregation or not.
      *
      * @return bool
