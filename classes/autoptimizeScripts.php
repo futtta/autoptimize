@@ -555,7 +555,7 @@ class autoptimizeScripts extends autoptimizeBase
         if ( ! $cache->check() ) {
             $contents = trim( JSMin::minify( $contents ) );
             // Store in cache.
-            $cache->cache( $contents, $mime );
+            $cache->cache( $contents, "text/javascript" );
         }
         $url = AUTOPTIMIZE_CACHE_URL . $cache->getname();
         unset( $cache );

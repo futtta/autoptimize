@@ -645,10 +645,8 @@ abstract class autoptimizeBase
         // Decide what we're dealing with, return false if we don't know.
         if ( $this->str_ends_in( $filepath, '.js' ) ) {
             $type = 'js';
-            $mime = 'text/javascript';
         } elseif ( $this->str_ends_in( $filepath, '.css' ) ) {
             $type = 'css';
-            $mime = 'text/css';
         } else {
             return false;
         }

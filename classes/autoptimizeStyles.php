@@ -1018,7 +1018,7 @@ class autoptimizeStyles extends autoptimizeBase
             $cssmin   = new autoptimizeCSSmin();
             $contents = trim( $cssmin->run( $contents ) );
             // Store in cache.
-            $cache->cache( $contents, $mime );
+            $cache->cache( $contents, "text/css" );
         }
         $url = AUTOPTIMIZE_CACHE_URL . $cache->getname();
         unset( $cache );
