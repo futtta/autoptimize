@@ -549,7 +549,7 @@ class autoptimizeScripts extends autoptimizeBase
         
         // Check cache.
         $hash  = 'single_' . md5( $contents );
-        $cache = new autoptimizeCache( $hash, $type );
+        $cache = new autoptimizeCache( $hash, "js" );
 
         // If not in cache already, minify...
         if ( ! $cache->check() ) {
