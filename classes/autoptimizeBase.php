@@ -633,6 +633,7 @@ abstract class autoptimizeBase
 
         error_log( $data );
     }
+
     /**
      * Minifies a single local css/js file and returns its (cached) url.
      *
@@ -666,13 +667,28 @@ abstract class autoptimizeBase
 
         // Get file contents, bail if empty.
         $contents = file_get_contents( $filepath );
-        if ( empty( $contents ) ) {
-            return false;
-        }
-        
+
         return $contents;
     }
-    
+
+    /**
+     * Given an autoptimizeCache instance returns the (maybe cdn-ed) url of
+     * the cached file.
+     *
+     * @param autoptimizeCache $cache autoptimizeCache instance
+     *
+     * @return string
+     */
+    protected function build_minify_single_url( autoptimizeCache $cache )
+    {
+        $url = AUTOPTIMIZE_CACHE_URL . $cache->getname();
+
+        // CDN-replace the resulting URL if needed...
+        $url = $this->url_replace_cdn( $url );
+
+        return $url;
+    }
+
     /**
      * Returns true if given $str ends with given $test.
      *

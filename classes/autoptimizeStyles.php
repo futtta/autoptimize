@@ -999,14 +999,14 @@ class autoptimizeStyles extends autoptimizeBase
     public function minify_single( $filepath )
     {
         $contents = $this->prepare_minify_single( $filepath );
-        
+
         if ( empty( $contents ) ) {
             return false;
         }
-        
+
         // Check cache.
         $hash  = 'single_' . md5( $contents );
-        $cache = new autoptimizeCache( $hash, "css" );
+        $cache = new autoptimizeCache( $hash, 'css' );
 
         // If not in cache already, minify...
         if ( ! $cache->check() ) {
@@ -1018,13 +1018,10 @@ class autoptimizeStyles extends autoptimizeBase
             $cssmin   = new autoptimizeCSSmin();
             $contents = trim( $cssmin->run( $contents ) );
             // Store in cache.
-            $cache->cache( $contents, "text/css" );
+            $cache->cache( $contents, 'text/css' );
         }
-        $url = AUTOPTIMIZE_CACHE_URL . $cache->getname();
-        unset( $cache );
 
-        // CDN-replace the resulting URL if needed...
-        $url = $this->url_replace_cdn( $url );
+        $url = $this->build_minify_single_url( $cache );
 
         return $url;
     }

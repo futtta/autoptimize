@@ -542,26 +542,23 @@ class autoptimizeScripts extends autoptimizeBase
     public function minify_single( $filepath )
     {
         $contents = $this->prepare_minify_single( $filepath );
-        
+
         if ( empty( $contents ) ) {
             return false;
         }
-        
+
         // Check cache.
         $hash  = 'single_' . md5( $contents );
-        $cache = new autoptimizeCache( $hash, "js" );
+        $cache = new autoptimizeCache( $hash, 'js' );
 
         // If not in cache already, minify...
         if ( ! $cache->check() ) {
             $contents = trim( JSMin::minify( $contents ) );
             // Store in cache.
-            $cache->cache( $contents, "text/javascript" );
+            $cache->cache( $contents, 'text/javascript' );
         }
-        $url = AUTOPTIMIZE_CACHE_URL . $cache->getname();
-        unset( $cache );
 
-        // CDN-replace if needed...
-        $url = $this->url_replace_cdn( $url );
+        $url = $this->build_minify_single_url( $cache );
 
         return $url;
     }
