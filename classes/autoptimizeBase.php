@@ -633,7 +633,48 @@ abstract class autoptimizeBase
 
         error_log( $data );
     }
+    /**
+     * Minifies a single local css/js file and returns its (cached) url.
+     *
+     * @param string $filepath Filepath.
+     *
+     * @return bool|string Url pointing to the minified css/js file or false.
+     */
+    protected function prepare_minify_single( $filepath )
+    {
+        // Decide what we're dealing with, return false if we don't know.
+        if ( $this->str_ends_in( $filepath, '.js' ) ) {
+            $type = 'js';
+            $mime = 'text/javascript';
+        } elseif ( $this->str_ends_in( $filepath, '.css' ) ) {
+            $type = 'css';
+            $mime = 'text/css';
+        } else {
+            return false;
+        }
 
+        // Bail if it looks like its already minifed (by having -min or .min
+        // in filename) or if it looks like WP jquery.js (which is minified).
+        $minified_variants = array(
+            '-min.' . $type,
+            '.min.' . $type,
+            'js/jquery/jquery.js',
+        );
+        foreach ( $minified_variants as $ending ) {
+            if ( $this->str_ends_in( $filepath, $ending ) ) {
+                return false;
+            }
+        }
+
+        // Get file contents, bail if empty.
+        $contents = file_get_contents( $filepath );
+        if ( empty( $contents ) ) {
+            return false;
+        }
+        
+        return $contents;
+    }
+    
     /**
      * Returns true if given $str ends with given $test.
      *
