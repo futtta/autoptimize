@@ -394,7 +394,7 @@ class autoptimizeStyles extends autoptimizeBase
      *
      * @return string
      */
-    protected function replace_longest_matches_first( $string, $replacements = array() )
+    protected static function replace_longest_matches_first( $string, $replacements = array() )
     {
         if ( ! empty( $replacements ) ) {
             // Sort the replacements array by key length in desc order (so that the longest strings are replaced first)
@@ -450,7 +450,7 @@ class autoptimizeStyles extends autoptimizeBase
             }
         }
 
-        $code = $this->replace_longest_matches_first($code, $replacements);
+        $code = self::replace_longest_matches_first($code, $replacements);
 
         return $code;
     }
@@ -568,7 +568,7 @@ class autoptimizeStyles extends autoptimizeBase
             }
         }
 
-        $code = $this->replace_longest_matches_first($code, $imgreplace);
+        $code = self::replace_longest_matches_first($code, $imgreplace);
 
         // Replace back font-face markers with actual font-face declarations
         $code = $this->restore_fontface($code);
@@ -922,14 +922,7 @@ class autoptimizeStyles extends autoptimizeBase
                 }
             }
 
-            if ( ! empty( $replace ) ) {
-                // Sort the replacements array by key length in desc order (so that the longest strings are replaced first)
-                $keys = array_map( 'strlen', array_keys( $replace ) );
-                array_multisort( $keys, SORT_DESC, $replace );
-
-                // Replace URLs found within $code
-                $code = str_replace( array_keys( $replace ), array_values( $replace ), $code );
-            }
+            $code = self::replace_longest_matches_first( $code, $replace );
         }
 
         return $code;
