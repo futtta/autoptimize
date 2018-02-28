@@ -635,11 +635,11 @@ abstract class autoptimizeBase
     }
 
     /**
-     * Minifies a single local css/js file and returns its (cached) url.
+     * checks if a single local css/js file can be minified and returns source if so.
      *
      * @param string $filepath Filepath.
      *
-     * @return bool|string Url pointing to the minified css/js file or false.
+     * @return bool|string to be minified code or false.
      */
     protected function prepare_minify_single( $filepath )
     {
