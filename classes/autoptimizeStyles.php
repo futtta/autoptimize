@@ -993,10 +993,11 @@ class autoptimizeStyles extends autoptimizeBase
      * and returns its (cached) url.
      *
      * @param string $filepath Filepath.
+     * @param bool $cache_miss Optional. Force a cache miss. Default false.
      *
      * @return bool|string Url pointing to the minified css file or false.
      */
-    public function minify_single( $filepath )
+    public function minify_single( $filepath, $cache_miss = false )
     {
         $contents = $this->prepare_minify_single( $filepath );
 
@@ -1009,7 +1010,7 @@ class autoptimizeStyles extends autoptimizeBase
         $cache = new autoptimizeCache( $hash, 'css' );
 
         // If not in cache already, minify...
-        if ( ! $cache->check() ) {
+        if ( ! $cache->check() || $cache_miss ) {
             // Fixurls...
             $contents = self::fixurls( $filepath, $contents );
             // CDN-replace any referenced assets if needed...

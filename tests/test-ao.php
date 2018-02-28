@@ -1668,7 +1668,7 @@ HTML;
         $styles = new autoptimizeStyles( '' );
         $opts = $this->getAoStylesDefaultOptions();
         $styles->read( $opts );
-        $url = $styles->minify_single( $pathname );
+        $url = $styles->minify_single( $pathname, $cache_miss = true );
 
         // Minified url filename + its pointed to cdn
         $this->assertContains( 'cache/autoptimize/', $url );
@@ -1679,6 +1679,6 @@ HTML;
         $path = $styles->getpath( $url );
         $contents = file_get_contents( $path );
         $this->assertContains( $styles->cdn_url, $contents );
-        $this->assertContains( '.bg{background:url(http://cdn.example.org/', $contents );
+        $this->assertContains( '.bg{background:url(' . $styles->cdn_url, $contents );
     }
 }

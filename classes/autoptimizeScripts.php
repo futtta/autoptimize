@@ -536,10 +536,11 @@ class autoptimizeScripts extends autoptimizeBase
      * Minifies a single local js file and returns its (cached) url.
      *
      * @param string $filepath Filepath.
+     * @param bool $cache_miss Optional. Force a cache miss. Default false.
      *
      * @return bool|string Url pointing to the minified js file or false.
      */
-    public function minify_single( $filepath )
+    public function minify_single( $filepath, $cache_miss = false )
     {
         $contents = $this->prepare_minify_single( $filepath );
 
@@ -552,7 +553,7 @@ class autoptimizeScripts extends autoptimizeBase
         $cache = new autoptimizeCache( $hash, 'js' );
 
         // If not in cache already, minify...
-        if ( ! $cache->check() ) {
+        if ( ! $cache->check() || $cache_miss ) {
             $contents = trim( JSMin::minify( $contents ) );
             // Store in cache.
             $cache->cache( $contents, 'text/javascript' );
