@@ -110,7 +110,7 @@ function getAOPartnerFeed() {
                         }
                         ?>
                         <div class="itemDescription"><?php echo wp_kses_post($item -> get_description() ); ?></div>
-                        <div class="itemButtonRow"><div class="itemButton button-secondary"><a href="<?php echo $itemURL; ?>" target="_blank">More info</a></div></div>
+                        <div class="itemButtonRow"><div class="itemButton button-secondary"><a href="<?php echo $itemURL; ?>" target="_blank"><?php _e('More info','autoptimize'); ?></a></div></div>
                     </li>
                 <?php endforeach; ?>
             <?php } ?>
