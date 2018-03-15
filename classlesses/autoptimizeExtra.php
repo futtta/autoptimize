@@ -35,7 +35,7 @@ function autoptimize_extra_init() {
     }
 
     /* async JS */
-    if (!empty($autoptimize_extra_options['autoptimize_extra_text_field_3'])) {
+    if ( !empty($autoptimize_extra_options['autoptimize_extra_text_field_3']) && !is_plugin_active('autoptimize/autoptimize.php') ) {
         add_filter('autoptimize_filter_js_exclude','autoptimize_extra_async_js',10,1);
     }
 
@@ -339,9 +339,21 @@ function autoptimize_extra_options_page() {
             <tr>
                 <th scope="row"><?php _e('Async Javascript-files <em>(advanced users)</em>','autoptimize'); ?></th>
                 <td>
-                    <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php echo $autoptimize_extra_options['autoptimize_extra_text_field_3']; ?>'>
-                    <br />
-                    <?php _e('Comma-separated list of local or 3rd party JS-files that should loaded with the <code>async</code> flag. JS-files from your own site will be automatically excluded if added here.','autoptimize'); ?>
+                    <?php if ( is_plugin_active('async-javascript/async-javascript.php') ) {
+                        _e('You have "Async JavaScript" installed, ','autoptimize');
+                        $asj_config_url="options-general.php?page=async-javascript";
+                        echo sprintf('<a href="'.$asj_config_url.'">%s</a>', __('configuration of async javascript is best done there.'));
+                    } else { ?>
+                        <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php echo $autoptimize_extra_options['autoptimize_extra_text_field_3']; ?>'>
+                        <br />
+                        <?php 
+                        _e('Comma-separated list of local or 3rd party JS-files that should loaded with the <code>async</code> flag. JS-files from your own site will be automatically excluded if added here. ','autoptimize');
+                        echo "<strong>";
+                        _e('Configuration of async javascript is easier and more flexible using the "Async Javascript"-plugin. ','autoptimize');
+                        echo "</strong>";
+                        $asj_install_url= network_admin_url()."plugin-install.php?s=async+javascript&tab=search&type=term";
+                        echo sprintf('<a href="'.$asj_install_url.'">%s</a>', __('Click here to install it.'));
+                    } ?>
                 </td>
             </tr>
         </table>
