@@ -356,6 +356,20 @@ function autoptimize_extra_options_page() {
                     } ?>
                 </td>
             </tr>
+            <tr>
+                <th scope="row"><?php _e('Optimize Youtube video\'s','autoptimize'); ?></th>
+                <td>
+                    <?php if ( is_plugin_active('wp-youtube-lyte/wp-youtube-lyte.php') ) {
+                        _e('Great, you have WP YouTube Lyte installed. ','autoptimize');
+                        $lyte_config_url="options-general.php?page=lyte_settings_page";
+                        echo sprintf('<a href="'.$lyte_config_url.'">%s</a>', __('Click here to configure it.'));
+                    } else {
+                        _e('WP YouTube Lyte allows you to “lazy load” your video’s, by inserting responsive “Lite YouTube Embeds". ','autoptimize');
+                        $lyte_install_url= network_admin_url()."plugin-install.php?s=lyte&tab=search&type=term";
+                        echo sprintf('<a href="'.$lyte_install_url.'">%s</a>', __('Click here to install it.'));
+                    } ?>
+                </td>
+            </tr>
         </table>
         <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e('Save Changes','autoptimize') ?>" /></p>
     </form>
