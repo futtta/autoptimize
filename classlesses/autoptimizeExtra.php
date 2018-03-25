@@ -348,25 +348,26 @@ function autoptimize_extra_options_page() {
                         <br />
                         <?php 
                         _e('Comma-separated list of local or 3rd party JS-files that should loaded with the <code>async</code> flag. JS-files from your own site will be automatically excluded if added here. ','autoptimize');
-                        echo "<strong>";
-                        _e('Configuration of async javascript is easier and more flexible using the "Async Javascript"-plugin. ','autoptimize');
-                        echo "</strong>";
+                        _e('Configuration of async javascript is easier and more flexible using the ','autoptimize');
+                        echo '"<a href="https://wordpress.org/plugins/async-javascript" target="_blank">Async Javascript</a>" ';
+                        _e('plugin. ','autoptimize');
                         $asj_install_url= network_admin_url()."plugin-install.php?s=async+javascript&tab=search&type=term";
-                        echo sprintf('<a href="'.$asj_install_url.'">%s</a>', __('Click here to install it.'));
+                        echo sprintf('<a href="'.$asj_install_url.'">%s</a>', __('Click here to install and activate it.'));
                     } ?>
                 </td>
             </tr>
             <tr>
-                <th scope="row"><?php _e('Optimize Youtube video\'s','autoptimize'); ?></th>
+                <th scope="row"><?php _e('Optimize YouTube video\'s','autoptimize'); ?></th>
                 <td>
                     <?php if ( is_plugin_active('wp-youtube-lyte/wp-youtube-lyte.php') ) {
                         _e('Great, you have WP YouTube Lyte installed. ','autoptimize');
                         $lyte_config_url="options-general.php?page=lyte_settings_page";
                         echo sprintf('<a href="'.$lyte_config_url.'">%s</a>', __('Click here to configure it.'));
                     } else {
-                        _e('WP YouTube Lyte allows you to “lazy load” your videos, by inserting responsive “Lite YouTube Embeds". ','autoptimize');
+                        echo '<a href="https://wordpress.org/plugins/wp-youtube-lyte" target="_blank">WP YouTube Lyte</a> ';
+                        _e('allows you to “lazy load” your videos, by inserting responsive “Lite YouTube Embeds". ','autoptimize');
                         $lyte_install_url= network_admin_url()."plugin-install.php?s=lyte&tab=search&type=term";
-                        echo sprintf('<a href="'.$lyte_install_url.'">%s</a>', __('Click here to install it.'));
+                        echo sprintf('<a href="'.$lyte_install_url.'">%s</a>', __('Click here to install and activate it.'));
                     } ?>
                 </td>
             </tr>
