@@ -340,19 +340,17 @@ function autoptimize_extra_options_page() {
                 <th scope="row"><?php _e('Async Javascript-files <em>(advanced users)</em>','autoptimize'); ?></th>
                 <td>
                     <?php if ( is_plugin_active('async-javascript/async-javascript.php') ) {
-                        _e('You have "Async JavaScript" installed, ','autoptimize');
+                        _e('You have "Async JavaScript" installed,','autoptimize');
                         $asj_config_url="options-general.php?page=async-javascript";
-                        echo sprintf('<a href="'.$asj_config_url.'">%s</a>', __('configuration of async javascript is best done there.'));
+                        echo sprintf(' <a href="'.$asj_config_url.'">%s</a>', __('configuration of async javascript is best done there.'));
                     } else { ?>
                         <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php echo $autoptimize_extra_options['autoptimize_extra_text_field_3']; ?>'>
                         <br />
                         <?php 
                         _e('Comma-separated list of local or 3rd party JS-files that should loaded with the <code>async</code> flag. JS-files from your own site will be automatically excluded if added here. ','autoptimize');
-                        _e('Configuration of async javascript is easier and more flexible using the ','autoptimize');
-                        echo '"<a href="https://wordpress.org/plugins/async-javascript" target="_blank">Async Javascript</a>" ';
-                        _e('plugin. ','autoptimize');
+                        echo sprintf( __('Configuration of async javascript is easier and more flexible using the %s plugin.','autoptimize'), '"<a href="https://wordpress.org/plugins/async-javascript" target="_blank">Async Javascript</a>"');
                         $asj_install_url= network_admin_url()."plugin-install.php?s=async+javascript&tab=search&type=term";
-                        echo sprintf('<a href="'.$asj_install_url.'">%s</a>', __('Click here to install and activate it.'));
+                        echo sprintf(' <a href="'.$asj_install_url.'">%s</a>', __('Click here to install and activate it.'));
                     } ?>
                 </td>
             </tr>
@@ -360,14 +358,13 @@ function autoptimize_extra_options_page() {
                 <th scope="row"><?php _e('Optimize YouTube video\'s','autoptimize'); ?></th>
                 <td>
                     <?php if ( is_plugin_active('wp-youtube-lyte/wp-youtube-lyte.php') ) {
-                        _e('Great, you have WP YouTube Lyte installed. ','autoptimize');
+                        _e('Great, you have WP YouTube Lyte installed.','autoptimize');
                         $lyte_config_url="options-general.php?page=lyte_settings_page";
-                        echo sprintf('<a href="'.$lyte_config_url.'">%s</a>', __('Click here to configure it.'));
+                        echo sprintf(' <a href="'.$lyte_config_url.'">%s</a>', __('Click here to configure it.'));
                     } else {
-                        echo '<a href="https://wordpress.org/plugins/wp-youtube-lyte" target="_blank">WP YouTube Lyte</a> ';
-                        _e('allows you to “lazy load” your videos, by inserting responsive “Lite YouTube Embeds". ','autoptimize');
+                        echo sprintf( __('%s allows you to “lazy load” your videos, by inserting responsive “Lite YouTube Embeds". ','autoptimize'),'<a href="https://wordpress.org/plugins/wp-youtube-lyte" target="_blank">WP YouTube Lyte</a>');
                         $lyte_install_url= network_admin_url()."plugin-install.php?s=lyte&tab=search&type=term";
-                        echo sprintf('<a href="'.$lyte_install_url.'">%s</a>', __('Click here to install and activate it.'));
+                        echo sprintf(' <a href="'.$lyte_install_url.'">%s</a>', __('Click here to install and activate it.'));
                     } ?>
                 </td>
             </tr>
