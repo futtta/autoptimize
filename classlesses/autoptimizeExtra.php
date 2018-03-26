@@ -355,7 +355,7 @@ function autoptimize_extra_options_page() {
                 </td>
             </tr>
             <tr>
-                <th scope="row"><?php _e('Optimize YouTube video\'s','autoptimize'); ?></th>
+                <th scope="row"><?php _e('Optimize YouTube videos','autoptimize'); ?></th>
                 <td>
                     <?php if ( is_plugin_active('wp-youtube-lyte/wp-youtube-lyte.php') ) {
                         _e('Great, you have WP YouTube Lyte installed.','autoptimize');
