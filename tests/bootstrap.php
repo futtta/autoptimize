@@ -38,7 +38,7 @@ function _manually_load_plugin() {
         return true;
     });
 
-    require dirname( dirname( __FILE__ ) ) . '/autoptimize-beta.php';
+    require dirname( dirname( __FILE__ ) ) . '/autoptimize.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
