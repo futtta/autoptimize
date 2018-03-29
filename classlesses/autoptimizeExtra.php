@@ -339,7 +339,7 @@ function autoptimize_extra_options_page() {
             <tr>
                 <th scope="row"><?php _e('Async Javascript-files <em>(advanced users)</em>','autoptimize'); ?></th>
                 <td>
-                    <?php if ( is_plugin_active('async-javascript/async-javascript.php') ) {
+                    <?php if ( function_exists('is_plugin_active') && is_plugin_active('async-javascript/async-javascript.php') ) {
                         _e('You have "Async JavaScript" installed,','autoptimize');
                         $asj_config_url="options-general.php?page=async-javascript";
                         echo sprintf(' <a href="'.$asj_config_url.'">%s</a>', __('configuration of async javascript is best done there.','autoptimize'));
@@ -357,7 +357,7 @@ function autoptimize_extra_options_page() {
             <tr>
                 <th scope="row"><?php _e('Optimize YouTube videos','autoptimize'); ?></th>
                 <td>
-                    <?php if ( is_plugin_active('wp-youtube-lyte/wp-youtube-lyte.php') ) {
+                    <?php if ( function_exists('is_plugin_active') && is_plugin_active('wp-youtube-lyte/wp-youtube-lyte.php') ) {
                         _e('Great, you have WP YouTube Lyte installed.','autoptimize');
                         $lyte_config_url="options-general.php?page=lyte_settings_page";
                         echo sprintf(' <a href="'.$lyte_config_url.'">%s</a>', __('Click here to configure it.','autoptimize'));
