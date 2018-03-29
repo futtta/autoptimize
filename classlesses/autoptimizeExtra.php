@@ -35,7 +35,11 @@ function autoptimize_extra_init() {
     }
 
     /* async JS */
-    if ( !empty($autoptimize_extra_options['autoptimize_extra_text_field_3']) && !is_plugin_active('async-javascript/async-javascript.php') ) {
+    $_asyncJSactive = false;
+    if ( function_exists('is_plugin_active') && is_plugin_active('async-javascript/async-javascript.php') ) {
+        $_asyncJSactive = true;
+    }
+    if ( !empty($autoptimize_extra_options['autoptimize_extra_text_field_3']) && $_asyncJSactive === false ) {
         add_filter('autoptimize_filter_js_exclude','autoptimize_extra_async_js',10,1);
     }
 
