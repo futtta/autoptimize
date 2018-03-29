@@ -34,7 +34,14 @@ function autoptimize_extra_init() {
         add_filter( 'style_loader_src', 'autoptimize_extra_remove_qs', 15, 1 );
     }
 
-    /* async JS */
+    /* 
+     * async JS
+     * 
+     * is_plugin_active is not available in frontend by default
+     * cfr. https://codex.wordpress.org/Function_Reference/is_plugin_active
+     * so we need to source in wp-admin/includes/plugin.php
+    */
+    include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
     $_asyncJSactive = false;
     if ( function_exists('is_plugin_active') && is_plugin_active('async-javascript/async-javascript.php') ) {
         $_asyncJSactive = true;
