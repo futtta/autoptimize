@@ -73,7 +73,7 @@ class autoptimizePartners
                     }
 
                     $output .= '<div class="itemDescription">' . wp_kses_post( $item->get_description() ) . '</div>';
-                    $output .= '<div class="itemButtonRow"><div class="itemButton button-secondary"><a href="' . $item_url . '" target="_blank">More info</a></div></div>';
+                    $output .= '<div class="itemButtonRow"><div class="itemButton button-secondary"><a href="' . $item_url . '" target="_blank">'.__('More info','autoptimize').'</a></div></div>';
                     $output .= '</li>';
                 }
                 $output .= '</ul>';
