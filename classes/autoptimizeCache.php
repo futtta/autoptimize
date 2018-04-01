@@ -152,7 +152,7 @@ class autoptimizeCache
      *
      * @return bool
      */
-    public static function clearall()
+    public static function clearall( $propagate=true )
     {
         if ( ! autoptimizeCache::cacheavail() ) {
             return false;
@@ -171,14 +171,16 @@ class autoptimizeCache
         @unlink( AUTOPTIMIZE_CACHE_DIR . '/.htaccess' ); // @codingStandardsIgnoreLine
         delete_transient( 'autoptimize_stats' );
 
-        // Cache was just purged!
-        if ( ! function_exists( 'autoptimize_do_cachepurged_action' ) ) {
-            function autoptimize_do_cachepurged_action() {
-                do_action( 'autoptimize_action_cachepurged' );
+        // Cache was just purged, clear page cache and allow others to hook into our purging if propagate = true
+        if ($propagate === true) {
+            if ( ! function_exists( 'autoptimize_do_cachepurged_action' ) ) {
+                function autoptimize_do_cachepurged_action() {
+                    do_action( 'autoptimize_action_cachepurged' );
+                }
             }
-        }
-        add_action( 'shutdown', 'autoptimize_do_cachepurged_action', 11 );
-        add_action( 'autoptimize_action_cachepurged', array( 'autoptimizeCache', 'flushPageCache' ), 10, 0 );
+            add_action( 'shutdown', 'autoptimize_do_cachepurged_action', 11 );
+            add_action( 'autoptimize_action_cachepurged', array( 'autoptimizeCache', 'flushPageCache' ), 10, 0 );
+        } 
 
         // Warm cache (part of speedupper)!
         if ( apply_filters( 'autoptimize_filter_speedupper', true ) ) {
@@ -187,6 +189,19 @@ class autoptimizeCache
             unset( $cache );
         }
 
+        return true;
+    }
+
+    /**
+     * Wrapper for clearall but with false param
+     * to ensure the event is not propagated to others  
+     * through our own hooks (to avoid infinit loops)
+     *
+     * @return bool
+     */
+    public static function clearallNoPropagate()
+    {
+        autoptimizeCache::clearall(false);
         return true;
     }
 

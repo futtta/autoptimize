@@ -58,6 +58,7 @@ class autoptimizeMain
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ) );
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
+        add_action( 'init', array( $this, 'hookPageCachePurge') );
 
         register_activation_hook( $this->filepath, array( $this, 'on_activate' ) );
     }
@@ -185,6 +186,21 @@ class autoptimizeMain
             new autoptimizePartners();
         }
     }
+
+    public function hookPageCachePurge() 
+    {
+        // hook into page cache purge actions if available
+        $pageCachePurgeActions = array(
+            'after_rocket_clean_domain', 
+            'hyper_cache_purged', 
+            'w3tc_flush_posts', 
+            'ce_action_cache_cleared'
+        );
+        foreach ($pageCachePurgeActions as $PurgeAction) 
+        {
+            add_action($PurgeAction, 'autoptimizeCache::clearallNoPropagate' );
+        }
+	}
 
     /**
      * Setup output buffering if needed.
