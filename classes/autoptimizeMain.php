@@ -194,7 +194,9 @@ class autoptimizeMain
             'after_rocket_clean_domain', 
             'hyper_cache_purged', 
             'w3tc_flush_posts', 
-            'ce_action_cache_cleared'
+            'w3tc_flush_all', 
+            'ce_action_cache_cleared', 
+            'comet_cache_wipe_cache'
         );
         foreach ($pageCachePurgeActions as $PurgeAction) 
         {
