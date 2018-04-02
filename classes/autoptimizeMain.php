@@ -58,7 +58,7 @@ class autoptimizeMain
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ) );
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
-        add_action( 'init', array( $this, 'hookPageCachePurge') );
+        add_action( 'plugins_loaded', array( $this, 'hookPageCachePurge') );
 
         register_activation_hook( $this->filepath, array( $this, 'on_activate' ) );
     }
@@ -191,12 +191,15 @@ class autoptimizeMain
     {
         // hook into page cache purge actions if available
         $pageCachePurgeActions = array(
-            'after_rocket_clean_domain', 
-            'hyper_cache_purged', 
-            'w3tc_flush_posts', 
-            'w3tc_flush_all', 
-            'ce_action_cache_cleared', 
-            'comet_cache_wipe_cache'
+            'after_rocket_clean_domain', // exists
+            'hyper_cache_purged', // Stefano confirmed this will be added
+            'w3tc_flush_posts', // exits
+            'w3tc_flush_all', // exists
+            'ce_action_cache_cleared', // Sven confirmed this will be added
+            'comet_cache_wipe_cache', // still to be confirmed by Raam
+            'wp_cache_cleared', // cfr. https://github.com/Automattic/wp-super-cache/pull/537
+            'wp_ajax_wpfc_delete_cache', // Emre is working on this
+            'wp_ajax_wpfc_delete_cache_and_minified' // Emre still working on this
         );
         foreach ($pageCachePurgeActions as $PurgeAction) 
         {
