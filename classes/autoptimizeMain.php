@@ -198,8 +198,7 @@ class autoptimizeMain
             'ce_action_cache_cleared', // Sven confirmed this will be added
             'comet_cache_wipe_cache', // still to be confirmed by Raam
             'wp_cache_cleared', // cfr. https://github.com/Automattic/wp-super-cache/pull/537
-            'wp_ajax_wpfc_delete_cache', // Emre is working on this
-            'wp_ajax_wpfc_delete_cache_and_minified' // Emre still working on this
+            'wpfc_delete_cache' // Emre is working on this
         );
         foreach ($pageCachePurgeActions as $PurgeAction) 
         {
