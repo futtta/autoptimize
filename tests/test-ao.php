@@ -1681,4 +1681,10 @@ HTML;
         $this->assertContains( $styles->cdn_url, $contents );
         $this->assertContains( '.bg{background:url(' . $styles->cdn_url, $contents );
     }
+
+    public function test_ao_partners_instantiation_without_explicit_include()
+    {
+        $partners = new autoptimizePartners();
+        $this->assertTrue($partners instanceof autoptimizePartners);
+    }
 }

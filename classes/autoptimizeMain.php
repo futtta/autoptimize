@@ -171,7 +171,6 @@ class autoptimizeMain
     public function maybe_run_ao_extra()
     {
         if ( apply_filters( 'autoptimize_filter_extra_activate', true ) ) {
-            include AUTOPTIMIZE_PLUGIN_DIR . 'classes/autoptimizeExtra.php';
             $ao_extra = new autoptimizeExtra();
             $ao_extra->run();
         }
@@ -181,7 +180,6 @@ class autoptimizeMain
     {
         // Loads partners tab code if in admin (and not in admin-ajax.php)!
         if ( autoptimizeConfig::is_admin_and_not_ajax() ) {
-            include AUTOPTIMIZE_PLUGIN_DIR . 'classes/autoptimizePartners.php';
             new autoptimizePartners();
         }
     }
