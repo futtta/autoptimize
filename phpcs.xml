@@ -21,7 +21,7 @@
     <!-- Check all PHP files in directory tree by default. -->
     <arg name="extensions" value="php"/>
     <!--file>.</file-->
-    <file>autoptimize-beta.php</file>
+    <file>autoptimize.php</file>
     <file>classes</file>
 
     <!-- Show progress and sniff codes in all reports -->

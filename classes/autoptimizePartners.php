@@ -44,7 +44,8 @@ class autoptimizePartners
         }
     }
 
-    protected function get_ao_partner_feed_markup() {
+    protected function get_ao_partner_feed_markup()
+    {
         $no_feed_text = __( 'Have a look at <a href="http://optimizingmatters.com/">optimizingmatters.com</a> for Autoptimize power-ups!', 'autoptimize' );
         $output       = '';
         if ( apply_filters( 'autoptimize_settingsscreen_remotehttp', true ) ) {
@@ -73,7 +74,7 @@ class autoptimizePartners
                     }
 
                     $output .= '<div class="itemDescription">' . wp_kses_post( $item->get_description() ) . '</div>';
-                    $output .= '<div class="itemButtonRow"><div class="itemButton button-secondary"><a href="' . $item_url . '" target="_blank">'.__('More info','autoptimize').'</a></div></div>';
+                    $output .= '<div class="itemButtonRow"><div class="itemButton button-secondary"><a href="' . $item_url . '" target="_blank">' . __( 'More info', 'autoptimize' ) . '</a></div></div>';
                     $output .= '</li>';
                 }
                 $output .= '</ul>';

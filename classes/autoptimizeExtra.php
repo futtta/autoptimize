@@ -121,18 +121,16 @@ class autoptimizeExtra
             add_filter( 'style_loader_src', array( $this, 'filter_remove_qs' ), 15, 1 );
         }
 
-        /* Async JS!
-         * 
-         * is_plugin_active is not available in frontend by default
-         * cfr. https://codex.wordpress.org/Function_Reference/is_plugin_active
-         * so we need to source in wp-admin/includes/plugin.php
-         */
-        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-        $_asyncJSactive = false;
-        if ( function_exists('is_plugin_active') && is_plugin_active('async-javascript/async-javascript.php') ) {
-            $_asyncJSactive = true;
+        // Making sure is_plugin_active() exists when we need it.
+        if ( ! function_exists( 'is_plugin_active' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
         }
-        if ( ! empty( $options['autoptimize_extra_text_field_3'] ) && $_asyncJSactive !== true ) {
+        // Avoiding conflicts of interest when async-javascript plugin is active!
+        $async_js_plugin_active = false;
+        if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'async-javascript/async-javascript.php' ) ) {
+            $async_js_plugin_active = true;
+        }
+        if ( ! empty( $options['autoptimize_extra_text_field_3'] ) && ! $async_js_plugin_active ) {
             add_filter( 'autoptimize_filter_js_exclude', array( $this, 'extra_async_js' ), 10, 1 );
         }
 
@@ -387,33 +385,36 @@ class autoptimizeExtra
             <tr>
                 <th scope="row"><?php _e( 'Async Javascript-files <em>(advanced users)</em>', 'autoptimize' ); ?></th>
                 <td>
-                    <?php if ( function_exists('is_plugin_active') && is_plugin_active('async-javascript/async-javascript.php') ) {
-                        _e('You have "Async JavaScript" installed,','autoptimize');
-                        $asj_config_url="options-general.php?page=async-javascript";
-                        echo sprintf(' <a href="'.$asj_config_url.'">%s</a>', __('configuration of async javascript is best done there.','autoptimize'));
-                    } else { ?>
+                    <?php
+                    if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'async-javascript/async-javascript.php' ) ) {
+                        _e( 'You have "Async JavaScript" installed,', 'autoptimize' );
+                        $asj_config_url = 'options-general.php?page=async-javascript';
+                        echo sprintf( ' <a href="' . $asj_config_url . '">%s</a>', __( 'configuration of async javascript is best done there.', 'autoptimize' ) );
+                    } else {
+                    ?>
                         <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php echo esc_attr( $options['autoptimize_extra_text_field_3'] ); ?>'>
                         <br />
                         <?php
                             _e( 'Comma-separated list of local or 3rd party JS-files that should loaded with the <code>async</code> flag. JS-files from your own site will be automatically excluded if added here. ', 'autoptimize' );
-                            echo sprintf( __('Configuration of async javascript is easier and more flexible using the %s plugin.','autoptimize'), '"<a href="https://wordpress.org/plugins/async-javascript" target="_blank">Async Javascript</a>"');
-                            $asj_install_url= network_admin_url()."plugin-install.php?s=async+javascript&tab=search&type=term";
-                            echo sprintf(' <a href="'.$asj_install_url.'">%s</a>', __('Click here to install and activate it.','autoptimize'));
-                    } ?>
+                            echo sprintf( __( 'Configuration of async javascript is easier and more flexible using the %s plugin.', 'autoptimize' ), '"<a href="https://wordpress.org/plugins/async-javascript" target="_blank">Async Javascript</a>"' );
+                            $asj_install_url = network_admin_url() . 'plugin-install.php?s=async+javascript&tab=search&type=term';
+                            echo sprintf( ' <a href="' . $asj_install_url . '">%s</a>', __( 'Click here to install and activate it.', 'autoptimize' ) );
+                    }
+                    ?>
                 </td>
             </tr>
             <tr>
-                <th scope="row"><?php _e('Optimize YouTube videos','autoptimize'); ?></th>
+                <th scope="row"><?php _e( 'Optimize YouTube videos', 'autoptimize' ); ?></th>
                 <td>
-                    <?php 
-                    if ( function_exists('is_plugin_active') && is_plugin_active('wp-youtube-lyte/wp-youtube-lyte.php') ) {
-                        _e('Great, you have WP YouTube Lyte installed.','autoptimize');
-                        $lyte_config_url="options-general.php?page=lyte_settings_page";
-                        echo sprintf(' <a href="'.$lyte_config_url.'">%s</a>', __('Click here to configure it.','autoptimize'));
+                    <?php
+                    if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'wp-youtube-lyte/wp-youtube-lyte.php' ) ) {
+                        _e( 'Great, you have WP YouTube Lyte installed.', 'autoptimize' );
+                        $lyte_config_url = 'options-general.php?page=lyte_settings_page';
+                        echo sprintf( ' <a href="' . $lyte_config_url . '">%s</a>', __( 'Click here to configure it.', 'autoptimize' ) );
                     } else {
-                        echo sprintf( __('%s allows you to “lazy load” your videos, by inserting responsive “Lite YouTube Embeds". ','autoptimize'),'<a href="https://wordpress.org/plugins/wp-youtube-lyte" target="_blank">WP YouTube Lyte</a>');
-                        $lyte_install_url= network_admin_url()."plugin-install.php?s=lyte&tab=search&type=term";
-                        echo sprintf(' <a href="'.$lyte_install_url.'">%s</a>', __('Click here to install and activate it.','autoptimize'));
+                        echo sprintf( __( '%s allows you to “lazy load” your videos, by inserting responsive “Lite YouTube Embeds". ', 'autoptimize' ), '<a href="https://wordpress.org/plugins/wp-youtube-lyte" target="_blank">WP YouTube Lyte</a>' );
+                        $lyte_install_url = network_admin_url() . 'plugin-install.php?s=lyte&tab=search&type=term';
+                        echo sprintf( ' <a href="' . $lyte_install_url . '">%s</a>', __( 'Click here to install and activate it.', 'autoptimize' ) );
                     }
                     ?>
                 </td>
