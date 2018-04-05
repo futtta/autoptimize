@@ -236,13 +236,13 @@ class Minify_HTML {
         $ws1 = ($m[1] === '') ? '' : ' ';
         $ws2 = ($m[4] === '') ? '' : ' ';
 
-        if ($this->_keepComments == false) {
-            // remove HTML comments (and ending "//" if present)
+        // remove HTML comments (and ending "//" if present)
+        if (!$this->_keepComments) {
             $js = preg_replace('/(?:^\\s*<!--\\s*|\\s*(?:\\/\\/)?\\s*-->\\s*$)/', '', $js);
-
-            // remove CDATA section markers
-            $js = $this->_removeCdata($js);
         }
+
+        // remove CDATA section markers
+        $js = $this->_removeCdata($js);
 
         // minify
         $minifier = $this->_jsMinifier
