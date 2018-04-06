@@ -58,7 +58,7 @@ class autoptimizeMain
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ) );
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
-        add_action( 'plugins_loaded', array( $this, 'hookPageCachePurge') );
+        add_action( 'plugins_loaded', array( $this, 'hook_page_cache_purge' ) );
 
         register_activation_hook( $this->filepath, array( $this, 'on_activate' ) );
     }
@@ -187,24 +187,26 @@ class autoptimizeMain
         }
     }
 
-    public function hookPageCachePurge() 
+    public function hook_page_cache_purge()
     {
-        // hook into page cache purge actions if available
-        $pageCachePurgeActions = array(
-            'after_rocket_clean_domain', // exists
-            'hyper_cache_purged', // Stefano confirmed this will be added
-            'w3tc_flush_posts', // exits
-            'w3tc_flush_all', // exists
-            'ce_action_cache_cleared', // Sven confirmed this will be added
-            'comet_cache_wipe_cache', // still to be confirmed by Raam
-            'wp_cache_cleared', // cfr. https://github.com/Automattic/wp-super-cache/pull/537
-            'wpfc_delete_cache' // Emre is working on this
-        );
-        foreach ($pageCachePurgeActions as $PurgeAction) 
-        {
-            add_action($PurgeAction, 'autoptimizeCache::clearallNoPropagate' );
+        // hook into a collection of page cache purge actions if filter allows.
+        if ( apply_filters( 'autoptimize_filter_main_hookpagecachepurge', true ) ) {
+            $page_cache_purge_actions = array(
+                'after_rocket_clean_domain', // exists.
+                'hyper_cache_purged', // Stefano confirmed this will be added.
+                'w3tc_flush_posts', // exits.
+                'w3tc_flush_all', // exists.
+                'ce_action_cache_cleared', // Sven confirmed this will be added.
+                'comet_cache_wipe_cache', // still to be confirmed by Raam.
+                'wp_cache_cleared', // cfr. https://github.com/Automattic/wp-super-cache/pull/537.
+                'wpfc_delete_cache', // Emre confirmed this will be added this.
+            );
+            foreach ($page_cache_purge_actions as $purge_action) 
+            {
+                add_action( $purge_action, 'autoptimizeCache::clearallNoPropagate' );
+            }
         }
-	}
+    }
 
     /**
      * Setup output buffering if needed.
