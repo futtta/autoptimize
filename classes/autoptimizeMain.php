@@ -199,8 +199,7 @@ class autoptimizeMain
                 'wp_cache_cleared', // cfr. https://github.com/Automattic/wp-super-cache/pull/537.
                 'wpfc_delete_cache', // Emre confirmed this will be added this.
             );
-            foreach ($page_cache_purge_actions as $purge_action) 
-            {
+            foreach ( $page_cache_purge_actions as $purge_action ) {
                 add_action( $purge_action, 'autoptimizeCache::clearallNoPropagate' );
             }
         }
