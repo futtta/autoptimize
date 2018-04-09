@@ -137,12 +137,8 @@ class autoptimizeExtra
         // Optimize google fonts!
         if ( ! empty( $options['autoptimize_extra_radio_field_4'] ) && ( '1' !== $options['autoptimize_extra_radio_field_4'] ) ) {
             add_filter( 'wp_resource_hints', array( $this, 'filter_remove_gfonts_dnsprefetch' ), 10, 2 );
-            if ( '2' === $options['autoptimize_extra_radio_field_4'] ) {
-                add_filter( 'autoptimize_filter_css_removables', array( $this, 'filter_remove_gfonts' ), 10, 1 );
-            } else {
-                add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_google_fonts' ), 10, 1 );
-                add_filter( 'autoptimize_extra_filter_tobepreconn', array( $this, 'filter_preconnect_google_fonts' ), 10, 1 );
-            }
+            add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_google_fonts' ), 10, 1 );
+            add_filter( 'autoptimize_extra_filter_tobepreconn', array( $this, 'filter_preconnect_google_fonts' ), 10, 1 );
         }
 
         // Preconnect!
@@ -222,7 +218,11 @@ class autoptimizeExtra
 
         $options      = $this->options;
         $fonts_markup = '';
-        if ( '3' === $options['autoptimize_extra_radio_field_4'] ) {
+        if ( '2' === $options['autoptimize_extra_radio_field_4'] ) {
+            // Remove Google Fonts.
+            unset( $fonts_collection );
+            return $in;
+        } elseif ( '3' === $options['autoptimize_extra_radio_field_4'] ) {
             // Aggregate & link!
             $fonts_string  = '';
             $subset_string = '';
@@ -256,7 +256,7 @@ class autoptimizeExtra
                 $fonts_array = array_merge( $fonts_array, $_fonts['fonts'] );
             }
 
-            $fonts_markup = '<script data-cfasync="false" type="text/javascript">WebFontConfig={google:{families:[\'';
+            $fonts_markup = '<script data-cfasync="false" id="ao_optimized_gfonts" type="text/javascript">WebFontConfig={google:{families:[\'';
             foreach ( $fonts_array as $fnt ) {
                 $fonts_markup .= $fnt . "','";
             }
@@ -266,6 +266,7 @@ class autoptimizeExtra
 
         // Replace back in markup.
         $out = substr_replace( $in, $fonts_markup . '<link', strpos( $in, '<link' ), strlen( '<link' ) );
+        unset( $fonts_collection );
         return $out;
     }
 
