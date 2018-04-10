@@ -147,12 +147,6 @@ class autoptimizeExtra
         }
     }
 
-    public function filter_remove_gfonts( $in )
-    {
-        // Adds 'fonts.googleapis.com' to the `autoptimize_filter_css_removables` list.
-        return $in . ', fonts.googleapis.com';
-    }
-
     public function filter_remove_emoji_dns_prefetch( $urls, $relation_type )
     {
         $emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/' );
