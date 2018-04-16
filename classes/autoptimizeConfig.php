@@ -184,6 +184,11 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
     </p></div>
 <?php } ?>
 
+<!-- AO beta only. -->
+<div class="notice-info notice"><p>
+    <?php printf( __( 'Thanks for testing Autoptimize Beta! Please report any issues you might encounter in the %s.', 'autoptimize' ), '<a href="https://github.com/futtta/autoptimize/issues" target="_blank">GitHub Issues</a>' ); ?>
+</p></div>
+
 <div id="autoptimize_main">
     <div id="ao_title_and_button">
         <h1 id="ao_title"><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?>
