@@ -216,7 +216,7 @@ class autoptimizeExtra
             // Remove Google Fonts.
             unset( $fonts_collection );
             return $in;
-        } elseif ( '3' === $options['autoptimize_extra_radio_field_4'] ) {
+        } elseif ( '3' === $options['autoptimize_extra_radio_field_4'] || '5' === $options['autoptimize_extra_radio_field_4'] ) {
             // Aggregate & link!
             $fonts_string  = '';
             $subset_string = '';
@@ -234,7 +234,12 @@ class autoptimizeExtra
             $fonts_string = str_replace( '|', '%7C', ltrim( $fonts_string, '|' ) );
 
             if ( ! empty( $fonts_string ) ) {
-                $fonts_markup = '<link rel="stylesheet" id="ao_optimized_gfonts" href="https://fonts.googleapis.com/css?family=' . $fonts_string . '" />';
+                if ( '5' === $options['autoptimize_extra_radio_field_4'] ) {
+                    $rel_string = 'rel="preload" as="style" onload="' . autoptimizeConfig::get_ao_css_preload_onload() . '"';
+                } else {
+                    $rel_string = 'rel="stylesheet"';
+                }
+                $fonts_markup = '<link ' . $rel_string . ' id="ao_optimized_gfonts" href="https://fonts.googleapis.com/css?family=' . $fonts_string . '" />';
             }
         } elseif ( '4' === $options['autoptimize_extra_radio_field_4'] ) {
             // Aggregate & load async (webfont.js impl.)!
@@ -261,6 +266,12 @@ class autoptimizeExtra
         // Replace back in markup.
         $out = substr_replace( $in, $fonts_markup . '<link', strpos( $in, '<link' ), strlen( '<link' ) );
         unset( $fonts_collection );
+
+        // and insert preload polyfill if "link preload" and if the polyfill isn't there yet (courtesy of inline&defer).
+        $preload_polyfill = autoptimizeConfig::get_ao_css_preload_polyfill();
+        if ( '5' === $options['autoptimize_extra_radio_field_4'] && strpos( $out, $preload_polyfill ) === false ) {
+            $out = str_replace( '</body>', $preload_polyfill . '</body>', $out );
+        }
         return $out;
     }
 
@@ -368,6 +379,7 @@ class autoptimizeExtra
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="1" <?php if ( ! in_array( $gfonts, array( 2, 3, 4 ) ) ) { echo 'checked'; } ?> ><?php _e( 'Leave as is', 'autoptimize' ); ?><br/>
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="2" <?php checked( 2, $gfonts, true ); ?> ><?php _e( 'Remove Google Fonts', 'autoptimize' ); ?><br/>
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="3" <?php checked( 3, $gfonts, true ); ?> ><?php _e( 'Combine and link in head', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php _e( 'Combine and preload in head', 'autoptimize' ); ?><br/>
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked( 4, $gfonts, true ); ?> ><?php _e( 'Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>', 'autoptimize' ); ?><br/>
                 </td>
             </tr>

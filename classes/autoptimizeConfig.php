@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
 
 class autoptimizeConfig
 {
@@ -14,16 +14,16 @@ class autoptimizeConfig
     private function __construct()
     {
         if ( is_admin() ) {
-            //Add the admin page and settings
+            // Add the admin page and settings.
             add_action( 'admin_menu', array( $this, 'addmenu' ) );
             add_action( 'admin_init', array( $this, 'registersettings' ) );
 
-            //Set meta info
+            // Set meta info.
             if ( function_exists( 'plugin_row_meta' ) ) {
-                //2.8+
-                add_filter( 'plugin_row_meta', array( $this,'setmeta' ), 10, 2 );
+                // 2.8 and higher.
+                add_filter( 'plugin_row_meta', array( $this, 'setmeta' ), 10, 2 );
             } elseif ( function_exists( 'post_class' ) ) {
-                //2.7
+                // 2.7 and lower.
                 $plugin = plugin_basename( AUTOPTIMIZE_PLUGIN_DIR . 'autoptimize.php' );
                 add_filter( 'plugin_action_links_' . $plugin, array( $this, 'setmeta' ) );
             }
@@ -38,7 +38,7 @@ class autoptimizeConfig
         }
 
         // Adds the Autoptimize Toolbar to the Admin bar.
-        // (we load outside the is_admin check so it's also displayed on the frontend toolbar)
+        // (we load outside the is_admin check so it's also displayed on the frontend toolbar).
         $toolbar = new autoptimizeToolbar();
     }
 
@@ -47,7 +47,7 @@ class autoptimizeConfig
      */
     static public function instance()
     {
-        // Only one instance
+        // Only one instance.
         if ( null === self::$instance ) {
             self::$instance = new autoptimizeConfig();
         }
@@ -552,7 +552,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
         show_feed(feedid);
     })
 
-    // validate cdn_url
+    // validate cdn_url.
     var cdn_url=document.getElementById("cdn_url");
     cdn_url_baseCSS=cdn_url.style.cssText;
     if ("validity" in cdn_url) {
@@ -645,20 +645,20 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 
     public function setmeta($links, $file = null)
     {
-        //Inspired on http://wpengineer.com/meta-links-for-wordpress-plugins/
-        //Do it only once - saves time
+        // Inspired on http://wpengineer.com/meta-links-for-wordpress-plugins/.
+        // Do it only once - saves time.
         static $plugin;
         if ( empty( $plugin ) ) {
             $plugin = plugin_basename( AUTOPTIMIZE_PLUGIN_DIR . 'autoptimize.php' );
         }
 
         if ( null === $file ) {
-            //2.7
+            // 2.7 and lower.
             $settings_link = sprintf( '<a href="options-general.php?page=autoptimize">%s</a>', __( 'Settings' ) );
             array_unshift( $links, $settings_link );
         } else {
-            //2.8
-            //If it's us, add the link
+            // 2.8 and higher.
+            // If it's us, add the link.
             if ( $file === $plugin ) {
                 $newlink = array( sprintf( '<a href="options-general.php?page=autoptimize">%s</a>', __( 'Settings' ) ) );
                 $links = array_merge( $links, $newlink );
@@ -720,13 +720,35 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
         return $defaults;
     }
 
+    /**
+     * Returns preload polyfill JS.
+     *
+     * @return string
+     */
+    public static function get_ao_css_preload_polyfill()
+    {
+        $preload_poly = apply_filters('autoptimize_css_preload_polyfill','<script data-cfasync=\'false\'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script>');
+        return $preload_poly;
+    }
+
+    /**
+     * Returns preload JS onload handler.
+     *
+     * @return string
+     */
+    public static function get_ao_css_preload_onload()
+    {
+        $preload_onload = apply_filters('autoptimize_filter_css_preload_onload',"this.onload=null;this.rel='stylesheet'");
+        return $preload_onload;
+    }
+
     public function get($key)
     {
         if ( ! is_array( $this->config ) ) {
-            // Default config
+            // Default config.
             $config = self::get_defaults();
 
-            // Override with user settings
+            // Override with user settings.
             foreach ( array_keys( $config ) as $name ) {
                 $conf = get_option( $name );
                 if ( false !== $conf ) {
@@ -735,7 +757,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
                 }
             }
 
-            // Save for next call
+            // Save for next call.
             $this->config = apply_filters( 'autoptimize_filter_get_config', $config );
         }
 
