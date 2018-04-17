@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
 Tested up to: 4.9
 Requires PHP: 5.3
-Stable tag: 2.4.0-beta1
+Stable tag: 2.4.0-beta-2
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS and HTML, async-ing JavaScript, removing emoji cruft, optimizing Google Fonts and more.
 
@@ -243,7 +243,13 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
-= 2.4.0 =
+= 2.4.0 beta 2 =
+
+* new: Autoptimize "listens" to page caches being cleared, upon which it purges it's own cache as well. Support depends on known action hooks firing by the page cache, supported by Hyper Cache, WP Rocket, W3 Total Cache, KeyCDN Cache Enabler, support confirmed coming in WP Fastest Cache and Comet Cache.
+* new: Google Fonts can now be "aggregated & preloaded", this uses CSS which is loaded non render-blocking
+* improvement: "remove all Google Fonts" is now more careful (avoiding removing entire CSS
+
+= 2.4.0 beta 1 =
 
 * first release as "Autoptimize Beta"
 * refactored significantly (no more "classlesses", all is OO), classes are autoloaded, tests added (travis-ci) by zytzagoo
