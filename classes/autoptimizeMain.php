@@ -89,12 +89,7 @@ class autoptimizeMain
             define( 'AUTOPTIMIZE_CACHEFILE_PREFIX', 'autoptimize_' );
         }
         if ( ! defined( 'AUTOPTIMIZE_CACHE_DIR' ) ) {
-            if ( is_multisite() && apply_filters( 'autoptimize_separate_blog_caches', true ) ) {
-                $blog_id = get_current_blog_id();
-                define( 'AUTOPTIMIZE_CACHE_DIR', WP_CONTENT_DIR . AUTOPTIMIZE_CACHE_CHILD_DIR . $blog_id . '/' );
-            } else {
-                define( 'AUTOPTIMIZE_CACHE_DIR', WP_CONTENT_DIR . AUTOPTIMIZE_CACHE_CHILD_DIR );
-            }
+            define( 'AUTOPTIMIZE_CACHE_DIR', autoptimizeCache::get_pathname() );
         }
 
         define( 'WP_ROOT_DIR', substr( WP_CONTENT_DIR, 0, strlen( WP_CONTENT_DIR ) - strlen( AUTOPTIMIZE_WP_CONTENT_NAME ) ) );

@@ -2057,4 +2057,18 @@ MARKUP;
         $this->assertSame( 'âñxæë', autoptimizeUtils::substr_replace( $str, 'ñx', 2, 3 ) );
         $this->assertSame( 'âz', autoptimizeUtils::substr_replace( $str, 'z', 2, 10 ) ); // Length larger than possible...
     }
+
+    public function test_cache_fast_delete()
+    {
+        add_filter( 'autoptimize_filter_cache_clear_advanced', '__return_true' );
+
+        autoptimizeCache::clearall_actionless();
+
+        remove_all_filters( 'autoptimize_filter_cache_clear_advanced' );
+    }
+
+    public function test_delete_advanced_cache_clear_artifacts()
+    {
+        $this->assertTrue( autoptimizeCache::delete_advanced_cache_clear_artifacts() );
+    }
 }

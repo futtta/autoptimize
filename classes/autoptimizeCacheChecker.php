@@ -70,6 +70,9 @@ class autoptimizeCacheChecker
                 }
             }
         }
+
+        // Nukes advanced cache clearing artifacts if they exists...
+        autoptimizeCache::delete_advanced_cache_clear_artifacts();
     }
 
     public function show_admin_notice()
