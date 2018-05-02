@@ -88,6 +88,7 @@ class autoptimizeMain
         if ( ! defined( 'AUTOPTIMIZE_CACHEFILE_PREFIX' ) ) {
             define( 'AUTOPTIMIZE_CACHEFILE_PREFIX', 'autoptimize_' );
         }
+        // Note: trailing slash is not optional!
         if ( ! defined( 'AUTOPTIMIZE_CACHE_DIR' ) ) {
             define( 'AUTOPTIMIZE_CACHE_DIR', autoptimizeCache::get_pathname() );
         }

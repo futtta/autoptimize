@@ -1697,7 +1697,7 @@ HTML;
         $url = $styles->minify_single( $pathname, $cache_miss = true );
 
         // Minified url filename + its pointed to cdn.
-        $this->assertContains( 'cache/autoptimize/', $url );
+        $this->assertContains( AUTOPTIMIZE_CACHE_CHILD_DIR, $url );
         $this->assertContains( '/autoptimize_single_', $url );
         $this->assertContains( $styles->cdn_url, $url );
 
