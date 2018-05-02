@@ -152,7 +152,7 @@ class autoptimizeCache
      *
      * @return void
      */
-    protected static function clear_cache_dirs_classic()
+    protected static function clear_cache_classic()
     {
         $contents = self::get_cache_contents();
         foreach ( $contents as $name => $files ) {
@@ -168,44 +168,26 @@ class autoptimizeCache
     }
 
     /**
-     * Deletes the specified pathaname (file/directory) if possible.
+     * Recursively deletes the specified pathname (file/directory) if possible.
      * Returns true on success, false otherwise.
      *
      * @param string $pathname Pathname to remove.
-     * @param bool   $recursive Whether to recursively delete everything inside.
      *
      * @return bool
      */
-    protected static function rmdir( $pathname, $recursive = false )
+    protected static function rmdir( $pathname )
     {
-        if ( $recursive ) {
-            $files = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator(
-                    $pathname, \RecursiveDirectoryIterator::SKIP_DOTS
-                ),
-                \RecursiveIteratorIterator::CHILD_FIRST
-            );
-        } else {
-            $files = new \FilesystemIterator( $pathname, \FilesystemIterator::SKIP_DOTS );
-        }
-
+        $files = self::get_dir_contents( $pathname );
         foreach ( $files as $file ) {
-            if ( $file->isDir() ) {
-                if ( ! rmdir( $file->getRealPath() ) ) {
-                    return false;
-                }
+            $path = $pathname . '/' . $file;
+            if ( is_dir( $path ) ) {
+                self::rmdir( $path );
             } else {
-                if ( ! unlink( $file->getRealPath() ) ) {
-                    return false;
-                }
+                unlink( $path );
             }
         }
 
-        if ( ! rmdir( $pathname ) ) {
-            return false;
-        }
-
-        return true;
+        return rmdir( $pathname );
     }
 
     /**
@@ -215,7 +197,7 @@ class autoptimizeCache
      *
      * @return bool Returns true when everything is done successfully, false otherwise.
      */
-    protected static function clear_cache_dirs_by_rename()
+    protected static function clear_cache_via_rename()
     {
         $ok       = false;
         $dir      = self::get_pathname_base();
@@ -271,6 +253,26 @@ class autoptimizeCache
         return $prefix;
     }
 
+    /**
+     * Returns an array of file and directory names found within
+     * the given $pathname without '.' and '..' elements.
+     *
+     * @param string $pathname Pathname.
+     *
+     * @return array
+     */
+    protected static function get_dir_contents( $pathname )
+    {
+        return array_slice( scandir( $pathname ), 2 );
+    }
+
+    /**
+     * Wipes directories which were created as part of the fast cache clearing
+     * routine (which renames the current cache directory into a new one with
+     * a custom-prefixed unique name).
+     *
+     * @return bool
+     */
     public static function delete_advanced_cache_clear_artifacts()
     {
         $dir    = self::get_pathname_base();
@@ -278,12 +280,14 @@ class autoptimizeCache
         $parent = dirname( $dir );
         $ok     = false;
 
-        foreach ( new DirectoryIterator( $parent ) as $file ) {
-            // @var SplFileInfo $file
-            $name                = $file->getFilename();
-            $name_matches_prefix = ( false !== strpos( $name, $prefix ) );
-            if ( ! $file->isDot() && $file->isDir() && $name_matches_prefix ) {
-                $ok = self::rmdir( $file->getPathname(), true );
+        // Returns the list of files without '.' and '..' elements.
+        $files = self::get_dir_contents( $parent );
+        foreach ( $files as $file ) {
+            $path     = $parent . '/' . $file;
+            $prefixed = ( false !== strpos( $path, $prefix ) );
+            // Removing only our own (prefixed) directories...
+            if ( is_dir( $path ) && $prefixed ) {
+                $ok = self::rmdir( $path );
             }
         }
 
@@ -337,9 +341,9 @@ class autoptimizeCache
 
         // TODO/FIXME: If cache is big, switch to advanced/new cache clearing automatically?
         if ( self::advanced_cache_clear_enabled() ) {
-            self::clear_cache_dirs_by_rename();
+            self::clear_cache_via_rename();
         } else {
-            self::clear_cache_dirs_classic();
+            self::clear_cache_classic();
         }
 
         // Remove the transient so it gets regenerated...
