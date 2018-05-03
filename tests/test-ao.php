@@ -9,6 +9,20 @@ class AOTest extends WP_UnitTestcase
      */
     protected $ao;
 
+    protected static $flexible_url_parts_js = [
+        'default'          => 'wp-content/cache/autoptimize/js/' . AUTOPTIMIZE_CACHEFILE_PREFIX,
+        'custom'           => 'wp-content/c/ao/js/' . AUTOPTIMIZE_CACHEFILE_PREFIX,
+        'multisite'        => 'wp-content/cache/autoptimize/1/js/' . AUTOPTIMIZE_CACHEFILE_PREFIX,
+        'multisite_custom' => 'wp-content/c/ao/1/js/' . AUTOPTIMIZE_CACHEFILE_PREFIX,
+    ];
+
+    protected static $flexible_url_parts_css = [
+        'default'          => 'wp-content/cache/autoptimize/css/' . AUTOPTIMIZE_CACHEFILE_PREFIX,
+        'custom'           => 'wp-content/c/ao/css/' . AUTOPTIMIZE_CACHEFILE_PREFIX,
+        'multisite'        => 'wp-content/cache/autoptimize/1/css/' . AUTOPTIMIZE_CACHEFILE_PREFIX,
+        'multisite_custom' => 'wp-content/c/ao/1/css/' . AUTOPTIMIZE_CACHEFILE_PREFIX,
+    ];
+
     protected function getAoStylesDefaultOptions()
     {
         $conf = autoptimizeConfig::instance();
@@ -73,7 +87,9 @@ class AOTest extends WP_UnitTestcase
         parent::tearDown();
     }
 
-    const TEST_MARKUP = <<<MARKUP
+    protected function get_test_markup()
+    {
+        $markup = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
 <!--[if IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -97,55 +113,55 @@ class AOTest extends WP_UnitTestcase
 
 /* roboto-100 - latin-ext_latin */
 @font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 100;
-  src: url('../fonts/roboto-v15-latin-ext_latin-100.eot'); /* IE9 Compat Modes */
-  src: local('Roboto Thin'), local('Roboto-Thin'),
-       url('../fonts/roboto-v15-latin-ext_latin-100.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../fonts/roboto-v15-latin-ext_latin-100.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/roboto-v15-latin-ext_latin-100.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/roboto-v15-latin-ext_latin-100.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 100;
+    src: url('../fonts/roboto-v15-latin-ext_latin-100.eot'); /* IE9 Compat Modes */
+    src: local('Roboto Thin'), local('Roboto-Thin'),
+        url('../fonts/roboto-v15-latin-ext_latin-100.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('../fonts/roboto-v15-latin-ext_latin-100.woff2') format('woff2'), /* Super Modern Browsers */
+        url('../fonts/roboto-v15-latin-ext_latin-100.woff') format('woff'), /* Modern Browsers */
+        url('../fonts/roboto-v15-latin-ext_latin-100.ttf') format('truetype'), /* Safari, Android, iOS */
+        url('../fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 /* roboto-300 - latin-ext_latin */
 @font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 300;
-  src: url('../fonts/roboto-v15-latin-ext_latin-300.eot'); /* IE9 Compat Modes */
-  src: local('Roboto Light'), local('Roboto-Light'),
-       url('../fonts/roboto-v15-latin-ext_latin-300.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../fonts/roboto-v15-latin-ext_latin-300.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/roboto-v15-latin-ext_latin-300.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/roboto-v15-latin-ext_latin-300.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/roboto-v15-latin-ext_latin-300.svg#Roboto') format('svg'); /* Legacy iOS */
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    src: url('../fonts/roboto-v15-latin-ext_latin-300.eot'); /* IE9 Compat Modes */
+    src: local('Roboto Light'), local('Roboto-Light'),
+        url('../fonts/roboto-v15-latin-ext_latin-300.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('../fonts/roboto-v15-latin-ext_latin-300.woff2') format('woff2'), /* Super Modern Browsers */
+        url('../fonts/roboto-v15-latin-ext_latin-300.woff') format('woff'), /* Modern Browsers */
+        url('../fonts/roboto-v15-latin-ext_latin-300.ttf') format('truetype'), /* Safari, Android, iOS */
+        url('../fonts/roboto-v15-latin-ext_latin-300.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 /* roboto-regular - latin-ext_latin */
 @font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  src: url('../fonts/roboto-v15-latin-ext_latin-regular.eot'); /* IE9 Compat Modes */
-  src: local('Roboto'), local('Roboto-Regular'),
-       url('../fonts/roboto-v15-latin-ext_latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../fonts/roboto-v15-latin-ext_latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/roboto-v15-latin-ext_latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/roboto-v15-latin-ext_latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/roboto-v15-latin-ext_latin-regular.svg#Roboto') format('svg'); /* Legacy iOS */
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/roboto-v15-latin-ext_latin-regular.eot'); /* IE9 Compat Modes */
+    src: local('Roboto'), local('Roboto-Regular'),
+        url('../fonts/roboto-v15-latin-ext_latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('../fonts/roboto-v15-latin-ext_latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+        url('../fonts/roboto-v15-latin-ext_latin-regular.woff') format('woff'), /* Modern Browsers */
+        url('../fonts/roboto-v15-latin-ext_latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+        url('../fonts/roboto-v15-latin-ext_latin-regular.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 /* roboto-500 - latin-ext_latin */
 @font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 500;
-  src: url('../fonts/roboto-v15-latin-ext_latin-500.eot'); /* IE9 Compat Modes */
-  src: local('Roboto Medium'), local('Roboto-Medium'),
-       url('../fonts/roboto-v15-latin-ext_latin-500.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../fonts/roboto-v15-latin-ext_latin-500.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/roboto-v15-latin-ext_latin-500.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/roboto-v15-latin-ext_latin-500.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/roboto-v15-latin-ext_latin-500.svg#Roboto') format('svg'); /* Legacy iOS */
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    src: url('../fonts/roboto-v15-latin-ext_latin-500.eot'); /* IE9 Compat Modes */
+    src: local('Roboto Medium'), local('Roboto-Medium'),
+        url('../fonts/roboto-v15-latin-ext_latin-500.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('../fonts/roboto-v15-latin-ext_latin-500.woff2') format('woff2'), /* Super Modern Browsers */
+        url('../fonts/roboto-v15-latin-ext_latin-500.woff') format('woff'), /* Modern Browsers */
+        url('../fonts/roboto-v15-latin-ext_latin-500.ttf') format('truetype'), /* Safari, Android, iOS */
+        url('../fonts/roboto-v15-latin-ext_latin-500.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 </style>
     <!--[if lt IE 9]>
@@ -160,11 +176,11 @@ class AOTest extends WP_UnitTestcase
 
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/hr_HR/sdk.js#version=v2.0&xfbml=1&appId=";
-      fjs.parentNode.insertBefore(js, fjs);
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/hr_HR/sdk.js#version=v2.0&xfbml=1&appId=";
+        fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
@@ -181,7 +197,20 @@ class AOTest extends WP_UnitTestcase
 </html>
 MARKUP;
 
-    const TEST_MARKUP_OUTPUT = <<<MARKUP
+        return $markup;
+    }
+
+    protected function get_test_markup_output()
+    {
+        $key = 'default';
+        if ( defined( 'CUSTOM_CONSTANTS_USED' ) && CUSTOM_CONSTANTS_USED ) {
+            $key = 'custom';
+        }
+
+        $csspart = self::$flexible_url_parts_css[ $key ];
+        $jspart  = self::$flexible_url_parts_js[ $key ];
+
+        $markup = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
 <!--[if IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -189,7 +218,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<link type="text/css" media="all" href="http://cdn.example.org/wp-content/cache/autoptimize/css/autoptimize_863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<link type="text/css" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -204,11 +233,11 @@ MARKUP;
 
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/hr_HR/sdk.js#version=v2.0&xfbml=1&appId=";
-      fjs.parentNode.insertBefore(js, fjs);
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/hr_HR/sdk.js#version=v2.0&xfbml=1&appId=";
+        fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
@@ -221,12 +250,24 @@ MARKUP;
 <script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="http://cdn.example.org/wp-content/cache/autoptimize/js/autoptimize_730dfe55780a3a6fc98224e18fa27340.js"></script></body>
+<script type="text/javascript" defer src="http://cdn.example.org/${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script></body>
 </html>
 MARKUP;
 
-    // When `is_multisite()` returns true, default path to files is different...
-    const TEST_MARKUP_OUTPUT_MS = <<<MARKUP
+        return $markup;
+    }
+
+    protected function get_test_markup_output_ms()
+    {
+        $key = 'multisite';
+        if ( defined( 'CUSTOM_CONSTANTS_USED' ) && CUSTOM_CONSTANTS_USED ) {
+            $key = 'multisite_custom';
+        }
+
+        $csspart = self::$flexible_url_parts_css[ $key ];
+        $jspart  = self::$flexible_url_parts_js[ $key ];
+
+        $markup = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
 <!--[if IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -234,7 +275,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<link type="text/css" media="all" href="http://cdn.example.org/wp-content/cache/autoptimize/1/css/autoptimize_863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<link type="text/css" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -249,11 +290,11 @@ MARKUP;
 
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/hr_HR/sdk.js#version=v2.0&xfbml=1&appId=";
-      fjs.parentNode.insertBefore(js, fjs);
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/hr_HR/sdk.js#version=v2.0&xfbml=1&appId=";
+        fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
@@ -266,11 +307,24 @@ MARKUP;
 <script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="http://cdn.example.org/wp-content/cache/autoptimize/1/js/autoptimize_730dfe55780a3a6fc98224e18fa27340.js"></script></body>
+<script type="text/javascript" defer src="http://cdn.example.org/${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script></body>
 </html>
 MARKUP;
 
-    const TEST_MARKUP_OUTPUT_INLINE_DEFER = <<<MARKUP
+        return $markup;
+    }
+
+    protected function get_test_markup_output_inline_defer()
+    {
+        $key = 'default';
+        if ( defined( 'CUSTOM_CONSTANTS_USED' ) && CUSTOM_CONSTANTS_USED ) {
+            $key = 'custom';
+        }
+
+        $csspart = self::$flexible_url_parts_css[ $key ];
+        $jspart  = self::$flexible_url_parts_js[ $key ];
+
+        $markup = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
 <!--[if IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -278,7 +332,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style type="text/css" id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="http://cdn.example.org/wp-content/cache/autoptimize/css/autoptimize_863f587e89f100b0223ddccc0dabc57a.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link type="text/css" media="all" href="http://cdn.example.org/wp-content/cache/autoptimize/css/autoptimize_863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style type="text/css" id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link type="text/css" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -293,11 +347,11 @@ MARKUP;
 
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/hr_HR/sdk.js#version=v2.0&xfbml=1&appId=";
-      fjs.parentNode.insertBefore(js, fjs);
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/hr_HR/sdk.js#version=v2.0&xfbml=1&appId=";
+        fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
@@ -310,11 +364,24 @@ MARKUP;
 <script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="http://cdn.example.org/wp-content/cache/autoptimize/js/autoptimize_730dfe55780a3a6fc98224e18fa27340.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
+<script type="text/javascript" defer src="http://cdn.example.org/${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
 </html>
 MARKUP;
 
-    const TEST_MARKUP_OUTPUT_INLINE_DEFER_MS = <<<MARKUP
+        return $markup;
+    }
+
+    protected function get_test_markup_output_inline_defer_ms()
+    {
+        $key = 'multisite';
+        if ( defined( 'CUSTOM_CONSTANTS_USED' ) && CUSTOM_CONSTANTS_USED ) {
+            $key = 'multisite_custom';
+        }
+
+        $csspart = self::$flexible_url_parts_css[ $key ];
+        $jspart  = self::$flexible_url_parts_js[ $key ];
+
+        $markup = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
 <!--[if IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -322,7 +389,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style type="text/css" id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="http://cdn.example.org/wp-content/cache/autoptimize/1/css/autoptimize_863f587e89f100b0223ddccc0dabc57a.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link type="text/css" media="all" href="http://cdn.example.org/wp-content/cache/autoptimize/1/css/autoptimize_863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style type="text/css" id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link type="text/css" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -337,11 +404,11 @@ MARKUP;
 
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/hr_HR/sdk.js#version=v2.0&xfbml=1&appId=";
-      fjs.parentNode.insertBefore(js, fjs);
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/hr_HR/sdk.js#version=v2.0&xfbml=1&appId=";
+        fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
@@ -354,9 +421,12 @@ MARKUP;
 <script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="http://cdn.example.org/wp-content/cache/autoptimize/1/js/autoptimize_730dfe55780a3a6fc98224e18fa27340.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
+<script type="text/javascript" defer src="http://cdn.example.org/${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
 </html>
 MARKUP;
+
+        return $markup;
+    }
 
     /**
      * @dataProvider provider_test_rewrite_markup_with_cdn
@@ -374,10 +444,10 @@ MARKUP;
 
             array(
                 // Input.
-                self::TEST_MARKUP,
+                $this->get_test_markup(),
                 // Expected output.
                 // TODO/FIXME: This seemed like the fastest way to get MS crude test to pass...
-                ( is_multisite() ? self::TEST_MARKUP_OUTPUT_MS : self::TEST_MARKUP_OUTPUT ),
+                ( is_multisite() ? $this->get_test_markup_output_ms() : $this->get_test_markup_output() ),
             ),
 
         );
@@ -1581,11 +1651,11 @@ HTML;
         add_filter( 'autoptimize_filter_css_defer', '__return_true' );
         add_filter( 'autoptimize_filter_css_defer_inline', '__return_true' );
 
-        $actual = $this->ao->end_buffering( self::TEST_MARKUP );
+        $actual = $this->ao->end_buffering( $this->get_test_markup() );
         if ( is_multisite() ) {
-            $this->assertEquals( self::TEST_MARKUP_OUTPUT_INLINE_DEFER_MS, $actual );
+            $this->assertEquals( $this->get_test_markup_output_inline_defer_ms(), $actual );
         } else {
-            $this->assertEquals( self::TEST_MARKUP_OUTPUT_INLINE_DEFER, $actual );
+            $this->assertEquals( $this->get_test_markup_output_inline_defer(), $actual );
         }
 
         remove_all_filters( 'autoptimize_filter_css_defer' );
