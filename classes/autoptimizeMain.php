@@ -201,7 +201,7 @@ class autoptimizeMain
             );
             $page_cache_purge_actions = apply_filters( 'autoptimize_filter_main_pagecachepurgeactions', $page_cache_purge_actions );
             foreach ( $page_cache_purge_actions as $purge_action ) {
-                add_action( $purge_action, 'autoptimizeCache::clearallNoPropagate' );
+                add_action( $purge_action, 'autoptimizeCache::clearall_actionless' );
             }
         }
     }
