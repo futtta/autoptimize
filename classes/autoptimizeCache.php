@@ -96,14 +96,14 @@ class autoptimizeCache
             $phpcode = file_get_contents( AUTOPTIMIZE_PLUGIN_DIR . 'config/' . $file );
             $phpcode = str_replace( array( '%%CONTENT%%', 'exit;' ), array( $mime, '' ), $phpcode );
 
-            file_put_contents( $this->cachedir . $this->filename, $phpcode, LOCK_EX );
-            file_put_contents( $this->cachedir . $this->filename . '.none', $data, LOCK_EX );
+            file_put_contents( $this->cachedir . $this->filename, $phpcode );
+            file_put_contents( $this->cachedir . $this->filename . '.none', $data );
         } else {
             // Write code to cache without doing anything else.
-            file_put_contents( $this->cachedir . $this->filename, $data, LOCK_EX );
+            file_put_contents( $this->cachedir . $this->filename, $data );
             if ( apply_filters( 'autoptimize_filter_cache_create_static_gzip', false ) ) {
                 // Create an additional cached gzip file.
-                file_put_contents( $this->cachedir . $this->filename . '.gz', gzencode( $data, 9, FORCE_GZIP ), LOCK_EX );
+                file_put_contents( $this->cachedir . $this->filename . '.gz', gzencode( $data, 9, FORCE_GZIP ) );
             }
         }
     }
