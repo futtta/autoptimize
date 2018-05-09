@@ -1833,4 +1833,202 @@ MARKUP;
         $actual = $instance->getcontent();
         $this->assertEquals( $expected, $actual );
     }
+
+    public function test_utils_mbstring_iconv_availabilty_overriding()
+    {
+        $orig     = autoptimizeUtils::iconv_available();
+        $opposite = ! $orig;
+
+        $this->assertSame( $orig, autoptimizeUtils::iconv_available() );
+        // Override works...
+        $this->assertSame( $opposite, autoptimizeUtils::iconv_available( $opposite ) );
+        // And override remains cached as the last version
+        $this->assertSame( $opposite, autoptimizeUtils::iconv_available() );
+
+        $orig     = autoptimizeUtils::mbstring_available();
+        $opposite = ! $orig;
+
+        $this->assertSame( $orig, autoptimizeUtils::mbstring_available() );
+        // Override works...
+        $this->assertSame( $opposite, autoptimizeUtils::mbstring_available( $opposite ) );
+        // And override remains cached as the last version
+        $this->assertSame( $opposite, autoptimizeUtils::mbstring_available() );
+    }
+
+    public function test_utils_mbstring_basics()
+    {
+        // Turn off iconv, turn on mbstring usage
+        autoptimizeUtils::mbstring_available( true );
+        autoptimizeUtils::iconv_available( false );
+
+        $this->assertSame( 2, autoptimizeUtils::strlen( "\x00\xFF", 'ASCII' ) );
+        $this->assertSame( 2, autoptimizeUtils::strlen( "\x00\xFF", 'CP850' ) );
+        $this->assertSame( 3, autoptimizeUtils::strlen( '한국어' ) );
+
+        $this->assertFalse( @autoptimizeUtils::strpos( 'abc', '' ) );
+        $this->assertFalse( @autoptimizeUtils::strpos( 'abc', 'a', -1 ) );
+        $this->assertFalse( autoptimizeUtils::strpos( 'abc', 'd' ) );
+        $this->assertFalse( autoptimizeUtils::strpos( 'abc', 'a', 3 ) );
+        $this->assertSame( 1, autoptimizeUtils::strpos( '한국어', '국' ) );
+    }
+
+    public function test_utils_iconv_basics()
+    {
+        // Turn off mbstring, turn on iconv
+        autoptimizeUtils::mbstring_available( false );
+        autoptimizeUtils::iconv_available( true );
+
+        $this->assertSame( 1, autoptimizeUtils::strpos( '11--', '1-', 0, 'UTF-8' ) );
+        $this->assertSame( 2, autoptimizeUtils::strpos( '-11--', '1-', 0, 'UTF-8' ) );
+        $this->assertSame( 4, autoptimizeUtils::strlen( 'déjà', 'UTF-8' ) );
+        $this->assertSame( 3, autoptimizeUtils::strlen( '한국어', 'UTF-8' ) );
+    }
+
+    /**
+     * @dataProvider provider_utils_substr_replace
+     */
+    function test_utils_substr_replace_basics_mbstring($s, $repl, $start, $len, $expected)
+    {
+        // Force mbstring code path...
+        autoptimizeUtils::mbstring_available( true );
+        autoptimizeUtils::iconv_available( false );
+        $this->assertEquals( $expected, autoptimizeUtils::substr_replace( $s, $repl, $start, $len ) );
+    }
+
+    /**
+     * @dataProvider provider_utils_substr_replace
+     */
+    function test_utils_substr_replace_basics_iconv($s, $repl, $start, $len, $expected)
+    {
+        // Force iconv code path...
+        autoptimizeUtils::mbstring_available( false );
+        autoptimizeUtils::iconv_available( true );
+        $this->assertEquals( $expected, autoptimizeUtils::substr_replace( $s, $repl, $start, $len ) );
+    }
+
+    public function provider_utils_substr_replace()
+    {
+        $str  = 'try this';
+        $repl = 'bala ';
+
+        return [
+            [
+                $str,
+                $repl,
+                2,
+                null,
+                'trbala ',
+            ],
+            [
+                $str,
+                $repl,
+                2,
+                3,
+                'trbala his',
+            ],
+            [
+                $str,
+                $repl,
+                2,
+                0,
+                'trbala y this',
+            ],
+            [
+                $str,
+                $repl,
+                2,
+                -2,
+                'trbala is',
+            ],
+        ];
+    }
+
+    function test_mb_substr_replace_with_ascii_input_string()
+    {
+        autoptimizeUtils::mbstring_available( false );
+        autoptimizeUtils::iconv_available( true );
+
+        $str = 'Ascii';
+
+        $this->assertSame( 'Añ', autoptimizeUtils::substr_replace( $str, 'ñ', 1 ) );
+        $this->assertSame( 'ñcii', autoptimizeUtils::substr_replace( $str, 'ñ', 0, 2 ) );
+        $this->assertSame( 'Asñx', autoptimizeUtils::substr_replace( $str, 'ñx', 2, 3 ) );
+        $this->assertSame( 'Asz', autoptimizeUtils::substr_replace( $str, 'z', 2, 10 ) );
+        $this->assertSame( 'Añii', autoptimizeUtils::substr_replace( $str, 'ñ', 1, 2 ) );
+    }
+
+    function test_mb_substr_replace_with_utf8_input_string()
+    {
+        autoptimizeUtils::mbstring_available( true );
+        autoptimizeUtils::iconv_available( false );
+
+        $str = 'âønæë';
+
+        $this->assertSame( 'âñ', autoptimizeUtils::substr_replace( $str, 'ñ', 1 ) ); // No length.
+        $this->assertSame( 'ñnæë', autoptimizeUtils::substr_replace( $str, 'ñ', 0, 2 ) );
+        $this->assertSame( 'âøñx', autoptimizeUtils::substr_replace( $str, 'ñx', 2, 3 ) );
+        $this->assertSame( 'âøz', autoptimizeUtils::substr_replace( $str, 'z', 2, 10 ) ); // Length larger than possible...
+        $this->assertSame( 'âñæë', autoptimizeUtils::substr_replace( $str, 'ñ', 1, 2 ) );
+    }
+
+    function test_iconv_substr_replace_with_ascii_input_string()
+    {
+        autoptimizeUtils::mbstring_available( false );
+        autoptimizeUtils::iconv_available( true );
+
+        $str = 'Ascii';
+
+        $this->assertSame( 'Añ', autoptimizeUtils::substr_replace( $str, 'ñ', 1 ) );
+        $this->assertSame( 'ñcii', autoptimizeUtils::substr_replace( $str, 'ñ', 0, 2 ) );
+        $this->assertSame( 'Asñx', autoptimizeUtils::substr_replace( $str, 'ñx', 2, 3 ) );
+        $this->assertSame( 'Asz', autoptimizeUtils::substr_replace( $str, 'z', 2, 10 ) );
+        $this->assertSame( 'Añii', autoptimizeUtils::substr_replace( $str, 'ñ', 1, 2 ) );
+    }
+
+    function test_iconv_substr_replace_with_utf8_input_string()
+    {
+        autoptimizeUtils::mbstring_available( false );
+        autoptimizeUtils::iconv_available( true );
+
+        $str = 'âønæë';
+
+        $this->assertSame( 'âñ', autoptimizeUtils::substr_replace( $str, 'ñ', 1 ) ); // No length.
+        $this->assertSame( 'ñnæë', autoptimizeUtils::substr_replace( $str, 'ñ', 0, 2 ) );
+        $this->assertSame( 'âøñx', autoptimizeUtils::substr_replace( $str, 'ñx', 2, 3 ) );
+        $this->assertSame( 'âøz', autoptimizeUtils::substr_replace( $str, 'z', 2, 10 ) ); // Length larger than possible...
+        $this->assertSame( 'âñæë', autoptimizeUtils::substr_replace( $str, 'ñ', 1, 2 ) );
+    }
+
+    function test_default_substr_replace_with_ascii_input_string()
+    {
+        // Disabling both mbstring and iconv approach, falling back to substr_replace...
+        autoptimizeUtils::mbstring_available( false );
+        autoptimizeUtils::iconv_available( false );
+
+        $str = 'Ascii';
+
+        $this->assertSame( 'Añ', autoptimizeUtils::substr_replace( $str, 'ñ', 1 ) );
+        $this->assertSame( 'ñcii', autoptimizeUtils::substr_replace( $str, 'ñ', 0, 2 ) );
+        $this->assertSame( 'Asñx', autoptimizeUtils::substr_replace( $str, 'ñx', 2, 3 ) );
+        $this->assertSame( 'Asz', autoptimizeUtils::substr_replace( $str, 'z', 2, 10 ) );
+        $this->assertSame( 'Añii', autoptimizeUtils::substr_replace( $str, 'ñ', 1, 2 ) );
+    }
+
+    function test_default_substr_replace_with_utf8_input_string()
+    {
+        // Disabling both mbstring and iconv approach, falling back to substr_replace...
+        autoptimizeUtils::mbstring_available( false );
+        autoptimizeUtils::iconv_available( false );
+
+        // This is really impossible to make work properly, since
+        // any start/len parameters we give are working with bytes instead
+        // of characters, shit just breaks.
+        $str = 'âønæë';
+
+        //$this->assertSame( '�ñ', autoptimizeUtils::substr_replace( $str, 'ñ', 1 ) ); // No length.
+        //$this->assertSame( 'ñ�næë', autoptimizeUtils::substr_replace( $str, 'ñ', 1, 2 ) );
+        $this->assertSame( 'ñønæë', autoptimizeUtils::substr_replace( $str, 'ñ', 0, 2 ) );
+        $this->assertSame( 'âñxæë', autoptimizeUtils::substr_replace( $str, 'ñx', 2, 3 ) );
+        $this->assertSame( 'âz', autoptimizeUtils::substr_replace( $str, 'z', 2, 10 ) ); // Length larger than possible...
+    }
 }

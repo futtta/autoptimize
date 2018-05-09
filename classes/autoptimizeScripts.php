@@ -394,26 +394,26 @@ class autoptimizeScripts extends autoptimizeBase
         $bodyreplacementpayload = '<script type="text/javascript" ' . $defer . 'src="' . $this->url . '"></script>';
         $bodyreplacementpayload = apply_filters( 'autoptimize_filter_js_bodyreplacementpayload', $bodyreplacementpayload );
 
-        $bodyreplacement = implode( '',$this->move['first'] );
+        $bodyreplacement = implode( '', $this->move['first'] );
         $bodyreplacement .= $bodyreplacementpayload;
         $bodyreplacement .= implode( '', $this->move['last'] );
 
         $replaceTag = apply_filters( 'autoptimize_filter_js_replacetag', $replaceTag );
 
         if ( strlen( $this->jscode ) > 0 ) {
-            $this->inject_in_html($bodyreplacement, $replaceTag);
+            $this->inject_in_html( $bodyreplacement, $replaceTag );
         }
 
-        // restore comments
-        $this->content = $this->restore_comments($this->content);
+        // Restore comments.
+        $this->content = $this->restore_comments( $this->content );
 
-        // Restore IE hacks
-        $this->content = $this->restore_iehacks($this->content);
+        // Restore IE hacks.
+        $this->content = $this->restore_iehacks( $this->content );
 
-        // Restore noptimize
-        $this->content = $this->restore_noptimize($this->content);
+        // Restore noptimize.
+        $this->content = $this->restore_noptimize( $this->content );
 
-        // Return the modified HTML
+        // Return the modified HTML.
         return $this->content;
     }
 
