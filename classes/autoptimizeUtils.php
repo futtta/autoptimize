@@ -201,12 +201,12 @@ class autoptimizeUtils
         if ( null === $length ) {
             $length = 2147483647;
         } elseif ( $length < 0 ) {
-            $length = \iconv_strlen( $s, $encoding ) + $length - $start;
+            $length = self::strlen( $s, $encoding ) + ( $length - $start );
             if ( $length < 0 ) {
                 return '';
             }
         }
 
-        return (string) \iconv_substr( $s, $start, $length, $encoding );
+        return (string) ( null === $encoding ) ? \iconv_substr( $s, $start, $length ) : \iconv_substr( $s, $start, $length, $encoding );
     }
 }
