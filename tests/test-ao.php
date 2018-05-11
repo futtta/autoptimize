@@ -3,40 +3,27 @@
 class AOTest extends WP_UnitTestcase
 {
     /**
+     * Plugin instance/fixture used in some tests.
+     *
      * @var autoptimizeMain
      */
     protected $ao;
-
-    /**
-     * Normalizes EOLs into "\n" otherwise some tests fail due to simple newline
-     * differences in the markup (depending on how/where it was entered/generated).
-     * This can occasionally get even more complicated by git changing newlines
-     * on checkout (if so configured).
-     *
-     * @param $str
-     *
-     * @return mixed
-     */
-    private function normalize_newlines($str)
-    {
-        return str_replace("\r\n", "\n", $str);
-    }
 
     protected function getAoStylesDefaultOptions()
     {
         $conf = autoptimizeConfig::instance();
 
         return [
-            'aggregate'      => $conf->get('autoptimize_css_aggregate'),
-            'justhead'       => $conf->get('autoptimize_css_justhead'),
-            'datauris'       => $conf->get('autoptimize_css_datauris'),
-            'defer'          => $conf->get('autoptimize_css_defer'),
-            'defer_inline'   => $conf->get('autoptimize_css_defer_inline'),
-            'inline'         => $conf->get('autoptimize_css_inline'),
-            'css_exclude'    => $conf->get('autoptimize_css_exclude'),
-            'cdn_url'        => $conf->get('autoptimize_cdn_url'),
-            'include_inline' => $conf->get('autoptimize_css_include_inline'),
-            'nogooglefont'   => $conf->get('autoptimize_css_nogooglefont')
+            'aggregate'      => $conf->get( 'autoptimize_css_aggregate' ),
+            'justhead'       => $conf->get( 'autoptimize_css_justhead' ),
+            'datauris'       => $conf->get( 'autoptimize_css_datauris' ),
+            'defer'          => $conf->get( 'autoptimize_css_defer' ),
+            'defer_inline'   => $conf->get( 'autoptimize_css_defer_inline' ),
+            'inline'         => $conf->get( 'autoptimize_css_inline' ),
+            'css_exclude'    => $conf->get( 'autoptimize_css_exclude' ),
+            'cdn_url'        => $conf->get( 'autoptimize_cdn_url' ),
+            'include_inline' => $conf->get( 'autoptimize_css_include_inline' ),
+            'nogooglefont'   => $conf->get( 'autoptimize_css_nogooglefont' ),
         ];
     }
 
@@ -55,6 +42,9 @@ class AOTest extends WP_UnitTestcase
         ];
     }
 
+    /**
+     * Runs before each test method.
+     */
     public function setUp()
     {
         $this->ao = new autoptimizeMain( AUTOPTIMIZE_PLUGIN_VERSION, AUTOPTIMIZE_PLUGIN_FILE );
@@ -62,17 +52,19 @@ class AOTest extends WP_UnitTestcase
         parent::setUp();
     }
 
-    // Runs after each test method
+    /**
+     * Runs after each test method.
+     */
     public function tearDown()
     {
-        // Making sure certain filters are removed after each test to ensure isolation
+        // Making sure certain filters are removed after each test to ensure isolation.
         $filter_tags = array(
             'autoptimize_filter_noptimize',
             'autoptimize_filter_base_cdnurl',
             'autoptimize_filter_css_is_datauri_candidate',
             'autoptimize_filter_css_datauri_image',
             'autoptimize_filter_css_inlinesize',
-            'autoptimize_filter_css_fonts_cdn'
+            'autoptimize_filter_css_fonts_cdn',
         );
         foreach ( $filter_tags as $filter_tag ) {
             remove_all_filters( $filter_tag );
@@ -233,7 +225,7 @@ MARKUP;
 </html>
 MARKUP;
 
-    // When `is_multisite()` returns true, default path to files is different
+    // When `is_multisite()` returns true, default path to files is different...
     const TEST_MARKUP_OUTPUT_MS = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -369,12 +361,11 @@ MARKUP;
     /**
      * @dataProvider provider_test_rewrite_markup_with_cdn
      */
-    function test_rewrite_markup_with_cdn($input, $expected)
+    function test_rewrite_markup_with_cdn( $input, $expected )
     {
         $actual = $this->ao->end_buffering( $input );
 
-        // $this->markTestIncomplete('Full-blown rewrite test currently doesn\'t work on Windows (or with any custom WP-tests setup/location really).');
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals( $expected, $actual );
     }
 
     public function provider_test_rewrite_markup_with_cdn()
@@ -382,11 +373,11 @@ MARKUP;
         return array(
 
             array(
-                // input
+                // Input.
                 self::TEST_MARKUP,
-                // expected output
-                // TODO/FIXME: this seemed like the fastest way to get MS crude test to pass
-                ( is_multisite() ? self::TEST_MARKUP_OUTPUT_MS : self::TEST_MARKUP_OUTPUT )
+                // Expected output.
+                // TODO/FIXME: This seemed like the fastest way to get MS crude test to pass...
+                ( is_multisite() ? self::TEST_MARKUP_OUTPUT_MS : self::TEST_MARKUP_OUTPUT ),
             ),
 
         );
@@ -417,6 +408,7 @@ MARKUP;
        url('../fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 CSS;
+
         $css_expected = <<<CSS
 .bg { background:url(img/something.svg); }
 .bg-no-quote { background: url(img/something.svg); }
@@ -441,14 +433,12 @@ CSS;
 }
 CSS;
 
-        //add_filter( 'autoptimize_filter_css_fonts_cdn', '__return_true' );
+        $instance = new autoptimizeStyles( $css_in );
+        $instance->setOption( 'cdn_url', 'http://cdn.example.org' );
 
-        $instance = new autoptimizeStyles($css_in);
-        $instance->setOption('cdn_url', 'http://cdn.example.org');
+        $css_actual = $instance->rewrite_assets( $css_in );
 
-        $css_actual = $instance->rewrite_assets($css_in);
-
-        $this->assertEquals($css_expected, $css_actual);
+        $this->assertEquals( $css_expected, $css_actual );
     }
 
     public function test_default_cssmin_minifier()
@@ -478,78 +468,80 @@ CSS;
 }
 CSS;
 
-$expected = <<<CSS
+        $expected = <<<CSS
 .bg{background:url('img/something.svg')}.bg-no-quote{background:url(img/something.svg)}.bg-double-quotes{background:url("img/something.svg")}.whitespaces{background:url ("../../somewhere-else/svg.svg")}.host-relative{background:url("/img/something.svg")}.protocol-relative{background:url("//something/somewhere/example.png")}@font-face{font-family:'Roboto';font-style:normal;font-weight:100;src:url(../fonts/roboto-v15-latin-ext_latin-100.eot);src:local('Roboto Thin'),local('Roboto-Thin'),url(../fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'),url(../fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'),url(../fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'),url(../fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'),url(../fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg')}
 CSS;
 
-        $instance = new autoptimizeStyles($css);
-        $minified = $instance->run_minifier_on($css);
+        $instance = new autoptimizeStyles( $css );
+        $minified = $instance->run_minifier_on( $css );
 
-        $this->assertEquals($expected, $minified);
+        $this->assertEquals( $expected, $minified );
     }
 
     /**
      * @dataProvider provider_test_should_aggregate_script_types
      * @covers autoptimizeScripts::should_aggregate
      */
-    public function test_should_aggregate_script_types($input, $expected)
+    public function test_should_aggregate_script_types( $input, $expected )
     {
-        $instance = new autoptimizeScripts('');
-        $actual = $instance->should_aggregate($input);
+        $instance = new autoptimizeScripts( '' );
+        $actual   = $instance->should_aggregate( $input );
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals( $expected, $actual );
     }
 
     public function provider_test_should_aggregate_script_types()
     {
         return array(
-            // no type attribute at all
+            // No type attribute at all.
             array(
-                // input
+                // Input.
                 '<script>var something=true</script>',
-                // expected output
-                true
+                // Expected output.
+                true,
             ),
-            // case-insensitive
+            // Case-insensitive.
             array(
                 '<script type="text/ecmaScript">var something=true</script>',
-                true
+                true,
             ),
-            // allowed/aggregated now (wasn't previously)
+            // Allowed/aggregated now (wasn't previously).
             array(
                 '<script type="application/javascript">var something=true</script>',
-                true
+                true,
             ),
-            // quotes shouldn't matter, nor should case-sensitivity
+            // Quotes shouldn't matter, nor should case-sensitivity.
             array(
                 '<script type=\'text/JaVascriPt">var something=true</script>',
-                true
+                true,
             ),
-            // liberal to whitespace around attribute names/values
+            // Liberal to whitespace around attribute names/values.
             array(
                 '<script tYpe = text/javascript>var something=true</script>',
-                true
+                true,
             ),
-            // something custom, should be ignored/skipped
+            // Something custom, should be ignored/skipped.
             array(
                 '<script type=template/javascript>var something=true</script>',
-                false
+                false,
             ),
-            // type attribute checking should be constrained to actual script tag's type attribute
-            // only, regardless of any `type=` string present in the actual inline script contents
+            // Type attribute checking should be constrained to actual script
+            // tag's type attribute only, regardless of any `type=` string
+            // present in the actual inline script contents.
             array(
-                // since there's no type attribute, it should be aggregate by default
+                // Since there's no type attribute, it should be aggregate by default.
                 '<script>var type=something;</script>',
-                true
+                true,
             ),
-            // application/ld+json should not be aggregated by default regardless of spacing around attr/values
+            // Application/ld+json should not be aggregated by default regardless
+            // of spacing around attr/values.
             array(
                 '<script type = "application/ld+json" >{   "@context": "" }',
-                false
+                false,
             ),
             array(
                 '<script type="application/ld+json">{   "@context": "" }',
-                false
+                false,
             ),
         );
     }
@@ -558,11 +550,11 @@ CSS;
      * @dataProvider provider_is_valid_buffer
      * @covers autoptimizeMain::is_valid_buffer
      */
-    public function test_valid_buffers($input, $expected)
+    public function test_valid_buffers( $input, $expected )
     {
-        $actual = $this->ao->is_valid_buffer($input);
+        $actual = $this->ao->is_valid_buffer( $input );
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals( $expected, $actual );
     }
 
     public function provider_is_valid_buffer()
@@ -576,47 +568,47 @@ CSS;
             array(
                 '<!doctype html>
 <html amp>',
-                false
+                false,
             ),
             array(
                 '<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
-                false
+                false,
             ),
             array(
                 '<!doctype html>
 <html>',
-                true
+                true,
             ),
             array(
                 '<html dir="ltr" amp>',
-                false
+                false,
             ),
             array(
                 '<html dir="ltr" ⚡>',
-                false
+                false,
             ),
             array(
                 '<html amp dir="ltr">',
-                false
+                false,
             ),
             array(
                 '<html ⚡ dir="ltr">',
-                false
+                false,
             ),
             array(
                 '<HTML ⚡ DIR="LTR">',
-                false
+                false,
             ),
             array(
                 '<HTML AMP DIR="LTR">',
-                false
+                false,
             ),
-            // https://github.com/futtta/autoptimize/commit/54385939db06f725fcafe68598cce6ed148ef6c1
+            // @link https://github.com/futtta/autoptimize/commit/54385939db06f725fcafe68598cce6ed148ef6c1
             array(
                 '<!doctype html>',
-                true
+                true,
             ),
         );
     }
@@ -625,11 +617,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
      * @dataProvider provider_is_amp_markup
      * @covers autoptimizeMain::is_amp_markup
      */
-    public function test_autoptimize_is_amp_markup($input, $expected)
+    public function test_autoptimize_is_amp_markup( $input, $expected )
     {
-        $actual = autoptimizeMain::is_amp_markup($input);
+        $actual = autoptimizeMain::is_amp_markup( $input );
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals( $expected, $actual );
     }
 
     public function provider_is_amp_markup()
@@ -643,43 +635,42 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             array(
                 '<!doctype html>
 <html amp>',
-                true
+                true,
             ),
             array(
                 '<!doctype html>
 <head>
 <meta charset=utf-8>',
-                false
-            )
+                false,
+            ),
         );
     }
 
     /**
      * Test various conditions that can/should prevent autoptimize from buffering content.
      */
-
     public function test_skips_buffering_when_ao_noptimize_filter_is_true()
     {
-        // true => disable autoptimize
+        // True => disable autoptimize.
         add_filter( 'autoptimize_filter_noptimize', '__return_true' );
 
-        // buffering should not run due to the above filter
+        // Buffering should not run due to the above filter.
         $expected = false;
         $actual   = $this->ao->should_buffer( $doing_tests = true );
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals( $expected, $actual );
     }
 
     public function test_does_buffering_when_ao_noptimize_filter_is_false()
     {
-        // false => disable noptimize, aka, run normally (weird, yes...)
+        // False => disable noptimize, aka, run normally (weird, yes...).
         add_filter( 'autoptimize_filter_noptimize', '__return_false' );
 
-        // buffering should run because of above
+        // Buffering should run because of above.
         $expected = true;
         $actual   = $this->ao->should_buffer( $doing_tests = true );
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals( $expected, $actual );
     }
 
     public function test_ignores_ao_noptimize_qs_when_instructed()
@@ -687,19 +678,22 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
         // Should skip checking for the qs completely due to filter.
         add_filter( 'autoptimize_filter_honor_qs_noptimize', '__return_false' );
 
-        // Which should then result in the "current" value being `false` when passed to 'autoptimize_filter_noptimize'
-        // unless the DONOTMINIFY constant is defined, which changes the result... Which
-        // basically means this test changes its' expected result depending on the order of tests
-        // execution and/or the environment, which is AAAARGGGGGGHHH...
+        /**
+         * The above should then result in the "current" value being `false`
+         * when passed to 'autoptimize_filter_noptimize' unless the DONOTMINIFY
+         * constant is defined, which changes the result... Which basically
+         * means this test changes its' expected result depending on the order
+         * of tests execution and/or the environment, which is AAAARGGGGGGHHH...
+         */
 
         $that = $this; // Makes it work on php 5.3!
-        add_filter( 'autoptimize_filter_noptimize', function ($current_value) use ($that) {
+        add_filter( 'autoptimize_filter_noptimize', function ( $current_value ) use ( $that ) {
             $expected = false;
             if ( defined( 'DONOTMINIFY' ) && DONOTMINIFY ) {
                 $expected = true;
             }
 
-            $that->assertEquals($expected, $current_value);
+            $that->assertEquals( $expected, $current_value );
         });
 
         $this->ao->should_buffer( $doing_tests = true );
@@ -709,15 +703,18 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
     {
         // Creating a mock so that we can get past class_exists() and method_exists() checks present
         // in `autoptimizeCache::flushPageCache()`...
-        $stub = $this->getMockBuilder('WpeCommon')->disableAutoload()
-                ->disableOriginalConstructor()->setMethods(array(
-                    'purge_varnish_cache'))
+        $stub = $this->getMockBuilder( 'WpeCommon' )->disableAutoload()
+                ->disableOriginalConstructor()->setMethods(
+                    array(
+                        'purge_varnish_cache',
+                    )
+                )
                 ->getMock();
 
         $that = $this;
-        add_filter( 'autoptimize_flush_wpengine_methods', function($methods) use ($that) {
-            $expected_methods = array('purge_varnish_cache');
-            $that->assertEquals($methods, $expected_methods);
+        add_filter( 'autoptimize_flush_wpengine_methods', function( $methods ) use ( $that ) {
+            $expected_methods = array( 'purge_varnish_cache' );
+            $that->assertEquals( $methods, $expected_methods );
 
             return $methods;
         });
@@ -725,30 +722,35 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
         autoptimizeCache::flushPageCache();
     }
 
-    // Test with the `autoptimize_flush_wpengine_aggressive` filter
+    /**
+     * Tests the `autoptimize_flush_wpengine_aggressive` filter
+     */
     public function test_wpengine_cache_flush_agressive()
     {
         // Creating a mock so that we can get past class_exists() and method_exists() checks `autoptimize_flush_pagecache()`...
-        $stub = $this->getMockBuilder('WpeCommon')->disableAutoload()
-                ->disableOriginalConstructor()->setMethods(array(
-                    'purge_varnish_cache',
-                    'purge_memcached',
-                    'clear_maxcdn_cache'))
+        $stub = $this->getMockBuilder( 'WpeCommon' )->disableAutoload()
+                ->disableOriginalConstructor()->setMethods(
+                    array(
+                        'purge_varnish_cache',
+                        'purge_memcached',
+                        'clear_maxcdn_cache',
+                    )
+                )
                 ->getMock();
 
-        add_filter( 'autoptimize_flush_wpengine_aggressive', function(){
+        add_filter( 'autoptimize_flush_wpengine_aggressive', function() {
             return true;
         });
 
         $that = $this;
-        add_filter( 'autoptimize_flush_wpengine_methods', function($methods) use ($that) {
+        add_filter( 'autoptimize_flush_wpengine_methods', function( $methods ) use ( $that ) {
             $expected_methods = array(
                 'purge_varnish_cache',
                 'purge_memcached',
-                'clear_maxcdn_cache'
+                'clear_maxcdn_cache',
             );
 
-            $that->assertEquals($methods, $expected_methods);
+            $that->assertEquals( $methods, $expected_methods );
 
             return $methods;
         });
@@ -760,101 +762,103 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
      * @dataProvider provider_test_url_replace_cdn
      * @covers autoptimizeBase::url_replace_cdn
      */
-    public function test_url_replace_cdn($cdn_url, $input, $expected)
+    public function test_url_replace_cdn( $cdn_url, $input, $expected )
     {
-        $mock = $this->getMockBuilder('autoptimizeBase')->disableOriginalConstructor()->getMockForAbstractClass();
-        $mock->cdn_url = $cdn_url;
+        $mock = $this->getMockBuilder( 'autoptimizeBase' )
+                ->disableOriginalConstructor()
+                ->getMockForAbstractClass();
 
-        $actual = $mock->url_replace_cdn($input);
-        $this->assertEquals($expected, $actual);
+        $mock->cdn_url = $cdn_url;
+        $actual        = $mock->url_replace_cdn( $input );
+        $this->assertEquals( $expected, $actual );
     }
 
     public function provider_test_url_replace_cdn()
     {
         return array(
-            // host-relative links get properly transformed
+            // Host-relative links get properly transformed...
             array(
-                // cdn base url, url, expected result
+                // CDN base url, url, expected result...
                 'http://cdn-test.example.org',
                 '/a.jpg',
                 'http://cdn-test.example.org/a.jpg',
             ),
-            // full link with a matching AUTOPTIMIZE_WP_SITE_URL gets properly replaced
+            // Full link with a matching AUTOPTIMIZE_WP_SITE_URL gets properly replaced...
             array(
                 'http://cdn-test.example.org',
                 'http://example.org/wp-content/themes/something/example.svg',
-                'http://cdn-test.example.org/wp-content/themes/something/example.svg'
+                'http://cdn-test.example.org/wp-content/themes/something/example.svg',
             ),
-            // protocol-relative url with a "local" hostname that doesn't match example.org (AUTOPTIMIZE_WP_SITE_URL)
+            // Protocol-relative url with a "local" hostname that doesn't match example.org (AUTOPTIMIZE_WP_SITE_URL)...
             array(
                 'http://cdn-test.example.org',
                 '//something/somewhere.jpg',
-                '//something/somewhere.jpg'
+                '//something/somewhere.jpg',
             ),
-            // www.example.org does not match example.org (AUTOPTIMIZE_WP_SITE_URL) so it's left alone
+            // www.example.org does not match example.org (AUTOPTIMIZE_WP_SITE_URL) so it's left alone...
             array(
                 'http://cdn-test.example.org',
                 'http://www.example.org/wp-content/themes/something/example.svg',
-                'http://www.example.org/wp-content/themes/something/example.svg'
+                'http://www.example.org/wp-content/themes/something/example.svg',
             ),
-            // ssl cdn url + host-relative link
+            // SSL cdn url + host-relative link...
             array(
                 'https://cdn.example.org',
                 '/a.jpg',
-                'https://cdn.example.org/a.jpg'
+                'https://cdn.example.org/a.jpg',
             ),
-            // ssl cdn url + http site url that matches AUTOPTIMIZE_WP_SITE_URL is properly replaced
+            // SSL cdn url + http site url that matches AUTOPTIMIZE_WP_SITE_URL is properly replaced...
             array(
                 'https://cdn.example.org',
                 'http://example.org/wp-content/themes/something/example.svg',
-                'https://cdn.example.org/wp-content/themes/something/example.svg'
+                'https://cdn.example.org/wp-content/themes/something/example.svg',
             ),
-            // protocol-relative cdn url given with protocol relative link that matches AUTOPTIMIZE_WP_SITE_URL host
+            // Protocol-relative cdn url given with protocol relative link that matches AUTOPTIMIZE_WP_SITE_URL host...
             array(
                 '//cdn.example.org',
                 '//example.org/something.jpg',
-                '//cdn.example.org/something.jpg'
+                '//cdn.example.org/something.jpg',
             ),
-            // protocol-relative cdn url given a http link that matches AUTOPTIMIZE_WP_SITE_URL host
+            // Protocol-relative cdn url given a http link that matches AUTOPTIMIZE_WP_SITE_URL host...
             array(
                 '//cdn.example.org',
                 'http://example.org/something.png',
                 '//cdn.example.org/something.png',
             ),
-            // protocol-relative cdn url with a host-relative link
+            // Protocol-relative cdn url with a host-relative link...
             array(
                 '//cdn.example.org',
                 '/a.jpg',
                 '//cdn.example.org/a.jpg',
             ),
-            // Testing cdn urls with an explicit port number
+            // Testing cdn urls with an explicit port number...
             array(
                 'http://cdn.com:8080',
                 '/a.jpg',
-                'http://cdn.com:8080/a.jpg'
+                'http://cdn.com:8080/a.jpg',
             ),
             array(
                 '//cdn.com:4433',
                 '/a.jpg',
-                '//cdn.com:4433/a.jpg'
+                '//cdn.com:4433/a.jpg',
             ),
             array(
                 '//cdn.com:4433',
                 'http://example.org/something.jpg',
-                '//cdn.com:4433/something.jpg'
+                '//cdn.com:4433/something.jpg',
             ),
             array(
                 '//cdn.com:1234',
                 '//example.org/something.jpg',
-                '//cdn.com:1234/something.jpg'
+                '//cdn.com:1234/something.jpg',
             ),
-            // relative links should not be touched by url_replace_cdn() method
+            // Relative links should not be touched by url_replace_cdn()...
             array(
-                // base cdn url
+                // Base cdn url.
                 'http://cdn-test.example.org',
-                // url
+                // Url.
                 'a.jpg',
-                // expected result
+                // Expected result.
                 'a.jpg',
             ),
             array(
@@ -866,69 +870,76 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
                 'http://cdn-test.example.org',
                 '../something/somewhere.svg',
                 '../something/somewhere.svg',
-            )
+            ),
         );
     }
 
-    // test `autoptimize_filter_base_cdnurl` filtering as described here: https://wordpress.org/support/topic/disable-cdn-of-ssl-pages
+    /**
+     * Tests `autoptimize_filter_base_cdnurl` filtering as described here:
+     * https://wordpress.org/support/topic/disable-cdn-of-ssl-pages
+     */
     public function test_autoptimize_filter_base_cdnurl()
     {
         $test_link = '/a.jpg';
-        $cdn_url = '//cdn.example.org';
+        $cdn_url   = '//cdn.example.org';
 
-        $with_ssl = function($cdn) {
+        $with_ssl = function( $cdn ) {
             return '';
         };
         $expected_with_ssl = '/a.jpg';
 
-        $without_ssl = function($cdn) {
+        $without_ssl = function( $cdn ) {
             return $cdn;
         };
         $expected_without_ssl = '//cdn.example.org/a.jpg';
 
-        // with a filter that returns something considered "empty", cdn replacement shouldn't occur
+        // With a filter that returns something considered "empty", cdn replacement shouldn't occur...
         add_filter( 'autoptimize_filter_base_cdnurl', $with_ssl );
-        $mock = $this->getMockBuilder('autoptimizeBase')->disableOriginalConstructor()->getMockForAbstractClass();
-        $mock->cdn_url = $cdn_url;
-        $actual_with_ssl = $mock->url_replace_cdn($test_link);
-        $this->assertEquals($expected_with_ssl, $actual_with_ssl);
+        $mock = $this->getMockBuilder( 'autoptimizeBase' )
+                ->disableOriginalConstructor()
+                ->getMockForAbstractClass();
+
+        $mock->cdn_url   = $cdn_url;
+        $actual_with_ssl = $mock->url_replace_cdn( $test_link );
+        $this->assertEquals( $expected_with_ssl, $actual_with_ssl );
         remove_filter( 'autoptimize_filter_base_cdnurl', $with_ssl );
 
-        // with a filter that returns an actual cdn url, cdn replacement should occur
+        // With a filter that returns an actual cdn url, cdn replacement should occur.
         add_filter( 'autoptimize_filter_base_cdnurl', $without_ssl );
-        $actual_without_ssl = $mock->url_replace_cdn($test_link);
-        $this->assertEquals($expected_without_ssl, $actual_without_ssl);
+        $actual_without_ssl = $mock->url_replace_cdn( $test_link );
+        $this->assertEquals( $expected_without_ssl, $actual_without_ssl );
     }
 
     public function provider_cssmin_issues()
     {
         return array(
-            // https://wordpress.org/support/topic/css-minify-breaks-calc-subtract-operation-in-css/?replies=2#post-6610027
+            // @link https://wordpress.org/support/topic/css-minify-breaks-calc-subtract-operation-in-css/?replies=2#post-6610027
             array(
-                // input
+                // Input.
                 'input { width: calc(33.33333% - ((0.75em*2)/3)); }',
-                // expected output (ancient version of CSSmin returns 0.75, newer versions drop the 0)
-                'input{width:calc(33.33333% - ((.75em*2)/3))}'
+                // Expected output (ancient version of CSSmin returns 0.75, newer versions drop the 0).
+                'input{width:calc(33.33333% - ((.75em*2)/3))}',
             ),
-            // Actual examples from above, but original wasn't really valid css input fully,
-            // but these tests used to work and we'd like to know if output changes with various
-            // CSSmin versions, for backcompat reasons if nothing else
+            // Actual examples from above, but original wasn't really valid
+            // css input fully, but these tests used to work and we'd like to
+            // know if output changes with various CSSmin versions, for
+            // backcompat reasons if nothing else.
             array(
-                // input
+                // Input.
                 'width: calc(33.33333% - ((0.75em*2)/3));',
-                // expected output
-                'width:calc(33.33333% - ((0.75em*2)/3));'
+                // Expected output.
+                'width:calc(33.33333% - ((0.75em*2)/3));',
             ),
-            // https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port/issues/22#issuecomment-251401341
+            // @link https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port/issues/22#issuecomment-251401341
             array(
                 'input { width: calc(100% - (1em*1.5) - 2em); }',
-                'input{width:calc(100% - (1em*1.5) - 2em)}'
+                'input{width:calc(100% - (1em*1.5) - 2em)}',
             ),
-            // https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port/issues/26
+            // @link https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port/issues/26
             array(
                 '.px { flex: 1 1 0px; }, .percent {flex: 1 1 0%}',
-                '.px{flex:1 1 0px},.percent{flex:1 1 0%}'
-            )
+                '.px{flex:1 1 0px},.percent{flex:1 1 0%}',
+            ),
         );
     }
 
@@ -936,53 +947,54 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
      * @dataProvider provider_cssmin_issues
      * @covers CSSmin::replace_calc
      */
-    public function test_cssmin_issues($input, $expected)
+    public function test_cssmin_issues( $input, $expected )
     {
-        $minifier = new autoptimizeCSSmin(false); // no need to raise limits for now
-
-        $actual = $minifier->run($input);
-        $this->assertEquals($expected, $actual);
+        $minifier = new autoptimizeCSSmin( false ); // No need to raise limits for now.
+        $actual   = $minifier->run( $input );
+        $this->assertEquals( $expected, $actual );
     }
 
     public function provider_getpath()
     {
         return array(
-            // These all don't really exist, and getpath() returns
-            // false for non-existing files since upstream's 1386e4fe1d commit
+            /**
+             * These all don't really exist, and getpath() returns false for
+             * non-existing files since upstream's 1386e4fe1d commit.
+             */
             array(
                 'img/something.svg',
-                false
+                false,
             ),
             array(
                 '../../somewhere-else/svg.svg',
-                false
+                false,
             ),
             array(
                 '//something/somewhere/example.png',
-                false
+                false,
             ),
             // This file comes with core, so should exist...
             array(
                 '/wp-includes/js/jquery/jquery.js',
-                WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.js'
+                WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.js',
             ),
-            // Empty $url should return false
+            // Empty $url should return false.
             array(
                 '',
-                false
+                false,
             ),
             array(
                 false,
-                false
+                false,
             ),
             array(
                 null,
-                false
+                false,
             ),
             array(
                 0,
-                false
-            )
+                false,
+            ),
         );
     }
 
@@ -990,18 +1002,20 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
      * @dataProvider provider_getpath
      * @covers autoptimizeBase::getpath
      */
-    public function test_getpath($input, $expected)
+    public function test_getpath( $input, $expected )
     {
-        $mock = $this->getMockBuilder('autoptimizeBase')->disableOriginalConstructor()->getMockForAbstractClass();
+        $mock = $this->getMockBuilder( 'autoptimizeBase' )->disableOriginalConstructor()->getMockForAbstractClass();
 
-        $actual = $mock->getpath($input);
-        $this->assertEquals($expected, $actual);
+        $actual = $mock->getpath( $input );
+        $this->assertEquals( $expected, $actual );
     }
 
-    // https://github.com/futtta/autoptimize/pull/81#issuecomment-278935307
+    /**
+     * @link https://github.com/futtta/autoptimize/pull/81#issuecomment-278935307
+     */
     public function test_fixurls_with_hash_only_urls()
     {
-        $css_orig = <<<CSS
+        $css_orig     = <<<CSS
 header{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90px' height='110px' viewBox='0 0 90 110'%3E%3Cstyle%3E.a%7Bstop-color:%23FFF;%7D.b%7Bstop-color:%23B2D235;%7D.c%7Bstop-color:%23BEE7FA;%7D.d%7Bfill:%23590C15;%7D%3C/style%3E%3ClinearGradient id='c' y2='135.4' gradientUnits='userSpaceOnUse' x2='209.1' gradientTransform='rotate(-1.467 -4082.888 7786.794)' y1='205.8' x1='262'%3E%3Cstop class='b' offset='0'/%3E%3Cstop class='b' offset='.48'/%3E%3Cstop stop-color='%23829D25' offset='1'/%3E%3C/linearGradient%3E%3Cpath stroke-width='.3' d='M77.3 45.4c-3-3.5-7.1-6.5-11.6-7.8-5.1-1.5-10-.1-14.9 1.5C52 35.4 54.3 29 60 24l-4.8-5.5c-3.4 3-5.8 6.3-7.5 9.4-1.7-4.3-4.1-8.4-7.5-12C33.4 8.6 24.3 4.7 15.1 4.2c-.2 9.3 3.1 18.6 9.9 25.9 5.2 5.6 11.8 9.2 18.7 10.8-2.5.2-4.9-.1-7.7-.9-5.2-1.4-10.5-2.8-15.8-1C10.6 42.3 4.5 51.9 4 61.7c-.5 11.6 3.8 23.8 9.9 33.5 3.9 6.3 9.6 13.7 17.7 13.4 3.8-.1 7-2.1 10.7-2.7 5.2-.8 9.1 1.2 14.1 1.8 16.4 2 24.4-23.6 26.4-35.9 1.2-9.1.8-19.1-5.5-26.4z' stroke='%233E6D1F' fill='url(%23c)'/%3E%3C/svg%3E")}
 section.clipped.clippedTop {clip-path:url("#clipPolygonTop")}
 section.clipped.clippedBottom {clip-path:url("#clipPolygonBottom")}
@@ -1014,13 +1028,13 @@ section.clipped.clippedBottom {clip-path:url("#clipPolygonBottom")}
 .myimg {background-image: url(//example.org/wp-content/themes/my-theme/images/under-left-leaf.png), url(//example.org/wp-content/themes/my-theme/images/over-blue-bird.png), url(//example.org/wp-content/themes/my-theme/images/under-top.png), url(//example.org/wp-content/themes/my-theme/images/bg-top-grunge.png);}
 CSS;
 
-        $fixurls_result = autoptimizeStyles::fixurls(ABSPATH . 'wp-content/themes/my-theme/style.css', $css_orig);
-        $this->assertEquals($css_expected, $fixurls_result);
+        $fixurls_result = autoptimizeStyles::fixurls( ABSPATH . 'wp-content/themes/my-theme/style.css', $css_orig );
+        $this->assertEquals( $css_expected, $fixurls_result );
     }
 
     public function test_background_datauri_sprites_with_fixurls()
     {
-        $css_orig = <<<CSS
+        $css_orig     = <<<CSS
 .shadow { background:url(img/1x1.png) top center; }
 .shadow1 { background-image:url(img/1x1.png) 0 -767px repeat-x; }
 .shadow2 {background:url(img/1x1.png) top center}
@@ -1071,44 +1085,48 @@ section.clipped.clippedBottom {clip-path:url("#clipPolygonBottom")}
 */
 CSS;
 
-        // For test purposes, ALL images in the css are being inline with a 1x1 trans png string/datauri
-        add_filter( 'autoptimize_filter_css_is_datauri_candidate', function($is_candidate, $path) {
+        // For test purposes, ALL images in the css are being inline with a 1x1 trans png string/datauri.
+        add_filter( 'autoptimize_filter_css_is_datauri_candidate', function( $is_candidate, $path ) {
             return true;
-        }, 10, 2);
+        }, 10, 2 );
 
-        // For test purposes, ALL images in the css are being inline with a 1x1 trans png string/datauri
-        add_filter( 'autoptimize_filter_css_datauri_image', function($base64array, $path) {
+        // For test purposes, ALL images in the css are being inline with a 1x1 trans png string/datauri.
+        add_filter( 'autoptimize_filter_css_datauri_image', function( $base64array, $path ) {
             $head = 'data:image/png;base64,';
             $data = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
-            $result['full'] = $head . $data;
+            $result['full']       = $head . $data;
             $result['base64data'] = $data;
             return $result;
-        }, 10, 2);
+        }, 10, 2 );
 
-        $instance = new autoptimizeStyles($css_orig);
-        $instance->setOption('datauris', true);
+        $instance = new autoptimizeStyles( $css_orig );
+        $instance->setOption( 'datauris', true );
 
-        $fixurls_result = autoptimizeStyles::fixurls(ABSPATH . 'wp-content/themes/my-theme/style.css', $css_orig);
-        $css_actual = $instance->rewrite_assets($fixurls_result);
+        $fixurls_result = autoptimizeStyles::fixurls( ABSPATH . 'wp-content/themes/my-theme/style.css', $css_orig );
+        $css_actual     = $instance->rewrite_assets( $fixurls_result );
 
-        $this->assertEquals($css_expected, $css_actual);
+        $this->assertEquals( $css_expected, $css_actual );
     }
 
     /**
-     * Doing rewrite_assets() without calling fixurls() beforehand could cause wrong results if/when there's a
-     * (same) image referenced via root-relative and relative urls, i.e., `/wp-content/themes/my-theme/images/shadow.png` and
+     * Doing rewrite_assets() without calling fixurls() beforehand could
+     * cause wrong results if/when there's a (same) image referenced via
+     * root-relative and relative urls, i.e.,
+     * `/wp-content/themes/my-theme/images/shadow.png` and
      * `wp-content/themes/my-theme/images/shadow.png` in test code below.
-     * That's because urls are not really "normalized" in rewrite_assets() at all, and replacements are done
-     * using simple string keys (based on url), so whenever the shorter url ends up being spotted first, the replacement
-     * was done in a way that leaves the first `/` character in place. Which could mean trouble, especially when
-     * doing inlining of smaller images.
-     * After sorting the replacements array in rewrite_assets() by string length in descending order, the problem
-     * goes away.
+     * That's because urls are not really "normalized" in rewrite_assets() at
+     * all, and replacements are done using simple string keys (based on url),
+     * so whenever the shorter url ends up being spotted first, the replacement
+     * was done in a way that leaves the first `/` character in place.
+     * Which could mean trouble, especially when doing inlining of smaller
+     * images.
+     * After sorting the replacements array in rewrite_assets() by string
+     * length in descending order, the problem goes away.
      */
     public function test_background_datauri_sprites_without_fixurls()
     {
-        $css_orig = <<<CSS
+        $css_orig     = <<<CSS
 .shadow { background:url(img/1x1.png) top center; }
 .shadow1 { background-image:url(img/1x1.png) 0 -767px repeat-x; }
 .shadow2 {background:url(img/1x1.png) top center}
@@ -1151,28 +1169,30 @@ section.clipped.clippedBottom {clip-path:url("#clipPolygonBottom")}
 .widget ul li { background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=) top center; }
 CSS;
 
-        // For test purposes, ALL images in the css are being inline with a 1x1 trans png string/datauri
-        add_filter( 'autoptimize_filter_css_is_datauri_candidate', function($is_candidate, $path) {
+        // For test purposes, ALL images in the css are being inlined with a 1x1 trans png string/datauri.
+        add_filter( 'autoptimize_filter_css_is_datauri_candidate', function( $is_candidate, $path ) {
             return true;
-        }, 10, 2);
+        }, 10, 2 );
 
-        // For test purposes, ALL images in the css are being inline with a 1x1 trans png string/datauri
-        add_filter( 'autoptimize_filter_css_datauri_image', function($base64array, $path) {
+        // For test purposes, ALL images in the css are being inlined with a 1x1 trans png string/datauri.
+        add_filter( 'autoptimize_filter_css_datauri_image', function( $base64array, $path ) {
             $head = 'data:image/png;base64,';
             $data = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
-            $result['full'] = $head . $data;
+            $result['full']       = $head . $data;
             $result['base64data'] = $data;
             return $result;
-        }, 10, 2);
+        }, 10, 2 );
 
-        $instance = new autoptimizeStyles($css_orig);
-        $instance->setOption('datauris', true);
-        $css_actual = $instance->rewrite_assets($css_orig);
-        $this->assertEquals($css_expected, $css_actual);
+        $instance = new autoptimizeStyles( $css_orig );
+        $instance->setOption( 'datauris', true );
+        $css_actual = $instance->rewrite_assets( $css_orig );
+        $this->assertEquals( $css_expected, $css_actual );
     }
 
-    // Test css with fonts pointed to the CDN + cdn_url option is set
+    /**
+     * Test css with fonts pointed to the CDN + cdn_url option is set.
+     */
     public function test_css_fonts_on_cdn_with_filter()
     {
         $css_in = <<<CSS
@@ -1227,6 +1247,7 @@ CSS;
        url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 CSS;
+
         $css_expected_fonts_cdn = <<<CSS
 /* these should not be touched except for quotes removal */
 @font-face {
@@ -1280,16 +1301,18 @@ CSS;
 }
 CSS;
 
-        // Test with fonts pointed to the CDN + cdn option is set
+        // Test with fonts pointed to the CDN + cdn option is set.
         add_filter( 'autoptimize_filter_css_fonts_cdn', '__return_true' );
-        $instance = new autoptimizeStyles($css_in);
-        $instance->setOption('cdn_url', 'http://cdn.example.org');
-        $css_actual_fonts_cdn = $instance->rewrite_assets($css_in);
+        $instance = new autoptimizeStyles( $css_in );
+        $instance->setOption( 'cdn_url', 'http://cdn.example.org' );
+        $css_actual_fonts_cdn = $instance->rewrite_assets( $css_in );
 
-        $this->assertEquals($css_expected_fonts_cdn, $css_actual_fonts_cdn);
+        $this->assertEquals( $css_expected_fonts_cdn, $css_actual_fonts_cdn );
     }
 
-    // Test css fonts not moved to cdn by default even if cdn_url option is set
+    /**
+     * Test css fonts not moved to cdn by default even if cdn_url option is set.
+     */
     public function test_css_fonts_skipped_by_default_when_cdn_is_set()
     {
         $css_in = <<<CSS
@@ -1343,7 +1366,7 @@ CSS;
        url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 CSS;
-        // Expected without cdning fonts but cdn option is set
+        // Expected without cdning fonts but cdn option is set.
         $css_expected = <<<CSS
 /* these should not be changed, not even quotes */
 @font-face {
@@ -1395,16 +1418,16 @@ CSS;
        url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 CSS;
-        // Test without moving fonts to CDN, but cdn option is set
-        $instance = new autoptimizeStyles($css_in);
-        $instance->setOption('cdn_url', 'http://cdn.example.org');
-        $css_actual = $instance->rewrite_assets($css_in);
-        $this->assertEquals($css_expected, $css_actual);
+        // Test without moving fonts to CDN, but cdn option is set.
+        $instance = new autoptimizeStyles( $css_in );
+        $instance->setOption( 'cdn_url', 'http://cdn.example.org' );
+        $css_actual = $instance->rewrite_assets( $css_in );
+        $this->assertEquals( $css_expected, $css_actual );
     }
 
     public function test_assets_regex_replaces_multi_bg_images()
     {
-        $in = <<<CSS
+        $in       = <<<CSS
 body:after {
   content: url(/img/close.png) url(/img/loading.gif) url(/img/prev.png) url(/img/next.png);
 }
@@ -1415,16 +1438,16 @@ body:after {
 }
 CSS;
 
-        $instance = new autoptimizeStyles($in);
-        $instance->setOption('cdn_url', 'http://cdn.example.org');
-        $actual = $instance->rewrite_assets($in);
+        $instance = new autoptimizeStyles( $in );
+        $instance->setOption( 'cdn_url', 'http://cdn.example.org' );
+        $actual = $instance->rewrite_assets( $in );
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals( $expected, $actual );
     }
 
     public function test_at_supports_spacing_issue_110()
     {
-        $in = <<<CSS
+        $in       = <<<CSS
 @supports (-webkit-filter: blur(3px)) or (filter: blur(3px)) {
     .blur {
         filter:blur(3px);
@@ -1438,10 +1461,10 @@ CSS;
 @supports (-webkit-filter:blur(3px)) or (filter:blur(3px)){.blur{filter:blur(3px)}}@supports((position:-webkit-sticky) or (position:sticky)){.sticky{position:sticky}}
 CSS;
 
-        $instance = new autoptimizeStyles($in);
-        $actual = $instance->run_minifier_on($in);
+        $instance = new autoptimizeStyles( $in );
+        $actual   = $instance->run_minifier_on( $in );
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals( $expected, $actual );
     }
 
     public function test_css_import_semicolon_url_issue_122()
@@ -1456,15 +1479,15 @@ HTML;
         $expected = '<style type="text/css" media="all">@import url(http://cdn.example.org/foo.css?a&#038;b);@import url(http://cdn.example.org/bar.css);</style><!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag `title` missing --><!--/noptimize-->';
 
         $options = [
-            'autoptimizeStyles' => $this->getAoStylesDefaultOptions()
+            'autoptimizeStyles' => $this->getAoStylesDefaultOptions(),
         ];
 
-        $instance = new autoptimizeStyles($in);
-        $instance->read($options['autoptimizeStyles']);
+        $instance = new autoptimizeStyles( $in );
+        $instance->read( $options['autoptimizeStyles'] );
         $instance->minify();
         $instance->cache();
         $actual = $instance->getcontent();
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals( $expected, $actual );
     }
 
     public function test_fixurls_with_at_imports_and_media_queries()
@@ -1472,8 +1495,8 @@ HTML;
         $in  = '@import "foo.css"; @import "bar.css" (orientation:landscape);';
         $exp = '@import url(//example.org/wp-content/themes/my-theme/foo.css); @import url(//example.org/wp-content/themes/my-theme/bar.css) (orientation:landscape);';
 
-        $actual = autoptimizeStyles::fixurls(ABSPATH . 'wp-content/themes/my-theme/style.css', $in);
-        $this->assertEquals($exp, $actual);
+        $actual = autoptimizeStyles::fixurls( ABSPATH . 'wp-content/themes/my-theme/style.css', $in );
+        $this->assertEquals( $exp, $actual );
     }
 
     public function test_aostyles_at_imports_with_media_queries()
@@ -1487,29 +1510,29 @@ HTML;
         $expected = '<style type="text/css" media="all">@import url(http://cdn.example.org/foo.css);@import url(http://cdn.example.org/bar.css) (orientation:landscape);</style><!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag `title` missing --><!--/noptimize-->';
 
         $options = [
-            'autoptimizeStyles' => $this->getAoStylesDefaultOptions()
+            'autoptimizeStyles' => $this->getAoStylesDefaultOptions(),
         ];
 
-        $instance = new autoptimizeStyles($in);
-        $instance->read($options['autoptimizeStyles']);
+        $instance = new autoptimizeStyles( $in );
+        $instance->read( $options['autoptimizeStyles'] );
         $instance->minify();
         $instance->cache();
 
         $actual = $instance->getcontent();
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals( $expected, $actual );
     }
 
     public function test_cache_size_checker_hooked_by_default()
     {
-        $this->assertTrue(true, autoptimizeCacheChecker::SCHEDULE_HOOK);
+        $this->assertNotEmpty( autoptimizeCacheChecker::SCHEDULE_HOOK );
 
-        // No schedule, because it's only added when is_admin() is true
-        $this->assertEquals(false, wp_get_schedule(autoptimizeCacheChecker::SCHEDULE_HOOK));
+        // No schedule, because it's only added when is_admin() is true.
+        $this->assertEquals( false, wp_get_schedule( autoptimizeCacheChecker::SCHEDULE_HOOK ) );
 
-        // Prove that setup() sets the schedule as needed
+        // Proving that setup() sets the schedule as needed.
         $checker = new autoptimizeCacheChecker();
         $checker->setup();
-        $this->assertEquals('daily', wp_get_schedule(autoptimizeCacheChecker::SCHEDULE_HOOK));
+        $this->assertEquals( 'daily', wp_get_schedule( autoptimizeCacheChecker::SCHEDULE_HOOK ) );
     }
 
     public function test_cache_size_checker_disabled_with_filter()
@@ -1518,7 +1541,7 @@ HTML;
 
         $checker = new autoptimizeCacheChecker();
         $checker->setup();
-        $this->assertEquals(false, wp_get_schedule(autoptimizeCacheChecker::SCHEDULE_HOOK));
+        $this->assertEquals( false, wp_get_schedule( autoptimizeCacheChecker::SCHEDULE_HOOK ) );
 
         remove_all_filters( 'autoptimize_filter_cachecheck_do' );
     }
@@ -1527,27 +1550,30 @@ HTML;
     {
         $instance = autoptimize();
 
-        // TODO/FIXME: ideally, we'd test all possible setups, but once we set
-        // a constant, there's no going back, unless we use runkit or somesuch:
-        // https://www.theaveragedev.com/mocking-constants-in-tests/
+        /**
+         * TODO/FIXME: ideally, we'd test all possible setups, but once we set
+         * a constant, there's no going back, unless we use runkit or somesuch:
+         * https://www.theaveragedev.com/mocking-constants-in-tests/.
+         */
 
-        if (defined('AUTOPTIMIZE_INIT_EARLIER')) {
+        if ( defined( 'AUTOPTIMIZE_INIT_EARLIER' ) ) {
             $this->assertEquals(
                 autoptimizeMain::INIT_EARLIER_PRIORITY,
-                has_action('init', array($instance, 'start_buffering'))
+                has_action( 'init', array( $instance, 'start_buffering' ) )
             );
-            $this->assertTrue(!defined('AUTOPTIMIZE_HOOK_INTO'));
+            $this->assertTrue( ! defined( 'AUTOPTIMIZE_HOOK_INTO' ) );
         }
-/*
+
+        /*
         // AUTOPTIMIZE_HOOK_INTO only exists if AUTOPTIMIZE_INIT_EARLIER doesnt
         $this->assertEquals(
             autoptimizeMain::DEFAULT_HOOK_PRIORITY,
-            has_action(constant('AUTOPTIMIZE_HOOK_INTO'), array($instance, 'start_buffering'))
+            has_action( constant( 'AUTOPTIMIZE_HOOK_INTO' ), array( $instance, 'start_buffering' ) )
         );
         $this->assertFalse(
-            has_action('init', array($instance, 'start_buffering'))
+            has_action( 'init', array( $instance, 'start_buffering' ) )
         );
-*/
+        */
     }
 
     public function test_inline_and_defer_markup()
@@ -1570,47 +1596,47 @@ HTML;
     {
         $opts = $this->getAoScriptsDefaultOptions();
 
-        // Aggregating: true by default
-        $scripts = new autoptimizeScripts('');
-        $scripts->read($opts);
-        $this->assertTrue($scripts->aggregating());
+        // Aggregating: true by default.
+        $scripts = new autoptimizeScripts( '' );
+        $scripts->read( $opts );
+        $this->assertTrue( $scripts->aggregating() );
 
         // Aggregating: option=true (dontaggregate=false by default).
         $opts['aggregate'] = true;
-        $scripts = new autoptimizeScripts('');
-        $scripts->read($opts);
-        $this->assertTrue($scripts->aggregating());
+        $scripts           = new autoptimizeScripts( '' );
+        $scripts->read( $opts );
+        $this->assertTrue( $scripts->aggregating() );
 
         // Aggregating: option=true, dontaggregate=false explicit.
-        add_filter( 'autoptimize_filter_js_dontaggregate', '__return_false' );
         $opts['aggregate'] = true;
-        $scripts = new autoptimizeScripts('');
-        $scripts->read($opts);
-        $this->assertTrue($scripts->aggregating());
+        add_filter( 'autoptimize_filter_js_dontaggregate', '__return_false' );
+        $scripts = new autoptimizeScripts( '' );
+        $scripts->read( $opts );
+        $this->assertTrue( $scripts->aggregating() );
         remove_all_filters( 'autoptimize_filter_js_dontaggregate' );
 
         // Not aggregating: option=true, dontaggregate=true.
-        add_filter( 'autoptimize_filter_js_dontaggregate', '__return_true' );
         $opts['aggregate'] = true;
-        $scripts = new autoptimizeScripts('');
-        $scripts->read($opts);
-        $this->assertFalse($scripts->aggregating());
+        add_filter( 'autoptimize_filter_js_dontaggregate', '__return_true' );
+        $scripts = new autoptimizeScripts( '' );
+        $scripts->read( $opts );
+        $this->assertFalse( $scripts->aggregating() );
         remove_all_filters( 'autoptimize_filter_js_dontaggregate' );
 
         // Not aggregating: option=false, dontaggregate=false.
-        add_filter( 'autoptimize_filter_js_dontaggregate', '__return_false' );
         $opts['aggregate'] = false;
-        $scripts = new autoptimizeScripts('');
-        $scripts->read($opts);
-        $this->assertFalse($scripts->aggregating());
+        add_filter( 'autoptimize_filter_js_dontaggregate', '__return_false' );
+        $scripts = new autoptimizeScripts( '' );
+        $scripts->read( $opts );
+        $this->assertFalse( $scripts->aggregating() );
         remove_all_filters( 'autoptimize_filter_js_dontaggregate' );
 
         // Not aggregating: option=false, dontaggregate=true.
-        add_filter( 'autoptimize_filter_js_dontaggregate', '__return_true' );
         $opts['aggregate'] = false;
-        $scripts = new autoptimizeScripts('');
-        $scripts->read($opts);
-        $this->assertFalse($scripts->aggregating());
+        add_filter( 'autoptimize_filter_js_dontaggregate', '__return_true' );
+        $scripts = new autoptimizeScripts( '' );
+        $scripts->read( $opts );
+        $this->assertFalse( $scripts->aggregating() );
         remove_all_filters( 'autoptimize_filter_js_dontaggregate' );
     }
 
@@ -1618,65 +1644,65 @@ HTML;
     {
         $opts = $this->getAoStylesDefaultOptions();
 
-        // Aggregating: true by default
-        $styles = new autoptimizeStyles('');
-        $this->assertTrue($styles->aggregating());
+        // Aggregating: true by default.
+        $styles = new autoptimizeStyles( '' );
+        $this->assertTrue( $styles->aggregating() );
 
         // Aggregating: option=true (dontaggregate=false by default).
         $opts['aggregate'] = true;
-        $styles = new autoptimizeStyles('');
-        $styles->read($opts);
-        $this->assertTrue($styles->aggregating());
+        $styles            = new autoptimizeStyles( '' );
+        $styles->read( $opts );
+        $this->assertTrue( $styles->aggregating() );
 
         // Aggregating: option=true, dontaggregate=false explicit.
-        add_filter( 'autoptimize_filter_css_dontaggregate', '__return_false' );
         $opts['aggregate'] = true;
-        $styles = new autoptimizeStyles('');
-        $styles->read($opts);
-        $this->assertTrue($styles->aggregating());
+        add_filter( 'autoptimize_filter_css_dontaggregate', '__return_false' );
+        $styles = new autoptimizeStyles( '' );
+        $styles->read( $opts );
+        $this->assertTrue( $styles->aggregating() );
         remove_all_filters( 'autoptimize_filter_css_dontaggregate' );
 
         // Not aggregating: option=true, dontaggregate=true.
-        add_filter( 'autoptimize_filter_css_dontaggregate', '__return_true' );
         $opts['aggregate'] = true;
-        $styles = new autoptimizeStyles('');
-        $styles->read($opts);
-        $this->assertFalse($styles->aggregating());
+        add_filter( 'autoptimize_filter_css_dontaggregate', '__return_true' );
+        $styles = new autoptimizeStyles( '' );
+        $styles->read( $opts );
+        $this->assertFalse( $styles->aggregating() );
         remove_all_filters( 'autoptimize_filter_css_dontaggregate' );
 
         // Not aggregating: option=false, dontaggregate=false.
-        add_filter( 'autoptimize_filter_css_dontaggregate', '__return_false' );
         $opts['aggregate'] = false;
-        $styles = new autoptimizeStyles('');
-        $styles->read($opts);
-        $this->assertFalse($styles->aggregating());
+        add_filter( 'autoptimize_filter_css_dontaggregate', '__return_false' );
+        $styles = new autoptimizeStyles( '' );
+        $styles->read( $opts );
+        $this->assertFalse( $styles->aggregating() );
         remove_all_filters( 'autoptimize_filter_css_dontaggregate' );
 
         // Not aggregating: option=false, dontaggregate=true.
-        add_filter( 'autoptimize_filter_css_dontaggregate', '__return_true' );
         $opts['aggregate'] = false;
-        $styles = new autoptimizeStyles('');
-        $styles->read($opts);
-        $this->assertFalse($styles->aggregating());
+        add_filter( 'autoptimize_filter_css_dontaggregate', '__return_true' );
+        $styles = new autoptimizeStyles( '' );
+        $styles->read( $opts );
+        $this->assertFalse( $styles->aggregating() );
         remove_all_filters( 'autoptimize_filter_css_dontaggregate' );
     }
 
     public function test_css_minify_single_with_cdning()
     {
-        $pathname = dirname(__FILE__) . '/fixtures/minify-single.css';
-
-        $styles = new autoptimizeStyles( '' );
-        $opts = $this->getAoStylesDefaultOptions();
+        $pathname = dirname( __FILE__ ) . '/fixtures/minify-single.css';
+        $opts     = $this->getAoStylesDefaultOptions();
+        $styles   = new autoptimizeStyles( '' );
         $styles->read( $opts );
+
         $url = $styles->minify_single( $pathname, $cache_miss = true );
 
-        // Minified url filename + its pointed to cdn
+        // Minified url filename + its pointed to cdn.
         $this->assertContains( 'cache/autoptimize/', $url );
         $this->assertContains( '/autoptimize_single_', $url );
         $this->assertContains( $styles->cdn_url, $url );
 
         // Actual minified css contents are minified and cdn-ed.
-        $path = $styles->getpath( $url );
+        $path     = $styles->getpath( $url );
         $contents = file_get_contents( $path );
         $this->assertContains( $styles->cdn_url, $contents );
         $this->assertContains( '.bg{background:url(' . $styles->cdn_url, $contents );
@@ -1685,12 +1711,12 @@ HTML;
     public function test_ao_partners_instantiation_without_explicit_include()
     {
         $partners = new autoptimizePartners();
-        $this->assertTrue($partners instanceof autoptimizePartners);
+        $this->assertTrue( $partners instanceof autoptimizePartners );
     }
 
-    public function  test_html_minify_keep_html_comments_inside_script_blocks()
+    public function test_html_minify_keep_html_comments_inside_script_blocks()
     {
-        $markup = <<<MARKUP
+        $markup   = <<<MARKUP
 <script>
 <!-- End Support AJAX add to cart -->
 var a = "b";
@@ -1713,10 +1739,10 @@ MARKUP;
 <!-- End Support AJAX add to cart --></script>
 MARKUP;
 
-        // When keepcomments is true
+        // When keepcomments is true.
         $options = [
             'autoptimizeHTML' => [
-                'keepcomments' => true
+                'keepcomments' => true,
             ],
         ];
 
@@ -1735,8 +1761,8 @@ MARKUP;
 
     public function test_html_minify_remove_html_comments_inside_script_blocks()
     {
-        // Default case, where html comments are removed (keepcomments = false)
-        $markup1 = <<<MARKUP
+        // Default case, html comments removed (keepcomments = false).
+        $markup1   = <<<MARKUP
 <script>
 var a = "b";
 <!-- End Support AJAX add to cart -->
@@ -1747,7 +1773,7 @@ MARKUP;
 <!-- End Support AJAX add to cart</script>
 MARKUP;
 
-        $markup2 = <<<MARKUP
+        $markup2   = <<<MARKUP
 <script>
 <!-- End Support AJAX add to cart -->
 var a = "b";
@@ -1842,7 +1868,7 @@ MARKUP;
         $this->assertSame( $orig, autoptimizeUtils::iconv_available() );
         // Override works...
         $this->assertSame( $opposite, autoptimizeUtils::iconv_available( $opposite ) );
-        // And override remains cached as the last version
+        // And override remains cached as the last version.
         $this->assertSame( $opposite, autoptimizeUtils::iconv_available() );
 
         $orig     = autoptimizeUtils::mbstring_available();
@@ -1851,13 +1877,13 @@ MARKUP;
         $this->assertSame( $orig, autoptimizeUtils::mbstring_available() );
         // Override works...
         $this->assertSame( $opposite, autoptimizeUtils::mbstring_available( $opposite ) );
-        // And override remains cached as the last version
+        // And override remains cached as the last version.
         $this->assertSame( $opposite, autoptimizeUtils::mbstring_available() );
     }
 
     public function test_utils_mbstring_basics()
     {
-        // Turn off iconv, turn on mbstring usage
+        // Turn off iconv, turn on mbstring usage.
         autoptimizeUtils::mbstring_available( true );
         autoptimizeUtils::iconv_available( false );
 
@@ -1874,7 +1900,7 @@ MARKUP;
 
     public function test_utils_iconv_basics()
     {
-        // Turn off mbstring, turn on iconv
+        // Turn off mbstring, turn on iconv.
         autoptimizeUtils::mbstring_available( false );
         autoptimizeUtils::iconv_available( true );
 
@@ -1887,7 +1913,7 @@ MARKUP;
     /**
      * @dataProvider provider_utils_substr_replace
      */
-    function test_utils_substr_replace_basics_mbstring($s, $repl, $start, $len, $expected)
+    function test_utils_substr_replace_basics_mbstring( $s, $repl, $start, $len, $expected )
     {
         // Force mbstring code path...
         autoptimizeUtils::mbstring_available( true );
@@ -1898,7 +1924,7 @@ MARKUP;
     /**
      * @dataProvider provider_utils_substr_replace
      */
-    function test_utils_substr_replace_basics_iconv($s, $repl, $start, $len, $expected)
+    function test_utils_substr_replace_basics_iconv( $s, $repl, $start, $len, $expected )
     {
         // Force iconv code path...
         autoptimizeUtils::mbstring_available( false );
@@ -2025,8 +2051,8 @@ MARKUP;
         // of characters, shit just breaks.
         $str = 'âønæë';
 
-        //$this->assertSame( '�ñ', autoptimizeUtils::substr_replace( $str, 'ñ', 1 ) ); // No length.
-        //$this->assertSame( 'ñ�næë', autoptimizeUtils::substr_replace( $str, 'ñ', 1, 2 ) );
+        // $this->assertSame( '�ñ', autoptimizeUtils::substr_replace( $str, 'ñ', 1 ) ); // No length.
+        // $this->assertSame( 'ñ�næë', autoptimizeUtils::substr_replace( $str, 'ñ', 1, 2 ) );
         $this->assertSame( 'ñønæë', autoptimizeUtils::substr_replace( $str, 'ñ', 0, 2 ) );
         $this->assertSame( 'âñxæë', autoptimizeUtils::substr_replace( $str, 'ñx', 2, 3 ) );
         $this->assertSame( 'âz', autoptimizeUtils::substr_replace( $str, 'z', 2, 10 ) ); // Length larger than possible...
