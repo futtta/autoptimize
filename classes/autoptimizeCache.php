@@ -96,14 +96,14 @@ class autoptimizeCache
             $phpcode = file_get_contents( AUTOPTIMIZE_PLUGIN_DIR . 'config/' . $file );
             $phpcode = str_replace( array( '%%CONTENT%%', 'exit;' ), array( $mime, '' ), $phpcode );
 
-            file_put_contents( $this->cachedir . $this->filename, $phpcode, LOCK_EX );
-            file_put_contents( $this->cachedir . $this->filename . '.none', $data, LOCK_EX );
+            file_put_contents( $this->cachedir . $this->filename, $phpcode );
+            file_put_contents( $this->cachedir . $this->filename . '.none', $data );
         } else {
             // Write code to cache without doing anything else.
-            file_put_contents( $this->cachedir . $this->filename, $data, LOCK_EX );
+            file_put_contents( $this->cachedir . $this->filename, $data );
             if ( apply_filters( 'autoptimize_filter_cache_create_static_gzip', false ) ) {
                 // Create an additional cached gzip file.
-                file_put_contents( $this->cachedir . $this->filename . '.gz', gzencode( $data, 9, FORCE_GZIP ), LOCK_EX );
+                file_put_contents( $this->cachedir . $this->filename . '.gz', gzencode( $data, 9, FORCE_GZIP ) );
             }
         }
     }
@@ -150,9 +150,15 @@ class autoptimizeCache
     /**
      * Deletes everything from the cache directories.
      *
+     * @param bool $propagate Controls whether
+     *                        `do_action('autoptimize_action_cachepurged')` is
+     *                        called and if we'll be flushing various page
+     *                        caches or not (which can in turn hook into our
+     *                        actions and trigger our cache clearing again etc.).
+     *
      * @return bool
      */
-    public static function clearall( $propagate=true )
+    public static function clearall( $propagate = true )
     {
         if ( ! autoptimizeCache::cacheavail() ) {
             return false;
@@ -171,8 +177,8 @@ class autoptimizeCache
         @unlink( AUTOPTIMIZE_CACHE_DIR . '/.htaccess' ); // @codingStandardsIgnoreLine
         delete_transient( 'autoptimize_stats' );
 
-        // Cache was just purged, clear page cache and allow others to hook into our purging if propagate = true
-        if ($propagate === true) {
+        // Cache was just purged, clear page cache and allow others to hook into our purging if desired.
+        if ( true === $propagate ) {
             if ( ! function_exists( 'autoptimize_do_cachepurged_action' ) ) {
                 function autoptimize_do_cachepurged_action() {
                     do_action( 'autoptimize_action_cachepurged' );
@@ -180,7 +186,7 @@ class autoptimizeCache
             }
             add_action( 'shutdown', 'autoptimize_do_cachepurged_action', 11 );
             add_action( 'autoptimize_action_cachepurged', array( 'autoptimizeCache', 'flushPageCache' ), 10, 0 );
-        } 
+        }
 
         // Warm cache (part of speedupper)!
         if ( apply_filters( 'autoptimize_filter_speedupper', true ) ) {
@@ -194,15 +200,14 @@ class autoptimizeCache
 
     /**
      * Wrapper for clearall but with false param
-     * to ensure the event is not propagated to others  
-     * through our own hooks (to avoid infinit loops)
+     * to ensure the event is not propagated to others
+     * through our own hooks (to avoid infinite loops).
      *
      * @return bool
      */
-    public static function clearallNoPropagate()
+    public static function clearall_actionless()
     {
-        autoptimizeCache::clearall(false);
-        return true;
+        return autoptimizeCache::clearall( false );
     }
 
     /**

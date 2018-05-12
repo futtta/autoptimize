@@ -336,8 +336,9 @@ abstract class autoptimizeBase
      */
     protected function inject_in_html( $payload, $where )
     {
-        $warned = false;
-        if ( false !== strpos( $this->content, $where[0] ) ) {
+        $warned   = false;
+        $position = autoptimizeUtils::strpos( $this->content, $where[0] );
+        if ( false !== $position ) {
             // Found the tag, setup content/injection as specified.
             if ( 'after' === $where[1] ) {
                 $content = $where[0] . $payload;
@@ -347,10 +348,12 @@ abstract class autoptimizeBase
                 $content = $payload . $where[0];
             }
             // Place where specified.
-            $this->content = substr_replace(
+            $this->content = autoptimizeUtils::substr_replace(
                 $this->content,
                 $content,
-                strpos( $this->content, $where[0] ),
+                $position,
+                // Using plain strlen() should be safe here for now, since
+                // we're not searching for multibyte chars here still...
                 strlen( $where[0] )
             );
         } else {
@@ -635,7 +638,7 @@ abstract class autoptimizeBase
     }
 
     /**
-     * checks if a single local css/js file can be minified and returns source if so.
+     * Checks if a single local css/js file can be minified and returns source if so.
      *
      * @param string $filepath Filepath.
      *
@@ -675,7 +678,7 @@ abstract class autoptimizeBase
      * Given an autoptimizeCache instance returns the (maybe cdn-ed) url of
      * the cached file.
      *
-     * @param autoptimizeCache $cache autoptimizeCache instance
+     * @param autoptimizeCache $cache autoptimizeCache instance.
      *
      * @return string
      */
