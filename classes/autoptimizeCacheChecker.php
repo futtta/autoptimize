@@ -37,7 +37,7 @@ class autoptimizeCacheChecker
         $do_cache_check = (bool) apply_filters( 'autoptimize_filter_cachecheck_do', true );
         $schedule       = wp_get_schedule( self::SCHEDULE_HOOK );
         $frequency      = apply_filters( 'autoptimize_filter_cachecheck_frequency', 'daily' );
-        if ( ! in_array( $frequency, array( 'hourly', 'daily', 'monthly' ) ) ) {
+        if ( ! in_array( $frequency, array( 'hourly', 'daily', 'weekly', 'monthly' ) ) ) {
             $frequency = 'daily';
         }
         if ( $do_cache_check && ( ! $schedule || $schedule !== $frequency ) ) {
