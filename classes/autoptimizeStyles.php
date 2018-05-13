@@ -558,7 +558,7 @@ class autoptimizeStyles extends autoptimizeBase
                  * inlining isn't turned on, or if a resource is skipped from
                  * being inlined for whatever reason above.
                  */
-                if ( ! $inlined  && ! empty( $this->cdn_url ) ) {
+                if ( ! $inlined  && ( ! empty( $this->cdn_url ) || has_filter('autoptimize_filter_base_replace_cdn') ) ) {
                     // Just do the "simple" CDN replacement
                     $replacement_url = $this->url_replace_cdn($url);
                     $imgreplace[ $url_src_matches[1][ $count ] ] = str_replace(
