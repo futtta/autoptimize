@@ -148,22 +148,12 @@ class autoptimizeCache
     }
 
     /**
-     * Deletes everything from the cache directories.
+     * Clears contents of AUTOPTIMIZE_CACHE_DIR.
      *
-     * @param bool $propagate Controls whether
-     *                        `do_action('autoptimize_action_cachepurged')` is
-     *                        called and if we'll be flushing various page
-     *                        caches or not (which can in turn hook into our
-     *                        actions and trigger our cache clearing again etc.).
-     *
-     * @return bool
+     * @return void
      */
-    public static function clearall( $propagate = true )
+    protected static function clear_cache_classic()
     {
-        if ( ! autoptimizeCache::cacheavail() ) {
-            return false;
-        }
-
         $contents = self::get_cache_contents();
         foreach ( $contents as $name => $files ) {
             $dir = rtrim( AUTOPTIMIZE_CACHE_DIR . $name, '/' ) . '/';
@@ -175,9 +165,191 @@ class autoptimizeCache
         }
 
         @unlink( AUTOPTIMIZE_CACHE_DIR . '/.htaccess' ); // @codingStandardsIgnoreLine
+    }
+
+    /**
+     * Recursively deletes the specified pathname (file/directory) if possible.
+     * Returns true on success, false otherwise.
+     *
+     * @param string $pathname Pathname to remove.
+     *
+     * @return bool
+     */
+    protected static function rmdir( $pathname )
+    {
+        $files = self::get_dir_contents( $pathname );
+        foreach ( $files as $file ) {
+            $path = $pathname . '/' . $file;
+            if ( is_dir( $path ) ) {
+                self::rmdir( $path );
+            } else {
+                unlink( $path );
+            }
+        }
+
+        return rmdir( $pathname );
+    }
+
+    /**
+     * Clears contents of AUTOPTIMIZE_CACHE_DIR by renaming the current
+     * cache directory into a new one with a unique name and then
+     * re-creating the default (empty) cache directory.
+     *
+     * @return bool Returns true when everything is done successfully, false otherwise.
+     */
+    protected static function clear_cache_via_rename()
+    {
+        $ok       = false;
+        $dir      = self::get_pathname_base();
+        $new_name = self::get_unique_name();
+
+        // Makes sure the new pathname is on the same level...
+        $new_pathname = dirname( $dir ) . '/' . $new_name;
+        $renamed      = @rename( $dir, $new_pathname ); // @codingStandardsIgnoreLine
+
+        // When renamed, re-create the default cache directory back so it's
+        // available again...
+        if ( $renamed ) {
+            $ok = self::cacheavail();
+        }
+
+        return $ok;
+    }
+
+    /**
+     * Returns true when advanced cache clearing is enabled.
+     *
+     * @return bool
+     */
+    public static function advanced_cache_clear_enabled()
+    {
+        return apply_filters( 'autoptimize_filter_cache_clear_advanced', false );
+    }
+
+    /**
+     * Returns a (hopefully) unique new cache folder name for renaming purposes.
+     *
+     * @return string
+     */
+    protected static function get_unique_name()
+    {
+        $prefix   = self::get_advanced_cache_clear_prefix();
+        $new_name = uniqid( $prefix, true );
+
+        return $new_name;
+    }
+
+    /**
+     * Get cache prefix name used in advanced cache clearing mode.
+     *
+     * @return string
+     */
+    protected static function get_advanced_cache_clear_prefix()
+    {
+        $pathname = self::get_pathname_base();
+        $basename = basename( $pathname );
+        $prefix   = $basename . '-';
+
+        return $prefix;
+    }
+
+    /**
+     * Returns an array of file and directory names found within
+     * the given $pathname without '.' and '..' elements.
+     *
+     * @param string $pathname Pathname.
+     *
+     * @return array
+     */
+    protected static function get_dir_contents( $pathname )
+    {
+        return array_slice( scandir( $pathname ), 2 );
+    }
+
+    /**
+     * Wipes directories which were created as part of the fast cache clearing
+     * routine (which renames the current cache directory into a new one with
+     * a custom-prefixed unique name).
+     *
+     * @return bool
+     */
+    public static function delete_advanced_cache_clear_artifacts()
+    {
+        $dir    = self::get_pathname_base();
+        $prefix = self::get_advanced_cache_clear_prefix();
+        $parent = dirname( $dir );
+        $ok     = false;
+
+        // Returns the list of files without '.' and '..' elements.
+        $files = self::get_dir_contents( $parent );
+        foreach ( $files as $file ) {
+            $path     = $parent . '/' . $file;
+            $prefixed = ( false !== strpos( $path, $prefix ) );
+            // Removing only our own (prefixed) directories...
+            if ( is_dir( $path ) && $prefixed ) {
+                $ok = self::rmdir( $path );
+            }
+        }
+
+        return $ok;
+    }
+
+    /**
+     * Returns the cache directory pathname used.
+     * Done as a function so we canSlightly different
+     * if multisite is used and `autoptimize_separate_blog_caches` filter
+     * is used.
+     *
+     * @return string
+     */
+    public static function get_pathname()
+    {
+        $pathname = self::get_pathname_base();
+
+        if ( is_multisite() && apply_filters( 'autoptimize_separate_blog_caches', true ) ) {
+            $blog_id   = get_current_blog_id();
+            $pathname .= $blog_id . '/';
+        }
+
+        return $pathname;
+    }
+
+    /**
+     * Returns the base path of our cache directory.
+     *
+     * @return string
+     */
+    protected static function get_pathname_base()
+    {
+        $pathname = WP_CONTENT_DIR . AUTOPTIMIZE_CACHE_CHILD_DIR;
+
+        return $pathname;
+    }
+
+    /**
+     * Deletes everything from the cache directories.
+     *
+     * @param bool $propagate Whether to trigger additional actions when cache is purged.
+     *
+     * @return bool
+     */
+    public static function clearall( $propagate = true )
+    {
+        if ( ! self::cacheavail() ) {
+            return false;
+        }
+
+        // TODO/FIXME: If cache is big, switch to advanced/new cache clearing automatically?
+        if ( self::advanced_cache_clear_enabled() ) {
+            self::clear_cache_via_rename();
+        } else {
+            self::clear_cache_classic();
+        }
+
+        // Remove the transient so it gets regenerated...
         delete_transient( 'autoptimize_stats' );
 
-        // Cache was just purged, clear page cache and allow others to hook into our purging if desired.
+        // Cache was just purged, clear page cache and allow others to hook into our purging...
         if ( true === $propagate ) {
             if ( ! function_exists( 'autoptimize_do_cachepurged_action' ) ) {
                 function autoptimize_do_cachepurged_action() {
@@ -207,7 +379,7 @@ class autoptimizeCache
      */
     public static function clearall_actionless()
     {
-        return autoptimizeCache::clearall( false );
+        return self::clearall( false );
     }
 
     /**
@@ -237,7 +409,7 @@ class autoptimizeCache
 
         // If no transient, do the actual scan!
         if ( ! is_array( $stats ) ) {
-            if ( ! autoptimizeCache::cacheavail() ) {
+            if ( ! self::cacheavail() ) {
                 return 0;
             }
             $stats = self::stats_scan();
@@ -313,7 +485,7 @@ class autoptimizeCache
         }
 
         foreach ( array( '', 'js', 'css' ) as $dir ) {
-            if ( ! autoptimizeCache::check_cache_dir( AUTOPTIMIZE_CACHE_DIR . $dir ) ) {
+            if ( ! self::check_cache_dir( AUTOPTIMIZE_CACHE_DIR . $dir ) ) {
                 return false;
             }
         }

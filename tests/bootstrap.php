@@ -23,6 +23,20 @@ require_once $_tests_dir . '/includes/functions.php';
 function _manually_load_plugin() {
     define( 'AUTOPTIMIZE_INIT_EARLIER', true );
 
+    // For overriding cache dirs and whatnot. Kinda works if you keep a few things in mind.
+    if ( getenv('CUSTOM_CONSTANTS' ) ) {
+        define( 'AUTOPTIMIZE_CACHE_CHILD_DIR', '/c/ao/' );
+        $pathname = WP_CONTENT_DIR . AUTOPTIMIZE_CACHE_CHILD_DIR;
+        if ( is_multisite() && apply_filters( 'autoptimize_separate_blog_caches', true ) ) {
+            $blog_id   = get_current_blog_id();
+            $pathname .= $blog_id . '/';
+        }
+        define( 'AUTOPTIMIZE_CACHE_DIR', $pathname );
+        define( 'CUSTOM_CONSTANTS_USED', true );
+    } else {
+        define( 'CUSTOM_CONSTANTS_USED', false );
+    }
+
     /*
     $active_plugins = array('autoptimize/autoptimize.php');
     update_option( 'active_plugins', $active_plugins );
