@@ -31,7 +31,11 @@
         "test": [
             "@phpunit"
         ],
-        "phpunit": "phpunit",
+        "coverage": [
+            "@phpunit-coverage"
+        ],
+        "phpunit": "phpunit --no-coverage",
+        "phpunit-coverage": "phpunit --coverage-html=./coverage/ --coverage-clover=./coverage/clover.xml",
         "phpcs": "phpcs"
     }
 }
