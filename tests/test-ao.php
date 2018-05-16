@@ -57,6 +57,41 @@ class AOTest extends WP_UnitTestcase
     }
 
     /**
+     * @return array
+     */
+    protected function get_urls()
+    {
+        static $site_url = null;
+        if (null === $site_url) {
+            $site_url = site_url();
+        }
+
+        static $cdn_url = null;
+        if ( null === $cdn_url ) {
+            $cdn_url = get_option( 'autoptimize_cdn_url' );
+        }
+
+        static $urls = [];
+
+        if ( empty( $urls ) ) {
+            $parts = autoptimizeUtils::get_ao_wp_site_url_parts();
+            $urls = [
+                'siteurl'    => $site_url,
+                'prsiteurl'  => '//' . str_replace( array( 'http://', 'https://' ), '', $site_url ),
+                'wwwsiteurl' => $parts['scheme'] . '://www.' . str_replace( 'www.', '', $parts['host'] ),
+                'cdnurl'     => $cdn_url,
+                'subfolder'  => '',
+            ];
+
+            if ( AO_TEST_SUBFOLDER_INSTALL ) {
+                $urls['subfolder'] = 'wordpress/';
+            }
+        }
+
+        return $urls;
+    }
+
+    /**
      * Runs before each test method.
      */
     public function setUp()
@@ -89,6 +124,8 @@ class AOTest extends WP_UnitTestcase
 
     protected function get_test_markup()
     {
+        $siteurl = $this->get_urls()['siteurl'];
+
         $markup = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -165,10 +202,10 @@ class AOTest extends WP_UnitTestcase
 }
 </style>
     <!--[if lt IE 9]>
-    <script src="http://example.org/wp-content/themes/my-theme/js/vendor/html5shiv-printshiv.min.js" type="text/javascript"></script>
+    <script src="$siteurl/wp-content/themes/my-theme/js/vendor/html5shiv-printshiv.min.js" type="text/javascript"></script>
     <![endif]-->
     <!--[if (gte IE 6)&(lte IE 8)]>
-        <script type="text/javascript" src="http://example.org/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
+        <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -184,15 +221,15 @@ class AOTest extends WP_UnitTestcase
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='http://example.org/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='http://example.org/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/main.js'></script>
-<script type='text/javascript' src='http://example.org/wp-includes/js/comment-reply.min.js?ver=4.1.1'></script>
+<script type='text/javascript' src='$siteurl/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$siteurl/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$siteurl/wp-includes/js/comment-reply.min.js?ver=4.1.1'></script>
 </body>
 </html>
 MARKUP;
@@ -210,6 +247,16 @@ MARKUP;
         $csspart = self::$flexible_url_parts_css[ $key ];
         $jspart  = self::$flexible_url_parts_js[ $key ];
 
+        $csshash = '863f587e89f100b0223ddccc0dabc57a';
+        if ( AO_TEST_SUBFOLDER_INSTALL ) {
+            $csshash = '56398de576d59887e88e3011715250e0';
+        }
+
+        $urls      = $this->get_urls();
+        $siteurl   = $urls['siteurl'];
+        $cdnurl    = $urls['cdnurl'];
+        $subfolder = $urls['subfolder'];
+
         $markup = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -218,14 +265,14 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<link type="text/css" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<link type="text/css" media="all" href="${cdnurl}/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
-    <script src="http://example.org/wp-content/themes/my-theme/js/vendor/html5shiv-printshiv.min.js" type="text/javascript"></script>
+    <script src="$siteurl/wp-content/themes/my-theme/js/vendor/html5shiv-printshiv.min.js" type="text/javascript"></script>
     <![endif]-->
     <!--[if (gte IE 6)&(lte IE 8)]>
-        <script type="text/javascript" src="http://example.org/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
+        <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -241,16 +288,16 @@ MARKUP;
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='http://example.org/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='http://example.org/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$siteurl/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="http://cdn.example.org/${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script></body>
+<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script></body>
 </html>
 MARKUP;
 
@@ -267,6 +314,16 @@ MARKUP;
         $csspart = self::$flexible_url_parts_css[ $key ];
         $jspart  = self::$flexible_url_parts_js[ $key ];
 
+        $csshash = '863f587e89f100b0223ddccc0dabc57a';
+        if ( AO_TEST_SUBFOLDER_INSTALL ) {
+            $csshash = '56398de576d59887e88e3011715250e0';
+        }
+
+        $urls      = $this->get_urls();
+        $siteurl   = $urls['siteurl'];
+        $cdnurl    = $urls['cdnurl'];
+        $subfolder = $urls['subfolder'];
+
         $markup = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -275,14 +332,14 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<link type="text/css" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<link type="text/css" media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
-    <script src="http://example.org/wp-content/themes/my-theme/js/vendor/html5shiv-printshiv.min.js" type="text/javascript"></script>
+    <script src="$siteurl/wp-content/themes/my-theme/js/vendor/html5shiv-printshiv.min.js" type="text/javascript"></script>
     <![endif]-->
     <!--[if (gte IE 6)&(lte IE 8)]>
-        <script type="text/javascript" src="http://example.org/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
+        <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -298,16 +355,16 @@ MARKUP;
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='http://example.org/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='http://example.org/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$siteurl/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="http://cdn.example.org/${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script></body>
+<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script></body>
 </html>
 MARKUP;
 
@@ -324,6 +381,16 @@ MARKUP;
         $csspart = self::$flexible_url_parts_css[ $key ];
         $jspart  = self::$flexible_url_parts_js[ $key ];
 
+        $csshash = '863f587e89f100b0223ddccc0dabc57a';
+        if ( AO_TEST_SUBFOLDER_INSTALL ) {
+            $csshash = '56398de576d59887e88e3011715250e0';
+        }
+
+        $urls      = $this->get_urls();
+        $siteurl   = $urls['siteurl'];
+        $cdnurl    = $urls['cdnurl'];
+        $subfolder = $urls['subfolder'];
+
         $markup = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -332,14 +399,14 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style type="text/css" id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link type="text/css" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style type="text/css" id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="$cdnurl/${subfolder}${csspart}{$csshash}.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link type="text/css" media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
-    <script src="http://example.org/wp-content/themes/my-theme/js/vendor/html5shiv-printshiv.min.js" type="text/javascript"></script>
+    <script src="$siteurl/wp-content/themes/my-theme/js/vendor/html5shiv-printshiv.min.js" type="text/javascript"></script>
     <![endif]-->
     <!--[if (gte IE 6)&(lte IE 8)]>
-        <script type="text/javascript" src="http://example.org/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
+        <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -355,16 +422,16 @@ MARKUP;
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='http://example.org/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='http://example.org/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$siteurl/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="http://cdn.example.org/${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
+<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
 </html>
 MARKUP;
 
@@ -381,6 +448,16 @@ MARKUP;
         $csspart = self::$flexible_url_parts_css[ $key ];
         $jspart  = self::$flexible_url_parts_js[ $key ];
 
+        $csshash = '863f587e89f100b0223ddccc0dabc57a';
+        if ( AO_TEST_SUBFOLDER_INSTALL ) {
+            $csshash = '56398de576d59887e88e3011715250e0';
+        }
+
+        $urls      = $this->get_urls();
+        $siteurl   = $urls['siteurl'];
+        $cdnurl    = $urls['cdnurl'];
+        $subfolder = $urls['subfolder'];
+
         $markup = <<<MARKUP
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-svg no-js lt-ie9 lt-ie8 lt-ie7"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <![endif]-->
@@ -389,14 +466,14 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style type="text/css" id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link type="text/css" media="all" href="http://cdn.example.org/${csspart}863f587e89f100b0223ddccc0dabc57a.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style type="text/css" id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link type="text/css" media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
-    <script src="http://example.org/wp-content/themes/my-theme/js/vendor/html5shiv-printshiv.min.js" type="text/javascript"></script>
+    <script src="$siteurl/wp-content/themes/my-theme/js/vendor/html5shiv-printshiv.min.js" type="text/javascript"></script>
     <![endif]-->
     <!--[if (gte IE 6)&(lte IE 8)]>
-        <script type="text/javascript" src="http://example.org/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
+        <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
 </head>
 
@@ -412,16 +489,16 @@ MARKUP;
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='http://example.org/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='http://example.org/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='http://example.org/wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$siteurl/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="http://cdn.example.org/${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
+<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
 </html>
 MARKUP;
 
@@ -845,6 +922,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
 
     public function provider_test_url_replace_cdn()
     {
+        $urls                 = $this->get_urls();
+        $siteurl              = $urls['siteurl'];
+        $wwwsiteurl           = $urls['wwwsiteurl'];
+        $protorelativesiteurl = $urls['prsiteurl'];
+        $subfolder            = $urls['subfolder'];
+
         return array(
             // Host-relative links get properly transformed...
             array(
@@ -856,8 +939,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             // Full link with a matching AUTOPTIMIZE_WP_SITE_URL gets properly replaced...
             array(
                 'http://cdn-test.example.org',
-                'http://example.org/wp-content/themes/something/example.svg',
-                'http://cdn-test.example.org/wp-content/themes/something/example.svg',
+                $siteurl . '/wp-content/themes/something/example.svg',
+                'http://cdn-test.example.org/' . $subfolder . 'wp-content/themes/something/example.svg',
             ),
             // Protocol-relative url with a "local" hostname that doesn't match example.org (AUTOPTIMIZE_WP_SITE_URL)...
             array(
@@ -868,8 +951,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             // www.example.org does not match example.org (AUTOPTIMIZE_WP_SITE_URL) so it's left alone...
             array(
                 'http://cdn-test.example.org',
-                'http://www.example.org/wp-content/themes/something/example.svg',
-                'http://www.example.org/wp-content/themes/something/example.svg',
+                $wwwsiteurl . '/wp-content/themes/something/example.svg',
+                $wwwsiteurl . '/' . $subfolder . 'wp-content/themes/something/example.svg',
             ),
             // SSL cdn url + host-relative link...
             array(
@@ -880,20 +963,20 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             // SSL cdn url + http site url that matches AUTOPTIMIZE_WP_SITE_URL is properly replaced...
             array(
                 'https://cdn.example.org',
-                'http://example.org/wp-content/themes/something/example.svg',
+                $siteurl . '/wp-content/themes/something/example.svg',
                 'https://cdn.example.org/wp-content/themes/something/example.svg',
             ),
             // Protocol-relative cdn url given with protocol relative link that matches AUTOPTIMIZE_WP_SITE_URL host...
             array(
                 '//cdn.example.org',
-                '//example.org/something.jpg',
-                '//cdn.example.org/something.jpg',
+                $protorelativesiteurl . '/something.jpg',
+                '//cdn.example.org/' . $subfolder . 'something.jpg',
             ),
             // Protocol-relative cdn url given a http link that matches AUTOPTIMIZE_WP_SITE_URL host...
             array(
                 '//cdn.example.org',
-                'http://example.org/something.png',
-                '//cdn.example.org/something.png',
+                $siteurl . '/something.png',
+                '//cdn.example.org/' . $subfolder . 'something.png',
             ),
             // Protocol-relative cdn url with a host-relative link...
             array(
@@ -914,13 +997,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             ),
             array(
                 '//cdn.com:4433',
-                'http://example.org/something.jpg',
-                '//cdn.com:4433/something.jpg',
+                $siteurl . '/something.jpg',
+                '//cdn.com:4433/' . $subfolder . 'something.jpg',
             ),
             array(
                 '//cdn.com:1234',
-                '//example.org/something.jpg',
-                '//cdn.com:1234/something.jpg',
+                $protorelativesiteurl . '/something.jpg',
+                '//cdn.com:1234/' . $subfolder . 'something.jpg',
             ),
             // Relative links should not be touched by url_replace_cdn()...
             array(
@@ -940,6 +1023,35 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
                 'http://cdn-test.example.org',
                 '../something/somewhere.svg',
                 '../something/somewhere.svg',
+            ),
+            // These prove some weird combinations pre-2.4 remain working
+            // even though they are really strange...
+            array(
+                $siteurl, // example.org or http://localhost or http://localhost/wordpress
+                $siteurl . '/something.jpg',
+                $siteurl . '/' . $subfolder . 'something.jpg',
+            ),
+            // These shouldn't really be changed, or even if replacements do
+            // happen, they shouldn't be destructive...
+            array(
+                'http://localhost/wp',
+                'http://localhost/wp/something.jpg',
+                'http://localhost/wp/something.jpg',
+            ),
+            array(
+                'http://localhost',
+                'http://localhost/something.jpg',
+                'http://localhost/something.jpg',
+            ),
+            array(
+                'http://localhost',
+                'http://localhost/wordpress/something.jpg',
+                'http://localhost/wordpress/something.jpg',
+            ),
+            array(
+                'http://localhost/wordpress',
+                'http://localhost/wordpress/something.jpg',
+                'http://localhost/wordpress/something.jpg',
             ),
         );
     }
@@ -1015,8 +1127,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
 
     /**
      * @dataProvider provider_cssmin_issues
-     * @covers CSSmin::replace_calc
-     */
+      */
     public function test_cssmin_issues( $input, $expected )
     {
         $minifier = new autoptimizeCSSmin( false ); // No need to raise limits for now.
@@ -1085,6 +1196,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
      */
     public function test_fixurls_with_hash_only_urls()
     {
+        $urls      = $this->get_urls();
+        $siteurl   = $urls['siteurl'];
+        $subfolder = $urls['subfolder'];
+
+        $protorelativesiteurl = $urls['prsiteurl'];
+
         $css_orig     = <<<CSS
 header{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90px' height='110px' viewBox='0 0 90 110'%3E%3Cstyle%3E.a%7Bstop-color:%23FFF;%7D.b%7Bstop-color:%23B2D235;%7D.c%7Bstop-color:%23BEE7FA;%7D.d%7Bfill:%23590C15;%7D%3C/style%3E%3ClinearGradient id='c' y2='135.4' gradientUnits='userSpaceOnUse' x2='209.1' gradientTransform='rotate(-1.467 -4082.888 7786.794)' y1='205.8' x1='262'%3E%3Cstop class='b' offset='0'/%3E%3Cstop class='b' offset='.48'/%3E%3Cstop stop-color='%23829D25' offset='1'/%3E%3C/linearGradient%3E%3Cpath stroke-width='.3' d='M77.3 45.4c-3-3.5-7.1-6.5-11.6-7.8-5.1-1.5-10-.1-14.9 1.5C52 35.4 54.3 29 60 24l-4.8-5.5c-3.4 3-5.8 6.3-7.5 9.4-1.7-4.3-4.1-8.4-7.5-12C33.4 8.6 24.3 4.7 15.1 4.2c-.2 9.3 3.1 18.6 9.9 25.9 5.2 5.6 11.8 9.2 18.7 10.8-2.5.2-4.9-.1-7.7-.9-5.2-1.4-10.5-2.8-15.8-1C10.6 42.3 4.5 51.9 4 61.7c-.5 11.6 3.8 23.8 9.9 33.5 3.9 6.3 9.6 13.7 17.7 13.4 3.8-.1 7-2.1 10.7-2.7 5.2-.8 9.1 1.2 14.1 1.8 16.4 2 24.4-23.6 26.4-35.9 1.2-9.1.8-19.1-5.5-26.4z' stroke='%233E6D1F' fill='url(%23c)'/%3E%3C/svg%3E")}
 section.clipped.clippedTop {clip-path:url("#clipPolygonTop")}
@@ -1095,7 +1212,7 @@ CSS;
 header{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90px' height='110px' viewBox='0 0 90 110'%3E%3Cstyle%3E.a%7Bstop-color:%23FFF;%7D.b%7Bstop-color:%23B2D235;%7D.c%7Bstop-color:%23BEE7FA;%7D.d%7Bfill:%23590C15;%7D%3C/style%3E%3ClinearGradient id='c' y2='135.4' gradientUnits='userSpaceOnUse' x2='209.1' gradientTransform='rotate(-1.467 -4082.888 7786.794)' y1='205.8' x1='262'%3E%3Cstop class='b' offset='0'/%3E%3Cstop class='b' offset='.48'/%3E%3Cstop stop-color='%23829D25' offset='1'/%3E%3C/linearGradient%3E%3Cpath stroke-width='.3' d='M77.3 45.4c-3-3.5-7.1-6.5-11.6-7.8-5.1-1.5-10-.1-14.9 1.5C52 35.4 54.3 29 60 24l-4.8-5.5c-3.4 3-5.8 6.3-7.5 9.4-1.7-4.3-4.1-8.4-7.5-12C33.4 8.6 24.3 4.7 15.1 4.2c-.2 9.3 3.1 18.6 9.9 25.9 5.2 5.6 11.8 9.2 18.7 10.8-2.5.2-4.9-.1-7.7-.9-5.2-1.4-10.5-2.8-15.8-1C10.6 42.3 4.5 51.9 4 61.7c-.5 11.6 3.8 23.8 9.9 33.5 3.9 6.3 9.6 13.7 17.7 13.4 3.8-.1 7-2.1 10.7-2.7 5.2-.8 9.1 1.2 14.1 1.8 16.4 2 24.4-23.6 26.4-35.9 1.2-9.1.8-19.1-5.5-26.4z' stroke='%233E6D1F' fill='url(%23c)'/%3E%3C/svg%3E")}
 section.clipped.clippedTop {clip-path:url("#clipPolygonTop")}
 section.clipped.clippedBottom {clip-path:url("#clipPolygonBottom")}
-.myimg {background-image: url(//example.org/wp-content/themes/my-theme/images/under-left-leaf.png), url(//example.org/wp-content/themes/my-theme/images/over-blue-bird.png), url(//example.org/wp-content/themes/my-theme/images/under-top.png), url(//example.org/wp-content/themes/my-theme/images/bg-top-grunge.png);}
+.myimg {background-image: url($protorelativesiteurl/wp-content/themes/my-theme/images/under-left-leaf.png), url($protorelativesiteurl/wp-content/themes/my-theme/images/over-blue-bird.png), url($protorelativesiteurl/wp-content/themes/my-theme/images/under-top.png), url($protorelativesiteurl/wp-content/themes/my-theme/images/bg-top-grunge.png);}
 CSS;
 
         $fixurls_result = autoptimizeStyles::fixurls( ABSPATH . 'wp-content/themes/my-theme/style.css', $css_orig );
@@ -1265,6 +1382,11 @@ CSS;
      */
     public function test_css_fonts_on_cdn_with_filter()
     {
+        $urls      = $this->get_urls();
+        $siteurl   = $urls['siteurl'];
+        $cdnurl    = $urls['cdnurl'];
+        $subfolder = $urls['subfolder'];
+
         $css_in = <<<CSS
 /* these should not be touched except for quotes removal */
 @font-face {
@@ -1308,13 +1430,13 @@ CSS;
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 100;
-  src: url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot'); /* IE9 Compat Modes */
+  src: url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot'); /* IE9 Compat Modes */
   src: local('Roboto Thin'), local('Roboto-Thin'),
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2') format('woff2'), /* Super Modern Browsers */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff') format('woff'), /* Modern Browsers */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2') format('woff2'), /* Super Modern Browsers */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff') format('woff'), /* Modern Browsers */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 CSS;
 
@@ -1349,32 +1471,32 @@ CSS;
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 100;
-  src: url(http://cdn.example.org/fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
+  src: url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
   src: local('Roboto Thin'), local('Roboto-Thin'),
-       url(http://cdn.example.org/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
-       url(http://cdn.example.org/fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
-       url(http://cdn.example.org/fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
-       url(http://cdn.example.org/fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
-       url(http://cdn.example.org/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
+       url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
+       url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
+       url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
+       url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
+       url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
 }
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 100;
-  src: url(http://cdn.example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
+  src: url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
   src: local('Roboto Thin'), local('Roboto-Thin'),
-       url(http://cdn.example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
-       url(http://cdn.example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
-       url(http://cdn.example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
-       url(http://cdn.example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
-       url(http://cdn.example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
+       url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
+       url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
+       url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
+       url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
+       url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
 }
 CSS;
 
         // Test with fonts pointed to the CDN + cdn option is set.
         add_filter( 'autoptimize_filter_css_fonts_cdn', '__return_true' );
         $instance = new autoptimizeStyles( $css_in );
-        $instance->setOption( 'cdn_url', 'http://cdn.example.org' );
+        $instance->setOption( 'cdn_url', $cdnurl );
         $css_actual_fonts_cdn = $instance->rewrite_assets( $css_in );
 
         $this->assertEquals( $css_expected_fonts_cdn, $css_actual_fonts_cdn );
@@ -1385,6 +1507,10 @@ CSS;
      */
     public function test_css_fonts_skipped_by_default_when_cdn_is_set()
     {
+        $urls      = $this->get_urls();
+        $siteurl   = $urls['siteurl'];
+        $subfolder = $urls['subfolder'];
+
         $css_in = <<<CSS
 /* these should not be changed, not even quotes */
 @font-face {
@@ -1427,13 +1553,13 @@ CSS;
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 100;
-  src: url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot'); /* IE9 Compat Modes */
+  src: url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot'); /* IE9 Compat Modes */
   src: local('Roboto Thin'), local('Roboto-Thin'),
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2') format('woff2'), /* Super Modern Browsers */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff') format('woff'), /* Modern Browsers */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2') format('woff2'), /* Super Modern Browsers */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff') format('woff'), /* Modern Browsers */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 CSS;
         // Expected without cdning fonts but cdn option is set.
@@ -1479,18 +1605,18 @@ CSS;
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 100;
-  src: url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot'); /* IE9 Compat Modes */
+  src: url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot'); /* IE9 Compat Modes */
   src: local('Roboto Thin'), local('Roboto-Thin'),
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2') format('woff2'), /* Super Modern Browsers */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff') format('woff'), /* Modern Browsers */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('http://example.org/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2') format('woff2'), /* Super Modern Browsers */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff') format('woff'), /* Modern Browsers */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('$siteurl/wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto') format('svg'); /* Legacy iOS */
 }
 CSS;
         // Test without moving fonts to CDN, but cdn option is set.
         $instance = new autoptimizeStyles( $css_in );
-        $instance->setOption( 'cdn_url', 'http://cdn.example.org' );
+        $instance->setOption( 'cdn_url', $urls['cdnurl'] );
         $css_actual = $instance->rewrite_assets( $css_in );
         $this->assertEquals( $css_expected, $css_actual );
     }
@@ -1539,6 +1665,10 @@ CSS;
 
     public function test_css_import_semicolon_url_issue_122()
     {
+        $urls   = $this->get_urls();
+        $sub    = $urls['subfolder'];
+        $cdnurl = $urls['cdnurl'];
+
         $in = <<<HTML
 <style type="text/css">
 @import url("foo.css?a&#038;b");
@@ -1546,7 +1676,7 @@ CSS;
 </style>
 HTML;
 
-        $expected = '<style type="text/css" media="all">@import url(http://cdn.example.org/foo.css?a&#038;b);@import url(http://cdn.example.org/bar.css);</style><!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag `title` missing --><!--/noptimize-->';
+        $expected = '<style type="text/css" media="all">@import url(' . $cdnurl . '/' . $sub . 'foo.css?a&#038;b);@import url(' . $cdnurl . '/' . $sub . 'bar.css);</style><!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag `title` missing --><!--/noptimize-->';
 
         $options = [
             'autoptimizeStyles' => $this->getAoStylesDefaultOptions(),
@@ -1562,8 +1692,12 @@ HTML;
 
     public function test_fixurls_with_at_imports_and_media_queries()
     {
+        $urls      = $this->get_urls();
+        $prsiteurl = $urls['prsiteurl'];
+        $subfolder = $urls['subfolder'];
+
         $in  = '@import "foo.css"; @import "bar.css" (orientation:landscape);';
-        $exp = '@import url(//example.org/wp-content/themes/my-theme/foo.css); @import url(//example.org/wp-content/themes/my-theme/bar.css) (orientation:landscape);';
+        $exp = '@import url(' . $prsiteurl . '/wp-content/themes/my-theme/foo.css); @import url(' . $prsiteurl . '/wp-content/themes/my-theme/bar.css) (orientation:landscape);';
 
         $actual = autoptimizeStyles::fixurls( ABSPATH . 'wp-content/themes/my-theme/style.css', $in );
         $this->assertEquals( $exp, $actual );
@@ -1571,13 +1705,17 @@ HTML;
 
     public function test_aostyles_at_imports_with_media_queries()
     {
+        $urls   = $this->get_urls();
+        $sub    = $urls['subfolder'];
+        $cdnurl = $urls['cdnurl'];
+
         $in = <<<HTML
 <style type="text/css">
 @import "foo.css"; @import "bar.css" (orientation:landscape);
 </style>
 HTML;
 
-        $expected = '<style type="text/css" media="all">@import url(http://cdn.example.org/foo.css);@import url(http://cdn.example.org/bar.css) (orientation:landscape);</style><!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag `title` missing --><!--/noptimize-->';
+        $expected = '<style type="text/css" media="all">@import url(' . $cdnurl . '/' . $sub . 'foo.css);@import url(' . $cdnurl . '/' . $sub . 'bar.css) (orientation:landscape);</style><!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag `title` missing --><!--/noptimize-->';
 
         $options = [
             'autoptimizeStyles' => $this->getAoStylesDefaultOptions(),
@@ -2140,5 +2278,24 @@ MARKUP;
     public function test_delete_advanced_cache_clear_artifacts()
     {
         $this->assertTrue( autoptimizeCache::delete_advanced_cache_clear_artifacts() );
+    }
+
+    public function test_cdn_keep_magic_subfolder()
+    {
+        if ( AO_TEST_SUBFOLDER_INSTALL ) {
+            $this->assertTrue( autoptimizeUtils::do_cdn_replace_backcompat_way() );
+        } else {
+            $this->assertFalse( autoptimizeUtils::do_cdn_replace_backcompat_way() );
+        }
+
+        add_filter( 'autoptimize_filter_cdn_keep_magic_subfolder', '__return_true' );
+        $this->assertTrue( autoptimizeUtils::do_cdn_replace_backcompat_way() );
+        $this->assertTrue( autoptimizeUtils::do_cdn_replace_backcompat_way( true ) );
+        // Even when overriding, filter still wins...
+        $this->assertTrue( autoptimizeUtils::do_cdn_replace_backcompat_way( false ) );
+        remove_all_filters( 'autoptimize_filter_cdn_keep_magic_subfolder' );
+
+        // Last overriden value stays set.
+        $this->assertFalse( autoptimizeUtils::do_cdn_replace_backcompat_way() );
     }
 }

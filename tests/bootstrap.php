@@ -32,9 +32,21 @@ function _manually_load_plugin() {
             $pathname .= $blog_id . '/';
         }
         define( 'AUTOPTIMIZE_CACHE_DIR', $pathname );
+
+        $custom_site_url = 'http://localhost/wordpress';
+        define( 'AUTOPTIMIZE_WP_SITE_URL', $custom_site_url );
+        add_filter( 'site_url', function( $url, $path, $scheme, $blog_id ) use ( $custom_site_url ) {
+            return $custom_site_url;
+        }, 10, 4 );
+        add_filter( 'content_url', function( $url, $path ) use ( $custom_site_url ) {
+            return $custom_site_url . '/wp-content';
+        }, 10, 2 );
+        define( 'AO_TEST_SUBFOLDER_INSTALL', true );
+
         define( 'CUSTOM_CONSTANTS_USED', true );
     } else {
         define( 'CUSTOM_CONSTANTS_USED', false );
+        define( 'AO_TEST_SUBFOLDER_INSTALL', false );
     }
 
     /*

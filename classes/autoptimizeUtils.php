@@ -209,4 +209,79 @@ class autoptimizeUtils
 
         return (string) ( null === $encoding ) ? \iconv_substr( $s, $start, $length ) : \iconv_substr( $s, $start, $length, $encoding );
     }
+
+    /**
+     * Decides whether this is a "subdirectory site" or not.
+     *
+     * @param bool $override Allows overriding the decision when needed.
+     *
+     * @return bool
+     */
+    public static function siteurl_not_root( $override = null )
+    {
+        static $subdir = null;
+
+        if ( null === $subdir ) {
+            $siteurl = site_url();
+            $parsed  = parse_url( $siteurl );
+            $subdir  = ( isset( $parsed['path'] ) && ( '/' !== $parsed['path'] ) );
+        }
+
+        if ( null !== $override ) {
+            $subdir = $override;
+        }
+
+        return $subdir;
+    }
+
+    /**
+     * Decides whether cdn replacement happens in a backwards-compatible way
+     * or not. Version 2.4 slightly changed how CDN-replacement works in order
+     * to be more flexible, but we decided to keep the old behavior for
+     * subfolder installs by default (in order to not introduce breaking changes).
+     * If subfolder installs wish to opt-in to new behavior, they can do so by
+     * using a filter:
+     *
+     * ```php
+     * add_filter( 'autoptimize_filter_cdn_keep_magic_subfolder', '__return_false' );
+     * ```
+     *
+     * Using `$override` parameter one can influence one part of the decision,
+     * but whatever the filter ends up returning in the end, wins.
+     * Value of `$override` is passed as the default value to the
+     * `autoptimize_filter_cdn_keep_magic_subfolder` filter.
+     *
+     * @param bool|null $override Allows overriding the decision when needed.
+     *                            Passed as default value to
+     *                            `autoptimize_filter_cdn_keep_magic_subfolder`
+     *                            filter.
+     *
+     * @return bool
+     */
+    public static function do_cdn_replace_backcompat_way( $override = null )
+    {
+        $sub = self::siteurl_not_root( $override );
+
+        // Filter allows subfolder installs to opt-out of old magic behaviour.
+        $sub = apply_filters( 'autoptimize_filter_cdn_keep_magic_subfolder', $sub, $override );
+
+        return ( $sub );
+    }
+
+    /**
+     * Parse AUTOPTIMIZE_WP_SITE_URL into components using \parse_url(), but do
+     * so only once per request/lifecycle.
+     *
+     * @return array
+     */
+    public static function get_ao_wp_site_url_parts()
+    {
+        static $parts = array();
+
+        if ( empty( $parts ) ) {
+            $parts = \parse_url( AUTOPTIMIZE_WP_SITE_URL );
+        }
+
+        return $parts;
+    }
 }

@@ -300,16 +300,34 @@ abstract class autoptimizeBase
                 // Prepending host-relative urls with the cdn url.
                 $url = $cdn_url . $url;
             } else {
-                // Either a protocol-relative or "regular" url, replacing it either way.
-                if ( $is_protocol_relative ) {
-                    // Massage $site_url so that simple str_replace() still "works" by
-                    // searching for the protocol-relative version of AUTOPTIMIZE_WP_SITE_URL.
-                    $site_url = str_replace( array( 'http:', 'https:' ), '', AUTOPTIMIZE_WP_SITE_URL );
+                // Maintain backcompat with 2.3 version even though it's somewhat limiting...
+                if ( autoptimizeUtils::do_cdn_replace_backcompat_way() ) {
+                    // Parse wp site parts.
+                    $wp_site_url_parts = autoptimizeUtils::get_ao_wp_site_url_parts();
+                    $wp_base_url       = $wp_site_url_parts['scheme'] . '://' . $wp_site_url_parts['host'];
+                    if ( ! empty( $wp_site_url_parts['port'] ) ) {
+                        $wp_base_url .= ':' . $wp_site_url_parts['port'];
+                    }
+                    // Replace full url's with scheme.
+                    $tmp_url = str_replace( $wp_base_url, rtrim( $cdn_url, '/' ), $url );
+                     if ( $tmp_url === $url ) {
+                        // Last attempt; replace scheme-less URL's...
+                        $url = str_replace( preg_replace( '/https?:/', '', $wp_base_url ), rtrim( $cdn_url, '/' ), $url );
+                    } else {
+                        $url = $tmp_url;
+                    }
                 } else {
-                    $site_url = AUTOPTIMIZE_WP_SITE_URL;
+                    // Either a protocol-relative or "regular" url, replacing it either way.
+                    if ( $is_protocol_relative ) {
+                        // Massage $site_url so that simple str_replace() still "works" by
+                        // searching for the protocol-relative version of AUTOPTIMIZE_WP_SITE_URL.
+                        $site_url = str_replace( array( 'http:', 'https:' ), '', AUTOPTIMIZE_WP_SITE_URL );
+                    } else {
+                        $site_url = AUTOPTIMIZE_WP_SITE_URL;
+                    }
+                    $this->debug_log( '`' . $site_url . '` -> `' . $cdn_url . '` in `' . $url . '`' );
+                    $url = str_replace( $site_url, $cdn_url, $url );
                 }
-                $this->debug_log( '`' . $site_url . '` -> `' . $cdn_url . '` in `' . $url . '`' );
-                $url = str_replace( $site_url, $cdn_url, $url );
             }
 
             $this->debug_log( 'after=' . $url );
