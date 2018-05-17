@@ -532,6 +532,10 @@ MARKUP;
 
     public function test_rewrite_css_assets()
     {
+        $urls   = $this->get_urls();
+        $cdnurl = $urls['cdnurl'];
+        $sub    = $urls['subfolder'];
+
         $css_in = <<<CSS
 .bg { background:url('img/something.svg'); }
 .bg-no-quote { background: url(img/something.svg); }
@@ -563,7 +567,7 @@ CSS;
 
 .whitespaces { background : url   (  ../../somewhere-else/svg.svg) ; }
 
-.host-relative { background: url(http://cdn.example.org/img/something.svg); }
+.host-relative { background: url(${cdnurl}/${sub}img/something.svg); }
 .protocol-relative { background: url(//something/somewhere/example.png); }
 
 @font-face {
@@ -581,7 +585,7 @@ CSS;
 CSS;
 
         $instance = new autoptimizeStyles( $css_in );
-        $instance->setOption( 'cdn_url', 'http://cdn.example.org' );
+        $instance->setOption( 'cdn_url', $cdnurl );
 
         $css_actual = $instance->rewrite_assets( $css_in );
 
@@ -934,7 +938,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
                 // CDN base url, url, expected result...
                 'http://cdn-test.example.org',
                 '/a.jpg',
-                'http://cdn-test.example.org/a.jpg',
+                'http://cdn-test.example.org/' . $subfolder . 'a.jpg',
             ),
             // Full link with a matching AUTOPTIMIZE_WP_SITE_URL gets properly replaced...
             array(
@@ -952,19 +956,19 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             array(
                 'http://cdn-test.example.org',
                 $wwwsiteurl . '/wp-content/themes/something/example.svg',
-                $wwwsiteurl . '/' . $subfolder . 'wp-content/themes/something/example.svg',
+                $wwwsiteurl . '/wp-content/themes/something/example.svg',
             ),
             // SSL cdn url + host-relative link...
             array(
                 'https://cdn.example.org',
                 '/a.jpg',
-                'https://cdn.example.org/a.jpg',
+                'https://cdn.example.org/' . $subfolder . 'a.jpg',
             ),
             // SSL cdn url + http site url that matches AUTOPTIMIZE_WP_SITE_URL is properly replaced...
             array(
                 'https://cdn.example.org',
                 $siteurl . '/wp-content/themes/something/example.svg',
-                'https://cdn.example.org/wp-content/themes/something/example.svg',
+                'https://cdn.example.org/' . $subfolder . 'wp-content/themes/something/example.svg',
             ),
             // Protocol-relative cdn url given with protocol relative link that matches AUTOPTIMIZE_WP_SITE_URL host...
             array(
@@ -982,18 +986,18 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             array(
                 '//cdn.example.org',
                 '/a.jpg',
-                '//cdn.example.org/a.jpg',
+                '//cdn.example.org/' . $subfolder . 'a.jpg',
             ),
             // Testing cdn urls with an explicit port number...
             array(
                 'http://cdn.com:8080',
                 '/a.jpg',
-                'http://cdn.com:8080/a.jpg',
+                'http://cdn.com:8080/' . $subfolder . 'a.jpg',
             ),
             array(
                 '//cdn.com:4433',
                 '/a.jpg',
-                '//cdn.com:4433/a.jpg',
+                '//cdn.com:4433/' . $subfolder . 'a.jpg',
             ),
             array(
                 '//cdn.com:4433',
@@ -1029,7 +1033,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             array(
                 $siteurl, // example.org or http://localhost or http://localhost/wordpress
                 $siteurl . '/something.jpg',
-                $siteurl . '/' . $subfolder . 'something.jpg',
+                $siteurl . '/something.jpg',
             ),
             // These shouldn't really be changed, or even if replacements do
             // happen, they shouldn't be destructive...
@@ -1062,6 +1066,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
      */
     public function test_autoptimize_filter_base_cdnurl()
     {
+        $urls = $this->get_urls();
+        $sub  = $urls['subfolder'];
+
         $test_link = '/a.jpg';
         $cdn_url   = '//cdn.example.org';
 
@@ -1073,7 +1080,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
         $without_ssl = function( $cdn ) {
             return $cdn;
         };
-        $expected_without_ssl = '//cdn.example.org/a.jpg';
+        $expected_without_ssl = '//cdn.example.org/' . $sub . 'a.jpg';
 
         // With a filter that returns something considered "empty", cdn replacement shouldn't occur...
         add_filter( 'autoptimize_filter_base_cdnurl', $with_ssl );
@@ -1382,10 +1389,10 @@ CSS;
      */
     public function test_css_fonts_on_cdn_with_filter()
     {
-        $urls      = $this->get_urls();
-        $siteurl   = $urls['siteurl'];
-        $cdnurl    = $urls['cdnurl'];
-        $subfolder = $urls['subfolder'];
+        $urls    = $this->get_urls();
+        $siteurl = $urls['siteurl'];
+        $cdnurl  = $urls['cdnurl'];
+        $sub     = $urls['subfolder'];
 
         $css_in = <<<CSS
 /* these should not be touched except for quotes removal */
@@ -1471,25 +1478,25 @@ CSS;
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 100;
-  src: url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
+  src: url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
   src: local('Roboto Thin'), local('Roboto-Thin'),
-       url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
-       url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
-       url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
-       url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
-       url($cdnurl/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
+       url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
+       url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
+       url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
+       url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
+       url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
 }
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 100;
-  src: url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
+  src: url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
   src: local('Roboto Thin'), local('Roboto-Thin'),
-       url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
-       url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
-       url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
-       url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
-       url($cdnurl/${subfolder}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
+       url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
+       url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
+       url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
+       url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
+       url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
 }
 CSS;
 
@@ -1505,7 +1512,7 @@ CSS;
     /**
      * Test css fonts not moved to cdn by default even if cdn_url option is set.
      */
-    public function test_css_fonts_skipped_by_default_when_cdn_is_set()
+    public function test_css_fonts_skipped_by_default_even_when_cdn_is_set()
     {
         $urls      = $this->get_urls();
         $siteurl   = $urls['siteurl'];
@@ -1623,19 +1630,24 @@ CSS;
 
     public function test_assets_regex_replaces_multi_bg_images()
     {
-        $in       = <<<CSS
+        $urls   = $this->get_urls();
+        $sub    = $urls['subfolder'];
+        $cdnurl = $urls['cdnurl'];
+
+        $in = <<<CSS
 body:after {
   content: url(/img/close.png) url(/img/loading.gif) url(/img/prev.png) url(/img/next.png);
 }
 CSS;
+
         $expected = <<<CSS
 body:after {
-  content: url(http://cdn.example.org/img/close.png) url(http://cdn.example.org/img/loading.gif) url(http://cdn.example.org/img/prev.png) url(http://cdn.example.org/img/next.png);
+  content: url($cdnurl/${sub}img/close.png) url($cdnurl/${sub}img/loading.gif) url($cdnurl/${sub}img/prev.png) url($cdnurl/${sub}img/next.png);
 }
 CSS;
 
         $instance = new autoptimizeStyles( $in );
-        $instance->setOption( 'cdn_url', 'http://cdn.example.org' );
+        $instance->setOption( 'cdn_url', $cdnurl );
         $actual = $instance->rewrite_assets( $in );
 
         $this->assertEquals( $expected, $actual );
