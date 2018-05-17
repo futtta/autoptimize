@@ -222,9 +222,8 @@ class autoptimizeUtils
         static $subdir = null;
 
         if ( null === $subdir ) {
-            $siteurl = site_url();
-            $parsed  = parse_url( $siteurl );
-            $subdir  = ( isset( $parsed['path'] ) && ( '/' !== $parsed['path'] ) );
+            $parts  = self::get_ao_wp_site_url_parts();
+            $subdir = ( isset( $parts['path'] ) && ( '/' !== $parts['path'] ) );
         }
 
         if ( null !== $override ) {
@@ -232,40 +231,6 @@ class autoptimizeUtils
         }
 
         return $subdir;
-    }
-
-    /**
-     * Decides whether cdn replacement happens in a backwards-compatible way
-     * or not. Version 2.4 slightly changed how CDN-replacement works in order
-     * to be more flexible, but we decided to keep the old behavior for
-     * subfolder installs by default (in order to not introduce breaking changes).
-     * If subfolder installs wish to opt-in to new behavior, they can do so by
-     * using a filter:
-     *
-     * ```php
-     * add_filter( 'autoptimize_filter_cdn_keep_magic_subfolder', '__return_false' );
-     * ```
-     *
-     * Using `$override` parameter one can influence one part of the decision,
-     * but whatever the filter ends up returning in the end, wins.
-     * Value of `$override` is passed as the default value to the
-     * `autoptimize_filter_cdn_keep_magic_subfolder` filter.
-     *
-     * @param bool|null $override Allows overriding the decision when needed.
-     *                            Passed as default value to
-     *                            `autoptimize_filter_cdn_keep_magic_subfolder`
-     *                            filter.
-     *
-     * @return bool
-     */
-    public static function do_cdn_replace_backcompat_way( $override = null )
-    {
-        $sub = self::siteurl_not_root( $override );
-
-        // Filter allows subfolder installs to opt-out of old magic behaviour.
-        $sub = apply_filters( 'autoptimize_filter_cdn_keep_magic_subfolder', $sub, $override );
-
-        return ( $sub );
     }
 
     /**
@@ -283,5 +248,75 @@ class autoptimizeUtils
         }
 
         return $parts;
+    }
+
+    /**
+     * Modify given $cdn_url to include the site path when needed.
+     *
+     * @param string $cdn_url
+     *
+     * @return string
+     */
+    public static function tweak_cdn_url_if_needed( $cdn_url )
+    {
+        static $results = array();
+
+        if ( empty( $results ) || ! isset( $results[ $cdn_url ] ) ) {
+
+            // In order to return unmodified input when there's no need to tweak.
+            $results[ $cdn_url ] = $cdn_url;
+
+            // Behind a default true filter for backcompat, but easily turned
+            // of you don't want/need this...
+            if ( apply_filters( 'autoptimize_filter_cdn_magic_path_check', true ) ) {
+                if ( autoptimizeUtils::siteurl_not_root() ) {
+                    $site_url_parts = autoptimizeUtils::get_ao_wp_site_url_parts();
+                    $cdn_url_parts  = \parse_url( $cdn_url );
+                    if ( $cdn_url_parts = self::maybe_replace_cdn_path( $site_url_parts, $cdn_url_parts ) ) {
+                        $results[ $cdn_url ] = self::assemble_parsed_url( $cdn_url_parts );
+                    }
+                }
+            }
+        }
+
+        return $results[ $cdn_url ];
+    }
+
+    /**
+     * @param array $site_url_parts
+     * @param array $cdn_url_parts
+     *
+     * @return array|false
+     */
+    public static function maybe_replace_cdn_path(array $site_url_parts, array $cdn_url_parts)
+    {
+        if ( isset( $site_url_parts['path'] ) && '/' !== $site_url_parts['path'] ) {
+            if ( ! isset( $cdn_url_parts['path'] ) || '/' === $cdn_url_parts['path'] ) {
+                $cdn_url_parts['path'] = $site_url_parts['path'];
+                return $cdn_url_parts;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $parsed_url
+     *
+     * @return string
+     */
+    public static function assemble_parsed_url( array $parsed_url )
+    {
+        $scheme   = isset( $parsed_url['scheme'] ) ? $parsed_url['scheme'] . '://' : '';
+        $host     = isset( $parsed_url['host'] ) ? $parsed_url['host'] : '';
+        $port     = isset( $parsed_url['port'] ) ? ':' . $parsed_url['port'] : '';
+        $user     = isset( $parsed_url['user'] ) ? $parsed_url['user'] : '';
+        $pass     = isset( $parsed_url['pass'] ) ? ':' . $parsed_url['pass']  : '';
+        $pass     = ( $user || $pass ) ? "$pass@" : '';
+        $path     = isset( $parsed_url['path'] ) ? $parsed_url['path'] : '';
+        $query    = isset( $parsed_url['query'] ) ? '?' . $parsed_url['query'] : '';
+        $fragment = isset( $parsed_url['fragment'] ) ? '#' . $parsed_url['fragment'] : '';
+
+        return "$scheme$user$pass$host$port$path$query$fragment";
     }
 }

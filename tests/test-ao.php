@@ -2279,23 +2279,4 @@ MARKUP;
     {
         $this->assertTrue( autoptimizeCache::delete_advanced_cache_clear_artifacts() );
     }
-
-    public function test_cdn_keep_magic_subfolder()
-    {
-        if ( AO_TEST_SUBFOLDER_INSTALL ) {
-            $this->assertTrue( autoptimizeUtils::do_cdn_replace_backcompat_way() );
-        } else {
-            $this->assertFalse( autoptimizeUtils::do_cdn_replace_backcompat_way() );
-        }
-
-        add_filter( 'autoptimize_filter_cdn_keep_magic_subfolder', '__return_true' );
-        $this->assertTrue( autoptimizeUtils::do_cdn_replace_backcompat_way() );
-        $this->assertTrue( autoptimizeUtils::do_cdn_replace_backcompat_way( true ) );
-        // Even when overriding, filter still wins...
-        $this->assertTrue( autoptimizeUtils::do_cdn_replace_backcompat_way( false ) );
-        remove_all_filters( 'autoptimize_filter_cdn_keep_magic_subfolder' );
-
-        // Last overriden value stays set.
-        $this->assertFalse( autoptimizeUtils::do_cdn_replace_backcompat_way() );
-    }
 }

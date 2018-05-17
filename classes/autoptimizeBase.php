@@ -287,7 +287,13 @@ abstract class autoptimizeBase
      */
     public function url_replace_cdn( $url )
     {
-        $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', $this->cdn_url );
+        // For 2.3 back-compat in which cdn-ing appeared to be automatically
+        // including WP subfolder/subdirectory into account as part of cdn-ing,
+        // even though it might've caused serious troubles in certain edge-cases.
+        $cdn_url = autoptimizeUtils::tweak_cdn_url_if_needed( $this->cdn_url );
+
+        // Allows API/filter to further tweak the cdn url...
+        $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', $cdn_url );
         if ( ! empty( $cdn_url ) ) {
             $this->debug_log( 'before=' . $url );
 
@@ -300,34 +306,16 @@ abstract class autoptimizeBase
                 // Prepending host-relative urls with the cdn url.
                 $url = $cdn_url . $url;
             } else {
-                // Maintain backcompat with 2.3 version even though it's somewhat limiting...
-                if ( autoptimizeUtils::do_cdn_replace_backcompat_way() ) {
-                    // Parse wp site parts.
-                    $wp_site_url_parts = autoptimizeUtils::get_ao_wp_site_url_parts();
-                    $wp_base_url       = $wp_site_url_parts['scheme'] . '://' . $wp_site_url_parts['host'];
-                    if ( ! empty( $wp_site_url_parts['port'] ) ) {
-                        $wp_base_url .= ':' . $wp_site_url_parts['port'];
-                    }
-                    // Replace full url's with scheme.
-                    $tmp_url = str_replace( $wp_base_url, rtrim( $cdn_url, '/' ), $url );
-                     if ( $tmp_url === $url ) {
-                        // Last attempt; replace scheme-less URL's...
-                        $url = str_replace( preg_replace( '/https?:/', '', $wp_base_url ), rtrim( $cdn_url, '/' ), $url );
-                    } else {
-                        $url = $tmp_url;
-                    }
+                // Either a protocol-relative or "regular" url, replacing it either way.
+                if ( $is_protocol_relative ) {
+                    // Massage $site_url so that simple str_replace() still "works" by
+                    // searching for the protocol-relative version of AUTOPTIMIZE_WP_SITE_URL.
+                    $site_url = str_replace( array( 'http:', 'https:' ), '', AUTOPTIMIZE_WP_SITE_URL );
                 } else {
-                    // Either a protocol-relative or "regular" url, replacing it either way.
-                    if ( $is_protocol_relative ) {
-                        // Massage $site_url so that simple str_replace() still "works" by
-                        // searching for the protocol-relative version of AUTOPTIMIZE_WP_SITE_URL.
-                        $site_url = str_replace( array( 'http:', 'https:' ), '', AUTOPTIMIZE_WP_SITE_URL );
-                    } else {
-                        $site_url = AUTOPTIMIZE_WP_SITE_URL;
-                    }
-                    $this->debug_log( '`' . $site_url . '` -> `' . $cdn_url . '` in `' . $url . '`' );
-                    $url = str_replace( $site_url, $cdn_url, $url );
+                    $site_url = AUTOPTIMIZE_WP_SITE_URL;
                 }
+                $this->debug_log( '`' . $site_url . '` -> `' . $cdn_url . '` in `' . $url . '`' );
+                $url = str_replace( $site_url, $cdn_url, $url );
             }
 
             $this->debug_log( 'after=' . $url );
