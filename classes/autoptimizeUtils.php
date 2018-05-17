@@ -272,8 +272,9 @@ class autoptimizeUtils
                 if ( autoptimizeUtils::siteurl_not_root() ) {
                     $site_url_parts = autoptimizeUtils::get_ao_wp_site_url_parts();
                     $cdn_url_parts  = \parse_url( $cdn_url );
+                    $schemeless     = self::is_protocol_relative( $cdn_url );
                     if ( $cdn_url_parts = self::maybe_replace_cdn_path( $site_url_parts, $cdn_url_parts ) ) {
-                        $results[ $cdn_url ] = self::assemble_parsed_url( $cdn_url_parts );
+                        $results[ $cdn_url ] = self::assemble_parsed_url( $cdn_url_parts, $schemeless );
                     }
                 }
             }
@@ -302,12 +303,16 @@ class autoptimizeUtils
 
     /**
      * @param array $parsed_url
+     * @param bool $schemeless
      *
      * @return string
      */
-    public static function assemble_parsed_url( array $parsed_url )
+    public static function assemble_parsed_url( array $parsed_url, $schemeless = false )
     {
-        $scheme   = isset( $parsed_url['scheme'] ) ? $parsed_url['scheme'] . '://' : '';
+        $scheme = isset( $parsed_url['scheme'] ) ? $parsed_url['scheme'] . '://' : '';
+        if ( $schemeless ) {
+            $scheme = '//';
+        }
         $host     = isset( $parsed_url['host'] ) ? $parsed_url['host'] : '';
         $port     = isset( $parsed_url['port'] ) ? ':' . $parsed_url['port'] : '';
         $user     = isset( $parsed_url['user'] ) ? $parsed_url['user'] : '';
@@ -318,5 +323,17 @@ class autoptimizeUtils
         $fragment = isset( $parsed_url['fragment'] ) ? '#' . $parsed_url['fragment'] : '';
 
         return "$scheme$user$pass$host$port$path$query$fragment";
+    }
+
+    /**
+     * Returns true if given $url is protocol-relative.
+     *
+     * @param string $url
+     *
+     * @return bool
+     */
+    public static function is_protocol_relative( $url )
+    {
+        return ( '/' === $url{1} ); // second char is `/`.
     }
 }

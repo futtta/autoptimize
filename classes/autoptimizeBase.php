@@ -298,7 +298,7 @@ abstract class autoptimizeBase
             $this->debug_log( 'before=' . $url );
 
             // Simple str_replace-based approach fails when $url is protocol-or-host-relative.
-            $is_protocol_relative = ( '/' === $url{1} ); // second char is `/`.
+            $is_protocol_relative = autoptimizeUtils::is_protocol_relative( $url );
             $is_host_relative     = ( ! $is_protocol_relative && ( '/' === $url{0} ) );
             $cdn_url              = rtrim( $cdn_url, '/' );
 
