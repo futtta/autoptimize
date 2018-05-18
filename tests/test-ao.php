@@ -2334,10 +2334,7 @@ MARKUP;
      */
     public function test_autoptimize_filter_cdn_magic_path_check()
     {
-        $urls   = $this->get_urls();
-        $sub    = $urls['subfolder'];
         $cdnurl = 'http://cdn.example.org';
-
         add_filter( 'autoptimize_filter_cdn_magic_path_check', '__return_false', 10, 2 );
 
         // Even when site is in a subfolder, the resulting cdn-rewritten url
