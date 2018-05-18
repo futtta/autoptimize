@@ -78,18 +78,18 @@ abstract class autoptimizeBase
         $content_host = parse_url( AUTOPTIMIZE_WP_ROOT_URL, PHP_URL_HOST );
 
         // Normalizing attempts...
-        if ( 0 === strpos( $url, '//' ) ) {
+        $double_slash_position = strpos( $url, '//' );
+        if ( 0 === $double_slash_position ) {
             if ( is_ssl() ) {
                 $url = 'https:' . $url;
             } else {
                 $url = 'http:' . $url;
             }
-        } elseif ( ( false === strpos( $url, '//' ) ) && ( false === strpos( $url, $site_host ) ) ) {
+        } elseif ( ( false === $double_slash_position ) && ( false === strpos( $url, $site_host ) ) ) {
             if ( AUTOPTIMIZE_WP_SITE_URL === $site_host ) {
                 $url = AUTOPTIMIZE_WP_SITE_URL . $url;
             } else {
-                $subdir_levels = substr_count( preg_replace( '/https?:\/\//', '', AUTOPTIMIZE_WP_SITE_URL ), '/' );
-                $url           = AUTOPTIMIZE_WP_SITE_URL . str_repeat( '/..', $subdir_levels ) . $url;
+                $url = AUTOPTIMIZE_WP_SITE_URL . autoptimizeUtils::path_canonicalize( $url );
             }
         }
 
@@ -287,12 +287,18 @@ abstract class autoptimizeBase
      */
     public function url_replace_cdn( $url )
     {
-        $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', $this->cdn_url );
+        // For 2.3 back-compat in which cdn-ing appeared to be automatically
+        // including WP subfolder/subdirectory into account as part of cdn-ing,
+        // even though it might've caused serious troubles in certain edge-cases.
+        $cdn_url = autoptimizeUtils::tweak_cdn_url_if_needed( $this->cdn_url );
+
+        // Allows API/filter to further tweak the cdn url...
+        $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', $cdn_url );
         if ( ! empty( $cdn_url ) ) {
             $this->debug_log( 'before=' . $url );
 
             // Simple str_replace-based approach fails when $url is protocol-or-host-relative.
-            $is_protocol_relative = ( '/' === $url{1} ); // second char is `/`.
+            $is_protocol_relative = autoptimizeUtils::is_protocol_relative( $url );
             $is_host_relative     = ( ! $is_protocol_relative && ( '/' === $url{0} ) );
             $cdn_url              = rtrim( $cdn_url, '/' );
 
