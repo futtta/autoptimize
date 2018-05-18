@@ -62,7 +62,7 @@ class AOTest extends WP_UnitTestcase
     protected function get_urls()
     {
         static $site_url = null;
-        if (null === $site_url) {
+        if ( null === $site_url ) {
             $site_url = site_url();
         }
 
@@ -75,7 +75,7 @@ class AOTest extends WP_UnitTestcase
 
         if ( empty( $urls ) ) {
             $parts = autoptimizeUtils::get_ao_wp_site_url_parts();
-            $urls = [
+            $urls  = [
                 'siteurl'    => $site_url,
                 'prsiteurl'  => '//' . str_replace( array( 'http://', 'https://' ), '', $site_url ),
                 'wwwsiteurl' => $parts['scheme'] . '://www.' . str_replace( 'www.', '', $parts['host'] ),
@@ -1134,7 +1134,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
 
     /**
      * @dataProvider provider_cssmin_issues
-      */
+     */
     public function test_cssmin_issues( $input, $expected )
     {
         $minifier = new autoptimizeCSSmin( false ); // No need to raise limits for now.
@@ -2290,5 +2290,37 @@ MARKUP;
     public function test_delete_advanced_cache_clear_artifacts()
     {
         $this->assertTrue( autoptimizeCache::delete_advanced_cache_clear_artifacts() );
+    }
+
+    public function provider_canonicalization()
+    {
+        return array(
+            array( '../common', 'common' ),
+            array( '../what-does-this-mean/really?/', 'what-does-this-mean/really?/' ),
+            array( '../../what/where/how', 'what/where/how' ),
+            array( '/../more.dots.please/', '/more.dots.please/' ),
+            array( '/../../what/where/how', '/what/where/how' ),
+            array( '/a/b/c/../../../d/e/file.txt', '/d/e/file.txt' ),
+            array( 'a/b/../c', 'a/c' ),
+            array( './../../etc/passwd', './etc/passwd' ),
+            array( '/var/.////./user/./././..//.//../////../././.././test/////', '/test/' ),
+            array( '/var/user/./././.././../.././././test/', '/test/' ),
+            array( '/hello/0//how/../are/../you', '/hello/0/you' ),
+            array( '', '' ),
+            array( '.', '.' ),
+            array( '..', '..' ),
+            array( './..', './..' ),
+            array( '../.', '.' ),
+            // This might be debatable...
+            array( '../..', '..' ),
+        );
+    }
+
+    /**
+     * @dataProvider provider_canonicalization
+     */
+    public function test_path_canonicalize( $path, $canonicalized )
+    {
+        $this->assertSame( $canonicalized, autoptimizeUtils::path_canonicalize( $path ) );
     }
 }

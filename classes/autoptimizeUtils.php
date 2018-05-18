@@ -253,7 +253,7 @@ class autoptimizeUtils
     /**
      * Modify given $cdn_url to include the site path when needed.
      *
-     * @param string $cdn_url
+     * @param string $cdn_url CDN URL to tweak.
      *
      * @return string
      */
@@ -273,7 +273,8 @@ class autoptimizeUtils
                     $site_url_parts = autoptimizeUtils::get_ao_wp_site_url_parts();
                     $cdn_url_parts  = \parse_url( $cdn_url );
                     $schemeless     = self::is_protocol_relative( $cdn_url );
-                    if ( $cdn_url_parts = self::maybe_replace_cdn_path( $site_url_parts, $cdn_url_parts ) ) {
+                    $cdn_url_parts  = self::maybe_replace_cdn_path( $site_url_parts, $cdn_url_parts );
+                    if ( false !== $cdn_url_parts ) {
                         $results[ $cdn_url ] = self::assemble_parsed_url( $cdn_url_parts, $schemeless );
                     }
                 }
@@ -284,12 +285,17 @@ class autoptimizeUtils
     }
 
     /**
-     * @param array $site_url_parts
-     * @param array $cdn_url_parts
+     * When siteurl contans a path other than '/' and the CDN URL does not have
+     * a path or it's path is '/', this will modify the CDN URL's path component
+     * to match that of the siteurl.
+     * This is to support "magic" CDN urls that worked that way before v2.4...
+     *
+     * @param array $site_url_parts Site URL components array.
+     * @param array $cdn_url_parts  CDN URL components array.
      *
      * @return array|false
      */
-    public static function maybe_replace_cdn_path(array $site_url_parts, array $cdn_url_parts)
+    public static function maybe_replace_cdn_path( array $site_url_parts, array $cdn_url_parts )
     {
         if ( isset( $site_url_parts['path'] ) && '/' !== $site_url_parts['path'] ) {
             if ( ! isset( $cdn_url_parts['path'] ) || '/' === $cdn_url_parts['path'] ) {
@@ -302,8 +308,13 @@ class autoptimizeUtils
     }
 
     /**
-     * @param array $parsed_url
-     * @param bool $schemeless
+     * Given an array or components returned from \parse_url(), assembles back
+     * the complete URL.
+     * If optional
+     *
+     * @param array $parsed_url URL components array.
+     * @param bool  $schemeless Whether the assembled URL should be
+     *                          protocol-relative (schemeless) or not.
      *
      * @return string
      */
@@ -316,7 +327,7 @@ class autoptimizeUtils
         $host     = isset( $parsed_url['host'] ) ? $parsed_url['host'] : '';
         $port     = isset( $parsed_url['port'] ) ? ':' . $parsed_url['port'] : '';
         $user     = isset( $parsed_url['user'] ) ? $parsed_url['user'] : '';
-        $pass     = isset( $parsed_url['pass'] ) ? ':' . $parsed_url['pass']  : '';
+        $pass     = isset( $parsed_url['pass'] ) ? ':' . $parsed_url['pass'] : '';
         $pass     = ( $user || $pass ) ? "$pass@" : '';
         $path     = isset( $parsed_url['path'] ) ? $parsed_url['path'] : '';
         $query    = isset( $parsed_url['query'] ) ? '?' . $parsed_url['query'] : '';
@@ -328,12 +339,37 @@ class autoptimizeUtils
     /**
      * Returns true if given $url is protocol-relative.
      *
-     * @param string $url
+     * @param string $url URL to check.
      *
      * @return bool
      */
     public static function is_protocol_relative( $url )
     {
         return ( '/' === $url{1} ); // second char is `/`.
+    }
+
+    /**
+     * Canonicalizes the given path regardless of it existing or not.
+     *
+     * @param string $path Path to normalize.
+     *
+     * @return string
+     */
+    public static function path_canonicalize( $path )
+    {
+        $patterns     = array(
+            '~/{2,}~',
+            '~/(\./)+~',
+            '~([^/\.]+/(?R)*\.{2,}/)~',
+            '~\.\./~',
+        );
+        $replacements = array(
+            '/',
+            '/',
+            '',
+            '',
+        );
+
+        return preg_replace( $patterns, $replacements, $path );
     }
 }

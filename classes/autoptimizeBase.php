@@ -78,18 +78,18 @@ abstract class autoptimizeBase
         $content_host = parse_url( AUTOPTIMIZE_WP_ROOT_URL, PHP_URL_HOST );
 
         // Normalizing attempts...
-        if ( 0 === strpos( $url, '//' ) ) {
+        $double_slash_position = strpos( $url, '//' );
+        if ( 0 === $double_slash_position ) {
             if ( is_ssl() ) {
                 $url = 'https:' . $url;
             } else {
                 $url = 'http:' . $url;
             }
-        } elseif ( ( false === strpos( $url, '//' ) ) && ( false === strpos( $url, $site_host ) ) ) {
+        } elseif ( ( false === $double_slash_position ) && ( false === strpos( $url, $site_host ) ) ) {
             if ( AUTOPTIMIZE_WP_SITE_URL === $site_host ) {
                 $url = AUTOPTIMIZE_WP_SITE_URL . $url;
             } else {
-                $subdir_levels = substr_count( preg_replace( '/https?:\/\//', '', AUTOPTIMIZE_WP_SITE_URL ), '/' );
-                $url           = AUTOPTIMIZE_WP_SITE_URL . str_repeat( '/..', $subdir_levels ) . $url;
+                $url = AUTOPTIMIZE_WP_SITE_URL . autoptimizeUtils::path_canonicalize( $url );
             }
         }
 
