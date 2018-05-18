@@ -2323,4 +2323,30 @@ MARKUP;
     {
         $this->assertSame( $canonicalized, autoptimizeUtils::path_canonicalize( $path ) );
     }
+
+    /**
+     * For a site in subfolder, CDN-rewrite used to magically include
+     * the subfolder when rewriting assets to CDN.
+     * That behavior can be turned off by returning false via
+     * `autoptimize_filter_cdn_magic_path_check`.
+     * If it's false, cdn-rewriting should not include subfolder even
+     * when the site is actually in a subfolder/subdirectory.
+     */
+    public function test_autoptimize_filter_cdn_magic_path_check()
+    {
+        $urls   = $this->get_urls();
+        $sub    = $urls['subfolder'];
+        $cdnurl = 'http://cdn.example.org';
+
+        add_filter( 'autoptimize_filter_cdn_magic_path_check', '__return_false', 10, 2 );
+
+        // Even when site is in a subfolder, the resulting cdn-rewritten url
+        // should not magically include it, due to the above filter.
+        // The second parameter is here to force a cache miss and re-run
+        // the filter since we're using the same cdn url all over the place,
+        // but want to prove different things with it.
+        $this->assertSame( $cdnurl, autoptimizeUtils::tweak_cdn_url_if_needed( $cdnurl, true ) );
+
+        remove_all_filters( 'autoptimize_filter_cdn_magic_path_check' );
+    }
 }

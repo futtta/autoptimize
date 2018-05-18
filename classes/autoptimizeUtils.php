@@ -253,23 +253,27 @@ class autoptimizeUtils
     /**
      * Modify given $cdn_url to include the site path when needed.
      *
-     * @param string $cdn_url CDN URL to tweak.
+     * @param string $cdn_url          CDN URL to tweak.
+     * @param bool   $force_cache_miss Force a cache miss in order to be able
+     *                                 to re-run the filter.
      *
      * @return string
      */
-    public static function tweak_cdn_url_if_needed( $cdn_url )
+    public static function tweak_cdn_url_if_needed( $cdn_url, $force_cache_miss = false )
     {
         static $results = array();
 
-        if ( empty( $results ) || ! isset( $results[ $cdn_url ] ) ) {
+        if ( ! isset( $results[ $cdn_url ] ) || $force_cache_miss ) {
 
             // In order to return unmodified input when there's no need to tweak.
             $results[ $cdn_url ] = $cdn_url;
 
-            // Behind a default true filter for backcompat, but easily turned
-            // of you don't want/need this...
-            if ( apply_filters( 'autoptimize_filter_cdn_magic_path_check', true ) ) {
-                if ( autoptimizeUtils::siteurl_not_root() ) {
+            // Behind a default true filter for backcompat, and only for sites
+            // in a subfolder/subdirectory, but still easily turned off if
+            // not wanted/needed...
+            if ( autoptimizeUtils::siteurl_not_root() ) {
+                $check = apply_filters( 'autoptimize_filter_cdn_magic_path_check', true, $cdn_url );
+                if ( $check ) {
                     $site_url_parts = autoptimizeUtils::get_ao_wp_site_url_parts();
                     $cdn_url_parts  = \parse_url( $cdn_url );
                     $schemeless     = self::is_protocol_relative( $cdn_url );
