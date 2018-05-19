@@ -145,7 +145,7 @@ class autoptimizeExtra
         if ( ! empty( $options['autoptimize_extra_text_field_2'] ) || has_filter( 'autoptimize_extra_filter_tobepreconn' ) ) {
             add_filter( 'wp_resource_hints', array( $this, 'filter_preconnect' ), 10, 2 );
         }
-        
+
         // Optimize Images!
         if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) ) {
             add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
@@ -347,78 +347,80 @@ class autoptimizeExtra
          * smart switch between shortpixel hosts
          */
 
-        $site_host = parse_url(site_url(), PHP_URL_HOST);
-        $quality = "q_glossy";
-        $ret_val = "ret_img";
-        $shortpix_base_url = "https://api-ai.shortpixel.com/client/".$quality.",".$ret_val;
-        $to_replace = array();
-        
+        $site_host         = parse_url( site_url(), PHP_URL_HOST );
+        $quality           = 'q_glossy';
+        $ret_val           = 'ret_img';
+        $shortpix_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
+        $to_replace        = array();
+
         // extract img tags.
-        if ( preg_match_all('#<img[^>]*src[^>]*>#Usmi', $in, $matches) ) {
-            foreach( $matches[0] as $tag ) {
+        if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
+            foreach ( $matches[0] as $tag ) {
                 $orig_tag = $tag;
-            
+
                 // extract and hide src (to avoid the URL being overwritten by srcset rewrite).
-                if ( preg_match('#src=("|\')(.*)("|\')#Usmi', $tag, $url) ) {
-                    $tag = str_replace( $url[0], "<!--src-->", $tag );
+                if ( preg_match( '#src=("|\')(.*)("|\')#Usmi', $tag, $url ) ) {
+                    $tag = str_replace( $url[0], '<!--src-->', $tag );
                 }
-                
+
                 // first do srcsets.
-                if ( preg_match('#srcset=("|\')(.*)("|\')#Usmi',$tag,$srcset) ) {
-                    $srcset = $orig_srcset = $srcset[2];
-                    $srcsets = explode( ",", $srcset );
+                if ( preg_match( '#srcset=("|\')(.*)("|\')#Usmi', $tag, $srcset ) ) {
+                    $srcset      = $srcset[2];
+                    $orig_srcset = $srcset[2];
+                    $srcsets     = explode( ',', $srcset );
                     foreach ( $srcsets as $indiv_srcset ) {
-                        $indiv_srcset_parts = explode( " ", trim($indiv_srcset) );
-                        if ($indiv_srcset_parts[1] && rtrim($indiv_srcset_parts[1],"w") !== $indiv_srcset_parts[1] ) {
-                            $shortpix_size = "w_".rtrim($indiv_srcset_parts[1],"w");
+                        $indiv_srcset_parts = explode( ' ', trim( $indiv_srcset ) );
+                        if ( $indiv_srcset_parts[1] && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
+                            $shortpix_size = 'w_' . rtrim( $indiv_srcset_parts[1], 'w' );
                         }
-                        if ( strpos( $indiv_srcset_parts[0], $site_host ) !== false && strpos( $indiv_srcset_parts[0], ".php" ) === false ) {
-                            $shortpix_url = $shortpix_base_url.",".$shortpix_size."/".$indiv_srcset_parts[0];
-                            $to_replace[$orig_tag] = $tag = str_replace( $indiv_srcset_parts[0], $shortpix_url, $tag );
+                        if ( strpos( $indiv_srcset_parts[0], $site_host ) !== false && strpos( $indiv_srcset_parts[0], '.php' ) === false ) {
+                            $shortpix_url            = $shortpix_base_url . ',' . $shortpix_size . '/' . $indiv_srcset_parts[0];
+                            $tag                     = str_replace( $indiv_srcset_parts[0], $shortpix_url, $tag );
+                            $to_replace[ $orig_tag ] = $tag;
                         }
                     }
                 }
 
                 // proceed with img src.
                 // first get width and height and add to $shortpix_size.
-                if ( preg_match('#width=("|\')(.*)("|\')#Usmi',$tag,$width) ) {
-                    $shortpix_size = "w_".$width[2];
+                if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $width ) ) {
+                    $shortpix_size = 'w_' . $width[2];
                 }
-                if ( preg_match('#height=("|\')(.*)("|\')#Usmi',$tag,$height) ) {
-                    $shortpix_size .= ",h_".$height[2];
+                if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $height ) ) {
+                    $shortpix_size .= ',h_' . $height[2];
                 }
 
                 // and then find and change actual images src.
                 if ( $url ) {
                     $full_src = $url[0];
-                    $url = $url[2];
-                    if ( strpos( $url, $shortpix_base_url ) === false && strpos( $url, $site_host ) !== false && strpos( $url, ".php" ) === false ) {
+                    $url      = $url[2];
+                    if ( strpos( $url, $shortpix_base_url ) === false && strpos( $url, $site_host ) !== false && strpos( $url, '.php' ) === false ) {
                         // fixme: check this is an image.
-                        $shortpix_url = $shortpix_base_url.",".$shortpix_size."/".$url;
-                        $full_shortpix_src = str_replace( $url, $shortpix_url, $full_src );
-                        $to_replace[$orig_tag] = str_replace( "<!--src-->", $full_shortpix_src, $tag );
+                        $shortpix_url            = $shortpix_base_url . ',' . $shortpix_size . '/' . $url;
+                        $full_shortpix_src       = str_replace( $url, $shortpix_url, $full_src );
+                        $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_shortpix_src, $tag );
                     }
                 }
             }
-        } 
+        }
         return str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
     }
-    
+
     public function filter_optimize_css_images( $in )
     {
-        $quality = "q_glossy";
-        $ret_val = "ret_img";
-        $shortpix_base_url = "https://api-ai.shortpixel.com/client/".$quality.",".$ret_val;
-        
-        if ( strpos( $in, "http" ) !== 0 && strpos( $in, "//" ) === 0 ) {
-            // fixme: also take /wp-content/uploads/image.png into account
-            $in = "https:".$in;
+        $quality           = 'q_glossy';
+        $ret_val           = 'ret_img';
+        $shortpix_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
+
+        if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
+            // fixme: also take /wp-content/uploads/image.png into account.
+            $in = 'https:' . $in;
         }
-      
-        $url_path = parse_url($in, PHP_URL_PATH);
+
+        $url_path = parse_url( $in, PHP_URL_PATH );
         if ( $url_path !== str_replace( array( '.png', '.gif', '.jpg', '.jpeg' ), '', $url_path ) ) {
-            // fixme: should check against end of string + make sure there's no .php
-            return $shortpix_base_url.'/'.$in;
+            // fixme: should check against end of string + make sure there's no .php.
+            return $shortpix_base_url . '/' . $in;
         } else {
             return $in;
         }
