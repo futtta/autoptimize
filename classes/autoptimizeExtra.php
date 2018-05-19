@@ -148,8 +148,12 @@ class autoptimizeExtra
 
         // Optimize Images!
         if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) ) {
-            add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
-            add_filter( 'autoptimize_filter_base_replace_cdn', array( $this, 'filter_optimize_css_images' ), 10, 1 );
+            if ( apply_filters( 'autoptimize_filter_extra_images', true ) ) {
+                add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
+            }
+            if ( apply_filters( 'autoptimize_filter_extra_cssimages', true ) ) {
+                add_filter( 'autoptimize_filter_base_replace_cdn', array( $this, 'filter_optimize_css_images' ), 10, 1 );
+            }
         }
     }
 
@@ -335,21 +339,19 @@ class autoptimizeExtra
     public function filter_optimize_images( $in )
     {
         /*
-         * Still TO DO:
+         * Fix me (still to do):
          *
-         * picture element?
-         * filter to exclude images?
-         * filter to enable/ disable css background img vs 'normal' image stuff
-         * filters to change quality & ret_val
-         * add_filter('autoptimize_filter_css_defer_inline','shortpixify_ccss_images');
-         * preconnect to img proxy host
-         * gallery (see shortpixel example code)
-         * smart switch between shortpixel hosts
+         * picture element (could).
+         * filter to exclude images (should).
+         * filter for critical CSS (could).
+         * preconnect to img proxy host (should).
+         * gallery (see shortpixel example code) (must).
+         * smart switch between shortpixel hosts (could).
          */
 
         $site_host         = parse_url( site_url(), PHP_URL_HOST );
-        $quality           = 'q_glossy';
-        $ret_val           = 'ret_img';
+        $quality           = apply_filters( 'autoptimize_filter_extra_images_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
+        $ret_val           = apply_filters( 'autoptimize_filter_extra_images_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
         $shortpix_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
         $to_replace        = array();
 
@@ -408,8 +410,8 @@ class autoptimizeExtra
 
     public function filter_optimize_css_images( $in )
     {
-        $quality           = 'q_glossy';
-        $ret_val           = 'ret_img';
+        $quality           = apply_filters( 'autoptimize_filter_extra_images_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
+        $ret_val           = apply_filters( 'autoptimize_filter_extra_images_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
         $shortpix_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
 
         if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
@@ -514,6 +516,7 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( "Optimizes images using Shortpixel's image optimizing proxy.", 'autoptimize' ); ?></label>
+                    <p><?php _e( 'Free service during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ); ?> <a href="https://shortpixel.com/tos" target="_blank">Terms of Use</a>.</p>
                 </td>
             </tr>
             <tr>
