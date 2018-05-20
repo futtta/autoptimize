@@ -339,13 +339,13 @@ class autoptimizeExtra
     public function filter_optimize_images( $in )
     {
         /*
-         * Fix me (still to do):
+         * fixme (still to do):
          *
-         * picture element (could).
-         * filter to exclude images (should).
-         * filter for critical CSS (could).
-         * preconnect to img proxy host (should).
          * gallery (see shortpixel example code) (must).
+         * filter to exclude images (should).
+         * preconnect to img proxy host (should).
+         * picture element (could).
+         * filter for critical CSS (could).
          * smart switch between shortpixel hosts (could).
          */
 
