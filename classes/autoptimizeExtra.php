@@ -341,7 +341,6 @@ class autoptimizeExtra
         /*
          * fixme (still to do):
          *
-         * gallery (see shortpixel example code) (must).
          * filter to exclude images (should).
          * preconnect to img proxy host (should).
          * picture element (could).
@@ -403,7 +402,16 @@ class autoptimizeExtra
                 }
             }
         }
-        return str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
+        $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
+
+        // img thumbnails in e.g. woocommerce
+        $out = preg_replace_callback(
+            '/\<div.+?data-thumb\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>\<\/div\>/s',
+            array( $this, 'replace_data_thumbs' ),    
+            $out
+        );
+
+        return $out;
     }
 
     public function filter_optimize_css_images( $in )
@@ -430,6 +438,10 @@ class autoptimizeExtra
         $ret_val           = apply_filters( 'autoptimize_filter_extra_images_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
         $shortpix_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
         return $shortpix_base_url;
+    }
+
+    public function replace_data_thumbs( $matches ) {
+        return str_replace( $matches[1], $this->get_shortpixel_url() . ',w_150,h_150/' . $matches[1], $matches[0] );
     }
 
     public function admin_menu()
