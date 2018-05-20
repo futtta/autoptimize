@@ -349,10 +349,8 @@ class autoptimizeExtra
          * smart switch between shortpixel hosts (could).
          */
 
+        $shortpix_base_url = $this->get_shortpixel_url();
         $site_host         = parse_url( site_url(), PHP_URL_HOST );
-        $quality           = apply_filters( 'autoptimize_filter_extra_images_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
-        $ret_val           = apply_filters( 'autoptimize_filter_extra_images_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
-        $shortpix_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
         $to_replace        = array();
 
         // extract img tags.
@@ -410,9 +408,7 @@ class autoptimizeExtra
 
     public function filter_optimize_css_images( $in )
     {
-        $quality           = apply_filters( 'autoptimize_filter_extra_images_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
-        $ret_val           = apply_filters( 'autoptimize_filter_extra_images_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
-        $shortpix_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
+        $shortpix_base_url = $this->get_shortpixel_url();
 
         if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
             // fixme: also take /wp-content/uploads/image.png into account.
@@ -426,6 +422,14 @@ class autoptimizeExtra
         } else {
             return $in;
         }
+    }
+
+    public function get_shortpixel_url()
+    {
+        $quality           = apply_filters( 'autoptimize_filter_extra_images_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
+        $ret_val           = apply_filters( 'autoptimize_filter_extra_images_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
+        $shortpix_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
+        return $shortpix_base_url;
     }
 
     public function admin_menu()
