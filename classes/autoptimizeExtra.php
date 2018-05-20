@@ -339,7 +339,7 @@ class autoptimizeExtra
     public function filter_optimize_images( $in )
     {
         /*
-         * fixme (still to do):
+         * fixme: functional stuff
          *
          * filter to exclude images (should).
          * preconnect to img proxy host (should).
