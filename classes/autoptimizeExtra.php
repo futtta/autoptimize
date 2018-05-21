@@ -416,10 +416,12 @@ class autoptimizeExtra
     public function filter_optimize_css_images( $in )
     {
         $imgopt_base_url = $this->get_imgopt_url();
+        $parsed_site_url = parse_url( site_url() );
 
         if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
-            // fixme: also take /wp-content/uploads/image.png into account.
-            $in = 'https:' . $in;
+            $in = $parsed_site_url['scheme'] . ':' . $in;
+        } elseif ( strpos( $in, '/' ) === 0 ) {
+            $in = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $in;
         }
 
         if ( $this->can_optimize_image( $in ) ) {
@@ -467,7 +469,7 @@ class autoptimizeExtra
     }
 
     public function replace_data_thumbs( $matches ) {
-        if ( $this->can_optimize_image( $matches[1] ) ){
+        if ( $this->can_optimize_image( $matches[1] ) ) {
             return str_replace( $matches[1], $this->get_imgopt_url() . ',w_150,h_150/' . $matches[1], $matches[0] );
         } else {
             return $matches[0];
