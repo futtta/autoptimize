@@ -341,7 +341,6 @@ class autoptimizeExtra
         /*
          * fixme: functional stuff
          *
-         * filter to exclude images in can_optimize_image() (should).
          * preconnect to img proxy host (should).
          * picture element (could).
          * filter for critical CSS (could).
@@ -396,6 +395,8 @@ class autoptimizeExtra
                         $shortpix_url            = $imgopt_base_url . ',' . $shortpix_size . '/' . $url;
                         $full_shortpix_src       = str_replace( $url, $shortpix_url, $full_src );
                         $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_shortpix_src, $tag );
+                    } else {
+                        $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_src, $tag );
                     }
                 }
             }
@@ -443,6 +444,7 @@ class autoptimizeExtra
         $site_host       = parse_url( site_url(), PHP_URL_HOST );
         $cdn_url         = apply_filters( 'autoptimize_filter_base_cdnurl', get_option( 'autoptimize_cdn_url', '' ) );
         $url_path        = parse_url( $url, PHP_URL_PATH );
+        $nopti_images    = apply_filters( 'autoptimize_filter_extra_img_noptimize', '' );
 
         if ( strpos( $url, $imgopt_base_url ) !== false ) {
             return false;
@@ -453,13 +455,23 @@ class autoptimizeExtra
         } elseif ( $url_path === str_replace( array( '.png', '.gif', '.jpg', '.jpeg' ), '', $url_path ) ) {
             // fixme: should check against end of string.
             return false;
-        } else {
-            return true;
+        } elseif ( ! empty( $nopti_images ) ) {
+            $nopti_images_array = array_filter( array_map( 'trim', explode( ',', $nopti_images ) ) );
+            foreach ( $nopti_images_array as $nopti_image ) {
+                if ( strpos( $url, $nopti_image ) !== false ) {
+                    return false;
+                }
+            }
         }
+        return true;
     }
 
     public function replace_data_thumbs( $matches ) {
-        return str_replace( $matches[1], $this->get_imgopt_url() . ',w_150,h_150/' . $matches[1], $matches[0] );
+        if ( $this->can_optimize_image( $matches[1] ) ){
+            return str_replace( $matches[1], $this->get_imgopt_url() . ',w_150,h_150/' . $matches[1], $matches[0] );
+        } else {
+            return $matches[0];
+        }
     }
 
     public function admin_menu()
