@@ -342,6 +342,8 @@ class autoptimizeExtra
          * fixme: functional stuff
          *
          * preconnect to img proxy host (should).
+         * rename all vars and functions not to have "shortpixel" in name (should).
+         * separate reusable 'create_imgopt_link' function with filter to allow easier switch to other partners (should).
          * picture element (could).
          * filter for critical CSS (could).
          * smart switch between shortpixel hosts (could).
