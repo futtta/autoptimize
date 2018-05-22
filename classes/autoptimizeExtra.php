@@ -150,9 +150,14 @@ class autoptimizeExtra
         if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) ) {
             if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
                 add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
+                $_imgopt_active = true;
             }
             if ( apply_filters( 'autoptimize_filter_extra_imgopt_do_css', true ) ) {
                 add_filter( 'autoptimize_filter_base_replace_cdn', array( $this, 'filter_optimize_css_images' ), 10, 1 );
+                $_imgopt_active = true;
+            }
+            if ( $_imgopt_active ) {
+                add_filter( 'autoptimize_extra_filter_tobepreconn', array( $this, 'filter_preconnect_imgopt_url' ), 10, 1 );
             }
         }
     }
@@ -341,7 +346,6 @@ class autoptimizeExtra
         /*
          * fixme: functional stuff
          *
-         * preconnect to img proxy host (should).
          * picture element (could).
          * filter for critical CSS (could).
          * smart switch between shortpixel hosts (could).
@@ -498,6 +502,14 @@ class autoptimizeExtra
         } else {
             return $matches[0];
         }
+    }
+
+    public function filter_preconnect_imgopt_url( $in )
+    {
+        $imgopt_url_array = parse_url( $this->get_imgopt_url() );
+        $in[]             = $imgopt_url_array['scheme'] . '://' . $imgopt_url_array['host'];
+
+        return $in;
     }
 
     public function admin_menu()
