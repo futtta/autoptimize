@@ -342,7 +342,6 @@ class autoptimizeExtra
          * fixme: functional stuff
          *
          * preconnect to img proxy host (should).
-         * rename all vars and functions not to have "shortpixel" in name (should).
          * separate reusable 'create_imgopt_link' function with filter to allow easier switch to other partners (should).
          * picture element (could).
          * filter for critical CSS (could).
@@ -370,23 +369,23 @@ class autoptimizeExtra
                     foreach ( $srcsets as $indiv_srcset ) {
                         $indiv_srcset_parts = explode( ' ', trim( $indiv_srcset ) );
                         if ( $indiv_srcset_parts[1] && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
-                            $shortpix_size = 'w_' . rtrim( $indiv_srcset_parts[1], 'w' );
+                            $imgopt_size = 'w_' . rtrim( $indiv_srcset_parts[1], 'w' );
                         }
                         if ( $this->can_optimize_image( $indiv_srcset_parts[0] ) ) {
-                            $shortpix_url            = $imgopt_base_url . ',' . $shortpix_size . '/' . $indiv_srcset_parts[0];
-                            $tag                     = str_replace( $indiv_srcset_parts[0], $shortpix_url, $tag );
+                            $imgopt_url            = $imgopt_base_url . ',' . $imgopt_size . '/' . $indiv_srcset_parts[0];
+                            $tag                     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
                             $to_replace[ $orig_tag ] = $tag;
                         }
                     }
                 }
 
                 // proceed with img src.
-                // first get width and height and add to $shortpix_size.
+                // first get width and height and add to $imgopt_size.
                 if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $width ) ) {
-                    $shortpix_size = 'w_' . $width[2];
+                    $imgopt_size = 'w_' . $width[2];
                 }
                 if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $height ) ) {
-                    $shortpix_size .= ',h_' . $height[2];
+                    $imgopt_size .= ',h_' . $height[2];
                 }
 
                 // and then find and change actual images src.
@@ -394,9 +393,9 @@ class autoptimizeExtra
                     $full_src = $url[0];
                     $url      = $url[2];
                     if ( $this->can_optimize_image( $url ) ) {
-                        $shortpix_url            = $imgopt_base_url . ',' . $shortpix_size . '/' . $url;
-                        $full_shortpix_src       = str_replace( $url, $shortpix_url, $full_src );
-                        $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_shortpix_src, $tag );
+                        $imgopt_url            = $imgopt_base_url . ',' . $imgopt_size . '/' . $url;
+                        $full_imgopt_src       = str_replace( $url, $imgopt_url, $full_src );
+                        $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_imgopt_src, $tag );
                     } else {
                         $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_src, $tag );
                     }
