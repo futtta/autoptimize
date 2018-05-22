@@ -372,7 +372,7 @@ class autoptimizeExtra
                             $imgopt_size = 'w_' . rtrim( $indiv_srcset_parts[1], 'w' );
                         }
                         if ( $this->can_optimize_image( $indiv_srcset_parts[0] ) ) {
-                            $imgopt_url            = $imgopt_base_url . ',' . $imgopt_size . '/' . $indiv_srcset_parts[0];
+                            $imgopt_url              = $imgopt_base_url . ',' . $imgopt_size . '/' . $indiv_srcset_parts[0];
                             $tag                     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
                             $to_replace[ $orig_tag ] = $tag;
                         }
@@ -393,8 +393,8 @@ class autoptimizeExtra
                     $full_src = $url[0];
                     $url      = $url[2];
                     if ( $this->can_optimize_image( $url ) ) {
-                        $imgopt_url            = $imgopt_base_url . ',' . $imgopt_size . '/' . $url;
-                        $full_imgopt_src       = str_replace( $url, $imgopt_url, $full_src );
+                        $imgopt_url              = $imgopt_base_url . ',' . $imgopt_size . '/' . $url;
+                        $full_imgopt_src         = str_replace( $url, $imgopt_url, $full_src );
                         $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_imgopt_src, $tag );
                     } else {
                         $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_src, $tag );
@@ -565,7 +565,7 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( "Optimizes images using Shortpixel's image optimizing proxy.", 'autoptimize' ); ?></label>
-                    <p><?php _e( 'Free service during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ); ?> <a href="https://shortpixel.com/tos" target="_blank">Terms of Use</a> <?php _e('and','autoptimize'); ?> <a href="https://shortpixel.com/privacy" target="_blank">Privacy policy</a>.</p>
+                    <p><?php _e( 'Free service during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ); ?> <a href="https://shortpixel.com/tos" target="_blank">Terms of Use</a> <?php _e( 'and', 'autoptimize' ); ?> <a href="https://shortpixel.com/privacy" target="_blank">Privacy policy</a>.</p>
                 </td>
             </tr>
             <tr>
