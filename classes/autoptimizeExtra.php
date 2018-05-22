@@ -148,10 +148,10 @@ class autoptimizeExtra
 
         // Optimize Images!
         if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) ) {
-            if ( apply_filters( 'autoptimize_filter_extra_images', true ) ) {
+            if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
                 add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
             }
-            if ( apply_filters( 'autoptimize_filter_extra_cssimages', true ) ) {
+            if ( apply_filters( 'autoptimize_filter_extra_imgopt_do_css', true ) ) {
                 add_filter( 'autoptimize_filter_base_replace_cdn', array( $this, 'filter_optimize_css_images' ), 10, 1 );
             }
         }
@@ -342,7 +342,6 @@ class autoptimizeExtra
          * fixme: functional stuff
          *
          * preconnect to img proxy host (should).
-         * separate reusable 'create_imgopt_link' function with filter to allow easier switch to other partners (should).
          * picture element (could).
          * filter for critical CSS (could).
          * smart switch between shortpixel hosts (could).
@@ -369,10 +368,10 @@ class autoptimizeExtra
                     foreach ( $srcsets as $indiv_srcset ) {
                         $indiv_srcset_parts = explode( ' ', trim( $indiv_srcset ) );
                         if ( $indiv_srcset_parts[1] && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
-                            $imgopt_size = 'w_' . rtrim( $indiv_srcset_parts[1], 'w' );
+                            $imgopt_w = rtrim( $indiv_srcset_parts[1], 'w' );
                         }
                         if ( $this->can_optimize_image( $indiv_srcset_parts[0] ) ) {
-                            $imgopt_url              = $imgopt_base_url . ',' . $imgopt_size . '/' . $indiv_srcset_parts[0];
+                            $imgopt_url              = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
                             $tag                     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
                             $to_replace[ $orig_tag ] = $tag;
                         }
@@ -382,10 +381,10 @@ class autoptimizeExtra
                 // proceed with img src.
                 // first get width and height and add to $imgopt_size.
                 if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $width ) ) {
-                    $imgopt_size = 'w_' . $width[2];
+                    $imgopt_w = $width[2];
                 }
                 if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $height ) ) {
-                    $imgopt_size .= ',h_' . $height[2];
+                    $imgopt_h = $height[2];
                 }
 
                 // and then find and change actual images src.
@@ -393,7 +392,7 @@ class autoptimizeExtra
                     $full_src = $url[0];
                     $url      = $url[2];
                     if ( $this->can_optimize_image( $url ) ) {
-                        $imgopt_url              = $imgopt_base_url . ',' . $imgopt_size . '/' . $url;
+                        $imgopt_url              = $this->build_imgopt_url( $url, $imgopt_w, $imgopt_h );
                         $full_imgopt_src         = str_replace( $url, $imgopt_url, $full_src );
                         $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_imgopt_src, $tag );
                     } else {
@@ -426,7 +425,7 @@ class autoptimizeExtra
         }
 
         if ( $this->can_optimize_image( $in ) ) {
-            return $imgopt_base_url . '/' . $in;
+            return $this->build_imgopt_url( $in, '', '' );
         } else {
             return $in;
         }
@@ -434,11 +433,11 @@ class autoptimizeExtra
 
     private function get_imgopt_url()
     {
-        $quality         = apply_filters( 'autoptimize_filter_extra_images_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
-        $ret_val         = apply_filters( 'autoptimize_filter_extra_images_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
+        $quality         = apply_filters( 'autoptimize_filter_extra_imgopt_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
+        $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
         $imgopt_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
 
-        return apply_filters( 'autoptimize_filter_extra_imgopt_url', $imgopt_base_url );
+        return apply_filters( 'autoptimize_filter_extra_imgopt_base_url', $imgopt_base_url );
     }
 
     private function can_optimize_image( $url )
@@ -447,7 +446,7 @@ class autoptimizeExtra
         $site_host       = parse_url( site_url(), PHP_URL_HOST );
         $cdn_url         = apply_filters( 'autoptimize_filter_base_cdnurl', get_option( 'autoptimize_cdn_url', '' ) );
         $url_path        = parse_url( $url, PHP_URL_PATH );
-        $nopti_images    = apply_filters( 'autoptimize_filter_extra_img_noptimize', '' );
+        $nopti_images    = apply_filters( 'autoptimize_filter_extra_imgopt_noptimize', '' );
 
         if ( strpos( $url, $imgopt_base_url ) !== false ) {
             return false;
@@ -455,8 +454,8 @@ class autoptimizeExtra
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
-        } elseif ( $url_path === str_replace( array( '.png', '.gif', '.jpg', '.jpeg' ), '', $url_path ) ) {
-            // fixme: should check against end of string.
+        } elseif ( str_replace( array( '.png', '.gif', '.jpg', '.jpeg' ), '', $url_path ) === $url_path ) {
+            // fixme: better check against end of string.
             return false;
         } elseif ( ! empty( $nopti_images ) ) {
             $nopti_images_array = array_filter( array_map( 'trim', explode( ',', $nopti_images ) ) );
@@ -469,9 +468,33 @@ class autoptimizeExtra
         return true;
     }
 
+    private function build_imgopt_url( $orig_url, $width = 0, $height = 0 )
+    {
+        $filtered_url = apply_filters( 'autoptimize_filter_extra_imgopt_build_url', $url, $width, $height );
+
+        if ( $filtered_url !== $url ) {
+            return $filtered_url;
+        }
+
+        $imgopt_base_url = $this->get_imgopt_url();
+        $imgopt_size     = '';
+
+        if ( $width && 0 !== $width ) {
+            $imgopt_size = 'w_' . $width;
+        }
+
+        if ( $height && 0 !== $height ) {
+            $imgopt_size .= ',h_' . $height;
+        }
+
+        $url = $imgopt_base_url . ',' . $imgopt_size . '/' . $orig_url;
+
+        return $url;
+    }
+
     public function replace_data_thumbs( $matches ) {
         if ( $this->can_optimize_image( $matches[1] ) ) {
-            return str_replace( $matches[1], $this->get_imgopt_url() . ',w_150,h_150/' . $matches[1], $matches[0] );
+            return str_replace( $matches[1], $this->build_imgopt_url( $matches[1], 150, 150 ), $matches[0] );
         } else {
             return $matches[0];
         }
@@ -564,8 +587,8 @@ class autoptimizeExtra
             <tr>
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( "Optimizes images using Shortpixel's image optimizing proxy.", 'autoptimize' ); ?></label>
-                    <p><?php _e( 'Free service during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ); ?> <a href="https://shortpixel.com/tos" target="_blank">Terms of Use</a> <?php _e( 'and', 'autoptimize' ); ?> <a href="https://shortpixel.com/privacy" target="_blank">Privacy policy</a>.</p>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimizes images using an image optimizing proxy.', 'autoptimize' ); ?></label>
+                    <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Free service provided by Shortpixel during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos" target="_blank">Terms of Use</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/privacy" target="_blank">Privacy policy</a>.</p>' ); ?>
                 </td>
             </tr>
             <tr>
