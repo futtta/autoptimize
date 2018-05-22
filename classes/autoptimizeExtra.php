@@ -565,7 +565,7 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( "Optimizes images using Shortpixel's image optimizing proxy.", 'autoptimize' ); ?></label>
-                    <p><?php _e( 'Free service during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ); ?> <a href="https://shortpixel.com/tos" target="_blank">Terms of Use</a>.</p>
+                    <p><?php _e( 'Free service during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ); ?> <a href="https://shortpixel.com/tos" target="_blank">Terms of Use</a> <?php _e('and','autoptimize'); ?> <a href="https://shortpixel.com/privacy" target="_blank">Privacy policy</a>.</p>
                 </td>
             </tr>
             <tr>
