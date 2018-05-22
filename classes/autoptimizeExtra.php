@@ -536,6 +536,23 @@ class autoptimizeExtra
         <span id='autoptimize_extra_descr'><?php _e( 'The following settings can improve your site\'s performance even more.', 'autoptimize' ); ?></span>
         <table class="form-table">
             <tr>
+                <th scope="row"><?php _e( 'Google Fonts', 'autoptimize' ); ?></th>
+                <td>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="1" <?php if ( ! in_array( $gfonts, array( 2, 3, 4 ) ) ) { echo 'checked'; } ?> ><?php _e( 'Leave as is', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="2" <?php checked( 2, $gfonts, true ); ?> ><?php _e( 'Remove Google Fonts', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="3" <?php checked( 3, $gfonts, true ); ?> ><?php _e( 'Combine and link in head (fonts load fast but are render-blocking)', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php _e( 'Combine and preload in head (fonts load late, but are not render-blocking)', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked( 4, $gfonts, true ); ?> ><?php _e( 'Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>', 'autoptimize' ); ?><br/>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimizes images using an image optimizing proxy.', 'autoptimize' ); ?></label>
+                    <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Free service provided by Shortpixel during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos" target="_blank">Terms of Use</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/privacy" target="_blank">Privacy policy</a>.</p>' ); ?>
+                </td>
+            </tr>
+            <tr>
                 <th scope="row"><?php _e( 'Remove emojis', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_1]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_1'] ) && '1' === $options['autoptimize_extra_checkbox_field_1'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Removes WordPress\' core emojis\' inline CSS, inline JavaScript, and an otherwise un-autoptimized JavaScript file.', 'autoptimize' ); ?></label>
@@ -545,16 +562,6 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Remove query strings from static resources', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_0]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_0'] ) && '1' === $options['autoptimize_extra_checkbox_field_0'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Removing query strings (or more specificaly the <code>ver</code> parameter) will not improve load time, but might improve performance scores.', 'autoptimize' ); ?></label>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row"><?php _e( 'Google Fonts', 'autoptimize' ); ?></th>
-                <td>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="1" <?php if ( ! in_array( $gfonts, array( 2, 3, 4 ) ) ) { echo 'checked'; } ?> ><?php _e( 'Leave as is', 'autoptimize' ); ?><br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="2" <?php checked( 2, $gfonts, true ); ?> ><?php _e( 'Remove Google Fonts', 'autoptimize' ); ?><br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="3" <?php checked( 3, $gfonts, true ); ?> ><?php _e( 'Combine and link in head (fonts load fast but are render-blocking)', 'autoptimize' ); ?><br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php _e( 'Combine and preload in head (fonts load late, but are not render-blocking)', 'autoptimize' ); ?><br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked( 4, $gfonts, true ); ?> ><?php _e( 'Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>', 'autoptimize' ); ?><br/>
                 </td>
             </tr>
             <tr>
@@ -582,13 +589,6 @@ class autoptimizeExtra
                             echo sprintf( ' <a href="' . $asj_install_url . '">%s</a>', __( 'Click here to install and activate it.', 'autoptimize' ) );
                     }
                     ?>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
-                <td>
-                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimizes images using an image optimizing proxy.', 'autoptimize' ); ?></label>
-                    <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Free service provided by Shortpixel during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos" target="_blank">Terms of Use</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/privacy" target="_blank">Privacy policy</a>.</p>' ); ?>
                 </td>
             </tr>
             <tr>
