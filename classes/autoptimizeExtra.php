@@ -474,9 +474,9 @@ class autoptimizeExtra
 
     private function build_imgopt_url( $orig_url, $width = 0, $height = 0 )
     {
-        $filtered_url = apply_filters( 'autoptimize_filter_extra_imgopt_build_url', $url, $width, $height );
+        $filtered_url = apply_filters( 'autoptimize_filter_extra_imgopt_build_url', $orig_url, $width, $height );
 
-        if ( $filtered_url !== $url ) {
+        if ( $filtered_url !== $orig_url ) {
             return $filtered_url;
         }
 
