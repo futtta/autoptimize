@@ -484,14 +484,14 @@ class autoptimizeExtra
         $imgopt_size     = '';
 
         if ( $width && 0 !== $width ) {
-            $imgopt_size = 'w_' . $width;
+            $imgopt_size = ',w_' . $width;
         }
 
         if ( $height && 0 !== $height ) {
             $imgopt_size .= ',h_' . $height;
         }
 
-        $url = $imgopt_base_url . ',' . $imgopt_size . '/' . $orig_url;
+        $url = $imgopt_base_url . $imgopt_size . '/' . $orig_url;
 
         return $url;
     }
