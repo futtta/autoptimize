@@ -351,7 +351,7 @@ class autoptimizeExtra
          * smart switch between shortpixel hosts (could).
          */
 
-        $imgopt_base_url = $this->get_imgopt_url();
+        $imgopt_base_url = $this->get_imgopt_base_url();
         $to_replace      = array();
 
         // extract img tags.
@@ -419,7 +419,7 @@ class autoptimizeExtra
 
     public function filter_optimize_css_images( $in )
     {
-        $imgopt_base_url = $this->get_imgopt_url();
+        $imgopt_base_url = $this->get_imgopt_base_url();
         $parsed_site_url = parse_url( site_url() );
 
         if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
@@ -435,22 +435,36 @@ class autoptimizeExtra
         }
     }
 
-    private function get_imgopt_url()
+    private function get_imgopt_base_url()
     {
-        $quality         = apply_filters( 'autoptimize_filter_extra_imgopt_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
-        $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
-        $imgopt_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
+        static $imgopt_base_url = null;
 
-        return apply_filters( 'autoptimize_filter_extra_imgopt_base_url', $imgopt_base_url );
+        if ( is_null( $imgopt_base_url ) ) {
+            $quality         = apply_filters( 'autoptimize_filter_extra_imgopt_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
+            $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
+            $imgopt_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
+            $imgopt_base_url = apply_filters( 'autoptimize_filter_extra_imgopt_base_url', $imgopt_base_url );
+        }
+
+        return $imgopt_base_url;
     }
 
     private function can_optimize_image( $url )
     {
-        $imgopt_base_url = $this->get_imgopt_url();
+        static $cdn_url      = null;
+        static $nopti_images = null;
+
+        if ( is_null( $cdn_url ) ) {
+            $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', get_option( 'autoptimize_cdn_url', '' ) );
+        }
+
+        if ( is_null( $nopti_images ) ) {
+            $nopti_images = apply_filters( 'autoptimize_filter_extra_imgopt_noptimize', '' );
+        }
+
+        $imgopt_base_url = $this->get_imgopt_base_url();
         $site_host       = parse_url( site_url(), PHP_URL_HOST );
-        $cdn_url         = apply_filters( 'autoptimize_filter_base_cdnurl', get_option( 'autoptimize_cdn_url', '' ) );
         $url_path        = parse_url( $url, PHP_URL_PATH );
-        $nopti_images    = apply_filters( 'autoptimize_filter_extra_imgopt_noptimize', '' );
 
         if ( strpos( $url, $imgopt_base_url ) !== false ) {
             return false;
@@ -480,7 +494,7 @@ class autoptimizeExtra
             return $filtered_url;
         }
 
-        $imgopt_base_url = $this->get_imgopt_url();
+        $imgopt_base_url = $this->get_imgopt_base_url();
         $imgopt_size     = '';
 
         if ( $width && 0 !== $width ) {
@@ -506,7 +520,7 @@ class autoptimizeExtra
 
     public function filter_preconnect_imgopt_url( $in )
     {
-        $imgopt_url_array = parse_url( $this->get_imgopt_url() );
+        $imgopt_url_array = parse_url( $this->get_imgopt_base_url() );
         $in[]             = $imgopt_url_array['scheme'] . '://' . $imgopt_url_array['host'];
 
         return $in;
