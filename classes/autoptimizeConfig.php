@@ -720,6 +720,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
             'autoptimize_extra_radio_field_4'    => '1',
             'autoptimize_extra_text_field_2'     => '',
             'autoptimize_extra_text_field_3'     => '',
+            'autoptimize_extra_checkbox_field_5' => '0',            
         );
 
         return $defaults;

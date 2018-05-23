@@ -145,6 +145,21 @@ class autoptimizeExtra
         if ( ! empty( $options['autoptimize_extra_text_field_2'] ) || has_filter( 'autoptimize_extra_filter_tobepreconn' ) ) {
             add_filter( 'wp_resource_hints', array( $this, 'filter_preconnect' ), 10, 2 );
         }
+
+        // Optimize Images!
+        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) ) {
+            if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
+                add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
+                $_imgopt_active = true;
+            }
+            if ( apply_filters( 'autoptimize_filter_extra_imgopt_do_css', true ) ) {
+                add_filter( 'autoptimize_filter_base_replace_cdn', array( $this, 'filter_optimize_css_images' ), 10, 1 );
+                $_imgopt_active = true;
+            }
+            if ( $_imgopt_active ) {
+                add_filter( 'autoptimize_extra_filter_tobepreconn', array( $this, 'filter_preconnect_imgopt_url' ), 10, 1 );
+            }
+        }
     }
 
     public function filter_remove_emoji_dns_prefetch( $urls, $relation_type )
@@ -326,6 +341,191 @@ class autoptimizeExtra
         return $in;
     }
 
+    public function filter_optimize_images( $in )
+    {
+        /*
+         * fixme: functional stuff
+         *
+         * picture element (could).
+         * filter for critical CSS (could).
+         * smart switch between shortpixel hosts (could).
+         */
+
+        $imgopt_base_url = $this->get_imgopt_base_url();
+        $to_replace      = array();
+
+        // extract img tags.
+        if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
+            foreach ( $matches[0] as $tag ) {
+                $orig_tag = $tag;
+
+                // extract and hide src (to avoid the URL being overwritten by srcset rewrite).
+                if ( preg_match( '#src=("|\')(.*)("|\')#Usmi', $tag, $url ) ) {
+                    $tag = str_replace( $url[0], '<!--src-->', $tag );
+                }
+
+                // first do srcsets.
+                if ( preg_match( '#srcset=("|\')(.*)("|\')#Usmi', $tag, $srcset ) ) {
+                    $srcset      = $srcset[2];
+                    $orig_srcset = $srcset[2];
+                    $srcsets     = explode( ',', $srcset );
+                    foreach ( $srcsets as $indiv_srcset ) {
+                        $indiv_srcset_parts = explode( ' ', trim( $indiv_srcset ) );
+                        if ( $indiv_srcset_parts[1] && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
+                            $imgopt_w = rtrim( $indiv_srcset_parts[1], 'w' );
+                        }
+                        if ( $this->can_optimize_image( $indiv_srcset_parts[0] ) ) {
+                            $imgopt_url              = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
+                            $tag                     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
+                            $to_replace[ $orig_tag ] = $tag;
+                        }
+                    }
+                }
+
+                // proceed with img src.
+                // first get width and height and add to $imgopt_size.
+                if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $width ) ) {
+                    $imgopt_w = $width[2];
+                }
+                if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $height ) ) {
+                    $imgopt_h = $height[2];
+                }
+
+                // and then find and change actual images src.
+                if ( $url ) {
+                    $full_src = $url[0];
+                    $url      = $url[2];
+                    if ( $this->can_optimize_image( $url ) ) {
+                        $imgopt_url              = $this->build_imgopt_url( $url, $imgopt_w, $imgopt_h );
+                        $full_imgopt_src         = str_replace( $url, $imgopt_url, $full_src );
+                        $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_imgopt_src, $tag );
+                    } else {
+                        $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_src, $tag );
+                    }
+                }
+            }
+        }
+        $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
+
+        // img thumbnails in e.g. woocommerce.
+        $out = preg_replace_callback(
+            '/\<div.+?data-thumb\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>\<\/div\>/s',
+            array( $this, 'replace_data_thumbs' ),
+            $out
+        );
+
+        return $out;
+    }
+
+    public function filter_optimize_css_images( $in )
+    {
+        $imgopt_base_url = $this->get_imgopt_base_url();
+        $parsed_site_url = parse_url( site_url() );
+
+        if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
+            $in = $parsed_site_url['scheme'] . ':' . $in;
+        } elseif ( strpos( $in, '/' ) === 0 ) {
+            $in = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $in;
+        }
+
+        if ( $this->can_optimize_image( $in ) ) {
+            return $this->build_imgopt_url( $in, '', '' );
+        } else {
+            return $in;
+        }
+    }
+
+    private function get_imgopt_base_url()
+    {
+        static $imgopt_base_url = null;
+
+        if ( is_null( $imgopt_base_url ) ) {
+            $quality         = apply_filters( 'autoptimize_filter_extra_imgopt_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
+            $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
+            $imgopt_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
+            $imgopt_base_url = apply_filters( 'autoptimize_filter_extra_imgopt_base_url', $imgopt_base_url );
+        }
+
+        return $imgopt_base_url;
+    }
+
+    private function can_optimize_image( $url )
+    {
+        static $cdn_url      = null;
+        static $nopti_images = null;
+
+        if ( is_null( $cdn_url ) ) {
+            $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', get_option( 'autoptimize_cdn_url', '' ) );
+        }
+
+        if ( is_null( $nopti_images ) ) {
+            $nopti_images = apply_filters( 'autoptimize_filter_extra_imgopt_noptimize', '' );
+        }
+
+        $imgopt_base_url = $this->get_imgopt_base_url();
+        $site_host       = parse_url( site_url(), PHP_URL_HOST );
+        $url_path        = parse_url( $url, PHP_URL_PATH );
+
+        if ( strpos( $url, $imgopt_base_url ) !== false ) {
+            return false;
+        } elseif ( strpos( $url, $site_host ) === false && strpos( $url, $cdn_url ) === false ) {
+            return false;
+        } elseif ( strpos( $url, '.php' ) !== false ) {
+            return false;
+        } elseif ( str_replace( array( '.png', '.gif', '.jpg', '.jpeg' ), '', $url_path ) === $url_path ) {
+            // fixme: better check against end of string.
+            return false;
+        } elseif ( ! empty( $nopti_images ) ) {
+            $nopti_images_array = array_filter( array_map( 'trim', explode( ',', $nopti_images ) ) );
+            foreach ( $nopti_images_array as $nopti_image ) {
+                if ( strpos( $url, $nopti_image ) !== false ) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private function build_imgopt_url( $orig_url, $width = 0, $height = 0 )
+    {
+        $filtered_url = apply_filters( 'autoptimize_filter_extra_imgopt_build_url', $orig_url, $width, $height );
+
+        if ( $filtered_url !== $orig_url ) {
+            return $filtered_url;
+        }
+
+        $imgopt_base_url = $this->get_imgopt_base_url();
+        $imgopt_size     = '';
+
+        if ( $width && 0 !== $width ) {
+            $imgopt_size = ',w_' . $width;
+        }
+
+        if ( $height && 0 !== $height ) {
+            $imgopt_size .= ',h_' . $height;
+        }
+
+        $url = $imgopt_base_url . $imgopt_size . '/' . $orig_url;
+
+        return $url;
+    }
+
+    public function replace_data_thumbs( $matches ) {
+        if ( $this->can_optimize_image( $matches[1] ) ) {
+            return str_replace( $matches[1], $this->build_imgopt_url( $matches[1], 150, 150 ), $matches[0] );
+        } else {
+            return $matches[0];
+        }
+    }
+
+    public function filter_preconnect_imgopt_url( $in )
+    {
+        $imgopt_url_array = parse_url( $this->get_imgopt_base_url() );
+        $in[]             = $imgopt_url_array['scheme'] . '://' . $imgopt_url_array['host'];
+
+        return $in;
+    }
+
     public function admin_menu()
     {
         add_submenu_page( null, 'autoptimize_extra', 'autoptimize_extra', 'manage_options', 'autoptimize_extra', array( $this, 'options_page' ) );
@@ -362,6 +562,23 @@ class autoptimizeExtra
         <span id='autoptimize_extra_descr'><?php _e( 'The following settings can improve your site\'s performance even more.', 'autoptimize' ); ?></span>
         <table class="form-table">
             <tr>
+                <th scope="row"><?php _e( 'Google Fonts', 'autoptimize' ); ?></th>
+                <td>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="1" <?php if ( ! in_array( $gfonts, array( 2, 3, 4 ) ) ) { echo 'checked'; } ?> ><?php _e( 'Leave as is', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="2" <?php checked( 2, $gfonts, true ); ?> ><?php _e( 'Remove Google Fonts', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="3" <?php checked( 3, $gfonts, true ); ?> ><?php _e( 'Combine and link in head (fonts load fast but are render-blocking)', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php _e( 'Combine and preload in head (fonts load late, but are not render-blocking)', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked( 4, $gfonts, true ); ?> ><?php _e( 'Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>', 'autoptimize' ); ?><br/>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimizes images using an image optimizing proxy.', 'autoptimize' ); ?></label>
+                    <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Free service provided by Shortpixel during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos" target="_blank">Terms of Use</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/privacy" target="_blank">Privacy policy</a>.</p>' ); ?>
+                </td>
+            </tr>
+            <tr>
                 <th scope="row"><?php _e( 'Remove emojis', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_1]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_1'] ) && '1' === $options['autoptimize_extra_checkbox_field_1'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Removes WordPress\' core emojis\' inline CSS, inline JavaScript, and an otherwise un-autoptimized JavaScript file.', 'autoptimize' ); ?></label>
@@ -371,16 +588,6 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Remove query strings from static resources', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_0]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_0'] ) && '1' === $options['autoptimize_extra_checkbox_field_0'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Removing query strings (or more specificaly the <code>ver</code> parameter) will not improve load time, but might improve performance scores.', 'autoptimize' ); ?></label>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row"><?php _e( 'Google Fonts', 'autoptimize' ); ?></th>
-                <td>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="1" <?php if ( ! in_array( $gfonts, array( 2, 3, 4 ) ) ) { echo 'checked'; } ?> ><?php _e( 'Leave as is', 'autoptimize' ); ?><br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="2" <?php checked( 2, $gfonts, true ); ?> ><?php _e( 'Remove Google Fonts', 'autoptimize' ); ?><br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="3" <?php checked( 3, $gfonts, true ); ?> ><?php _e( 'Combine and link in head (fonts load fast but are render-blocking)', 'autoptimize' ); ?><br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php _e( 'Combine and preload in head (fonts load late, but are not render-blocking)', 'autoptimize' ); ?><br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked( 4, $gfonts, true ); ?> ><?php _e( 'Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>', 'autoptimize' ); ?><br/>
                 </td>
             </tr>
             <tr>

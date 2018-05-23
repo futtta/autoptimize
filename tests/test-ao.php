@@ -2346,4 +2346,24 @@ MARKUP;
 
         remove_all_filters( 'autoptimize_filter_cdn_magic_path_check' );
     }
+    
+    /**
+     * Test image optimization in autoptimizeExtra.php.
+     */
+    public function test_extra_imgopt()
+    {
+        $siteurl = $this->get_urls()['siteurl'];
+
+        $markup = <<<MARKUP
+<img src='$siteurl/wp-content/image.jpg' width='400' height='200'>
+MARKUP;
+
+        $expected = <<<MARKUP
+<img src='https://api-ai.shortpixel.com/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200'>
+MARKUP;
+
+        $instance = new autoptimizeExtra();
+        $actual = $instance->filter_optimize_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
 }
