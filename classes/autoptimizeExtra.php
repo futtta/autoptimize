@@ -556,6 +556,17 @@ class autoptimizeExtra
     <div class="wrap">
     <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
     <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
+    <?php
+    if ( 'on' !== get_option( 'autoptimize_js' ) && 'on' !== get_option( 'autoptimize_css' ) && 'on' !== get_option( 'autoptimize_html' ) ) {
+        ?>
+        <div class="notice-warning notice"><p>
+        <?php
+        _e( 'Most of below Extra optimizations require at least one of HTML, JS or CSS autoptimizations being active.', 'autoptimize' );
+        ?>
+        </p></div>
+        <?php
+    }
+    ?>
     <form id='ao_settings_form' action='options.php' method='post'>
         <?php settings_fields( 'autoptimize_extra_settings' ); ?>
         <h2><?php _e( 'Extra Auto-Optimizations', 'autoptimize' ); ?></h2>
