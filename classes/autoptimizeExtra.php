@@ -360,7 +360,7 @@ class autoptimizeExtra
                 $orig_tag = $tag;
 
                 // extract and hide src (to avoid the URL being overwritten by srcset rewrite).
-                if ( preg_match( '#src=("|\')(.*)("|\')#Usmi', $tag, $url ) ) {
+                if ( preg_match( '#src=("|\')(?!data)(.*)("|\')#Usmi', $tag, $url ) ) {
                     $tag = str_replace( $url[0], '<!--src-->', $tag );
                 }
 
