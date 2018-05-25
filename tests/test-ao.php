@@ -2374,7 +2374,7 @@ MARKUP;
      * 
      * Exception case: image served by .php, should not be proxied
      */
-    public function test_extra_imgopt()
+    public function test_extra_imgopt_php()
     {
         $siteurl = $this->get_urls()['siteurl'];
 
@@ -2396,7 +2396,7 @@ MARKUP;
      * 
      * Alternate case: lazy loaded images with srcsets (using wp rocket variant HTML)
      */
-    public function test_extra_imgopt()
+    public function test_extra_imgopt_lazy()
     {
         $siteurl = $this->get_urls()['siteurl'];
 
