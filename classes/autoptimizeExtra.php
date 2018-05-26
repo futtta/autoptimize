@@ -468,7 +468,7 @@ class autoptimizeExtra
 
         if ( strpos( $url, $imgopt_base_url ) !== false ) {
             return false;
-        } elseif ( strpos( $url, $site_host ) === false || ( !empty( $cdn_url ) && strpos( $url, $cdn_url ) === false ) ) {
+        } elseif ( strpos( $url, $site_host ) === false && ( !empty( $cdn_url ) && strpos( $url, $cdn_url ) === false ) ) {
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
