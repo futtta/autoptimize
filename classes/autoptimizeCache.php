@@ -511,9 +511,16 @@ class autoptimizeCache
 <IfModule mod_headers.c>
     Header append Cache-Control "public, immutable"
 </IfModule>
-<IfModule mod_deflate.c>
+<IfModule !mod_brotli.c>
+    <IfModule mod_deflate.c>
         <FilesMatch "\.(js|css)$">
-        SetOutputFilter DEFLATE
+            SetOutputFilter DEFLATE
+        </FilesMatch>
+    </IfModule>
+</IfModule>
+<IfModule mod_brotli.c>
+    <FilesMatch "\.(js|css)$">
+        SetOutputFilter BROTLI_COMPRESS
     </FilesMatch>
 </IfModule>
 <IfModule mod_authz_core.c>
@@ -537,9 +544,16 @@ class autoptimizeCache
 <IfModule mod_headers.c>
     Header append Cache-Control "public, immutable"
 </IfModule>
-<IfModule mod_deflate.c>
+<IfModule !mod_brotli.c>
+    <IfModule mod_deflate.c>
+        <FilesMatch "\.(js|css)$">
+            SetOutputFilter DEFLATE
+        </FilesMatch>
+    </IfModule>
+</IfModule>
+<IfModule mod_brotli.c>
     <FilesMatch "\.(js|css)$">
-        SetOutputFilter DEFLATE
+        SetOutputFilter BROTLI_COMPRESS
     </FilesMatch>
 </IfModule>
 <IfModule mod_authz_core.c>
