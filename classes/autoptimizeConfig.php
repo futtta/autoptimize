@@ -303,7 +303,15 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv">
 <th scope="row"><?php _e('Inline and Defer CSS?','autoptimize'); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_defer" id="autoptimize_css_defer" <?php echo get_option('autoptimize_css_defer')?'checked="checked" ':''; ?>/>
-<?php _e('Inline "above the fold CSS" while loading the main autoptimized CSS only after page load. <a href="http://wordpress.org/plugins/autoptimize/faq/" target="_blank">Check the FAQ</a> before activating this option!','autoptimize'); ?></label></td>
+<?php
+_e( 'Inline "above the fold CSS" while loading the main autoptimized CSS only after page load. <a href="http://wordpress.org/plugins/autoptimize/faq/" target="_blank">Check the FAQ</a> for more info.', 'autoptimize' );
+if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
+    echo '<br />';
+    $critcss_install_url = network_admin_url() . 'plugin-install.php?s=autoptimize+criticalcss&tab=search&type=term';
+    echo sprintf( __( 'This can be fully automated for different types of pages with the %s.', 'autoptimize' ), '<a href="'.$critcss_install_url.'">Autoptimize CriticalCSS Power-Up</a>' );
+}
+?>
+</label></td>
 </tr>
 <tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv" id="autoptimize_css_defer_inline">
 <th scope="row"></th>
