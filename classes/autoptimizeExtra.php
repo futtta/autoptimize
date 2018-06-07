@@ -466,7 +466,7 @@ class autoptimizeExtra
         $site_host       = parse_url( site_url(), PHP_URL_HOST );
         $url_parsed      = parse_url( $url );
 
-        if ( $url_parsed['host'] !== $site_host && ( !empty( $cdn_url ) && strpos( $url, $cdn_url ) === false ) ) {
+        if ( $url_parsed['host'] !== $site_host && ( ! empty( $cdn_url ) && strpos( $url, $cdn_url ) === false ) ) {
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
