@@ -348,7 +348,7 @@ class autoptimizeExtra
          *
          * picture element (could).
          * filter for critical CSS (could).
-         * smart switch between shortpixel hosts (could).
+         * smart switch between shortpixel hosts (won't).
          */
 
         $imgopt_base_url = $this->get_imgopt_base_url();
@@ -359,25 +359,21 @@ class autoptimizeExtra
             foreach ( $matches[0] as $tag ) {
                 $orig_tag = $tag;
 
-                // extract and hide src (to avoid the URL being overwritten by srcset rewrite).
-                if ( preg_match( '#src=("|\')(?!data)(.*)("|\')#Usmi', $tag, $url ) ) {
-                    $tag = str_replace( $url[0], '<!--src-->', $tag );
-                }
-
-                // first do srcsets.
-                if ( preg_match( '#srcset=("|\')(.*)("|\')#Usmi', $tag, $srcset ) ) {
-                    $srcset      = $srcset[2];
-                    $orig_srcset = $srcset[2];
-                    $srcsets     = explode( ',', $srcset );
-                    foreach ( $srcsets as $indiv_srcset ) {
-                        $indiv_srcset_parts = explode( ' ', trim( $indiv_srcset ) );
-                        if ( $indiv_srcset_parts[1] && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
-                            $imgopt_w = rtrim( $indiv_srcset_parts[1], 'w' );
-                        }
-                        if ( $this->can_optimize_image( $indiv_srcset_parts[0] ) ) {
-                            $imgopt_url              = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
-                            $tag                     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
-                            $to_replace[ $orig_tag ] = $tag;
+                // first do (data-)srcsets.
+                if ( preg_match_all( '#srcset=("|\')(.*)("|\')#Usmi', $tag, $allsrcsets, PREG_SET_ORDER ) ) {
+                    foreach ( $allsrcsets as $srcset ) {
+                        $srcset  = $srcset[2];
+                        $srcsets = explode( ',', $srcset );
+                        foreach ( $srcsets as $indiv_srcset ) {
+                            $indiv_srcset_parts = explode( ' ', trim( $indiv_srcset ) );
+                            if ( $indiv_srcset_parts[1] && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
+                                $imgopt_w = rtrim( $indiv_srcset_parts[1], 'w' );
+                            }
+                            if ( $this->can_optimize_image( $indiv_srcset_parts[0] ) ) {
+                                $imgopt_url              = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
+                                $tag                     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
+                                $to_replace[ $orig_tag ] = $tag;
+                            }
                         }
                     }
                 }
@@ -391,16 +387,17 @@ class autoptimizeExtra
                     $imgopt_h = $height[2];
                 }
 
-                // and then find and change actual images src.
-                if ( $url ) {
-                    $full_src = $url[0];
-                    $url      = $url[2];
-                    if ( $this->can_optimize_image( $url ) ) {
-                        $imgopt_url              = $this->build_imgopt_url( $url, $imgopt_w, $imgopt_h );
-                        $full_imgopt_src         = str_replace( $url, $imgopt_url, $full_src );
-                        $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_imgopt_src, $tag );
-                    } else {
-                        $to_replace[ $orig_tag ] = str_replace( '<!--src-->', $full_src, $tag );
+                // then start replacing images src.
+                if ( preg_match_all( '#src=(?:"|\')(?!data)(.*)(?:"|\')#Usmi', $tag, $urls, PREG_SET_ORDER ) ) {
+                    foreach ( $urls as $url ) {
+                        $full_src_orig = $url[0];
+                        $url           = $url[1];
+                        if ( $this->can_optimize_image( $url ) ) {
+                            $imgopt_url              = $this->build_imgopt_url( $url, $imgopt_w, $imgopt_h );
+                            $full_imgopt_src         = str_replace( $url, $imgopt_url, $full_src_orig );
+                            $tag                     = str_replace( $full_src_orig, $full_imgopt_src, $tag );
+                            $to_replace[ $orig_tag ] = $tag;
+                        }
                     }
                 }
             }
@@ -420,13 +417,7 @@ class autoptimizeExtra
     public function filter_optimize_css_images( $in )
     {
         $imgopt_base_url = $this->get_imgopt_base_url();
-        $parsed_site_url = parse_url( site_url() );
-
-        if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
-            $in = $parsed_site_url['scheme'] . ':' . $in;
-        } elseif ( strpos( $in, '/' ) === 0 ) {
-            $in = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $in;
-        }
+        $in              = $this->normalize_img_urls( $in );
 
         if ( $this->can_optimize_image( $in ) ) {
             return $this->build_imgopt_url( $in, '', '' );
@@ -492,6 +483,7 @@ class autoptimizeExtra
             return $filtered_url;
         }
 
+        $orig_url        = $this->normalize_img_urls( $orig_url );
         $imgopt_base_url = $this->get_imgopt_base_url();
         $imgopt_size     = '';
 
@@ -520,6 +512,18 @@ class autoptimizeExtra
     {
         $imgopt_url_array = parse_url( $this->get_imgopt_base_url() );
         $in[]             = $imgopt_url_array['scheme'] . '://' . $imgopt_url_array['host'];
+
+        return $in;
+    }
+
+    private function normalize_img_urls( $in ) {
+        $parsed_site_url = parse_url( site_url() );
+
+        if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
+            $in = $parsed_site_url['scheme'] . ':' . $in;
+        } elseif ( strpos( $in, '/' ) === 0 ) {
+            $in = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $in;
+        }
 
         return $in;
     }
