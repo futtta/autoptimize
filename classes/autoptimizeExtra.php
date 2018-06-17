@@ -405,11 +405,13 @@ class autoptimizeExtra
         $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
 
         // img thumbnails in e.g. woocommerce.
-        $out = preg_replace_callback(
-            '/\<div.+?data-thumb\=(?:\"|\')(.+?)(?:\"|\')(?:.+?)\>\<\/div\>/s',
-            array( $this, 'replace_data_thumbs' ),
-            $out
-        );
+        if ( strpos( $out, 'data-thumb' ) !== false && apply_filters( 'autoptimize_filter_extra_imgopt_datathumbs', true ) ) {
+            $out = preg_replace_callback(
+                '/\<div(?:[^>]?)\sdata-thumb\=(?:\"|\')(.+?)(?:\"|\')(?:[^>]*)?\>/s',
+                array( $this, 'replace_data_thumbs' ),
+                $out
+            );
+        }
 
         return $out;
     }
@@ -500,7 +502,8 @@ class autoptimizeExtra
         return $url;
     }
 
-    public function replace_data_thumbs( $matches ) {
+    public function replace_data_thumbs( $matches )
+    {
         if ( $this->can_optimize_image( $matches[1] ) ) {
             return str_replace( $matches[1], $this->build_imgopt_url( $matches[1], 150, 150 ), $matches[0] );
         } else {
@@ -516,7 +519,8 @@ class autoptimizeExtra
         return $in;
     }
 
-    private function normalize_img_urls( $in ) {
+    private function normalize_img_urls( $in )
+    {
         $parsed_site_url = parse_url( site_url() );
 
         if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
