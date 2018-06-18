@@ -921,6 +921,7 @@ class autoptimizeStyles extends autoptimizeBase
                      * $newurl = preg_replace( '/https?:/', '', str_replace( ' ', '%20', AUTOPTIMIZE_WP_CONTENT_URL . str_replace( '//', '/', $dir . '/' . $url ) ) );
                      */
                     $newurl = preg_replace( '/https?:/', '', str_replace( ' ', '%20', AUTOPTIMIZE_WP_ROOT_URL . str_replace( '//', '/', $dir . '/' . $url ) ) );
+                    $newurl = apply_filters( 'autoptimize_filter_css_fixurl_newurl', $newurl );
 
                     /**
                      * Hash the url + whatever was behind potentially for replacement
