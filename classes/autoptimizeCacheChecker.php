@@ -71,6 +71,9 @@ class autoptimizeCacheChecker
             }
         }
 
+        // Check if 3rd party services (e.g. image proxy) are up.
+        autoptimizeUtils::check_service_availability();
+
         // Nukes advanced cache clearing artifacts if they exists...
         autoptimizeCache::delete_advanced_cache_clear_artifacts();
     }
