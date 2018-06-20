@@ -376,4 +376,18 @@ class autoptimizeUtils
 
         return preg_replace( $patterns, $replacements, $path );
     }
+
+    /**
+     * Checks to see if 3rd party services are available and stores result in option
+     */
+    public static function check_service_availability()
+    {
+        $service_availability_resp = wp_remote_get( 'https://misc.optimizingmatters.com/api/autoptimize_service_availablity.json' );
+        if ( ! is_wp_error( $service_availability_resp ) ) {
+            if ( '200' == wp_remote_retrieve_response_code( $service_availability_resp ) ) {
+                $availabilities = json_decode( wp_remote_retrieve_body( $service_availability_resp ), true );
+                update_option( 'autoptimize_service_availablity', $availabilities);
+            }
+        }
+    }
 }

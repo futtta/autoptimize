@@ -47,6 +47,8 @@ class autoptimizeExtra
             // Fallback to returning defaults when no stored option exists yet.
             $value = autoptimizeConfig::get_ao_extra_default_options();
         }
+        // get service availability, default "up" for imageproxy.
+        $value['availabilities'] = get_option( 'autoptimize_service_availablity', array( 'extra_imageproxy'=>'up' ) );
 
         return $value;
     }
@@ -147,7 +149,7 @@ class autoptimizeExtra
         }
 
         // Optimize Images!
-        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) ) {
+        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && 'down' !== $options['availabilities']['extra_imageproxy'] ) {
             if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
                 add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
                 $_imgopt_active = true;
@@ -568,6 +570,16 @@ class autoptimizeExtra
         <div class="notice-warning notice"><p>
         <?php
         _e( 'Most of below Extra optimizations require at least one of HTML, JS or CSS autoptimizations being active.', 'autoptimize' );
+        ?>
+        </p></div>
+        <?php
+    }
+
+    if ( 'down' === $options['availabilities']['extra_imageproxy'] ) {
+        ?>
+        <div class="notice-warning notice"><p>
+        <?php
+        echo sprintf( __( 'The image optimization service is currently down, image optimization will be skipped until further notice. Check the %1$sAutoptimize support forum%2$s for more info.', 'autoptimize' ), '<a href="https://wordpress.org/support/plugin/autoptimize/" target="_blank">','</a>' );
         ?>
         </p></div>
         <?php

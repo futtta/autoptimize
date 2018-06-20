@@ -473,6 +473,7 @@ class autoptimizeMain
             'autoptimize_optimize_logged',
             'autoptimize_optimize_checkout',
             'autoptimize_extra_settings',
+            'autoptimize_service_availablity',
         );
 
         if ( ! is_multisite() ) {
