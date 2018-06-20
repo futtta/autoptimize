@@ -579,7 +579,7 @@ class autoptimizeExtra
         ?>
         <div class="notice-warning notice"><p>
         <?php
-        _e( 'The image optimization service is currently down, image optimization skipped until further notice.', 'autoptimize' );
+        echo sprintf( __( 'The image optimization service is currently down, image optimization will be skipped until further notice. Check the %1$sAutoptimize support forum%2$s for more info.', 'autoptimize' ), '<a href="https://wordpress.org/support/plugin/autoptimize/" target="_blank">','</a>' );
         ?>
         </p></div>
         <?php
