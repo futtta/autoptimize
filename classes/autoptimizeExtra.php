@@ -149,7 +149,7 @@ class autoptimizeExtra
         }
 
         // Optimize Images!
-        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && 'down' !== $options['availabilities']['extra_imgproxy'] ) {
+        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && 'down' !== $options['availabilities']['extra_imageproxy'] ) {
             if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
                 add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
                 $_imgopt_active = true;
@@ -575,7 +575,7 @@ class autoptimizeExtra
         <?php
     }
 
-    if ( 'down' === $options['availabilities']['extra_imgproxy'] ) {
+    if ( 'down' === $options['availabilities']['extra_imageproxy'] ) {
         ?>
         <div class="notice-warning notice"><p>
         <?php
