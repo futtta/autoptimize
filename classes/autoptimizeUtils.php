@@ -386,7 +386,7 @@ class autoptimizeUtils
         if ( ! is_wp_error( $service_availability_resp ) ) {
             if ( '200' == wp_remote_retrieve_response_code( $service_availability_resp ) ) {
                 $availabilities = json_decode( wp_remote_retrieve_body( $service_availability_resp ), true );
-                update_option( 'autoptimize_service_availablity', $availabilities);
+                update_option( 'autoptimize_service_availablity', $availabilities );
             }
         }
     }
