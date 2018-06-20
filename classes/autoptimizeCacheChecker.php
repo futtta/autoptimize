@@ -49,6 +49,7 @@ class autoptimizeCacheChecker
 
     public function cronjob()
     {
+        // Check cachesize and act accordingly.
         $max_size       = (int) apply_filters( 'autoptimize_filter_cachecheck_maxsize', 536870912 );
         $do_cache_check = (bool) apply_filters( 'autoptimize_filter_cachecheck_do', true );
         $stat_array     = autoptimizeCache::stats();
