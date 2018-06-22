@@ -329,7 +329,7 @@ function autoptimize_extra_options_page() {
             <tr>
                 <th scope="row"><?php _e('Remove query strings from static resources','autoptimize'); ?></th>
                 <td>
-                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_0]' <?php if (!empty( $autoptimize_extra_options['autoptimize_extra_checkbox_field_0']) && 1 == $autoptimize_extra_options['autoptimize_extra_checkbox_field_0']) echo 'checked="checked"'; ?> value='1'><?php _e('Removing query strings (or more specificaly the <code>ver</code> parameter) will not improve load time, but might improve performance scores.','autoptimize'); ?></label>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_0]' <?php if (!empty( $autoptimize_extra_options['autoptimize_extra_checkbox_field_0']) && 1 == $autoptimize_extra_options['autoptimize_extra_checkbox_field_0']) echo 'checked="checked"'; ?> value='1'><?php _e('Removing query strings (or more specifically the <code>ver</code> parameter) will not improve load time, but might improve performance scores.','autoptimize'); ?></label>
                 </td>
             </tr>
             <tr>
