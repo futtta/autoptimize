@@ -523,7 +523,9 @@ class autoptimizeExtra
 
     private function normalize_img_urls( $in )
     {
-        $parsed_site_url = parse_url( site_url() );
+        // home_url() iso site_url() to allow detection HTTPS even when using
+        // CloudFlare Flexible SSL plugin, which http:// for site_url().
+        $parsed_site_url = parse_url( home_url() );
 
         if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
             $in = $parsed_site_url['scheme'] . ':' . $in;
@@ -531,7 +533,7 @@ class autoptimizeExtra
             $in = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $in;
         }
 
-        return $in;
+        return apply_filters( 'autoptimize_filter_extra_imgopt_normalized_url', $in );
     }
 
     public function admin_menu()
