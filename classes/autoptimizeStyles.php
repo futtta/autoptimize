@@ -783,11 +783,11 @@ class autoptimizeStyles extends autoptimizeBase
     // Returns the content.
     public function getcontent()
     {
-        // restore IE hacks.
-        $this->content = $this->restore_iehacks( $this->content );
-
         // restore comments.
         $this->content = $this->restore_comments( $this->content );
+
+        // restore IE hacks.
+        $this->content = $this->restore_iehacks( $this->content );
 
         // restore (no)script.
         $this->content = $this->restore_marked_content( 'SCRIPT', $this->content );
