@@ -2346,10 +2346,10 @@ MARKUP;
 
         remove_all_filters( 'autoptimize_filter_cdn_magic_path_check' );
     }
-    
+
     /**
      * Test image optimization in autoptimizeExtra.php.
-     * 
+     *
      * Default case: img with srcsets
      */
     public function test_extra_imgopt()
@@ -2371,7 +2371,7 @@ MARKUP;
 
     /**
      * Test image optimization in autoptimizeExtra.php.
-     * 
+     *
      * Exception case: image served by .php, should not be proxied
      */
     public function test_extra_imgopt_php()
@@ -2393,7 +2393,7 @@ MARKUP;
 
     /**
      * Test image optimization in autoptimizeExtra.php.
-     * 
+     *
      * Alternate case: lazy loaded images with srcsets (using wp rocket variant HTML)
      */
     public function test_extra_imgopt_lazy()
@@ -2411,5 +2411,25 @@ MARKUP;
         $instance = new autoptimizeExtra();
         $actual = $instance->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * @dataProvider provider_str_is_valid_regex
+     */
+    public function test_str_is_valid_regex($str, $expected)
+    {
+        $actual = autoptimizeUtils::str_is_valid_regex($str);
+
+        $this->assertEquals( $expected, $actual );
+    }
+
+    public function provider_str_is_valid_regex()
+    {
+        return [
+            ['<!--[if', false],
+            ['&lt;--[if', false],
+            ['/booya/i', true],
+            ['~Valid(Regular)Expression~', true],
+        ];
     }
 }

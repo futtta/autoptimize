@@ -546,22 +546,6 @@ abstract class autoptimizeBase
     }
 
     /**
-     * Returns true if the string is a valid regex.
-     *
-     * @param string $string String, duh.
-     *
-     * @return bool
-     */
-    protected function str_is_valid_regex( $string )
-    {
-        set_error_handler( function() {}, E_WARNING );
-        $is_regex = ( false !== preg_match( $string, '' ) );
-        restore_error_handler();
-
-        return $is_regex;
-    }
-
-    /**
      * Searches for `$search` in `$content` (using either `preg_match()`
      * or `strpos()`, depending on whether `$search` is a valid regex pattern or not).
      * If something is found, it replaces `$content` using `$re_replace_pattern`,
@@ -580,7 +564,7 @@ abstract class autoptimizeBase
     {
         $found = false;
 
-        $is_regex = $this->str_is_valid_regex( $search );
+        $is_regex = autoptimizeUtils::str_is_valid_regex( $search );
         if ( $is_regex ) {
             $found = preg_match( $search, $content );
         } else {

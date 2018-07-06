@@ -390,4 +390,20 @@ class autoptimizeUtils
             }
         }
     }
+
+    /**
+     * Returns true if the string is a valid regex.
+     *
+     * @param string $string String, duh.
+     *
+     * @return bool
+     */
+    public static function str_is_valid_regex( $string )
+    {
+        set_error_handler( function() {}, E_WARNING );
+        $is_regex = ( false !== preg_match( $string, '' ) );
+        restore_error_handler();
+
+        return $is_regex;
+    }
 }
