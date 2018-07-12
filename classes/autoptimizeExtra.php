@@ -461,11 +461,13 @@ class autoptimizeExtra
         $site_host       = parse_url( site_url(), PHP_URL_HOST );
         $url_parsed      = parse_url( $url );
 
-        if ( $url_parsed['host'] !== $site_host && ( ! empty( $cdn_url ) && strpos( $url, $cdn_url ) === false ) ) {
+        if ( $url_parsed['host'] !== $site_host && empty( $cdn_url   )   ) {
+            return false;
+        } else if ( ! empty( $cdn_url  ) && strpos( $url, $cdn_url  ) === false && $url_parsed['host'] !== $site_host  ) {
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
-        } elseif ( str_replace( array( '.png', '.gif', '.jpg', '.jpeg' ), '', $url_parsed['path'] ) === $url_parsed['path'] ) {
+        } elseif ( str_ireplace( array( '.png', '.gif', '.jpg', '.jpeg' ), '', $url_parsed['path'] ) === $url_parsed['path'] ) {
             // fixme: better check against end of string.
             return false;
         } elseif ( ! empty( $nopti_images ) ) {
