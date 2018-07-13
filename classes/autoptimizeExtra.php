@@ -435,7 +435,7 @@ class autoptimizeExtra
         static $imgopt_base_url = null;
 
         if ( is_null( $imgopt_base_url ) ) {
-            $quality         = apply_filters( 'autoptimize_filter_extra_imgopt_quality', 'q_glossy' ); // values: q_lossy, q_lossless, q_glossy.
+            $quality         = apply_filters( 'autoptimize_filter_extra_imgopt_quality', 'q_' . $this->get_img_quality_string() );
             $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
             $imgopt_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
             $imgopt_base_url = apply_filters( 'autoptimize_filter_extra_imgopt_base_url', $imgopt_base_url );
@@ -536,6 +536,45 @@ class autoptimizeExtra
         return apply_filters( 'autoptimize_filter_extra_imgopt_normalized_url', $in );
     }
 
+    private function get_img_quality_array() {
+        static $img_quality_array = null;
+
+        if ( is_null( $img_quality_array ) ) {
+            $img_quality_array = apply_filters( 'autoptimize_filter_extra_imgopt_quality', array( '1' => 'lossy', '2' => 'glossy', '3' => 'lossless' ) );
+        }
+
+        return $img_quality_array;
+    }
+
+    private function get_img_quality_setting() {
+        static $_img_q = null;
+
+        if ( is_null( $_img_q ) ) {
+            $_setting = $this->options['autoptimize_extra_select_field_6'];
+
+            if ( ! $_setting || empty( $_setting ) || ( '1' !== $_setting && '3' !== $_setting ) ) {
+                // default image opt. value is 2 ("glossy").
+                $_img_q = '2';
+            } else {
+                $_img_q = $_setting;
+            }
+        }
+
+        return $_img_q;
+    }
+
+    private function get_img_quality_string() {
+        static $_img_q_string = null;
+
+        if ( is_null( $_img_q_string ) ) {
+            $_quality_array = $this->get_img_quality_array();
+            $_setting       = $this->get_img_quality_setting();
+            $_img_q_string  = $_quality_array[$_setting];
+        }
+
+        return $_img_q_string;
+    }
+
     public function admin_menu()
     {
         add_submenu_page( null, 'autoptimize_extra', 'autoptimize_extra', 'manage_options', 'autoptimize_extra', array( $this, 'options_page' ) );
@@ -605,8 +644,30 @@ class autoptimizeExtra
             <tr>
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimizes images using an image optimizing proxy.', 'autoptimize' ); ?></label>
+                    <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimizes images using an image optimizing proxy.', 'autoptimize' ); ?></label>
                     <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Free service provided by Shortpixel during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/privacy" target="_blank">Privacy policy</a>.</p>' ); ?>
+                </td>
+            </tr>
+            <tr id='autoptimize_imgopt_quality' <?php if ( ! array_key_exists( 'autoptimize_extra_checkbox_field_5', $options ) || ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' !== $options['autoptimize_extra_checkbox_field_5'] ) ) { echo 'class="hidden"'; } ?>>
+                <th scope="row"><?php _e( 'Image Optimization quality', 'autoptimize' ); ?></th>
+                <td>
+                    <label>
+                    <select name='autoptimize_extra_settings[autoptimize_extra_select_field_6]'>
+                        <?php
+                        $_imgopt_array = $this->get_img_quality_array();
+                        $_imgopt_val   = $this->get_img_quality_setting();
+
+                        foreach ($_imgopt_array as $key => $value) {
+                            echo '<option value="' . $key .'"';
+                            if ( $_imgopt_val == $key ) {
+                                echo ' selected';
+                            }
+                            echo '>' . $value . '</option>';
+                        }
+                        echo "\n";
+                        ?>
+                    </select>
+                    </label>
                 </td>
             </tr>
             <tr>
@@ -667,6 +728,17 @@ class autoptimizeExtra
         </table>
         <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Changes', 'autoptimize' ); ?>" /></p>
     </form>
+    <script>
+        jQuery(document).ready(function() {
+           jQuery( "#autoptimize_imgopt_checkbox" ).change(function() {
+                if (this.checked) {
+                    jQuery("#autoptimize_imgopt_quality").show("slow");
+                } else {
+                    jQuery("#autoptimize_imgopt_quality").hide("slow");
+                }
+            });
+        });
+    </script>
     <?php
     }
 }
