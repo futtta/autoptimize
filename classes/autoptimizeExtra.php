@@ -461,9 +461,9 @@ class autoptimizeExtra
         $site_host       = parse_url( site_url(), PHP_URL_HOST );
         $url_parsed      = parse_url( $url );
 
-        if ( $url_parsed['host'] !== $site_host && empty( $cdn_url   )   ) {
+        if ( $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
             return false;
-        } else if ( ! empty( $cdn_url  ) && strpos( $url, $cdn_url  ) === false && $url_parsed['host'] !== $site_host  ) {
+        } elseif ( ! empty( $cdn_url ) && strpos( $url, $cdn_url ) === false && $url_parsed['host'] !== $site_host ) {
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
@@ -540,7 +540,12 @@ class autoptimizeExtra
         static $img_quality_array = null;
 
         if ( is_null( $img_quality_array ) ) {
-            $img_quality_array = apply_filters( 'autoptimize_filter_extra_imgopt_quality', array( '1' => 'lossy', '2' => 'glossy', '3' => 'lossless' ) );
+            $img_quality_array = array(
+                '1' => 'lossy',
+                '2' => 'glossy',
+                '3' => 'lossless',
+            );
+            $img_quality_array = apply_filters( 'autoptimize_filter_extra_imgopt_quality', $img_quality_array );
         }
 
         return $img_quality_array;
@@ -569,7 +574,7 @@ class autoptimizeExtra
         if ( is_null( $_img_q_string ) ) {
             $_quality_array = $this->get_img_quality_array();
             $_setting       = $this->get_img_quality_setting();
-            $_img_q_string  = $_quality_array[$_setting];
+            $_img_q_string  = $_quality_array[ $_setting ];
         }
 
         return $_img_q_string;
@@ -657,8 +662,8 @@ class autoptimizeExtra
                         $_imgopt_array = $this->get_img_quality_array();
                         $_imgopt_val   = $this->get_img_quality_setting();
 
-                        foreach ($_imgopt_array as $key => $value) {
-                            echo '<option value="' . $key .'"';
+                        foreach ( $_imgopt_array as $key => $value ) {
+                            echo '<option value="' . $key . '"';
                             if ( $_imgopt_val == $key ) {
                                 echo ' selected';
                             }
@@ -730,7 +735,7 @@ class autoptimizeExtra
     </form>
     <script>
         jQuery(document).ready(function() {
-           jQuery( "#autoptimize_imgopt_checkbox" ).change(function() {
+            jQuery( "#autoptimize_imgopt_checkbox" ).change(function() {
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_quality").show("slow");
                 } else {
