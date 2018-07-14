@@ -435,7 +435,7 @@ class autoptimizeExtra
         static $imgopt_base_url = null;
 
         if ( is_null( $imgopt_base_url ) ) {
-            $quality         = apply_filters( 'autoptimize_filter_extra_imgopt_quality', 'q_' . $this->get_img_quality_string() );
+            $quality         = $this->get_img_quality_string();
             $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
             $imgopt_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
             $imgopt_base_url = apply_filters( 'autoptimize_filter_extra_imgopt_base_url', $imgopt_base_url );
@@ -574,7 +574,7 @@ class autoptimizeExtra
         if ( is_null( $_img_q_string ) ) {
             $_quality_array = $this->get_img_quality_array();
             $_setting       = $this->get_img_quality_setting();
-            $_img_q_string  = $_quality_array[ $_setting ];
+            $_img_q_string  = apply_filters( 'autoptimize_filter_extra_imgopt_quality', 'q_' . $_quality_array[ $_setting ] );
         }
 
         return $_img_q_string;
