@@ -545,7 +545,7 @@ class autoptimizeExtra
                 '2' => 'glossy',
                 '3' => 'lossless',
             );
-            $img_quality_array = apply_filters( 'autoptimize_filter_extra_imgopt_quality', $img_quality_array );
+            $img_quality_array = apply_filters( 'autoptimize_filter_extra_imgopt_quality_array', $img_quality_array );
         }
 
         return $img_quality_array;
