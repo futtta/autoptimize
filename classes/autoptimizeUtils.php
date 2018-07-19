@@ -349,7 +349,13 @@ class autoptimizeUtils
      */
     public static function is_protocol_relative( $url )
     {
-        return ( '/' === $url{1} ); // second char is `/`.
+        $result = false;
+
+        if ( ! empty( $url ) ) {
+            $result = ( '/' === $url{1} ); // second char is `/`.
+        }
+
+        return $result;
     }
 
     /**
