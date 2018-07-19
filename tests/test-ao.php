@@ -2432,4 +2432,27 @@ MARKUP;
             ['~Valid(Regular)Expression~', true],
         ];
     }
+
+    /**
+     * @dataProvider provider_protocol_relative_tests
+     */
+    public function test_is_protocol_relative( $str, $expected )
+    {
+        $actual = autoptimizeUtils::is_protocol_relative( $str );
+
+        $this->assertEquals( $expected, $actual );
+    }
+
+    public function provider_protocol_relative_tests()
+    {
+        return [
+            ['//something-that-might-be-an-url-but-isnt-really', true],
+            ['', false],
+            [null, false],
+            ['booya/i', false],
+            ['/root-relative', false],
+            ['http://what.ever/', false],
+            ['https://booya.kasha', false],
+        ];
+    }
 }
