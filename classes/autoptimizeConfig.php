@@ -306,7 +306,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <?php
 _e( 'Inline "above the fold CSS" while loading the main autoptimized CSS only after page load. <a href="http://wordpress.org/plugins/autoptimize/faq/" target="_blank">Check the FAQ</a> for more info.', 'autoptimize' );
 if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
-    echo '<br />';
+    echo ' ';
     $critcss_install_url = network_admin_url() . 'plugin-install.php?s=autoptimize+criticalcss&tab=search&type=term';
     echo sprintf( __( 'This can be fully automated for different types of pages with the %s.', 'autoptimize' ), '<a href="'.$critcss_install_url.'">Autoptimize CriticalCSS Power-Up</a>' );
 }
