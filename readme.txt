@@ -213,7 +213,7 @@ define('AUTOPTIMIZE_CACHEFILE_PREFIX','aggregated_');
 
 Yes, but this is off by default. You can enable this by passing ´true´ to ´autoptimize_filter_cache_create_static_gzip´. You'll obviously still have to configure your webserver to use these files instead of the non-gzipped ones to avoid the overhead of on-the-fly compression.
 
-= What does "remove emoji's" do? =
+= What does "remove emojis" do? =
 
 This new option in Autoptimize 2.3 removes the inline CSS, inline JS and linked JS-file added by WordPress core. As such is can have a small positive impact on your site's performance.
 
