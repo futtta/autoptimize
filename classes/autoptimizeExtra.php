@@ -580,6 +580,21 @@ class autoptimizeExtra
         return $_img_q_string;
     }
 
+    public function get_img_provider_stats()
+    {
+        $_img_provider_endpoint = 'https://api-ai.shortpixel.com/read-domain/';
+        $_site_host             = parse_url( site_url(), PHP_URL_HOST );
+        $_img_provider_stat_url = apply_filters( 'autoptimize_filter_extra_imgopt_stat_url', $_img_provider_endpoint . $_site_host );
+
+        $_img_stat_resp = wp_remote_get( $_img_provider_stat_url );
+        if ( ! is_wp_error( $_img_stat_resp ) ) {
+            if ( '200' == wp_remote_retrieve_response_code( $_img_stat_resp ) ) {
+                $_img_provider_stat = json_decode( wp_remote_retrieve_body( $_img_stat_resp ), true );
+                update_option( 'autoptimize_imgopt_provider_stat', $_img_provider_stat );
+            }
+        }
+    }
+
     public function admin_menu()
     {
         add_submenu_page( null, 'autoptimize_extra', 'autoptimize_extra', 'manage_options', 'autoptimize_extra', array( $this, 'options_page' ) );

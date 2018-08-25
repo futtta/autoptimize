@@ -474,6 +474,7 @@ class autoptimizeMain
             'autoptimize_optimize_checkout',
             'autoptimize_extra_settings',
             'autoptimize_service_availablity',
+            'autoptimize_imgopt_provider_stat',
         );
 
         if ( ! is_multisite() ) {
