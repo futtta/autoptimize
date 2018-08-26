@@ -84,11 +84,32 @@ class autoptimizeCacheChecker
 
     public function show_admin_notice()
     {
+        // fixme: make notices dismissable
         if ( (bool) get_option( 'autoptimize_cachesize_notice', false ) ) {
             echo '<div class="notice notice-warning"><p>';
             _e( '<strong>Autoptimize\'s cache size is getting big</strong>, consider purging the cache. Have a look at <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank" rel="noopener noreferrer">the Autoptimize FAQ</a> to see how you can keep the cache size under control.', 'autoptimize' );
             echo '</p></div>';
             update_option( 'autoptimize_cachesize_notice', false );
+        }
+
+        // Notice for image proxy usage, only if Image Optimization is active.
+        $_extra_options = get_option( 'autoptimize_extra_settings', '' );
+        if ( !empty( $_extra_options ) && is_array( $_extra_options ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $_extra_options ) && !empty( $_extra_options['autoptimize_extra_checkbox_field_5'] ) ) {
+            $_imgopt_notice = '';
+            $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
+
+            if ( is_array( $_stat ) ) {
+                if ( $_stat['Status'] === 1 ) {
+                    $_imgopt_notice = sprintf( __( 'You are nearing the threshold of Shortpixel\'s free image optimization tier, consider %sadding credits%s to make sure image optimization continues to work.', 'autoptimize' ), '<a href="https://shortpixel.com/proxycredits" target="_blank">', '</a>');
+                } else if ( $_stat['Status'] === -1 ) {
+                    $_imgopt_notice = sprintf( __( 'You are over Shortpixel\'s free image optimization tier threshold, %sadd credits to re-enable image optimization%s.', 'autoptimize' ), '<a href="https://shortpixel.com/proxycredits" target="_blank">', '</a>' );
+                }
+            }
+            $_imgopt_notice = apply_filters( 'autoptimize_filter_imgopt_warning', $_imgopt_notice );
+
+            if ( $_imgopt_notice ) {
+                echo '<div class="notice notice-warning"><p>'.$_imgopt_notice.'</p></div>';
+            }
         }
     }
 }
