@@ -643,6 +643,7 @@ class autoptimizeExtra
         ?>
         <div class="notice-warning notice"><p>
         <?php
+        // translators: "Autoptimize support forum" will appear in a "a href".
         echo sprintf( __( 'The image optimization service is currently down, image optimization will be skipped until further notice. Check the %1$sAutoptimize support forum%2$s for more info.', 'autoptimize' ), '<a href="https://wordpress.org/support/plugin/autoptimize/" target="_blank">', '</a>' );
         ?>
         </p></div>
@@ -725,6 +726,7 @@ class autoptimizeExtra
                         <br />
                         <?php
                             _e( 'Comma-separated list of local or 3rd party JS-files that should loaded with the <code>async</code> flag. JS-files from your own site will be automatically excluded if added here. ', 'autoptimize' );
+                            // translators: %s will be replaced by a link to the "async javascript" plugin.
                             echo sprintf( __( 'Configuration of async javascript is easier and more flexible using the %s plugin.', 'autoptimize' ), '"<a href="https://wordpress.org/plugins/async-javascript" target="_blank">Async Javascript</a>"' );
                             $asj_install_url = network_admin_url() . 'plugin-install.php?s=async+javascript&tab=search&type=term';
                             echo sprintf( ' <a href="' . $asj_install_url . '">%s</a>', __( 'Click here to install and activate it.', 'autoptimize' ) );
@@ -741,6 +743,7 @@ class autoptimizeExtra
                         $lyte_config_url = 'options-general.php?page=lyte_settings_page';
                         echo sprintf( ' <a href="' . $lyte_config_url . '">%s</a>', __( 'Click here to configure it.', 'autoptimize' ) );
                     } else {
+                        // translators: %s will be replaced by a link to "wp youtube lyte" plugin.
                         echo sprintf( __( '%s allows you to “lazy load” your videos, by inserting responsive “Lite YouTube Embeds". ', 'autoptimize' ), '<a href="https://wordpress.org/plugins/wp-youtube-lyte" target="_blank">WP YouTube Lyte</a>' );
                         $lyte_install_url = network_admin_url() . 'plugin-install.php?s=lyte&tab=search&type=term';
                         echo sprintf( ' <a href="' . $lyte_install_url . '">%s</a>', __( 'Click here to install and activate it.', 'autoptimize' ) );
