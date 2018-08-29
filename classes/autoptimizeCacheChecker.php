@@ -100,7 +100,6 @@ class autoptimizeCacheChecker
             $_site_host     = parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST );
             $_imgopt_upsell = 'https://shortpixel.com/proxycredits/'.$_site_host; // fixme: not the final URL!
 
-            $_stat['Status']=1;
             if ( is_array( $_stat ) ) {
                 if ( 1 === $_stat['Status'] ) {
                     // translators: "adding credits" will appear in a "a href".
