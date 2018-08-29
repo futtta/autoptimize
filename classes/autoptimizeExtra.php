@@ -585,7 +585,7 @@ class autoptimizeExtra
         $options = $this->options;
         if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) ) {
             $_img_provider_endpoint = 'https://api-ai.shortpixel.com/read-domain/';
-            $_site_host             = parse_url( site_url(), PHP_URL_HOST );
+            $_site_host             = parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST );
             $_img_provider_stat_url = apply_filters( 'autoptimize_filter_extra_imgopt_stat_url', $_img_provider_endpoint . $_site_host );
 
             $_img_stat_resp = wp_remote_get( $_img_provider_stat_url );
