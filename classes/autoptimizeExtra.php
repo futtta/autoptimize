@@ -582,8 +582,9 @@ class autoptimizeExtra
 
     public function get_img_provider_stats()
     {
-        $options = $this->options;
-        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) ) {
+        // As this gets called from autoptimizeCacheChecker.php we can't use $this->options so getting option from db.
+        $_extra_options = get_option( 'autoptimize_extra_settings', '' );
+        if ( ! empty( $_extra_options  ) && is_array( $_extra_options  ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $_extra_options  ) && ! empty( $_extra_options['autoptimize_extra_checkbox_field_5']  )  ) {
             $_img_provider_endpoint = 'https://api-ai.shortpixel.com/read-domain/';
             $_site_host             = parse_url( site_url(), PHP_URL_HOST );
             $_img_provider_stat_url = apply_filters( 'autoptimize_filter_extra_imgopt_stat_url', $_img_provider_endpoint . $_site_host );
