@@ -59,6 +59,7 @@ class autoptimizeMain
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
         add_action( 'plugins_loaded', array( $this, 'hook_page_cache_purge' ) );
+        add_action( 'admin_init', array( 'PAnD', 'init' ) );
 
         register_activation_hook( $this->filepath, array( $this, 'on_activate' ) );
     }

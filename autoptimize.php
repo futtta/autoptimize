@@ -68,6 +68,10 @@ function autoptimize_autoload( $class_name ) {
         $file     = $class_name;
         $path     = dirname( __FILE__ ) . '/classes/';
         $filepath = $path . $file . '.php';
+    } elseif ( 'PAnD' === $class_name ) {
+        $file     = 'persist-admin-notices-dismissal';
+        $path     = dirname( __FILE__ ) . '/classes/external/php/persist-admin-notices-dismissal/';
+        $filepath = $path . $file . '.php';
     }
 
     // If we didn't match one of our rules, bail!
