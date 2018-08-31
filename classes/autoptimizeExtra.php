@@ -332,7 +332,10 @@ class autoptimizeExtra
 
     public function filter_preconnect_google_fonts( $in )
     {
-        $in[] = 'https://fonts.gstatic.com';
+        if ( '2' !== $this->options['autoptimize_extra_radio_field_4'] ) {
+            // Preconnect to fonts.gstatic.com unless we remove gfonts.
+            $in[] = 'https://fonts.gstatic.com';
+        }
 
         if ( '4' === $this->options['autoptimize_extra_radio_field_4'] ) {
             // Preconnect even more hosts for webfont.js!
@@ -659,7 +662,7 @@ class autoptimizeExtra
             <tr>
                 <th scope="row"><?php _e( 'Google Fonts', 'autoptimize' ); ?></th>
                 <td>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="1" <?php if ( ! in_array( $gfonts, array( 2, 3, 4 ) ) ) { echo 'checked'; } ?> ><?php _e( 'Leave as is', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="1" <?php if ( ! in_array( $gfonts, array( 2, 3, 4, 5 ) ) ) { echo 'checked'; } ?> ><?php _e( 'Leave as is', 'autoptimize' ); ?><br/>
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="2" <?php checked( 2, $gfonts, true ); ?> ><?php _e( 'Remove Google Fonts', 'autoptimize' ); ?><br/>
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="3" <?php checked( 3, $gfonts, true ); ?> ><?php _e( 'Combine and link in head (fonts load fast but are render-blocking)', 'autoptimize' ); ?><br/>
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php _e( 'Combine and preload in head (fonts load late, but are not render-blocking)', 'autoptimize' ); ?><br/>
