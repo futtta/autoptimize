@@ -580,7 +580,7 @@ class autoptimizeExtra
         return $_img_q_string;
     }
 
-    public function get_img_provider_stats()
+    public static function get_img_provider_stats()
     {
         // As this gets called from autoptimizeCacheChecker.php we can't use $this->options so getting option from db.
         $_extra_options = get_option( 'autoptimize_extra_settings', '' );
