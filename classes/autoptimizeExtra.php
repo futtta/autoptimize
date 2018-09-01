@@ -583,11 +583,14 @@ class autoptimizeExtra
         return $_img_q_string;
     }
 
-    public static function get_img_provider_stats()
-    {
-        // As this gets called from autoptimizeCacheChecker.php we can't use $this->options so getting option from db.
-        $_extra_options = get_option( 'autoptimize_extra_settings', '' );
-        if ( ! empty( $_extra_options  ) && is_array( $_extra_options  ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $_extra_options  ) && ! empty( $_extra_options['autoptimize_extra_checkbox_field_5']  )  ) {
+    public static function get_img_provider_stats() {
+        // wrapper around query_img_provider_stats() so we can get to $this->options from cronjob() in autoptimizeCacheChecker.
+        $self = new self();
+        return $self->query_img_provider_stats();
+    }
+
+    public function query_img_provider_stats() {
+        if ( ! empty( $this->options['autoptimize_extra_checkbox_field_5'] ) ) {
             $_img_provider_endpoint = 'https://api-ai.shortpixel.com/read-domain/';
             $_site_host             = parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST );
             $_img_provider_stat_url = apply_filters( 'autoptimize_filter_extra_imgopt_stat_url', $_img_provider_endpoint . $_site_host );
