@@ -93,10 +93,7 @@ class autoptimizeStyles extends autoptimizeBase {
         if ( strpos( $this->content, '<script' ) !== false ) { 
             $this->content = preg_replace_callback(
                 '#<(?:no)?script.*?<\/(?:no)?script>#is',
-                create_function(
-                    '$matches',
-                    'return "%%SCRIPT".AUTOPTIMIZE_HASH."%%".base64_encode($matches[0])."%%SCRIPT%%";'
-                ),
+                function ($matches) {return "%%SCRIPT" . AUTOPTIMIZE_HASH . "%%" . base64_encode($matches[0]) . "%%SCRIPT%%";},
                 $this->content
             );
         }
@@ -254,7 +251,7 @@ class autoptimizeStyles extends autoptimizeBase {
             $md5list[$medianame] = $md5sum;
         }
         unset($tmpcss);
-        
+
         // Manage @imports, while is for recursive import management
         foreach ($this->csscode as &$thiscss) {
             // Flag to trigger import reconstitution and var to hold external imports
@@ -310,14 +307,13 @@ class autoptimizeStyles extends autoptimizeBase {
                 $thiscss_nocomments=preg_replace('#/\*.*\*/#Us','',$thiscss);
             }
             unset($thiscss_nocomments);
-            
+
             // add external imports to top of aggregated CSS
             if($fiximports) {
                 $thiscss=$external_imports.$thiscss;
             }
         }
         unset($thiscss);
-        
         // $this->csscode has all the uncompressed code now. 
         foreach($this->csscode as &$code) {
             // Check for already-minified code
@@ -329,7 +325,7 @@ class autoptimizeStyles extends autoptimizeBase {
                 $this->hashmap[md5($code)] = $hash;
                 continue;
             }
-            unset($ccheck);            
+            unset($ccheck);
 
             // Do the imaging!
             $imgreplace = array();
@@ -389,7 +385,7 @@ class autoptimizeStyles extends autoptimizeBase {
                                 default:
                                     $dataurihead = 'data:application/octet-stream;base64,';
                             }
-                        
+
                             // Encode the data
                             $base64data = base64_encode(file_get_contents($ipath));
                             $headAndData=$dataurihead.$base64data;
@@ -478,10 +474,7 @@ class autoptimizeStyles extends autoptimizeBase {
         if ( strpos( $this->content, '%%SCRIPT%%' ) !== false ) { 
             $this->content = preg_replace_callback(
                 '#%%SCRIPT'.AUTOPTIMIZE_HASH.'%%(.*?)%%SCRIPT%%#is',
-                create_function(
-                    '$matches',
-                    'return base64_decode($matches[1]);'
-                ),
+                function ($matches) {return base64_decode($matches[1]);},
                 $this->content
             );
         }

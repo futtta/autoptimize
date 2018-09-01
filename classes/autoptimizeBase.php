@@ -143,10 +143,7 @@ abstract class autoptimizeBase {
         if ( preg_match( '/<!--\s?noptimize\s?-->/', $noptimize_in ) ) { 
             $noptimize_out = preg_replace_callback(
                 '#<!--\s?noptimize\s?-->.*?<!--\s?/\s?noptimize\s?-->#is',
-                create_function(
-                    '$matches',
-                    'return "%%NOPTIMIZE".AUTOPTIMIZE_HASH."%%".base64_encode($matches[0])."%%NOPTIMIZE%%";'
-                ),
+                function ($matches) {return "%%NOPTIMIZE" . AUTOPTIMIZE_HASH . "%%" . base64_encode($matches[0]) . "%%NOPTIMIZE%%";},
                 $noptimize_in
             );
         } else {
@@ -160,10 +157,7 @@ abstract class autoptimizeBase {
         if ( strpos( $noptimize_in, '%%NOPTIMIZE%%' ) !== false ) { 
             $noptimize_out = preg_replace_callback(
                 '#%%NOPTIMIZE'.AUTOPTIMIZE_HASH.'%%(.*?)%%NOPTIMIZE%%#is',
-                create_function(
-                    '$matches',
-                    'return base64_decode($matches[1]);'
-                ),
+                function ($matches) {return base64_decode($matches[1]);},
                 $noptimize_in
             );
         } else {
@@ -176,10 +170,7 @@ abstract class autoptimizeBase {
         if ( strpos( $iehacks_in, '<!--[if' ) !== false ) { 
             $iehacks_out = preg_replace_callback(
                 '#<!--\[if.*?\[endif\]-->#is',
-                create_function(
-                    '$matches',
-                    'return "%%IEHACK".AUTOPTIMIZE_HASH."%%".base64_encode($matches[0])."%%IEHACK%%";'
-                ),
+                function ($matches) {return "%%IEHACK" . AUTOPTIMIZE_HASH . "%%" . base64_encode($matches[0]) . "%%IEHACK%%";},
                 $iehacks_in
             );
         } else {
@@ -192,10 +183,7 @@ abstract class autoptimizeBase {
         if ( strpos( $iehacks_in, '%%IEHACK%%' ) !== false ) { 
             $iehacks_out = preg_replace_callback(
                 '#%%IEHACK'.AUTOPTIMIZE_HASH.'%%(.*?)%%IEHACK%%#is',
-                create_function(
-                    '$matches',
-                    'return base64_decode($matches[1]);'
-                ),
+                function ($matches) {return base64_decode($matches[1]);},
                 $iehacks_in
             );
         } else {
@@ -208,10 +196,7 @@ abstract class autoptimizeBase {
         if ( strpos( $comments_in, '<!--' ) !== false ) {
             $comments_out = preg_replace_callback(
                 '#<!--.*?-->#is',
-                create_function(
-                    '$matches',
-                    'return "%%COMMENTS".AUTOPTIMIZE_HASH."%%".base64_encode($matches[0])."%%COMMENTS%%";'
-                ),
+                function ($matches) {return "%%COMMENTS" . AUTOPTIMIZE_HASH . "%%" . base64_encode($matches[0]) . "%%COMMENTS%%";},
                 $comments_in
             );
         } else {
@@ -224,10 +209,7 @@ abstract class autoptimizeBase {
         if ( strpos( $comments_in, '%%COMMENTS%%' ) !== false ) {
             $comments_out = preg_replace_callback(
                 '#%%COMMENTS'.AUTOPTIMIZE_HASH.'%%(.*?)%%COMMENTS%%#is',
-                create_function(
-                    '$matches',
-                    'return base64_decode($matches[1]);'
-                ),
+                function ($matches) {return base64_decode($matches[1]);},
                 $comments_in
             );
         } else {
@@ -300,40 +282,36 @@ abstract class autoptimizeBase {
         if ( strpos( $in, '%%INJECTLATER%%' ) !== false ) {
             $out = preg_replace_callback(
                 '#\/\*\!%%INJECTLATER'.AUTOPTIMIZE_HASH.'%%(.*?)%%INJECTLATER%%\*\/#is',
-                create_function(
-                    '$matches',
-                    '$filepath=base64_decode(strtok($matches[1],"|"));
-                    $filecontent=file_get_contents($filepath);
-                    
+                function ($matches) {$filepath = base64_decode(strtok($matches[1], "|"));
+                    $filecontent = file_get_contents($filepath);
+
                     // remove BOM
-                    $filecontent = preg_replace("#\x{EF}\x{BB}\x{BF}#","",$filecontent);
+                    $filecontent = preg_replace("#\x{EF}\x{BB}\x{BF}#", "", $filecontent);
 
                     // remove comments and blank lines
-                    if (substr($filepath,-3,3)===".js") {
-                        $filecontent=preg_replace("#^\s*\/\/.*$#Um","",$filecontent);
+                    if (substr($filepath, -3, 3) === ".js") {
+                        $filecontent = preg_replace("#^\s*\/\/.*$#Um", "", $filecontent);
                     }
 
-                    $filecontent=preg_replace("#^\s*\/\*[^!].*\*\/\s?#Um","",$filecontent);
-                    $filecontent=preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $filecontent);
+                    $filecontent = preg_replace("#^\s*\/\*[^!].*\*\/\s?#Um", "", $filecontent);
+                    $filecontent = preg_replace("#(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+#", "\n", $filecontent);
 
                     // differentiate between JS, CSS and other files
-                    if (substr($filepath,-3,3)===".js") {
-                        if ((substr($filecontent,-1,1)!==";")&&(substr($filecontent,-1,1)!=="}")) {
-                            $filecontent.=";";
+                    if (substr($filepath, -3, 3) === ".js") {
+                        if ((substr($filecontent, -1, 1) !== ";") && (substr($filecontent, -1, 1) !== "}")) {
+                            $filecontent .= ";";
                         }
 
-                        if (get_option("autoptimize_js_trycatch")==="on") {
-                            $filecontent="try{".$filecontent."}catch(e){}";
+                        if (get_option("autoptimize_js_trycatch") === "on") {
+                            $filecontent = "try{" . $filecontent . "}catch(e){}";
                         }
-                    } else if ((substr($filepath,-4,4)===".css")) {
-                        $filecontent=autoptimizeStyles::fixurls($filepath,$filecontent);
+                    } else if ((substr($filepath, -4, 4) === ".css")) {
+                        $filecontent = autoptimizeStyles::fixurls($filepath, $filecontent);
                     } else {
-                        $filecontent="";
+                        $filecontent = "";
                     }
-
-                    // return 
-                    return "\n".$filecontent;'
-                ),
+                    return "\n" . $filecontent;
+                },
                 $in
             );
         } else {
