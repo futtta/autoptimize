@@ -47,8 +47,13 @@ class autoptimizeExtra
             // Fallback to returning defaults when no stored option exists yet.
             $value = autoptimizeConfig::get_ao_extra_default_options();
         }
-        // get service availability, default "up" for imageproxy.
-        $value['availabilities'] = get_option( 'autoptimize_service_availablity', array( 'extra_imageproxy' => 'up' ) );
+
+        // get service availability
+        $value['availabilities'] = get_option( 'autoptimize_service_availablity');
+
+        if ( empty( $value['availabilities'] ) ) {
+            $value['availabilities'] = autoptimizeUtils::check_service_availability(true);
+        }
 
         return $value;
     }
@@ -615,6 +620,16 @@ class autoptimizeExtra
         }
     }
 
+    public function imgopt_launch_ok() {
+        $availabilities = $this->options['availabilities'];
+        $_number = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
+        if ( $_number < $availabilities['launch-threshold'] ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function admin_menu()
     {
         add_submenu_page( null, 'autoptimize_extra', 'autoptimize_extra', 'manage_options', 'autoptimize_extra', array( $this, 'options_page' ) );
@@ -656,7 +671,7 @@ class autoptimizeExtra
         <?php
     }
 
-    if ( 'down' === $options['availabilities']['extra_imageproxy'] ) {
+    if ( 'down' === $options['availabilities']['extra_imgopt']['status'] ) {
         ?>
         <div class="notice-warning notice"><p>
         <?php
@@ -666,6 +681,17 @@ class autoptimizeExtra
         </p></div>
         <?php
     }
+
+    if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && $this->imgopt_launch_ok() ) {
+        ?>
+        <div class="notice-warning notice"><p>
+        <?php
+        _e( 'The image optimization service is launching, but not yet available for this domain, it will become available in the next days.', 'autoptimize' );
+        ?>
+        </p></div>
+        <?php
+    }
+
     ?>
     <form id='ao_settings_form' action='options.php' method='post'>
         <?php settings_fields( 'autoptimize_extra_settings' ); ?>
