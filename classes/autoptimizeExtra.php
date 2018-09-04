@@ -622,7 +622,7 @@ class autoptimizeExtra
 
     public function imgopt_launch_ok() {
         $availabilities = $this->options['availabilities'];
-        $_number = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
+        $_number        = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
         if ( $_number < $availabilities['launch-threshold'] ) {
             return true;
         } else {
@@ -682,11 +682,11 @@ class autoptimizeExtra
         <?php
     }
 
-    if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && $this->imgopt_launch_ok() ) {
+    if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && !$this->imgopt_launch_ok() ) {
         ?>
         <div class="notice-warning notice"><p>
         <?php
-        _e( 'The image optimization service is launching, but not yet available for this domain, it will become available in the next days.', 'autoptimize' );
+        _e( 'The image optimization service is launching, but not yet available for this domain, it should become available in the next couple of days.', 'autoptimize' );
         ?>
         </p></div>
         <?php
