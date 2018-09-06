@@ -48,11 +48,11 @@ class autoptimizeExtra
             $value = autoptimizeConfig::get_ao_extra_default_options();
         }
 
-        // get service availability
-        $value['availabilities'] = get_option( 'autoptimize_service_availablity');
+        // get service availability.
+        $value['availabilities'] = get_option( 'autoptimize_service_availablity' );
 
         if ( empty( $value['availabilities'] ) ) {
-            $value['availabilities'] = autoptimizeUtils::check_service_availability(true);
+            $value['availabilities'] = autoptimizeUtils::check_service_availability( true );
         }
 
         return $value;
@@ -154,7 +154,7 @@ class autoptimizeExtra
         }
 
         // Optimize Images!
-        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && 'down' !== $options['availabilities']['extra_imageproxy'] ) {
+        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && 'down' !== $options['availabilities']['extra_imgopt']['status'] && ( 'launch' !== $options['availabilities']['extra_imgopt']['status'] || $this->imgopt_launch_ok() ) ) {
             if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
                 add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
                 $_imgopt_active = true;
@@ -443,9 +443,15 @@ class autoptimizeExtra
         static $imgopt_base_url = null;
 
         if ( is_null( $imgopt_base_url ) ) {
+            $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
+            if ( ! empty( $avail_imgopt ) && array_key_exists( 'hosts', $avail_imgopt ) && is_array( $avail_imgopt['hosts'] ) ) {
+                $imgopt_host = array_rand( array_flip( $avail_imgopt['hosts'] ) );
+            } else {
+                $imgopt_host = 'https://api-ai.shortpixel.com/';
+            }
             $quality         = $this->get_img_quality_string();
             $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
-            $imgopt_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
+            $imgopt_base_url = $imgopt_host . 'client/' . $quality . ',' . $ret_val;
             $imgopt_base_url = apply_filters( 'autoptimize_filter_extra_imgopt_base_url', $imgopt_base_url );
         }
 
@@ -621,9 +627,10 @@ class autoptimizeExtra
     }
 
     public function imgopt_launch_ok() {
-        $availabilities = $this->options['availabilities'];
-        $_number        = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
-        if ( $_number < $availabilities['launch-threshold'] ) {
+        // fixme: if once is returned true, should we not remember so users don't see their site go into launch-mode again?
+        $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
+        $_number      = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
+        if ( $_number < $avail_imgopt['launch-threshold'] ) {
             return true;
         } else {
             return false;
@@ -682,7 +689,7 @@ class autoptimizeExtra
         <?php
     }
 
-    if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && !$this->imgopt_launch_ok() ) {
+    if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && ! $this->imgopt_launch_ok() ) {
         ?>
         <div class="notice-warning notice"><p>
         <?php
