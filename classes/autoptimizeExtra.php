@@ -627,14 +627,23 @@ class autoptimizeExtra
     }
 
     public function imgopt_launch_ok() {
-        // fixme: if once is returned true, should we not remember so users don't see their site go into launch-mode again?
-        $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
-        $_number      = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
-        if ( $_number < $avail_imgopt['launch-threshold'] ) {
-            return true;
-        } else {
-            return false;
+        static $launch_status = null;
+
+        if ( is_null( $launch_status ) ) {
+            $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
+            $magic_number = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
+            $has_launched = get_option( 'autoptimize_imgopt_launched', '' );
+            if ( $has_launched || $magic_number < $avail_imgopt['launch-threshold'] ) {
+                $launch_status = true;
+                if ( ! $has_launched ) {
+                    update_option( 'autoptimize_imgopt_launched', 'on' );
+                }
+            } else {
+                $launch_status = false;
+            }
         }
+
+        return $launch_status;
     }
 
     public function admin_menu()
