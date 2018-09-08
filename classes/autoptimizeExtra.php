@@ -47,8 +47,13 @@ class autoptimizeExtra
             // Fallback to returning defaults when no stored option exists yet.
             $value = autoptimizeConfig::get_ao_extra_default_options();
         }
-        // get service availability, default "up" for imageproxy.
-        $value['availabilities'] = get_option( 'autoptimize_service_availablity', array( 'extra_imageproxy' => 'up' ) );
+
+        // get service availability.
+        $value['availabilities'] = get_option( 'autoptimize_service_availablity' );
+
+        if ( empty( $value['availabilities'] ) ) {
+            $value['availabilities'] = autoptimizeUtils::check_service_availability( true );
+        }
 
         return $value;
     }
@@ -149,7 +154,7 @@ class autoptimizeExtra
         }
 
         // Optimize Images!
-        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && 'down' !== $options['availabilities']['extra_imageproxy'] ) {
+        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && 'down' !== $options['availabilities']['extra_imgopt']['status'] && ( 'launch' !== $options['availabilities']['extra_imgopt']['status'] || $this->imgopt_launch_ok() ) ) {
             if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
                 add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
                 $_imgopt_active = true;
@@ -438,9 +443,15 @@ class autoptimizeExtra
         static $imgopt_base_url = null;
 
         if ( is_null( $imgopt_base_url ) ) {
+            $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
+            if ( ! empty( $avail_imgopt ) && array_key_exists( 'hosts', $avail_imgopt ) && is_array( $avail_imgopt['hosts'] ) ) {
+                $imgopt_host = array_rand( array_flip( $avail_imgopt['hosts'] ) );
+            } else {
+                $imgopt_host = 'https://api-ai.shortpixel.com/';
+            }
             $quality         = $this->get_img_quality_string();
             $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
-            $imgopt_base_url = 'https://api-ai.shortpixel.com/client/' . $quality . ',' . $ret_val;
+            $imgopt_base_url = $imgopt_host . 'client/' . $quality . ',' . $ret_val;
             $imgopt_base_url = apply_filters( 'autoptimize_filter_extra_imgopt_base_url', $imgopt_base_url );
         }
 
@@ -615,6 +626,26 @@ class autoptimizeExtra
         }
     }
 
+    public function imgopt_launch_ok() {
+        static $launch_status = null;
+
+        if ( is_null( $launch_status ) ) {
+            $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
+            $magic_number = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
+            $has_launched = get_option( 'autoptimize_imgopt_launched', '' );
+            if ( $has_launched || $magic_number < $avail_imgopt['launch-threshold'] ) {
+                $launch_status = true;
+                if ( ! $has_launched ) {
+                    update_option( 'autoptimize_imgopt_launched', 'on' );
+                }
+            } else {
+                $launch_status = false;
+            }
+        }
+
+        return $launch_status;
+    }
+
     public function admin_menu()
     {
         add_submenu_page( null, 'autoptimize_extra', 'autoptimize_extra', 'manage_options', 'autoptimize_extra', array( $this, 'options_page' ) );
@@ -656,7 +687,7 @@ class autoptimizeExtra
         <?php
     }
 
-    if ( 'down' === $options['availabilities']['extra_imageproxy'] ) {
+    if ( 'down' === $options['availabilities']['extra_imgopt']['status'] ) {
         ?>
         <div class="notice-warning notice"><p>
         <?php
@@ -666,6 +697,17 @@ class autoptimizeExtra
         </p></div>
         <?php
     }
+
+    if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && ! $this->imgopt_launch_ok() ) {
+        ?>
+        <div class="notice-warning notice"><p>
+        <?php
+        _e( 'The image optimization service is launching, but not yet available for this domain, it should become available in the next couple of days.', 'autoptimize' );
+        ?>
+        </p></div>
+        <?php
+    }
+
     ?>
     <form id='ao_settings_form' action='options.php' method='post'>
         <?php settings_fields( 'autoptimize_extra_settings' ); ?>

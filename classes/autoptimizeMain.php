@@ -476,6 +476,7 @@ class autoptimizeMain
             'autoptimize_extra_settings',
             'autoptimize_service_availablity',
             'autoptimize_imgopt_provider_stat',
+            'autoptimize_imgopt_launched',
         );
 
         if ( ! is_multisite() ) {
