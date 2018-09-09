@@ -385,6 +385,10 @@ class autoptimizeUtils
 
     /**
      * Checks to see if 3rd party services are available and stores result in option
+     *
+     * @param string $return_result should we return resulting service status array (default no).
+     *
+     * @return none if $return_result is false (default), array if $return_result is true.
      */
     public static function check_service_availability( $return_result = false )
     {
