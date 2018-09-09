@@ -388,7 +388,7 @@ class autoptimizeUtils
      */
     public static function check_service_availability( $return_result = false )
     {
-        $service_availability_resp = wp_remote_get( 'https://misc.optimizingmatters.com/api/autoptimize_service_availablity.json' );
+        $service_availability_resp = wp_remote_get( 'https://misc.optimizingmatters.com/api/autoptimize_service_availablity.json?from=aomain&ver=' . AUTOPTIMIZE_PLUGIN_VERSION );
         if ( ! is_wp_error( $service_availability_resp ) ) {
             if ( '200' == wp_remote_retrieve_response_code( $service_availability_resp ) ) {
                 $availabilities = json_decode( wp_remote_retrieve_body( $service_availability_resp ), true );
