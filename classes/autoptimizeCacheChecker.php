@@ -98,7 +98,7 @@ class autoptimizeCacheChecker
             $_imgopt_notice = '';
             $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
             $_site_host     = parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST );
-            $_imgopt_upsell = 'https://shortpixel.com/proxycredits/' . $_site_host; // fixme: not the final URL!
+            $_imgopt_upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
             $_dismissible   = 'ao-img-opt-notice-';
             $_hide_notice   = '7';
 
