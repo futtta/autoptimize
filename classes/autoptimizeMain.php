@@ -124,7 +124,9 @@ class autoptimizeMain
         if ( ! defined( 'AUTOPTIMIZE_HASH' ) ) {
             define( 'AUTOPTIMIZE_HASH', wp_hash( AUTOPTIMIZE_CACHE_URL ) );
         }
-
+        if ( ! defined( 'AUTOPTIMIZE_SITE_DOMAIN' ) ) {
+            define( 'AUTOPTIMIZE_SITE_DOMAIN', parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) );
+        }
         do_action( 'autoptimize_setup_done' );
     }
 

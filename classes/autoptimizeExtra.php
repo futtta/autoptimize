@@ -472,7 +472,7 @@ class autoptimizeExtra
         }
 
         $imgopt_base_url = $this->get_imgopt_base_url();
-        $site_host       = parse_url( site_url(), PHP_URL_HOST );
+        $site_host       = AUTOPTIMIZE_SITE_DOMAIN;
         $url_parsed      = parse_url( $url );
 
         if ( $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
@@ -605,7 +605,7 @@ class autoptimizeExtra
             $_img_provider_stat_url = '';
             // fixme: adapt endpoint based on base URL in availability json
             $_img_provider_endpoint = 'https://api-ai.shortpixel.com/read-domain/';
-            $_site_host             = parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST );
+            $_site_host             = AUTOPTIMIZE_SITE_DOMAIN;
 
             // make sure parse_url result makes sense, keeping $_img_provider_stat_url empty if not.
             if ( $_site_host && ! empty( $_site_host ) ) {
@@ -668,7 +668,7 @@ class autoptimizeExtra
         // behavior being persisted in the DB even if save is done here.
         $options       = $this->fetch_options();
         $gfonts        = $options['autoptimize_extra_radio_field_4'];
-        $sp_url_suffix = '/af/GWRGFLW109483/' . parse_url( site_url(), PHP_URL_HOST );
+        $sp_url_suffix = '/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
     ?>
     <style>
         #ao_settings_form {background: white;border: 1px solid #ccc;padding: 1px 15px;margin: 15px 10px 10px 0;}
