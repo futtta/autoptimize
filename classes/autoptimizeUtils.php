@@ -421,4 +421,24 @@ class autoptimizeUtils
 
         return $is_regex;
     }
+
+    /**
+     * Returns true if a certain WP plugin is active/loaded.
+     *
+     * @param string $plugin_file Main plugin file.
+     *
+     * @return bool
+     */
+    public static function is_plugin_active( $plugin_file )
+    {
+        static $ipa_exists = null;
+        if ( null === $ipa_exists ) {
+            if ( ! function_exists( '\is_plugin_active' ) ) {
+                require_once ABSPATH . 'wp-admin/includes/plugin.php';
+            }
+            $ipa_exists = function_exists( '\is_plugin_active' );
+        }
+
+        return $ipa_exists && \is_plugin_active( $plugin_file );
+    }
 }

@@ -2503,4 +2503,11 @@ MARKUP;
         $actual       = $instance->run_minifier_on( $css_unquoted );
         $this->assertEquals( $css_unquoted, $actual );
     }
+
+    public function test_is_plugin_active_utils_wrapper()
+    {
+        // Our plugin is loaded via "muplugins_loaded" filter in tests/bootstrap.php
+        $this->assertFalse( autoptimizeUtils::is_plugin_active( 'autoptimize/autoptimize.php' ) );
+        $this->assertFalse( autoptimizeUtils::is_plugin_active( 'async-javascript/async-javascript.php' ) );
+    }
 }
