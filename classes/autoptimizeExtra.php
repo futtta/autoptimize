@@ -603,6 +603,7 @@ class autoptimizeExtra
     public function query_img_provider_stats() {
         if ( ! empty( $this->options['autoptimize_extra_checkbox_field_5'] ) ) {
             $_img_provider_stat_url = '';
+            // fixme: adapt endpoint based on base URL in availability json
             $_img_provider_endpoint = 'https://api-ai.shortpixel.com/read-domain/';
             $_site_host             = parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST );
 
@@ -665,8 +666,9 @@ class autoptimizeExtra
         // That way any saves are still processed as expected, but we can still
         // override behavior by using `new autoptimizeExtra($custom_options)` and not have that custom
         // behavior being persisted in the DB even if save is done here.
-        $options = $this->fetch_options();
-        $gfonts  = $options['autoptimize_extra_radio_field_4'];
+        $options       = $this->fetch_options();
+        $gfonts        = $options['autoptimize_extra_radio_field_4'];
+        $sp_url_suffix = '/af/GWRGFLW109483/' . parse_url( site_url(), PHP_URL_HOST );
     ?>
     <style>
         #ao_settings_form {background: white;border: 1px solid #ccc;padding: 1px 15px;margin: 15px 10px 10px 0;}
@@ -727,8 +729,8 @@ class autoptimizeExtra
             <tr>
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimizes images using an image optimizing proxy.', 'autoptimize' ); ?></label>
-                    <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Free service provided by Shortpixel during Autoptimize 2.4 Beta cycle. After the official 2.4 release this will remain free up until a still to be defined threshold per domain, after which additional service can be purchased at Shortpixel. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/privacy" target="_blank">Privacy policy</a>.</p>' ); ?>
+                    <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from a CDN.', 'autoptimize' ); ?></label>
+                    <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by','autoptimize') . ' <a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">ShortPixel</a> ' . __('and then cached and served fast from a CDN. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.</p>' ); ?>
                 </td>
             </tr>
             <tr id='autoptimize_imgopt_quality' <?php if ( ! array_key_exists( 'autoptimize_extra_checkbox_field_5', $options ) || ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' !== $options['autoptimize_extra_checkbox_field_5'] ) ) { echo 'class="hidden"'; } ?>>
@@ -751,6 +753,7 @@ class autoptimizeExtra
                         ?>
                     </select>
                     </label>
+                    <p><a href="https://shortpixel.com/oic<?php echo $sp_url_suffix ?>" target="_blank"><?php _e( 'Test compression levels here.', 'autoptimize' ) ?></a></p>
                 </td>
             </tr>
             <tr>
