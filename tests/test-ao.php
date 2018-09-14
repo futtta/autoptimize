@@ -80,7 +80,7 @@ class AOTest extends WP_UnitTestcase
                 'prsiteurl'  => '//' . str_replace( array( 'http://', 'https://' ), '', $site_url ),
                 'wwwsiteurl' => $parts['scheme'] . '://www.' . str_replace( 'www.', '', $parts['host'] ),
                 'cdnurl'     => $cdn_url,
-                'imgopthost' => autoptimizeExtra::get_imgopt_host_wrapper();
+                'imgopthost' => autoptimizeExtra::get_imgopt_host_wrapper(),
                 'subfolder'  => '',
             ];
 
