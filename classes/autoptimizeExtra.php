@@ -658,6 +658,8 @@ class autoptimizeExtra
                 $imgopt_host = 'https://api-ai.shortpixel.com/';
             }
         }
+
+        return $imgopt_host;
     }
 
     public static function get_imgopt_host_wrapper()
