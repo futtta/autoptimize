@@ -71,6 +71,11 @@ class AOTest extends WP_UnitTestcase
             $cdn_url = get_option( 'autoptimize_cdn_url' );
         }
 
+        static $imgopt_host = null;
+        if ( null === $imgopt_host ) {
+            $imgopt_host = rtrim( autoptimizeExtra::get_imgopt_host_wrapper(), '/' );
+        }
+
         static $urls = [];
 
         if ( empty( $urls ) ) {
@@ -80,7 +85,7 @@ class AOTest extends WP_UnitTestcase
                 'prsiteurl'  => '//' . str_replace( array( 'http://', 'https://' ), '', $site_url ),
                 'wwwsiteurl' => $parts['scheme'] . '://www.' . str_replace( 'www.', '', $parts['host'] ),
                 'cdnurl'     => $cdn_url,
-                'imgopthost' => autoptimizeExtra::get_imgopt_host_wrapper(),
+                'imgopthost' => $imgopt_host,
                 'subfolder'  => '',
             ];
 
@@ -2364,7 +2369,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, https://api-ai.shortpixel.com/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+<img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
         $instance = new autoptimizeExtra();
