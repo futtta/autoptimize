@@ -354,11 +354,10 @@ class autoptimizeExtra
     public function filter_optimize_images( $in )
     {
         /*
-         * fixme: functional stuff
+         * potential future functional improvements:
          *
-         * picture element (could).
-         * filter for critical CSS (could).
-         * smart switch between shortpixel hosts (won't).
+         * picture element.
+         * filter for critical CSS.
          */
 
         $imgopt_base_url = $this->get_imgopt_base_url();
@@ -443,12 +442,7 @@ class autoptimizeExtra
         static $imgopt_base_url = null;
 
         if ( is_null( $imgopt_base_url ) ) {
-            $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
-            if ( ! empty( $avail_imgopt ) && array_key_exists( 'hosts', $avail_imgopt ) && is_array( $avail_imgopt['hosts'] ) ) {
-                $imgopt_host = array_rand( array_flip( $avail_imgopt['hosts'] ) );
-            } else {
-                $imgopt_host = 'https://api-ai.shortpixel.com/';
-            }
+            $imgopt_host     = $this->get_imgopt_host();
             $quality         = $this->get_img_quality_string();
             $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
             $imgopt_base_url = $imgopt_host . 'client/' . $quality . ',' . $ret_val;
@@ -550,7 +544,8 @@ class autoptimizeExtra
         return apply_filters( 'autoptimize_filter_extra_imgopt_normalized_url', $in );
     }
 
-    private function get_img_quality_array() {
+    private function get_img_quality_array()
+    {
         static $img_quality_array = null;
 
         if ( is_null( $img_quality_array ) ) {
@@ -565,7 +560,8 @@ class autoptimizeExtra
         return $img_quality_array;
     }
 
-    private function get_img_quality_setting() {
+    private function get_img_quality_setting()
+    {
         static $_img_q = null;
 
         if ( is_null( $_img_q ) ) {
@@ -582,7 +578,8 @@ class autoptimizeExtra
         return $_img_q;
     }
 
-    private function get_img_quality_string() {
+    private function get_img_quality_string()
+    {
         static $_img_q_string = null;
 
         if ( is_null( $_img_q_string ) ) {
@@ -594,17 +591,18 @@ class autoptimizeExtra
         return $_img_q_string;
     }
 
-    public static function get_img_provider_stats() {
+    public static function get_img_provider_stats()
+    {
         // wrapper around query_img_provider_stats() so we can get to $this->options from cronjob() in autoptimizeCacheChecker.
         $self = new self();
         return $self->query_img_provider_stats();
     }
 
-    public function query_img_provider_stats() {
+    public function query_img_provider_stats()
+    {
         if ( ! empty( $this->options['autoptimize_extra_checkbox_field_5'] ) ) {
             $_img_provider_stat_url = '';
-            // fixme: adapt endpoint based on base URL in availability json
-            $_img_provider_endpoint = 'https://api-ai.shortpixel.com/read-domain/';
+            $_img_provider_endpoint = $this->get_imgopt_host() . '/read-domain/';
             $_site_host             = AUTOPTIMIZE_SITE_DOMAIN;
 
             // make sure parse_url result makes sense, keeping $_img_provider_stat_url empty if not.
@@ -627,7 +625,8 @@ class autoptimizeExtra
         }
     }
 
-    public function imgopt_launch_ok() {
+    public function imgopt_launch_ok()
+    {
         static $launch_status = null;
 
         if ( is_null( $launch_status ) ) {
@@ -645,6 +644,21 @@ class autoptimizeExtra
         }
 
         return $launch_status;
+    }
+
+    public function get_imgopt_host()
+    {
+        static $imgopt_host = null;
+
+        if ( is_null( $imgopt_host ) ) {
+            $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
+            if ( ! empty( $avail_imgopt ) && array_key_exists( 'hosts', $avail_imgopt ) && is_array( $avail_imgopt['hosts'] ) ) {
+                // fixme: this can break CI tests as those assume api-ai.shortpixel.com.
+                $imgopt_host = array_rand( array_flip( $avail_imgopt['hosts'] ) );
+            } else {
+                $imgopt_host = 'https://api-ai.shortpixel.com/';
+            }
+        }
     }
 
     public function admin_menu()
@@ -730,7 +744,7 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
                 <td>
                     <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from a CDN.', 'autoptimize' ); ?></label>
-                    <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by','autoptimize') . ' <a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">ShortPixel</a> ' . __('and then cached and served fast from a CDN. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.</p>' ); ?>
+                    <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by', 'autoptimize' ) . ' <a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">ShortPixel</a> ' . __( 'and then cached and served fast from a CDN. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.</p>' ); ?>
                 </td>
             </tr>
             <tr id='autoptimize_imgopt_quality' <?php if ( ! array_key_exists( 'autoptimize_extra_checkbox_field_5', $options ) || ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' !== $options['autoptimize_extra_checkbox_field_5'] ) ) { echo 'class="hidden"'; } ?>>
@@ -753,7 +767,7 @@ class autoptimizeExtra
                         ?>
                     </select>
                     </label>
-                    <p><a href="https://shortpixel.com/oic<?php echo $sp_url_suffix ?>" target="_blank"><?php _e( 'Test compression levels here.', 'autoptimize' ) ?></a></p>
+                    <p><a href="https://shortpixel.com/oic<?php echo $sp_url_suffix; ?>" target="_blank"><?php _e( 'Test compression levels here.', 'autoptimize' ); ?></a></p>
                 </td>
             </tr>
             <tr>
