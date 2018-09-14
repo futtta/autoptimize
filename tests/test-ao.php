@@ -2357,7 +2357,7 @@ MARKUP;
     {
         $urls       = $this->get_urls();
         $siteurl    = $urls['siteurl'];
-        $imgopthost = $this['imgopthost'];
+        $imgopthost = $urls['imgopthost'];
 
         $markup = <<<MARKUP
 <img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
@@ -2403,7 +2403,7 @@ MARKUP;
     {
         $urls       = $this->get_urls();
         $siteurl    = $urls['siteurl'];
-        $imgopthost = $this['imgopthost'];
+        $imgopthost = $urls['imgopthost'];
 
         $markup = <<<MARKUP
 <img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
