@@ -752,7 +752,7 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
                 <td>
                     <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from a CDN.', 'autoptimize' ); ?></label>
-                    <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by', 'autoptimize' ) . ' <a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">ShortPixel</a> ' . __( 'and then cached and served fast from a CDN. Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.</p>' ); ?>
+                    <?php echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', '<p>' . __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by', 'autoptimize' ) . ' <a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">ShortPixel</a> ' . __( 'and then cached and served fast from a CDN. This is a free service up until a still to be defined threshold per domain, after which additional credits can be purchased.</p><p>Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . '<a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.</p>' ); ?>
                 </td>
             </tr>
             <tr id='autoptimize_imgopt_quality' <?php if ( ! array_key_exists( 'autoptimize_extra_checkbox_field_5', $options ) || ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' !== $options['autoptimize_extra_checkbox_field_5'] ) ) { echo 'class="hidden"'; } ?>>
@@ -775,7 +775,7 @@ class autoptimizeExtra
                         ?>
                     </select>
                     </label>
-                    <p><a href="https://shortpixel.com/oic<?php echo $sp_url_suffix; ?>" target="_blank"><?php _e( 'Test compression levels here.', 'autoptimize' ); ?></a></p>
+                    <p><?php echo apply_filters( 'autoptimize_extra_imgopt_quality_copy', '<a href="https://shortpixel.com/oic' . $sp_url_suffix .'" target="_blank">' . __( 'Test compression levels here.', 'autoptimize' ) . '</a>' ); ?></p>
                 </td>
             </tr>
             <tr>
