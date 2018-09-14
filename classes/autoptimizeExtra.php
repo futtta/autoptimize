@@ -653,12 +653,18 @@ class autoptimizeExtra
         if ( is_null( $imgopt_host ) ) {
             $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
             if ( ! empty( $avail_imgopt ) && array_key_exists( 'hosts', $avail_imgopt ) && is_array( $avail_imgopt['hosts'] ) ) {
-                // fixme: this can break CI tests as those assume api-ai.shortpixel.com.
                 $imgopt_host = array_rand( array_flip( $avail_imgopt['hosts'] ) );
             } else {
                 $imgopt_host = 'https://api-ai.shortpixel.com/';
             }
         }
+    }
+
+    public static function get_imgopt_host_wrapper()
+    {
+        // needed for CI tests.
+        $self = new self();
+        return $self->get_imgopt_host();
     }
 
     public function admin_menu()

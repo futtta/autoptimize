@@ -80,6 +80,7 @@ class AOTest extends WP_UnitTestcase
                 'prsiteurl'  => '//' . str_replace( array( 'http://', 'https://' ), '', $site_url ),
                 'wwwsiteurl' => $parts['scheme'] . '://www.' . str_replace( 'www.', '', $parts['host'] ),
                 'cdnurl'     => $cdn_url,
+                'imgopthost' => autoptimizeExtra::get_imgopt_host_wrapper();
                 'subfolder'  => '',
             ];
 
@@ -2354,14 +2355,16 @@ MARKUP;
      */
     public function test_extra_imgopt()
     {
-        $siteurl = $this->get_urls()['siteurl'];
+        $urls       = $this->get_urls();
+        $siteurl    = $urls['siteurl'];
+        $imgopthost = $this['imgopthost'];
 
         $markup = <<<MARKUP
 <img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
         $expected = <<<MARKUP
-<img src='https://api-ai.shortpixel.com/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="https://api-ai.shortpixel.com/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, https://api-ai.shortpixel.com/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+<img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, https://api-ai.shortpixel.com/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
         $instance = new autoptimizeExtra();
@@ -2398,14 +2401,16 @@ MARKUP;
      */
     public function test_extra_imgopt_lazy()
     {
-        $siteurl = $this->get_urls()['siteurl'];
+        $urls       = $this->get_urls();
+        $siteurl    = $urls['siteurl'];
+        $imgopthost = $this['imgopthost'];
 
         $markup = <<<MARKUP
 <img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
         $expected = <<<MARKUP
-<img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='https://api-ai.shortpixel.com/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="https://api-ai.shortpixel.com/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, https://api-ai.shortpixel.com/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+<img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
         $instance = new autoptimizeExtra();
