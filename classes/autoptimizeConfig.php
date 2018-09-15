@@ -103,7 +103,7 @@ class autoptimizeConfig
     margin-top: 0;
 }
 
-input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:100;}
+input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:normal;}
 #autoptimize_main .cb_label {display: block; padding-left: 25px; text-indent: -25px;}
 
 /* rss block */

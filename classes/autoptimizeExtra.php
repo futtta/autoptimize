@@ -694,7 +694,7 @@ class autoptimizeExtra
     ?>
     <style>
         #ao_settings_form {background: white;border: 1px solid #ccc;padding: 1px 15px;margin: 15px 10px 10px 0;}
-        #ao_settings_form .form-table th {font-weight: 100;}
+        #ao_settings_form .form-table th {font-weight: normal;}
         #autoptimize_extra_descr{font-size: 120%;}
     </style>
     <div class="wrap">
