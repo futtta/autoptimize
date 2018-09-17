@@ -24,7 +24,7 @@ class autoptimizeExtra
     public function __construct( $options = array() )
     {
         if ( empty( $options ) ) {
-            $options = $this->fetch_options();
+            $options = self::fetch_options();
         }
 
         $this->options = $options;
@@ -40,7 +40,7 @@ class autoptimizeExtra
         }
     }
 
-    protected function fetch_options()
+    public static function fetch_options()
     {
         $value = get_option( 'autoptimize_extra_settings' );
         if ( empty( $value ) ) {
@@ -85,7 +85,8 @@ class autoptimizeExtra
         }
     }
 
-    public function filter_remove_qs( $src ) {
+    public function filter_remove_qs( $src )
+    {
         if ( strpos( $src, '?ver=' ) ) {
             $src = remove_query_arg( 'ver', $src );
         }
@@ -147,19 +148,7 @@ class autoptimizeExtra
         }
 
         // Optimize Images!
-        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && 'down' !== $options['availabilities']['extra_imgopt']['status'] && ( 'launch' !== $options['availabilities']['extra_imgopt']['status'] || $this->imgopt_launch_ok() ) ) {
-            if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
-                add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
-                $_imgopt_active = true;
-            }
-            if ( apply_filters( 'autoptimize_filter_extra_imgopt_do_css', true ) ) {
-                add_filter( 'autoptimize_filter_base_replace_cdn', array( $this, 'filter_optimize_css_images' ), 10, 1 );
-                $_imgopt_active = true;
-            }
-            if ( $_imgopt_active ) {
-                add_filter( 'autoptimize_extra_filter_tobepreconn', array( $this, 'filter_preconnect_imgopt_url' ), 10, 1 );
-            }
-        }
+        autoptimizeImages::instance()->set_options( $options )->run();
     }
 
     public function filter_remove_emoji_dns_prefetch( $urls, $relation_type )
@@ -705,7 +694,14 @@ class autoptimizeExtra
 
     public function admin_menu()
     {
-        add_submenu_page( null, 'autoptimize_extra', 'autoptimize_extra', 'manage_options', 'autoptimize_extra', array( $this, 'options_page' ) );
+        add_submenu_page(
+            null,
+            'autoptimize_extra',
+            'autoptimize_extra',
+            'manage_options',
+            'autoptimize_extra',
+            array( $this, 'options_page' )
+        );
         register_setting( 'autoptimize_extra_settings', 'autoptimize_extra_settings' );
     }
 
@@ -724,8 +720,8 @@ class autoptimizeExtra
         // behavior being persisted in the DB even if save is done here.
         $options       = $this->fetch_options();
         $gfonts        = $options['autoptimize_extra_radio_field_4'];
-        $sp_url_suffix = '/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
-    ?>
+        $sp_url_suffix = autoptimizeImages::get_service_url_suffix();
+        ?>
     <style>
         #ao_settings_form {background: white;border: 1px solid #ccc;padding: 1px 15px;margin: 15px 10px 10px 0;}
         #ao_settings_form .form-table th {font-weight: normal;}
@@ -733,40 +729,27 @@ class autoptimizeExtra
     </style>
     <div class="wrap">
     <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
-    <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
-    <?php
-    if ( 'on' !== get_option( 'autoptimize_js' ) && 'on' !== get_option( 'autoptimize_css' ) && 'on' !== get_option( 'autoptimize_html' ) ) {
-        ?>
-        <div class="notice-warning notice"><p>
-        <?php
-        _e( 'Most of below Extra optimizations require at least one of HTML, JS or CSS autoptimizations being active.', 'autoptimize' );
-        ?>
-        </p></div>
-        <?php
-    }
+        <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
+        <?php if ( 'on' !== get_option( 'autoptimize_js' ) && 'on' !== get_option( 'autoptimize_css' ) && 'on' !== get_option( 'autoptimize_html' ) ) { ?>
+            <div class="notice-warning notice"><p>
+            <?php _e( 'Most of below Extra optimizations require at least one of HTML, JS or CSS autoptimizations being active.', 'autoptimize' ); ?>
+            </p></div>
+        <?php } ?>
 
-    if ( 'down' === $options['availabilities']['extra_imgopt']['status'] ) {
-        ?>
-        <div class="notice-warning notice"><p>
-        <?php
-        // translators: "Autoptimize support forum" will appear in a "a href".
-        echo sprintf( __( 'The image optimization service is currently down, image optimization will be skipped until further notice. Check the %1$sAutoptimize support forum%2$s for more info.', 'autoptimize' ), '<a href="https://wordpress.org/support/plugin/autoptimize/" target="_blank">', '</a>' );
-        ?>
-        </p></div>
-        <?php
-    }
+        <?php if ( 'down' === $options['availabilities']['extra_imgopt']['status'] ) { ?>
+            <div class="notice-warning notice"><p>
+            <?php
+            // translators: "Autoptimize support forum" will appear in a "a href".
+            echo sprintf( __( 'The image optimization service is currently down, image optimization will be skipped until further notice. Check the %1$sAutoptimize support forum%2$s for more info.', 'autoptimize' ), '<a href="https://wordpress.org/support/plugin/autoptimize/" target="_blank">', '</a>' );
+            ?>
+            </p></div>
+        <?php } ?>
 
-    if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && ! $this->imgopt_launch_ok() ) {
-        ?>
-        <div class="notice-warning notice"><p>
-        <?php
-        _e( 'The image optimization service is launching, but not yet available for this domain, it should become available in the next couple of days.', 'autoptimize' );
-        ?>
-        </p></div>
-        <?php
-    }
-
-    ?>
+        <?php if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && ! $this->imgopt_launch_ok() ) { ?>
+            <div class="notice-warning notice"><p>
+            <?php _e( 'The image optimization service is launching, but not yet available for this domain, it should become available in the next couple of days.', 'autoptimize' ); ?>
+            </p></div>
+        <?php } ?>
     <form id='ao_settings_form' action='options.php' method='post'>
         <?php settings_fields( 'autoptimize_extra_settings' ); ?>
         <h2><?php _e( 'Extra Auto-Optimizations', 'autoptimize' ); ?></h2>
@@ -867,7 +850,7 @@ class autoptimizeExtra
                     if ( autoptimizeUtils::is_plugin_active( 'async-javascript/async-javascript.php' ) ) {
                         printf( __( 'You have "Async JavaScript" installed, %1$sconfiguration of async javascript is best done there%2$s.', 'autoptimize' ), '<a href="options-general.php?page=async-javascript">', '</a>' );
                     } else {
-                    ?>
+                        ?>
                         <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php echo esc_attr( $options['autoptimize_extra_text_field_3'] ); ?>'>
                         <br />
                         <?php
@@ -911,6 +894,6 @@ class autoptimizeExtra
             });
         });
     </script>
-    <?php
+        <?php
     }
 }

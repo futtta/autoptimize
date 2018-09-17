@@ -75,11 +75,11 @@ class autoptimizeCacheChecker
         // Check if 3rd party services (e.g. image proxy) are up.
         autoptimizeUtils::check_service_availability();
 
-        // Check image optimization stats.
-        autoptimizeExtra::get_img_provider_stats();
-
         // Nukes advanced cache clearing artifacts if they exists...
         autoptimizeCache::delete_advanced_cache_clear_artifacts();
+
+        // Check image optimization stats.
+        autoptimizeImages::instance()->query_img_provider_stats();
     }
 
     public function show_admin_notice()
@@ -93,8 +93,8 @@ class autoptimizeCacheChecker
         }
 
         // Notice for image proxy usage.
-        $_imgopt_notice = autoptimizeExtra::get_imgopt_status_notice_wrapper();
-        if ( is_array( $_imgopt_notice ) && array_key_exists( 'status', $_imgopt_notice ) && in_array( $_imgopt_notice['status'], array( 1, -1 ) ) ) {
+        $_imgopt_notice = autoptimizeImages::instance()->get_status_notice();
+        if ( is_array( $_imgopt_notice ) && array_key_exists( 'status', $_imgopt_notice ) && 2 != $_imgopt_notice['status'] ) {
             $_dismissible = 'ao-img-opt-notice-';
             $_hide_notice = '7';
 

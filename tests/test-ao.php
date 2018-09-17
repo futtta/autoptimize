@@ -73,7 +73,8 @@ class AOTest extends WP_UnitTestcase
 
         static $imgopt_host = null;
         if ( null === $imgopt_host ) {
-            $imgopt_host = rtrim( autoptimizeExtra::get_imgopt_host_wrapper(), '/' );
+            $optimizer   = new autoptimizeImages( autoptimizeExtra::fetch_options() );
+            $imgopt_host = rtrim( $optimizer->get_imgopt_host(), '/' );
         }
 
         static $urls = [];
@@ -2354,7 +2355,7 @@ MARKUP;
     }
 
     /**
-     * Test image optimization in autoptimizeExtra.php.
+     * Test image optimization in autoptimizeImages.php.
      *
      * Default case: img with srcsets
      */
@@ -2372,13 +2373,12 @@ MARKUP;
 <img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $instance = new autoptimizeExtra();
-        $actual = $instance->filter_optimize_images( $markup );
+        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
 
     /**
-     * Test image optimization in autoptimizeExtra.php.
+     * Test image optimization in autoptimizeImages.php.
      *
      * Exception case: image served by .php, should not be proxied
      */
@@ -2394,13 +2394,12 @@ MARKUP;
 <img src='$siteurl/wp-content/plugins/imageplugin/image.php?id=16' width='400' height='200'>
 MARKUP;
 
-        $instance = new autoptimizeExtra();
-        $actual = $instance->filter_optimize_images( $markup );
+        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
 
     /**
-     * Test image optimization in autoptimizeExtra.php.
+     * Test image optimization in autoptimizeImages.php.
      *
      * Alternate case: lazy loaded images with srcsets (using wp rocket variant HTML)
      */
@@ -2418,8 +2417,7 @@ MARKUP;
 <img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $instance = new autoptimizeExtra();
-        $actual = $instance->filter_optimize_images( $markup );
+        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
 
