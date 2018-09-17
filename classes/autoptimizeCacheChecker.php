@@ -104,12 +104,12 @@ class autoptimizeCacheChecker
 
             if ( is_array( $_stat ) ) {
                 if ( 1 == $_stat['Status'] ) {
-                    // translators: "adding credits" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'You are nearing the threshold of Shortpixel\'s free image optimization tier, consider %1$sadding credits%2$s to make sure image optimization continues to work.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                    // translators: "add more credits" will appear in a "a href".
+                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                     $_hide_notice   = '7';
                 } elseif ( -1 == $_stat['Status'] ) {
-                    // translators: "add credits to re-enable image optimization" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'You are over Shortpixel\'s free image optimization tier threshold, %1$sadd credits to re-enable image optimization%2$s.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                    // translators: "add more credits" will appear in a "a href".
+                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                     $_hide_notice   = '1';
                 }
             }
