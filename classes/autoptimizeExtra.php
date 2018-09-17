@@ -602,7 +602,7 @@ class autoptimizeExtra
     {
         if ( ! empty( $this->options['autoptimize_extra_checkbox_field_5'] ) ) {
             $_img_provider_stat_url = '';
-            $_img_provider_endpoint = $this->get_imgopt_host() . '/read-domain/';
+            $_img_provider_endpoint = $this->get_imgopt_host() . 'read-domain/';
             $_site_host             = AUTOPTIMIZE_SITE_DOMAIN;
 
             // make sure parse_url result makes sense, keeping $_img_provider_stat_url empty if not.
