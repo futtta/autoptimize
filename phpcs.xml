@@ -13,6 +13,7 @@
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed"/>
         <exclude name="Generic.Classes.OpeningBraceSameLine.BraceOnNewLine"/>
         <exclude name="WordPress.WhiteSpace.ControlStructureSpacing.OpenBraceNotSameLine"/>
+        <exclude name="WordPress.WhiteSpace.ControlStructureSpacing.ExtraSpaceAfterCloseParenthesis"/>
         <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie.BraceOnNewLine"/>
         <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
     </rule>
