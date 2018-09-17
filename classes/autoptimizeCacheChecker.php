@@ -97,17 +97,17 @@ class autoptimizeCacheChecker
         if ( ! empty( $_extra_options ) && is_array( $_extra_options ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $_extra_options ) && ! empty( $_extra_options['autoptimize_extra_checkbox_field_5'] ) ) {
             $_imgopt_notice = '';
             $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
-            $_site_host     = parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST );
+            $_site_host     = AUTOPTIMIZE_SITE_DOMAIN;
             $_imgopt_upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
             $_dismissible   = 'ao-img-opt-notice-';
             $_hide_notice   = '7';
 
             if ( is_array( $_stat ) ) {
-                if ( 1 === $_stat['Status'] ) {
+                if ( 1 == $_stat['Status'] ) {
                     // translators: "adding credits" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'You are nearing the threshold of Shortpixel\'s free image optimization tier, consider %1$sadding credits%2$s to make sure image optimization continues to work.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                     $_hide_notice   = '7';
-                } elseif ( -1 === $_stat['Status'] ) {
+                } elseif ( -1 == $_stat['Status'] ) {
                     // translators: "add credits to re-enable image optimization" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'You are over Shortpixel\'s free image optimization tier threshold, %1$sadd credits to re-enable image optimization%2$s.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                     $_hide_notice   = '1';
