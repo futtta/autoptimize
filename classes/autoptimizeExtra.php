@@ -669,6 +669,37 @@ class autoptimizeExtra
         return $self->get_imgopt_host();
     }
 
+    public function get_imgopt_status_notice() {
+        $_extra_options = $this->options;
+        if ( ! empty( $_extra_options ) && is_array( $_extra_options ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $_extra_options ) && ! empty( $_extra_options['autoptimize_extra_checkbox_field_5'] ) ) {
+            $_imgopt_notice = '';
+            $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            $_site_host     = AUTOPTIMIZE_SITE_DOMAIN;
+            $_imgopt_upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
+
+            if ( is_array( $_stat ) ) {
+                if ( 1 == $_stat['Status'] ) {
+                    // translators: "add more credits" will appear in a "a href".
+                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                } elseif ( -1 == $_stat['Status'] ) {
+                    // translators: "add more credits" will appear in a "a href".
+                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                } elseif ( 2 == $_stat['Status'] ) {
+                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                }
+            }
+            $_imgopt_notice = apply_filters( 'autoptimize_filter_imgopt_notice', $_imgopt_notice );
+            return array( 'status' => $_stat['Status'] , 'notice' => $_imgopt_notice );
+        }
+        return false;
+    }
+
+    public static function get_imgopt_status_notice_wrapper() {
+        // needed for notice being shown in autoptimizeCacheChecker.php
+        $self = new self();
+        return $self->get_imgopt_status_notice();
+    }
+
     public function admin_menu()
     {
         add_submenu_page( null, 'autoptimize_extra', 'autoptimize_extra', 'manage_options', 'autoptimize_extra', array( $this, 'options_page' ) );
@@ -763,6 +794,25 @@ class autoptimizeExtra
                     }
                     $terms_of_use = '</p><p>' . __( 'Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.</p>';
                     echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', $upsell_msg_1 . $upsell_link . $upsell_msg_2 . $upsell_msg_3 . $terms_of_use );
+
+                    // show shortpixel status.
+                    $_notice = $this->get_imgopt_status_notice();
+                    if ( $_notice ) {
+                        switch ( $_notice['status'] ) {
+                            case 2:
+                                $_notice_color = "green";
+                                break;
+                            case 1:
+                                $_notice_color = "orange";
+                                break;
+                            case -1:
+                                $_notice_color = "red";
+                                break;
+                            default:
+                                $_notice_color = "green";
+                        }
+                        echo '<p><strong><span style="color:'. $_notice_color .';">' . __( 'Shortpixel status: ', 'autoptimize' ) . '</span></strong>' . $_notice['notice'] . '</p>';
+                    }
                     ?>
                 </td>
             </tr>

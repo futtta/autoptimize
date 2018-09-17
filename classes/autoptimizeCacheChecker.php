@@ -92,32 +92,20 @@ class autoptimizeCacheChecker
             update_option( 'autoptimize_cachesize_notice', false );
         }
 
-        // Notice for image proxy usage, only if Image Optimization is active.
-        $_extra_options = get_option( 'autoptimize_extra_settings', '' );
-        if ( ! empty( $_extra_options ) && is_array( $_extra_options ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $_extra_options ) && ! empty( $_extra_options['autoptimize_extra_checkbox_field_5'] ) ) {
-            $_imgopt_notice = '';
-            $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
-            $_site_host     = AUTOPTIMIZE_SITE_DOMAIN;
-            $_imgopt_upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
+        // Notice for image proxy usage.
+        $_imgopt_notice = autoptimizeExtra::get_imgopt_status_notice_wrapper();
+        if ( is_array( $_imgopt_notice ) && array_key_exists( 'status', $_imgopt_notice ) && $_imgopt_notice['status'] != 2 ) {
             $_dismissible   = 'ao-img-opt-notice-';
             $_hide_notice   = '7';
 
-            if ( is_array( $_stat ) ) {
-                if ( 1 == $_stat['Status'] ) {
-                    // translators: "add more credits" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
-                    $_hide_notice   = '7';
-                } elseif ( -1 == $_stat['Status'] ) {
-                    // translators: "add more credits" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
-                    $_hide_notice   = '1';
-                }
+            if ( -1 == $_imgopt_notice['status'] ) {
+                $_hide_notice   = '1';
             }
-            $_imgopt_notice             = apply_filters( 'autoptimize_filter_imgopt_notice', $_imgopt_notice );
+
             $_imgopt_notice_dismissible = apply_filters( 'autoptimize_filter_imgopt_notice_dismissable', $_dismissible . $_hide_notice );
 
             if ( $_imgopt_notice && PAnD::is_admin_notice_active( $_imgopt_notice_dismissible ) ) {
-                echo '<div class="notice notice-warning is-dismissible" data-dismissible="' . $_imgopt_notice_dismissible . '"><p>' . $_imgopt_notice . '</p></div>';
+                echo '<div class="notice notice-warning is-dismissible" data-dismissible="' . $_imgopt_notice_dismissible . '"><p>' . $_imgopt_notice['notice'] . '</p></div>';
             }
         }
     }
