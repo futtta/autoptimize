@@ -655,7 +655,7 @@ class autoptimizeExtra
             if ( ! empty( $avail_imgopt ) && array_key_exists( 'hosts', $avail_imgopt ) && is_array( $avail_imgopt['hosts'] ) ) {
                 $imgopt_host = array_rand( array_flip( $avail_imgopt['hosts'] ) );
             } else {
-                $imgopt_host = 'https://api-ai.shortpixel.com/';
+                $imgopt_host = 'https://cdn.shortpixel.ai/';
             }
         }
 
