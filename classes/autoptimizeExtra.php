@@ -687,15 +687,19 @@ class autoptimizeExtra
                 } elseif ( 2 == $_stat['Status'] ) {
                     $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                 }
+                $_imgopt_notice = apply_filters( 'autoptimize_filter_imgopt_notice', $_imgopt_notice );
+
+                return array(
+                    'status' => $_stat[ 'Status' ],
+                    'notice' => $_imgopt_notice,
+                );
             }
-            $_imgopt_notice = apply_filters( 'autoptimize_filter_imgopt_notice', $_imgopt_notice );
-            return array( 'status' => $_stat['Status'] , 'notice' => $_imgopt_notice );
         }
         return false;
     }
 
     public static function get_imgopt_status_notice_wrapper() {
-        // needed for notice being shown in autoptimizeCacheChecker.php
+        // needed for notice being shown in autoptimizeCacheChecker.php.
         $self = new self();
         return $self->get_imgopt_status_notice();
     }
@@ -784,35 +788,35 @@ class autoptimizeExtra
                 <td>
                     <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from a CDN.', 'autoptimize' ); ?></label>
                     <?php
-                    $upsell_msg_1 = '<p>' . __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by', 'autoptimize' );
-                    $upsell_link  = ' <a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">ShortPixel</a> ';
-                    $upsell_msg_2 = __( 'and then cached and served fast from a CDN.', 'autoptimize' ) . ' ';
-                    if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] ) {
-                        $upsell_msg_3 = __( 'For a limited time only, this service is offered free-for-all, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
-                    } else {
-                        $upsell_msg_3 = __( 'The service is offered for free for 100 images/month regardless of the traffic used. More image optimizations can be purchased starting with $4.99.', 'autoptimize' );
-                    }
-                    $terms_of_use = '</p><p>' . __( 'Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.</p>';
-                    echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', $upsell_msg_1 . $upsell_link . $upsell_msg_2 . $upsell_msg_3 . $terms_of_use );
-
                     // show shortpixel status.
                     $_notice = $this->get_imgopt_status_notice();
                     if ( $_notice ) {
                         switch ( $_notice['status'] ) {
                             case 2:
-                                $_notice_color = "green";
+                                $_notice_color = 'green';
                                 break;
                             case 1:
-                                $_notice_color = "orange";
+                                $_notice_color = 'orange';
                                 break;
                             case -1:
-                                $_notice_color = "red";
+                                $_notice_color = 'red';
                                 break;
                             default:
-                                $_notice_color = "green";
+                                $_notice_color = 'green';
                         }
-                        echo '<p><strong><span style="color:'. $_notice_color .';">' . __( 'Shortpixel status: ', 'autoptimize' ) . '</span></strong>' . $_notice['notice'] . '</p>';
+                        echo apply_filters( 'autoptimize_filter_imgopt_settings_status', '<p><strong><span style="color:' . $_notice_color . ';">' . __( 'Shortpixel status: ', 'autoptimize' ) . '</span></strong>' . $_notice['notice'] . '</p>' );
+                    } else {
+                        $upsell_msg_1 = '<p>' . __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by', 'autoptimize' );
+                        $upsell_link  = ' <a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">ShortPixel</a> ';
+                        $upsell_msg_2 = __( 'and then cached and served fast from a CDN.', 'autoptimize' ) . ' ';
+                        if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] ) {
+                            $upsell_msg_3 = __( 'For a limited time only, this service is offered free-for-all, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
+                        } else {
+                            $upsell_msg_3 = __( 'The service is offered for free for 100 images/month regardless of the traffic used. More image optimizations can be purchased starting with $4.99.', 'autoptimize' );
+                        }
+                        echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', $upsell_msg_1 . $upsell_link . $upsell_msg_2 . $upsell_msg_3 . '</p>' );
                     }
+                    echo '<p>' . __( 'Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.</p>';
                     ?>
                 </td>
             </tr>
