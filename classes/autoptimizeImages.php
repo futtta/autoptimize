@@ -123,7 +123,7 @@ class autoptimizeImages
      *
      * @return bool
      */
-    protected function launch_ok()
+    public function launch_ok()
     {
         static $launch_status = null;
 
