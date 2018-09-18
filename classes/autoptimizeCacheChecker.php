@@ -94,7 +94,7 @@ class autoptimizeCacheChecker
 
         // Notice for image proxy usage.
         $_imgopt_notice = autoptimizeImages::instance()->get_status_notice();
-        if ( is_array( $_imgopt_notice ) && array_key_exists( 'status', $_imgopt_notice ) && 2 != $_imgopt_notice['status'] ) {
+        if ( is_array( $_imgopt_notice ) && array_key_exists( 'status', $_imgopt_notice ) && in_array( $_imgopt_notice['status'], array( 1, -1 ) ) ) {
             $_dismissible = 'ao-img-opt-notice-';
             $_hide_notice = '7';
 
