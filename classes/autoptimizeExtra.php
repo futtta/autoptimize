@@ -745,7 +745,7 @@ class autoptimizeExtra
             </p></div>
         <?php } ?>
 
-        <?php if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && ! $this->imgopt_launch_ok() ) { ?>
+        <?php if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && ! autoptimizeImages::instance()->launch_ok() ) { ?>
             <div class="notice-warning notice"><p>
             <?php _e( 'The image optimization service is launching, but not yet available for this domain, it should become available in the next couple of days.', 'autoptimize' ); ?>
             </p></div>
@@ -771,7 +771,7 @@ class autoptimizeExtra
                     <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from a CDN.', 'autoptimize' ); ?></label>
                     <?php
                     // show shortpixel status.
-                    $_notice = $this->get_imgopt_status_notice();
+                    $_notice = autoptimizeImages::instance()->get_status_notice();
                     if ( $_notice ) {
                         switch ( $_notice['status'] ) {
                             case 2:
@@ -808,8 +808,8 @@ class autoptimizeExtra
                     <label>
                     <select name='autoptimize_extra_settings[autoptimize_extra_select_field_6]'>
                         <?php
-                        $_imgopt_array = $this->get_img_quality_array();
-                        $_imgopt_val   = $this->get_img_quality_setting();
+                        $_imgopt_array = autoptimizeImages::instance()->get_img_quality_array();
+                        $_imgopt_val   = autoptimizeImages::instance()->get_img_quality_setting();
 
                         foreach ( $_imgopt_array as $key => $value ) {
                             echo '<option value="' . $key . '"';
