@@ -110,7 +110,7 @@ class autoptimizeImages
         if (
             ! empty( $opts['autoptimize_extra_checkbox_field_5'] )
             && $service_not_down
-            && ( $service_not_launch || $this->launch_ok() )
+            && ( $not_launch_status || $this->launch_ok() )
         ) {
             return true;
         }
