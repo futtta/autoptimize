@@ -231,7 +231,7 @@ class autoptimizeImages
         }
     }
 
-    private function get_img_quality_string()
+    public function get_img_quality_string()
     {
         static $_img_q_string = null;
 
@@ -244,7 +244,7 @@ class autoptimizeImages
         return $_img_q_string;
     }
 
-    private function get_img_quality_array()
+    public function get_img_quality_array()
     {
         static $img_quality_array = null;
 
@@ -260,7 +260,7 @@ class autoptimizeImages
         return $img_quality_array;
     }
 
-    private function get_img_quality_setting()
+    public function get_img_quality_setting()
     {
         static $_img_q = null;
 
