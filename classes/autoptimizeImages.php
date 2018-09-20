@@ -295,9 +295,11 @@ class autoptimizeImages
             $parsed_site_url = parse_url( site_url() );
         }
 
-        if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
+        // Making sure given urls contain the full scheme and hostname
+        // in case they're not present already.
+        if ( autoptimizeUtils::is_protocol_relative( $in ) ) {
             $in = $parsed_site_url['scheme'] . ':' . $in;
-        } elseif ( strpos( $in, '/' ) === 0 ) {
+        } elseif ( 0 === strpos( $in, '/' ) ) {
             $in = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $in;
         }
 
