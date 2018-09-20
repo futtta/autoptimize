@@ -127,7 +127,7 @@ class autoptimizeImages
     {
         static $launch_status = null;
 
-        if ( is_null( $launch_status ) ) {
+        if ( null === $launch_status ) {
             $avail_imgopt  = $this->options['availabilities']['extra_imgopt'];
             $magic_number  = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
             $has_launched  = get_option( 'autoptimize_imgopt_launched', '' );
@@ -147,7 +147,7 @@ class autoptimizeImages
     {
         static $imgopt_host = null;
 
-        if ( is_null( $imgopt_host ) ) {
+        if ( null === $imgopt_host ) {
             $imgopt_host  = 'https://cdn.shortpixel.ai/';
             $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
             if ( ! empty( $avail_imgopt ) && array_key_exists( 'hosts', $avail_imgopt ) && is_array( $avail_imgopt['hosts'] ) ) {
@@ -197,13 +197,6 @@ class autoptimizeImages
         return $suffix;
     }
 
-    public static function img_provider_stats_ping()
-    {
-        // wrapper around query_img_provider_stats() so we can get to $this->options from cronjob() in autoptimizeCacheChecker.
-        $self = new self();
-        return $self->query_img_provider_stats();
-    }
-
     public function query_img_provider_stats()
     {
         if ( ! empty( $this->options['autoptimize_extra_checkbox_field_5'] ) ) {
@@ -235,7 +228,7 @@ class autoptimizeImages
     {
         static $_img_q_string = null;
 
-        if ( is_null( $_img_q_string ) ) {
+        if ( null === $_img_q_string ) {
             $_quality_array = $this->get_img_quality_array();
             $_setting       = $this->get_img_quality_setting();
             $_img_q_string  = apply_filters( 'autoptimize_filter_extra_imgopt_quality', 'q_' . $_quality_array[ $_setting ] );
@@ -248,7 +241,7 @@ class autoptimizeImages
     {
         static $img_quality_array = null;
 
-        if ( is_null( $img_quality_array ) ) {
+        if ( null === $img_quality_array ) {
             $img_quality_array = array(
                 '1' => 'lossy',
                 '2' => 'glossy',
@@ -264,7 +257,7 @@ class autoptimizeImages
     {
         static $_img_q = null;
 
-        if ( is_null( $_img_q ) ) {
+        if ( null === $_img_q ) {
             $_setting = $this->options['autoptimize_extra_select_field_6'];
 
             if ( ! $_setting || empty( $_setting ) || ( '1' !== $_setting && '3' !== $_setting ) ) {
@@ -315,7 +308,7 @@ class autoptimizeImages
     {
         static $imgopt_base_url = null;
 
-        if ( is_null( $imgopt_base_url ) ) {
+        if ( null === $imgopt_base_url ) {
             $imgopt_host     = $this->get_imgopt_host();
             $quality         = $this->get_img_quality_string();
             $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
@@ -331,11 +324,11 @@ class autoptimizeImages
         static $cdn_url      = null;
         static $nopti_images = null;
 
-        if ( is_null( $cdn_url ) ) {
+        if ( null === $cdn_url ) {
             $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', get_option( 'autoptimize_cdn_url', '' ) );
         }
 
-        if ( is_null( $nopti_images ) ) {
+        if ( null === $nopti_images ) {
             $nopti_images = apply_filters( 'autoptimize_filter_extra_imgopt_noptimize', '' );
         }
 
