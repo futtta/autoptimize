@@ -2461,6 +2461,7 @@ MARKUP;
             ['/root-relative', false],
             ['http://what.ever/', false],
             ['https://booya.kasha', false],
+            ['1/', false],
         ];
     }
 

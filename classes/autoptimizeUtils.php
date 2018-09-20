@@ -352,7 +352,7 @@ class autoptimizeUtils
         $result = false;
 
         if ( ! empty( $url ) ) {
-            $result = ( '/' === $url{1} ); // second char is `/`.
+            $result = ( 0 === strpos( $url, '//' ) );
         }
 
         return $result;
