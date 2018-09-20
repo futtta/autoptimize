@@ -306,8 +306,7 @@ class autoptimizeImages
 
     public function filter_optimize_css_images( $in )
     {
-        $imgopt_base_url = $this->get_imgopt_base_url();
-        $in              = $this->normalize_img_urls( $in );
+        $in = $this->normalize_img_urls( $in );
 
         if ( $this->can_optimize_image( $in ) ) {
             return $this->build_imgopt_url( $in, '', '' );
@@ -347,7 +346,6 @@ class autoptimizeImages
             $nopti_images = apply_filters( 'autoptimize_filter_extra_imgopt_noptimize', '' );
         }
 
-        $imgopt_base_url = $this->get_imgopt_base_url();
         $site_host       = AUTOPTIMIZE_SITE_DOMAIN;
         $url_parsed      = parse_url( $url );
 
@@ -420,9 +418,7 @@ class autoptimizeImages
          * picture element.
          * filter for critical CSS.
          */
-
-        $imgopt_base_url = $this->get_imgopt_base_url();
-        $to_replace      = array();
+        $to_replace = array();
 
         // extract img tags.
         if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
