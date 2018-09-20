@@ -818,7 +818,9 @@ class autoptimizeExtra
                         }
                         echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', $upsell_msg_1 . $upsell_link . $upsell_msg_2 . $upsell_msg_3 . '</p>' );
                     }
-                    echo '<p>' . __( 'Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.</p>';
+                    $faqcopy = __( '<strong>Questions</strong>? Have a look at the', 'autoptimize' ) . ' <strong><a href="https://shortpixel.helpscoutdocs.com/category/60-shortpixel-ai-cdn" target="_blank">' . __( 'ShortPixel FAQ', 'autoptimize' ) . '</strong></a>! ';
+                    $toscopy = __( 'Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.';
+                    echo apply_filters( 'autoptimize_extra_imgopt_settings_tos', '<p>' . $faqcopy . $toscopy . '</p>' );
                     ?>
                 </td>
             </tr>
