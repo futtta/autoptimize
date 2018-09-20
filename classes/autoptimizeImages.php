@@ -43,7 +43,7 @@ class autoptimizeImages
 
     /**
      * Helper for getting a singleton instance. While being an
-     * antipattern generally, it comes in handy for now from a
+     * anti-pattern generally, it comes in handy for now from a
      * readability/maintainability perspective, until we get some
      * proper dependency injection going.
      *
@@ -160,30 +160,29 @@ class autoptimizeImages
 
     public function get_status_notice()
     {
-        $_extra_options = $this->options;
-        if ( ! empty( $_extra_options ) && is_array( $_extra_options ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $_extra_options ) && ! empty( $_extra_options['autoptimize_extra_checkbox_field_5'] ) ) {
-            $_imgopt_notice = '';
-            $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
-            $_site_host     = AUTOPTIMIZE_SITE_DOMAIN;
-            $_imgopt_upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
+        $opts = $this->options;
+        if ( ! empty( $opts ) && is_array( $opts ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $opts ) && ! empty( $opts['autoptimize_extra_checkbox_field_5'] ) ) {
+            $notice = '';
+            $stat   = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            $upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
 
-            if ( is_array( $_stat ) ) {
-                if ( 1 == $_stat['Status'] ) {
+            if ( is_array( $stat ) ) {
+                if ( 1 == $stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
-                } elseif ( -1 == $_stat['Status'] ) {
+                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
+                } elseif ( -1 == $stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
                 } else {
-                    $_imgopt_upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';
+                    $upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';
                     // translators: "log in to check your account" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape, %1$slog in to check your account%2$s.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape, %1$slog in to check your account%2$s.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
                 }
-                $_imgopt_notice = apply_filters( 'autoptimize_filter_imgopt_notice', $_imgopt_notice );
+                $notice = apply_filters( 'autoptimize_filter_imgopt_notice', $notice );
 
                 return array(
-                    'status' => $_stat['Status'],
-                    'notice' => $_imgopt_notice,
+                    'status' => $stat['Status'],
+                    'notice' => $notice,
                 );
             }
         }
@@ -200,24 +199,28 @@ class autoptimizeImages
     public function query_img_provider_stats()
     {
         if ( ! empty( $this->options['autoptimize_extra_checkbox_field_5'] ) ) {
-            $_img_provider_stat_url = '';
-            $_img_provider_endpoint = $this->get_imgopt_host() . 'read-domain/';
-            $_site_host             = AUTOPTIMIZE_SITE_DOMAIN;
+            $url      = '';
+            $endpoint = $this->get_imgopt_host() . 'read-domain/';
+            $domain   = AUTOPTIMIZE_SITE_DOMAIN;
 
-            // make sure parse_url result makes sense, keeping $_img_provider_stat_url empty if not.
-            if ( $_site_host && ! empty( $_site_host ) ) {
-                $_img_provider_stat_url = $_img_provider_endpoint . $_site_host;
+            // make sure parse_url result makes sense, keeping $url empty if not.
+            if ( $domain && ! empty( $domain ) ) {
+                $url = $endpoint . $domain;
             }
 
-            $_img_provider_stat_url = apply_filters( 'autoptimize_filter_extra_imgopt_stat_url', $_img_provider_stat_url );
+            $url = apply_filters(
+                'autoptimize_filter_extra_imgopt_stat_url',
+                $url
+            );
 
-            // only do the remote call if $_img_provider_stat_url is not empty to make sure no parse_url weirdness results in useless calls.
-            if ( ! empty( $_img_provider_stat_url ) ) {
-                $_img_stat_resp = wp_remote_get( $_img_provider_stat_url );
-                if ( ! is_wp_error( $_img_stat_resp ) ) {
-                    if ( '200' == wp_remote_retrieve_response_code( $_img_stat_resp ) ) {
-                        $_img_provider_stat = json_decode( wp_remote_retrieve_body( $_img_stat_resp ), true );
-                        update_option( 'autoptimize_imgopt_provider_stat', $_img_provider_stat );
+            // only do the remote call if $url is not empty to make sure no parse_url
+            // weirdness results in useless calls.
+            if ( ! empty( $url ) ) {
+                $response = wp_remote_get( $url );
+                if ( ! is_wp_error( $response ) ) {
+                    if ( '200' == wp_remote_retrieve_response_code( $response ) ) {
+                        $stats = json_decode( wp_remote_retrieve_body( $response ), true );
+                        update_option( 'autoptimize_imgopt_provider_stat', $stats );
                     }
                 }
             }
@@ -226,55 +229,61 @@ class autoptimizeImages
 
     public function get_img_quality_string()
     {
-        static $_img_q_string = null;
+        static $quality = null;
 
-        if ( null === $_img_q_string ) {
-            $_quality_array = $this->get_img_quality_array();
-            $_setting       = $this->get_img_quality_setting();
-            $_img_q_string  = apply_filters( 'autoptimize_filter_extra_imgopt_quality', 'q_' . $_quality_array[ $_setting ] );
+        if ( null === $quality ) {
+            $q_array = $this->get_img_quality_array();
+            $setting = $this->get_img_quality_setting();
+            $quality = apply_filters(
+                'autoptimize_filter_extra_imgopt_quality',
+                'q_' . $q_array[ $setting ]
+            );
         }
 
-        return $_img_q_string;
+        return $quality;
     }
 
     public function get_img_quality_array()
     {
-        static $img_quality_array = null;
+        static $map = null;
 
-        if ( null === $img_quality_array ) {
-            $img_quality_array = array(
+        if ( null === $map ) {
+            $map = array(
                 '1' => 'lossy',
                 '2' => 'glossy',
                 '3' => 'lossless',
             );
-            $img_quality_array = apply_filters( 'autoptimize_filter_extra_imgopt_quality_array', $img_quality_array );
+            $map = apply_filters(
+                'autoptimize_filter_extra_imgopt_quality_array',
+                $map
+            );
         }
 
-        return $img_quality_array;
+        return $map;
     }
 
     public function get_img_quality_setting()
     {
-        static $_img_q = null;
+        static $q = null;
 
-        if ( null === $_img_q ) {
-            $_setting = $this->options['autoptimize_extra_select_field_6'];
+        if ( null === $q ) {
+            $setting = $this->options['autoptimize_extra_select_field_6'];
 
-            if ( ! $_setting || empty( $_setting ) || ( '1' !== $_setting && '3' !== $_setting ) ) {
+            if ( ! $setting || empty( $setting ) || ( '1' !== $setting && '3' !== $setting ) ) {
                 // default image opt. value is 2 ("glossy").
-                $_img_q = '2';
+                $q = '2';
             } else {
-                $_img_q = $_setting;
+                $q = $setting;
             }
         }
 
-        return $_img_q;
+        return $q;
     }
 
-    public function filter_preconnect_imgopt_url( $in )
+    public function filter_preconnect_imgopt_url( array $in )
     {
-        $imgopt_url_array = parse_url( $this->get_imgopt_base_url() );
-        $in[]             = $imgopt_url_array['scheme'] . '://' . $imgopt_url_array['host'];
+        $url_parts = parse_url( $this->get_imgopt_base_url() );
+        $in[]      = $url_parts['scheme'] . '://' . $url_parts['host'];
 
         return $in;
     }
@@ -328,7 +337,10 @@ class autoptimizeImages
         static $nopti_images = null;
 
         if ( null === $cdn_url ) {
-            $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', get_option( 'autoptimize_cdn_url', '' ) );
+            $cdn_url = apply_filters(
+                'autoptimize_filter_base_cdnurl',
+                get_option( 'autoptimize_cdn_url', '' )
+            );
         }
 
         if ( null === $nopti_images ) {
@@ -361,8 +373,14 @@ class autoptimizeImages
 
     private function build_imgopt_url( $orig_url, $width = 0, $height = 0 )
     {
-        $filtered_url = apply_filters( 'autoptimize_filter_extra_imgopt_build_url', $orig_url, $width, $height );
+        $filtered_url = apply_filters(
+            'autoptimize_filter_extra_imgopt_build_url',
+            $orig_url,
+            $width,
+            $height
+        );
 
+        // If filter modified the url, return that.
         if ( $filtered_url !== $orig_url ) {
             return $filtered_url;
         }
