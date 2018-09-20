@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles autoptimizeExtra frontend features + admin options page
+ * Handles optimizing images.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -348,8 +348,8 @@ class autoptimizeImages
             $nopti_images = apply_filters( 'autoptimize_filter_extra_imgopt_noptimize', '' );
         }
 
-        $site_host       = AUTOPTIMIZE_SITE_DOMAIN;
-        $url_parsed      = parse_url( $url );
+        $site_host  = AUTOPTIMIZE_SITE_DOMAIN;
+        $url_parsed = parse_url( $url );
 
         if ( $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
             return false;
