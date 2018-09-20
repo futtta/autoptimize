@@ -281,7 +281,10 @@ class autoptimizeImages
 
     private function normalize_img_urls( $in )
     {
-        $parsed_site_url = parse_url( site_url() );
+        static $parsed_site_url = null;
+        if ( null === $parsed_site_url ) {
+            $parsed_site_url = parse_url( site_url() );
+        }
 
         if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
             $in = $parsed_site_url['scheme'] . ':' . $in;
