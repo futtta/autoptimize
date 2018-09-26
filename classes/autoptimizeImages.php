@@ -288,27 +288,58 @@ class autoptimizeImages
         return $in;
     }
 
-    private function normalize_img_urls( $in )
+    /**
+     * Makes sure given url contains the full scheme and hostname
+     * in case they're not present already.
+     *
+     * @param string $in Image url to normalize.
+     *
+     * @return string
+     */
+    private function normalize_img_url( $in )
     {
+        // Only parse the site url once.
         static $parsed_site_url = null;
         if ( null === $parsed_site_url ) {
             $parsed_site_url = parse_url( site_url() );
         }
 
-        // Making sure given urls contain the full scheme and hostname
-        // in case they're not present already.
-        if ( autoptimizeUtils::is_protocol_relative( $in ) ) {
-            $in = $parsed_site_url['scheme'] . ':' . $in;
-        } elseif ( 0 === strpos( $in, '/' ) ) {
-            $in = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $in;
+        /**
+         * This method gets called a lot, often for identical urls it seems.
+         * `filter_optimize_css_images()` calls us, uses the resulting url and
+         * gives it to `can_optimize_image()`, and if that returns trueish
+         * then `build_imgopt_url()` is called (which, again, calls this method).
+         * Until we dig deeper into whether this all must really happen that
+         * way, having an internal cache here helps (to avoid doing repeated
+         * identical string operations).
+         */
+        static $cache = null;
+        if ( null === $cache ) {
+            $cache = array();
         }
 
-        return apply_filters( 'autoptimize_filter_extra_imgopt_normalized_url', $in );
+        // Do the work on cache miss only.
+        if ( ! isset( $cache[ $in ] ) ) {
+            // Default to what was given to us.
+            $result = $in;
+            if ( autoptimizeUtils::is_protocol_relative( $in ) ) {
+                $result = $parsed_site_url['scheme'] . ':' . $in;
+            } elseif ( 0 === strpos( $in, '/' ) ) {
+                $result = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $in;
+            }
+
+            $result = apply_filters( 'autoptimize_filter_extra_imgopt_normalized_url', $result );
+
+            // Store in cache.
+            $cache[ $in ] = $result;
+        }
+
+        return $cache[ $in ];
     }
 
     public function filter_optimize_css_images( $in )
     {
-        $in = $this->normalize_img_urls( $in );
+        $in = $this->normalize_img_url( $in );
 
         if ( $this->can_optimize_image( $in ) ) {
             return $this->build_imgopt_url( $in, '', '' );
@@ -385,7 +416,7 @@ class autoptimizeImages
             return $filtered_url;
         }
 
-        $orig_url        = $this->normalize_img_urls( $orig_url );
+        $orig_url        = $this->normalize_img_url( $orig_url );
         $imgopt_base_url = $this->get_imgopt_base_url();
         $imgopt_size     = '';
 
@@ -410,7 +441,6 @@ class autoptimizeImages
             return $matches[0];
         }
     }
-
 
     public function filter_optimize_images( $in )
     {
