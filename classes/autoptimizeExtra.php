@@ -868,9 +868,7 @@ class autoptimizeExtra
                 <td>
                     <?php
                     if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'async-javascript/async-javascript.php' ) ) {
-                        _e( 'You have "Async JavaScript" installed,', 'autoptimize' );
-                        $asj_config_url = 'options-general.php?page=async-javascript';
-                        echo sprintf( ' <a href="' . $asj_config_url . '">%s</a>', __( 'configuration of async javascript is best done there.', 'autoptimize' ) );
+                        printf( __( 'You have "Async JavaScript" installed, %1$sconfiguration of async javascript is best done there%2$s.', 'autoptimize' ), '<a href="' . 'options-general.php?page=async-javascript' . '">', '</a>' );
                     } else {
                     ?>
                         <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php echo esc_attr( $options['autoptimize_extra_text_field_3'] ); ?>'>
