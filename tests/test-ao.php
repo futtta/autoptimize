@@ -2390,12 +2390,9 @@ MARKUP;
 <img src='$siteurl/wp-content/plugins/imageplugin/image.php?id=16' width='400' height='200'>
 MARKUP;
 
-        $expected = <<<MARKUP
-<img src='$siteurl/wp-content/plugins/imageplugin/image.php?id=16' width='400' height='200'>
-MARKUP;
-
         $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
-        $this->assertEquals( $expected, $actual );
+        // Expecting $markup since replacement should not happen.
+        $this->assertEquals( $markup, $actual );
     }
 
     /**
