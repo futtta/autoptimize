@@ -417,9 +417,9 @@ abstract class autoptimizeBase
         $filehash = null;
 
         // Grab the parts we need.
-        $parts = explode( $matches[1], '|' );
+        $parts = explode( '|', $matches[1] );
         if ( ! empty( $parts ) ) {
-            $filepath = isset( $parts[0] ) ? $parts[0] : null;
+            $filepath = isset( $parts[0] ) ? base64_decode($parts[0]) : null;
             $filehash = isset( $parts[1] ) ? $parts[1] : null;
         }
 
@@ -485,7 +485,6 @@ abstract class autoptimizeBase
     protected function inject_minified( $in )
     {
         $out = $in;
-
         if ( false !== strpos( $in, '%%INJECTLATER%%' ) ) {
             $out = preg_replace_callback(
                 '#\/\*\!%%INJECTLATER' . AUTOPTIMIZE_HASH . '%%(.*?)%%INJECTLATER%%\*\/#is',
