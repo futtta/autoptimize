@@ -250,7 +250,7 @@ class autoptimizeExtra
             }
 
             if ( ! empty( $subset_string ) ) {
-                $fonts_string = $fonts_string . '#038;subset=' . $subset_string;
+                $fonts_string = $fonts_string . '&#038;subset=' . $subset_string;
             }
 
             $fonts_string = str_replace( '|', '%7C', ltrim( $fonts_string, '|' ) );
