@@ -808,17 +808,17 @@ class autoptimizeExtra
                         }
                         echo apply_filters( 'autoptimize_filter_imgopt_settings_status', '<p><strong><span style="color:' . $_notice_color . ';">' . __( 'Shortpixel status: ', 'autoptimize' ) . '</span></strong>' . $_notice['notice'] . '</p>' );
                     } else {
-                        $upsell_msg_1 = '<p>' . __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by', 'autoptimize' );
-                        $upsell_link  = ' <a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">ShortPixel</a> ';
-                        $upsell_msg_2 = __( 'and then cached and served fast from a CDN.', 'autoptimize' ) . ' ';
+                        $upsell_msg_1 = '<p>' . sprintf( __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by %1$sShortPixel%2$s and then cached and served fast from a CDN.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
                         if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] ) {
-                            $upsell_msg_3 = __( 'For a limited time only, this service is offered free-for-all, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
+                            $upsell_msg_2 = __( 'For a limited time only, this service is offered free-for-all, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
                         } else {
-                            $upsell_msg_3 = __( 'The service is offered for free for 100 images/month regardless of the traffic used. More image optimizations can be purchased starting with $4.99.', 'autoptimize' );
+                            $upsell_msg_2 = __( 'The service is offered for free for 100 images/month regardless of the traffic used. More image optimizations can be purchased starting with $4.99.', 'autoptimize' );
                         }
-                        echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', $upsell_msg_1 . $upsell_link . $upsell_msg_2 . $upsell_msg_3 . '</p>' );
+                        echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', $upsell_msg_1 . ' ' . $upsell_msg_2 . '</p>' );
                     }
-                    echo '<p>' . __( 'Usage of this feature is subject to Shortpixel\'s', 'autoptimize' ) . ' <a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">' . __( 'Terms of Use', 'autoptimize' ) . '</a> ' . __( 'and', 'autoptimize' ) . ' <a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">Privacy policy</a>.</p>';
+                    $faqcopy = sprintf( __( '<strong>Questions</strong>? Have a look at the %1$sShortPixel FAQ%2$s!', 'autoptimize' ), '<strong><a href="https://shortpixel.helpscoutdocs.com/category/60-shortpixel-ai-cdn" target="_blank">', '</strong></a>' );
+                    $toscopy = sprintf( __( 'Usage of this feature is subject to Shortpixel\'s %1$sTerms of Use%2$s and %3$sPrivacy policy%4$s.', 'autoptimize' ), '<a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">', '</a>', '<a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">', '</a>' );
+                    echo apply_filters( 'autoptimize_extra_imgopt_settings_tos', '<p>' . $faqcopy . ' ' . $toscopy . '</p>' );
                     ?>
                 </td>
             </tr>
@@ -842,7 +842,7 @@ class autoptimizeExtra
                         ?>
                     </select>
                     </label>
-                    <p><?php echo apply_filters( 'autoptimize_extra_imgopt_quality_copy', __( 'You can', 'autoptimize' ) . ' <a href="https://shortpixel.com/oic' . $sp_url_suffix . '" target="_blank">' . __( 'test compression levels here', 'autoptimize' ) . '</a>.' ); ?></p>
+                    <p><?php echo apply_filters( 'autoptimize_extra_imgopt_quality_copy', sprintf( __( 'You can %1$stest compression levels here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/oic' . $sp_url_suffix . '" target="_blank">', '</a>' ) ); ?></p>
                 </td>
             </tr>
             <tr>
@@ -868,9 +868,7 @@ class autoptimizeExtra
                 <td>
                     <?php
                     if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'async-javascript/async-javascript.php' ) ) {
-                        _e( 'You have "Async JavaScript" installed,', 'autoptimize' );
-                        $asj_config_url = 'options-general.php?page=async-javascript';
-                        echo sprintf( ' <a href="' . $asj_config_url . '">%s</a>', __( 'configuration of async javascript is best done there.', 'autoptimize' ) );
+                        printf( __( 'You have "Async JavaScript" installed, %1$sconfiguration of async javascript is best done there%2$s.', 'autoptimize' ), '<a href="' . 'options-general.php?page=async-javascript' . '">', '</a>' );
                     } else {
                     ?>
                         <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php echo esc_attr( $options['autoptimize_extra_text_field_3'] ); ?>'>
