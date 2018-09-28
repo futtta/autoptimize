@@ -3,7 +3,7 @@
 Plugin Name: Autoptimize
 Plugin URI: https://autoptimize.com/
 Description: Optimizes your website, concatenating the CSS and JavaScript code, and compressing it.
-Version: 2.4.0-beta-5
+Version: 2.4.1-beta-1
 Author: Frank Goossens (futtta)
 Author URI: https://autoptimize.com/
 Text Domain: autoptimize
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AUTOPTIMIZE_PLUGIN_VERSION', '2.4.0-beta-5' );
+define( 'AUTOPTIMIZE_PLUGIN_VERSION', '2.4.1-beta-1' );
 
 // plugin_dir_path() returns the trailing slash!
 define( 'AUTOPTIMIZE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
