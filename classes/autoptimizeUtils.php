@@ -66,9 +66,9 @@ class autoptimizeUtils
      */
     public static function strpos( $haystack, $needle, $offset = 0, $encoding = null )
     {
-        if ( self::mbstring_available() ) {
+        if ( self::mbstring_available() && apply_filters( 'autoptimize_filter_utils_charsets_goextramile', false ) ) {
             return ( null === $encoding ) ? \mb_strpos( $haystack, $needle, $offset ) : \mb_strlen( $haystack, $needle, $offset, $encoding );
-        } elseif ( self::iconv_available() ) {
+        } elseif ( self::iconv_available() && apply_filters( 'autoptimize_filter_utils_charsets_goextramile', false ) ) {
             return ( null === $encoding ) ? \iconv_strpos( $haystack, $needle, $offset ) : \iconv_strpos( $haystack, $needle, $offset, $encoding );
         } else {
             return \strpos( $haystack, $needle, $offset );
@@ -88,9 +88,9 @@ class autoptimizeUtils
      */
     public static function strlen( $string, $encoding = null )
     {
-        if ( self::mbstring_available() ) {
+        if ( self::mbstring_available() && apply_filters( 'autoptimize_filter_utils_charsets_goextramile', false ) ) {
             return ( null === $encoding ) ? \mb_strlen( $string ) : \mb_strlen( $string, $encoding );
-        } elseif ( self::iconv_available() ) {
+        } elseif ( self::iconv_available() && apply_filters( 'autoptimize_filter_utils_charsets_goextramile', false ) ) {
             return ( null === $encoding ) ? @iconv_strlen( $string ) : @iconv_strlen( $string, $encoding );
         } else {
             return \strlen( $string );
@@ -113,7 +113,7 @@ class autoptimizeUtils
      */
     public static function substr_replace( $string, $replacement, $start, $length = null, $encoding = null )
     {
-        if ( self::mbstring_available() ) {
+        if ( self::mbstring_available() && apply_filters( 'autoptimize_filter_utils_charsets_goextramile', false ) ) {
             $strlen = self::strlen( $string, $encoding );
 
             if ( $start < 0 ) {
@@ -146,7 +146,7 @@ class autoptimizeUtils
             }
 
             return "{$leader}{$replacement}{$trailer}";
-        } elseif ( self::iconv_available() ) {
+        } elseif ( self::iconv_available() && apply_filters( 'autoptimize_filter_utils_charsets_goextramile', false ) ) {
             $strlen = self::strlen( $string, $encoding );
 
             if ( $start < 0 ) {
