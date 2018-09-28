@@ -46,10 +46,6 @@ class autoptimizeUtils
             $available = \extension_loaded( 'iconv' );
         }
 
-        if ( ! apply_filters( 'autoptimize_filter_utils_do_inconv', false ) ) {
-            $available = false;
-        }
-
         if ( null !== $override ) {
             $available = $override;
         }

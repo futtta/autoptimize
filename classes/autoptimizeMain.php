@@ -127,6 +127,10 @@ class autoptimizeMain
         if ( ! defined( 'AUTOPTIMIZE_SITE_DOMAIN' ) ) {
             define( 'AUTOPTIMIZE_SITE_DOMAIN', parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) );
         }
+
+        // disable iconv by default (it's too slow).
+        autoptimizeUtils::iconv_available( false );
+
         do_action( 'autoptimize_setup_done' );
     }
 
