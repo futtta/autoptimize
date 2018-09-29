@@ -380,6 +380,7 @@ class autoptimizeImages
         }
 
         $site_host  = AUTOPTIMIZE_SITE_DOMAIN;
+        $url        = $this->normalize_img_url( $url );
         $url_parsed = parse_url( $url );
 
         if ( $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
