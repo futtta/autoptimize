@@ -515,6 +515,11 @@ class Minifier
 
         while (($blockStartPos = strpos($css, '{', $searchOffset)) !== false) {
             $blockEndPos = strpos($css, '}', $blockStartPos);
+            // When ending curly brace is missing, let's
+            // behave like there was one at the end of the block...
+            if ( false === $blockEndPos ) {
+                $blockEndPos = strlen($css) - 1;
+            }
             $nextBlockStartPos = strpos($css, '{', $blockStartPos + 1);
             $ret .= substr($css, $substrOffset, $blockStartPos - $substrOffset);
 
