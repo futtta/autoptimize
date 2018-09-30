@@ -325,7 +325,13 @@ class autoptimizeImages
             if ( autoptimizeUtils::is_protocol_relative( $in ) ) {
                 $result = $parsed_site_url['scheme'] . ':' . $in;
             } elseif ( 0 === strpos( $in, '/' ) ) {
-                $result = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $in;
+                // Root-relative...
+                $result = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'];
+                // Add the path for subfolder installs.
+                if ( isset( $parsed_site_url['path'] ) ) {
+                    $result .= $parsed_site_url['path'];
+                }
+                $result .= $in;
             }
 
             $result = apply_filters( 'autoptimize_filter_extra_imgopt_normalized_url', $result );
@@ -501,6 +507,7 @@ class autoptimizeImages
                 }
             }
         }
+
         $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
 
         // img thumbnails in e.g. woocommerce.
