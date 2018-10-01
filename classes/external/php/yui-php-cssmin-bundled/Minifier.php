@@ -636,7 +636,7 @@ class Minifier
         );
 
         // Restore unquoted font tokens now after colors have been changed.
-        $body = $this->restoreUnqoutedFontTokens($body);
+        $body = $this->restoreUnquotedFontTokens($body);
 
         // Replace positive sign from numbers before the leading space is removed.
         // +1.2em to 1.2em, +.8px to .8px, +2% to 2%
@@ -730,7 +730,7 @@ class Minifier
         return $this->registerUnquotedFontToken($matches[0]);
     }
 
-    private function restoreUnqoutedFontTokens($body)
+    private function restoreUnquotedFontTokens($body)
     {
         return strtr($body, $this->unquotedFontTokens);
     }
