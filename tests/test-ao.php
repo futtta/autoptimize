@@ -2465,4 +2465,21 @@ MARKUP;
             ['https://booya.kasha', false],
         ];
     }
+
+    public function test_css_minifier_unmatched_parens()
+    {
+        $css = <<<MARKUP
+img.centered, .aligncenter {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+MARKUP;
+
+        $expected = 'img.centered,.aligncenter{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}';
+
+        $instance = new autoptimizeStyles( $css );
+        $minified = $instance->run_minifier_on( $css );
+
+        $this->assertEquals( $expected, $minified );
+    }
 }
