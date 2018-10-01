@@ -64,7 +64,7 @@ class Minifier
     private $shortenThreeZeroesRegex;
     private $shortenFourZeroesRegex;
     private $unitsGroupRegex = '(?:ch|cm|em|ex|gd|in|mm|px|pt|pc|q|rem|vh|vmax|vmin|vw|%)';
-    private $unquotedFontsRegex = '/(font-family:|font:)([^ \'"]+?)[^}]*/Si';
+    private $unquotedFontsRegex = '/(font-family:|font:)([^\'"]+?)[^};]*/Si';
 
     /**
      * @param bool|int $raisePhpLimits If true, PHP settings will be raised if needed
