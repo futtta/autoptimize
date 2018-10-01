@@ -29,11 +29,13 @@ class Minifier
     const COMMENT_TOKEN_START = '_CSSMIN_CMT_';
     const RULE_BODY_TOKEN = '_CSSMIN_RBT_%d_';
     const PRESERVED_TOKEN = '_CSSMIN_PTK_%d_';
+    const UNQUOTED_FONT_TOKEN = '_CSSMIN_UFT_%d_';
 
     // Token lists
     private $comments = array();
     private $ruleBodies = array();
     private $preservedTokens = array();
+    private $unquotedFontTokens = array();
 
     // Output options
     private $keepImportantComments = true;
@@ -62,6 +64,7 @@ class Minifier
     private $shortenThreeZeroesRegex;
     private $shortenFourZeroesRegex;
     private $unitsGroupRegex = '(?:ch|cm|em|ex|gd|in|mm|px|pt|pc|q|rem|vh|vmax|vmin|vw|%)';
+    private $unquotedFontsRegex = '/(font-family:|font:)([^\'"]+?)[^};]*/Si';
 
     /**
      * @param bool|int $raisePhpLimits If true, PHP settings will be raised if needed
@@ -284,6 +287,17 @@ class Minifier
 
         $tokenId = sprintf(self::RULE_BODY_TOKEN, count($this->ruleBodies));
         $this->ruleBodies[$tokenId] = $body;
+        return $tokenId;
+    }
+
+    private function registerUnquotedFontToken($body)
+    {
+        if (empty($body)) {
+            return '';
+        }
+
+        $tokenId = sprintf(self::UNQUOTED_FONT_TOKEN, count($this->unquotedFontTokens));
+        $this->unquotedFontTokens[$tokenId] = $body;
         return $tokenId;
     }
 
@@ -605,6 +619,14 @@ class Minifier
             $body
         );
 
+        // Tokenize unquoted font names in order to hide them from
+        // color name replacements.
+        $body = preg_replace_callback(
+            $this->unquotedFontsRegex,
+            array($this, 'preserveUnquotedFontTokens'),
+            $body
+        );
+
         // Shorten long named colors with a shorter HEX counterpart: white -> #fff.
         // Run at least 2 times to cover most cases
         $body = preg_replace_callback(
@@ -612,6 +634,9 @@ class Minifier
             array($this, 'shortenNamedColorsCallback'),
             $body
         );
+
+        // Restore unquoted font tokens now after colors have been changed.
+        $body = $this->restoreUnquotedFontTokens($body);
 
         // Replace positive sign from numbers before the leading space is removed.
         // +1.2em to 1.2em, +.8px to .8px, +2% to 2%
@@ -698,6 +723,16 @@ class Minifier
         $body = preg_replace_callback('/(?:^|;)[A-Z-]+:/S', array($this, 'strtolowerCallback'), $body);
 
         return $body;
+    }
+
+    private function preserveUnquotedFontTokens($matches)
+    {
+        return $this->registerUnquotedFontToken($matches[0]);
+    }
+
+    private function restoreUnquotedFontTokens($body)
+    {
+        return strtr($body, $this->unquotedFontTokens);
     }
 
     /**
