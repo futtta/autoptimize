@@ -2482,4 +2482,25 @@ MARKUP;
 
         $this->assertEquals( $expected, $minified );
     }
+
+    public function test_css_font_names_mangling()
+    {
+        // Properly quoted font names dont get mangled.
+        $css      = 'h2{font-family:"Archivo Black"}';
+        $instance = new autoptimizeStyles( $css );
+        $actual   = $instance->run_minifier_on( $css );
+        $this->assertEquals( $css, $actual );
+
+        // When not quoted, 'Black' used to become '#000', but not anymore... :)
+        $css_unquoted = 'h2{font-family:Archivo Black;}';
+        $expected     = 'h2{font-family:Archivo Black}';
+        $instance     = new autoptimizeStyles( $css_unquoted );
+        $actual       = $instance->run_minifier_on( $css_unquoted );
+        $this->assertEquals( $expected, $actual );
+
+        $css_unquoted = 'h1{font:italic 1.2em Fira White,serif}';
+        $instance     = new autoptimizeStyles( $css_unquoted );
+        $actual       = $instance->run_minifier_on( $css_unquoted );
+        $this->assertEquals( $css_unquoted, $actual );
+    }
 }
