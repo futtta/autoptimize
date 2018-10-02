@@ -367,6 +367,8 @@ class autoptimizeExtra
         if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
             foreach ( $matches[0] as $tag ) {
                 $orig_tag = $tag;
+                $imgopt_w = '';
+                $imgopt_h = '';
 
                 // first do (data-)srcsets.
                 if ( preg_match_all( '#srcset=("|\')(.*)("|\')#Usmi', $tag, $allsrcsets, PREG_SET_ORDER ) ) {
@@ -388,7 +390,9 @@ class autoptimizeExtra
                 }
 
                 // proceed with img src.
-                // first get width and height and add to $imgopt_size.
+                // first reset and then get width and height and add to $imgopt_size.
+                $imgopt_w = '';
+                $imgopt_h = '';
                 if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $width ) ) {
                     $imgopt_w = $width[2];
                 }
