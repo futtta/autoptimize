@@ -128,8 +128,12 @@ class autoptimizeMain
             define( 'AUTOPTIMIZE_SITE_DOMAIN', parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) );
         }
 
-        // disable iconv by default (it's too slow).
-        autoptimizeUtils::iconv_available( false );
+        // Multibyte-capable string replacements are available with a filter.
+        // Also requires 'mbstring' extension.
+        $with_mbstring = apply_filters( 'autoptimize_filter_with_mbstring', false );
+        if ( $with_mbstring ) {
+            autoptimizeUtils::mbstring_available( \extensions_loaded( 'mbstring' ) );
+        }
 
         do_action( 'autoptimize_setup_done' );
     }
