@@ -73,7 +73,8 @@ class AOTest extends WP_UnitTestcase
 
         static $imgopt_host = null;
         if ( null === $imgopt_host ) {
-            $imgopt_host = rtrim( autoptimizeExtra::get_imgopt_host_wrapper(), '/' );
+            $optimizer   = new autoptimizeImages( autoptimizeExtra::fetch_options() );
+            $imgopt_host = rtrim( $optimizer->get_imgopt_host(), '/' );
         }
 
         static $urls = [];
@@ -2288,11 +2289,11 @@ MARKUP;
     }
 
     /**
-     * Test image optimization in autoptimizeExtra.php.
+     * Test image optimization in autoptimizeImages.php.
      *
      * Default case: img with srcsets
      */
-    public function test_extra_imgopt()
+    public function test_imgopt()
     {
         $urls       = $this->get_urls();
         $siteurl    = $urls['siteurl'];
@@ -2306,39 +2307,32 @@ MARKUP;
 <img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $instance = new autoptimizeExtra();
-        $actual = $instance->filter_optimize_images( $markup );
+        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
 
     /**
-     * Test image optimization in autoptimizeExtra.php.
+     * Test image optimization in autoptimizeImages.php.
      *
-     * Exception case: image served by .php, should not be proxied
+     * Exception case: image served by .php, should not be proxied.
      */
-    public function test_extra_imgopt_php()
+    public function test_imgopt_php()
     {
-        $siteurl = $this->get_urls()['siteurl'];
-
         $markup = <<<MARKUP
-<img src='$siteurl/wp-content/plugins/imageplugin/image.php?id=16' width='400' height='200'>
+<img src='/wp-content/plugins/imageplugin/image.php?id=16' width='400' height='200'>
 MARKUP;
 
-        $expected = <<<MARKUP
-<img src='$siteurl/wp-content/plugins/imageplugin/image.php?id=16' width='400' height='200'>
-MARKUP;
-
-        $instance = new autoptimizeExtra();
-        $actual = $instance->filter_optimize_images( $markup );
-        $this->assertEquals( $expected, $actual );
+        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
+        // Expecting $markup since replacement should not happen.
+        $this->assertEquals( $markup, $actual );
     }
 
     /**
-     * Test image optimization in autoptimizeExtra.php.
+     * Test image optimization in autoptimizeImages.php.
      *
      * Alternate case: lazy loaded images with srcsets (using wp rocket variant HTML)
      */
-    public function test_extra_imgopt_lazy()
+    public function test_imgopt_lazy()
     {
         $urls       = $this->get_urls();
         $siteurl    = $urls['siteurl'];
@@ -2352,8 +2346,50 @@ MARKUP;
 <img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $instance = new autoptimizeExtra();
-        $actual = $instance->filter_optimize_images( $markup );
+        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test image optimization when image urls have no explict host provided.
+     */
+    public function test_imgopt_url_normalize_root_relative()
+    {
+        $urls       = $this->get_urls();
+        $siteurl    = $urls['siteurl'];
+        $imgopthost = $urls['imgopthost'];
+
+        $markup = <<<MARKUP
+<img src='/wp-content/image.jpg' width='400' height='200' srcset="/wp-content/image-300X150.jpg 300w, /wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $expected = <<<MARKUP
+<img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test image optimization when image urls have a protocol-relative url.
+     */
+    public function test_imgopt_url_normalize_protocol_relative()
+    {
+        $urls       = $this->get_urls();
+        $siteurl    = $urls['siteurl'];
+        $prsiteurl  = $urls['prsiteurl'];
+        $imgopthost = $urls['imgopthost'];
+
+        $markup = <<<MARKUP
+<img src='$prsiteurl/wp-content/image.jpg' width='400' height='200' srcset="$prsiteurl/wp-content/image-300X150.jpg 300w, $prsiteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $expected = <<<MARKUP
+<img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
 
@@ -2397,6 +2433,7 @@ MARKUP;
             ['/root-relative', false],
             ['http://what.ever/', false],
             ['https://booya.kasha', false],
+            ['1/', false],
         ];
     }
 
@@ -2436,5 +2473,12 @@ MARKUP;
         $instance     = new autoptimizeStyles( $css_unquoted );
         $actual       = $instance->run_minifier_on( $css_unquoted );
         $this->assertEquals( $css_unquoted, $actual );
+    }
+
+    public function test_is_plugin_active_utils_wrapper()
+    {
+        // Our plugin is loaded via "muplugins_loaded" filter in tests/bootstrap.php
+        $this->assertFalse( autoptimizeUtils::is_plugin_active( 'autoptimize/autoptimize.php' ) );
+        $this->assertFalse( autoptimizeUtils::is_plugin_active( 'async-javascript/async-javascript.php' ) );
     }
 }

@@ -24,7 +24,7 @@ class autoptimizeExtra
     public function __construct( $options = array() )
     {
         if ( empty( $options ) ) {
-            $options = $this->fetch_options();
+            $options = self::fetch_options();
         }
 
         $this->options = $options;
@@ -40,7 +40,7 @@ class autoptimizeExtra
         }
     }
 
-    protected function fetch_options()
+    public static function fetch_options()
     {
         $value = get_option( 'autoptimize_extra_settings' );
         if ( empty( $value ) ) {
@@ -85,7 +85,8 @@ class autoptimizeExtra
         }
     }
 
-    public function filter_remove_qs( $src ) {
+    public function filter_remove_qs( $src )
+    {
         if ( strpos( $src, '?ver=' ) ) {
             $src = remove_query_arg( 'ver', $src );
         }
@@ -128,15 +129,8 @@ class autoptimizeExtra
             add_filter( 'style_loader_src', array( $this, 'filter_remove_qs' ), 15, 1 );
         }
 
-        // Making sure is_plugin_active() exists when we need it.
-        if ( ! function_exists( 'is_plugin_active' ) ) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-        }
         // Avoiding conflicts of interest when async-javascript plugin is active!
-        $async_js_plugin_active = false;
-        if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'async-javascript/async-javascript.php' ) ) {
-            $async_js_plugin_active = true;
-        }
+        $async_js_plugin_active = autoptimizeUtils::is_plugin_active( 'async-javascript/async-javascript.php' );
         if ( ! empty( $options['autoptimize_extra_text_field_3'] ) && ! $async_js_plugin_active ) {
             add_filter( 'autoptimize_filter_js_exclude', array( $this, 'extra_async_js' ), 10, 1 );
         }
@@ -154,19 +148,7 @@ class autoptimizeExtra
         }
 
         // Optimize Images!
-        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && 'down' !== $options['availabilities']['extra_imgopt']['status'] && ( 'launch' !== $options['availabilities']['extra_imgopt']['status'] || $this->imgopt_launch_ok() ) ) {
-            if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
-                add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
-                $_imgopt_active = true;
-            }
-            if ( apply_filters( 'autoptimize_filter_extra_imgopt_do_css', true ) ) {
-                add_filter( 'autoptimize_filter_base_replace_cdn', array( $this, 'filter_optimize_css_images' ), 10, 1 );
-                $_imgopt_active = true;
-            }
-            if ( $_imgopt_active ) {
-                add_filter( 'autoptimize_extra_filter_tobepreconn', array( $this, 'filter_preconnect_imgopt_url' ), 10, 1 );
-            }
-        }
+        autoptimizeImages::instance()->set_options( $options )->run();
     }
 
     public function filter_remove_emoji_dns_prefetch( $urls, $relation_type )
@@ -712,7 +694,14 @@ class autoptimizeExtra
 
     public function admin_menu()
     {
-        add_submenu_page( null, 'autoptimize_extra', 'autoptimize_extra', 'manage_options', 'autoptimize_extra', array( $this, 'options_page' ) );
+        add_submenu_page(
+            null,
+            'autoptimize_extra',
+            'autoptimize_extra',
+            'manage_options',
+            'autoptimize_extra',
+            array( $this, 'options_page' )
+        );
         register_setting( 'autoptimize_extra_settings', 'autoptimize_extra_settings' );
     }
 
@@ -731,8 +720,8 @@ class autoptimizeExtra
         // behavior being persisted in the DB even if save is done here.
         $options       = $this->fetch_options();
         $gfonts        = $options['autoptimize_extra_radio_field_4'];
-        $sp_url_suffix = '/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
-    ?>
+        $sp_url_suffix = autoptimizeImages::get_service_url_suffix();
+        ?>
     <style>
         #ao_settings_form {background: white;border: 1px solid #ccc;padding: 1px 15px;margin: 15px 10px 10px 0;}
         #ao_settings_form .form-table th {font-weight: normal;}
@@ -740,40 +729,27 @@ class autoptimizeExtra
     </style>
     <div class="wrap">
     <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
-    <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
-    <?php
-    if ( 'on' !== get_option( 'autoptimize_js' ) && 'on' !== get_option( 'autoptimize_css' ) && 'on' !== get_option( 'autoptimize_html' ) ) {
-        ?>
-        <div class="notice-warning notice"><p>
-        <?php
-        _e( 'Most of below Extra optimizations require at least one of HTML, JS or CSS autoptimizations being active.', 'autoptimize' );
-        ?>
-        </p></div>
-        <?php
-    }
+        <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
+        <?php if ( 'on' !== get_option( 'autoptimize_js' ) && 'on' !== get_option( 'autoptimize_css' ) && 'on' !== get_option( 'autoptimize_html' ) ) { ?>
+            <div class="notice-warning notice"><p>
+            <?php _e( 'Most of below Extra optimizations require at least one of HTML, JS or CSS autoptimizations being active.', 'autoptimize' ); ?>
+            </p></div>
+        <?php } ?>
 
-    if ( 'down' === $options['availabilities']['extra_imgopt']['status'] ) {
-        ?>
-        <div class="notice-warning notice"><p>
-        <?php
-        // translators: "Autoptimize support forum" will appear in a "a href".
-        echo sprintf( __( 'The image optimization service is currently down, image optimization will be skipped until further notice. Check the %1$sAutoptimize support forum%2$s for more info.', 'autoptimize' ), '<a href="https://wordpress.org/support/plugin/autoptimize/" target="_blank">', '</a>' );
-        ?>
-        </p></div>
-        <?php
-    }
+        <?php if ( 'down' === $options['availabilities']['extra_imgopt']['status'] ) { ?>
+            <div class="notice-warning notice"><p>
+            <?php
+            // translators: "Autoptimize support forum" will appear in a "a href".
+            echo sprintf( __( 'The image optimization service is currently down, image optimization will be skipped until further notice. Check the %1$sAutoptimize support forum%2$s for more info.', 'autoptimize' ), '<a href="https://wordpress.org/support/plugin/autoptimize/" target="_blank">', '</a>' );
+            ?>
+            </p></div>
+        <?php } ?>
 
-    if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && ! $this->imgopt_launch_ok() ) {
-        ?>
-        <div class="notice-warning notice"><p>
-        <?php
-        _e( 'The image optimization service is launching, but not yet available for this domain, it should become available in the next couple of days.', 'autoptimize' );
-        ?>
-        </p></div>
-        <?php
-    }
-
-    ?>
+        <?php if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && ! autoptimizeImages::instance()->launch_ok() ) { ?>
+            <div class="notice-warning notice"><p>
+            <?php _e( 'The image optimization service is launching, but not yet available for this domain, it should become available in the next couple of days.', 'autoptimize' ); ?>
+            </p></div>
+        <?php } ?>
     <form id='ao_settings_form' action='options.php' method='post'>
         <?php settings_fields( 'autoptimize_extra_settings' ); ?>
         <h2><?php _e( 'Extra Auto-Optimizations', 'autoptimize' ); ?></h2>
@@ -795,7 +771,7 @@ class autoptimizeExtra
                     <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from a CDN.', 'autoptimize' ); ?></label>
                     <?php
                     // show shortpixel status.
-                    $_notice = $this->get_imgopt_status_notice();
+                    $_notice = autoptimizeImages::instance()->get_status_notice();
                     if ( $_notice ) {
                         switch ( $_notice['status'] ) {
                             case 2:
@@ -832,8 +808,8 @@ class autoptimizeExtra
                     <label>
                     <select name='autoptimize_extra_settings[autoptimize_extra_select_field_6]'>
                         <?php
-                        $_imgopt_array = $this->get_img_quality_array();
-                        $_imgopt_val   = $this->get_img_quality_setting();
+                        $_imgopt_array = autoptimizeImages::instance()->get_img_quality_array();
+                        $_imgopt_val   = autoptimizeImages::instance()->get_img_quality_setting();
 
                         foreach ( $_imgopt_array as $key => $value ) {
                             echo '<option value="' . $key . '"';
@@ -871,10 +847,10 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Async Javascript-files <em>(advanced users)</em>', 'autoptimize' ); ?></th>
                 <td>
                     <?php
-                    if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'async-javascript/async-javascript.php' ) ) {
-                        printf( __( 'You have "Async JavaScript" installed, %1$sconfiguration of async javascript is best done there%2$s.', 'autoptimize' ), '<a href="' . 'options-general.php?page=async-javascript' . '">', '</a>' );
+                    if ( autoptimizeUtils::is_plugin_active( 'async-javascript/async-javascript.php' ) ) {
+                        printf( __( 'You have "Async JavaScript" installed, %1$sconfiguration of async javascript is best done there%2$s.', 'autoptimize' ), '<a href="options-general.php?page=async-javascript">', '</a>' );
                     } else {
-                    ?>
+                        ?>
                         <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php echo esc_attr( $options['autoptimize_extra_text_field_3'] ); ?>'>
                         <br />
                         <?php
@@ -891,7 +867,7 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Optimize YouTube videos', 'autoptimize' ); ?></th>
                 <td>
                     <?php
-                    if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'wp-youtube-lyte/wp-youtube-lyte.php' ) ) {
+                    if ( autoptimizeUtils::is_plugin_active( 'wp-youtube-lyte/wp-youtube-lyte.php' ) ) {
                         _e( 'Great, you have WP YouTube Lyte installed.', 'autoptimize' );
                         $lyte_config_url = 'options-general.php?page=lyte_settings_page';
                         echo sprintf( ' <a href="' . $lyte_config_url . '">%s</a>', __( 'Click here to configure it.', 'autoptimize' ) );
@@ -918,6 +894,6 @@ class autoptimizeExtra
             });
         });
     </script>
-    <?php
+        <?php
     }
 }
