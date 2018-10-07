@@ -641,7 +641,7 @@ class autoptimizeStyles extends autoptimizeBase
                     $medianame                 = $med . ', ' . $media;
                     $this->csscode[$medianame] = $code;
                     $md5list[$medianame]       = $md5list[$med];
-                    unset( $this->csscode[$med], $this->csscode[$media], $med5list[$med] );
+                    unset( $this->csscode[$med], $this->csscode[$media], $md5list[$med] );
                 }
             }
             $md5list[$medianame] = $md5sum;
