@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ruleset name="Autoptimize Coding Standards">
+    <description>Modified from WordPress Coding Standards for Plugins</description>
+
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+
+    <rule ref="WordPress-Core">
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+        <exclude name="PEAR.NamingConventions.ValidClassName.StartWithCapital"/>
+        <exclude name="Squiz.Commenting.ClassComment.Missing"/>
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed"/>
+        <exclude name="Generic.Classes.OpeningBraceSameLine.BraceOnNewLine"/>
+        <exclude name="WordPress.WhiteSpace.ControlStructureSpacing.OpenBraceNotSameLine"/>
+        <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie.BraceOnNewLine"/>
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+    </rule>
+    <rule ref="WordPress-Docs" />
+
+    <!-- Check all PHP files in directory tree by default. -->
+    <arg name="extensions" value="php"/>
+    <!--file>.</file-->
+    <file>autoptimize.php</file>
+    <file>classes</file>
+
+    <!-- Show progress and sniff codes in all reports -->
+    <arg value="ps"/>
+
+    <rule ref="PHPCompatibility"/>
+    <config name="testVersion" value="5.3"/>
+
+    <!--exclude-pattern>*/node_modules/*</exclude-pattern-->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/external/*</exclude-pattern>
+</ruleset>
