@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
 Tested up to: 4.9
 Requires PHP: 5.3
-Stable tag: 2.4.1-beta-1
+Stable tag: 2.4.0
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, HTML, Google Fonts and images, async-ing JS, removing emoji cruft and more.
 
@@ -227,6 +227,33 @@ Preconnect is a somewhat advanced feature to instruct browsers ([if they support
 
 JavaScript files that are not autoptimized (because they were excluded or because they are hosted elsewhere) are typically render-blocking. By adding them in the comma-separated "async JS" field, Autoptimize will add the async flag causing the browser to load those files asynchronously (i.e. non-render blocking). This can however break your site (page), e.g. if you async "js/jquery/jquery.js" you will very likely get "jQuery is not defined"-errors. Use with care.
 
+= How does image optimization work? =
+
+When image optimization is on, Autoptimize will look for png, gif, jpeg (.jpg) files in image tags and in your CSS files that are loaded from your own domain and change the src (source) to the ShortPixel CDN for those.
+
+= Where can I get more info on image optimization? =
+
+Have a look at [Shortpixel's FAQ](https://shortpixel.helpscoutdocs.com/category/60-shortpixel-ai-cdn).
+
+= Can I disable the minification of excluded JS/ CSS? =
+
+As from AO 2.4 excluded JS/ CSS are minified if the (filename indicates the) file is not minified yet. You can disable this with these filters;
+
+`
+add_filter('autoptimize_filter_js_minify_excluded','__return_false');
+add_filter('autoptimize_filter_css_minify_excluded','__return_false');`
+
+= Can I disable AO listening to page cache purges? =
+
+As from AO 2.4 AO "listens" to page cache purges to clear its own cache. You can disable this behavior with this filter;
+
+`
+add_filter('autoptimize_filter_main_hookpagecachepurge','__return_false');`
+
+= Why can't I upgrade from 2.3.4 to 2.4.0 (or higher)? =
+
+Main reason (apart from occasional hickups that seem to be inherent to plugin upgrades) is that AO 2.4 requires you to be running PHP 5.3 or higher. And let's face it; you should actually be running PHP 7.x if you value performance (and security and support), no?
+
 = Where can I get help? =
 
 You can get help on the [wordpress.org support forum](http://wordpress.org/support/plugin/autoptimize). If you are 100% sure this your problem cannot be solved using Autoptimize configuration and that you in fact discovered a bug in the code, you can [create an issue on GitHub](https://github.com/futtta/autoptimize/issues). If you're looking for premium support, check out our [Autoptimize Pro Support and Web Performance Optimization services](http://autoptimize.com/).
@@ -243,31 +270,117 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
-= 2.4.0 beta 5 =
+= 2.5.0 =
+* moved image optimization logic to a separate file.
 
-* lots of polishing, esp. for the image optimization stuff, see [GitHub changelog](https://github.com/futtta/autoptimize/commits/beta)
-* this _should_ be the last beta, unless medium or major issues are found, you can expect the AO 2.4 release for the end of Sept.
-
-= 2.4.0 beta 4 =
-
-* edging closer to release (but we'll have at least one more beta)
-* misc smaller improvements & fixes (see [GitHub changelog](https://github.com/futtta/autoptimize/commits/beta))
-
-= 2.4.0 beta 3 =
-
+= 2.4.0 =
+* refactored significantly (no more "classlesses", all is OO), classes are autoloaded, tests added (travis-ci) by zytzagoo who deserves praise for his hard work!
 * new: image optimization (see "Extra"-tab) using Shortpixel's smart image optimization proxy
+* new: you can now disable JS/ CSS-files being aggregated, having them minified individually instead
+* new: Google Fonts can now be "aggregated & preloaded", this uses CSS which is loaded non render-blocking
+* new: Autoptimize "listens" to page caches being cleared, upon which it purges it's own cache as well. Support depends on known action hooks firing by the page cache, supported by Hyper Cache, WP Rocket, W3 Total Cache, KeyCDN Cache Enabler, Swift, WP Super Cache, WP Fastest Cache and Comet Cache.
+* new: local JS/ CSS-files that are excluded from optimization are minified by default (can be overridden by filter)
+* improvement: updated minifiers (with very significant improvements for YUI CSS compressor PHP port)
+* improvement: "remove all Google Fonts" is now more careful (avoiding removing entire CSS blocks)
 * misc. under the hood improvements (e.g. more robust cache clearing, better support for multibyte character sets, improved CDN rewrite logic, avoid PHP warnings when writing files to cache, ...)
 
-= 2.4.0 beta 2 =
+= 2.3.4 =
+* bugfix: is_plugin_active causing errors in some cases as [reported by @iluminancia and @lozula](https://wordpress.org/support/topic/fatal-error-after-update-to-2-3-3/)
+* bugfix: added language domain to 4 __/_e functions, un grand merci Ã  Guillaume Blet!
 
-* new: Autoptimize "listens" to page caches being cleared, upon which it purges it's own cache as well. Support depends on known action hooks firing by the page cache, supported by Hyper Cache, WP Rocket, W3 Total Cache, KeyCDN Cache Enabler, support confirmed coming in WP Fastest Cache and Comet Cache.
-* new: Google Fonts can now be "aggregated & preloaded", this uses CSS which is loaded non render-blocking
-* improvement: "remove all Google Fonts" is now more careful (avoiding removing entire CSS blocks)
+= 2.3.3 =
+* improvement: updated to latest version of Filamentgroup's loadCSS
+* improvement: by default exclude `wp-content/cache` and `wp-content/uploads` from CSS optimization (Divi, Avada & possibly others store page-specific CSS there)
+* bugfix: stop double try/catch-blocks
+* misc. bugfixes (see [GitHub commit log](https://github.com/futtta/autoptimize/commits/master))
+* heads-up: this is (supposed to be) the last minor release of the 2.3 branch, [2.4 is a major change with some big under-the-hood and functional changes](https://blog.futtta.be/2018/02/18/introducing-zytzagoos-major-changes-for-autoptimize-2-4/)
 
-= 2.4.0 beta 1 =
+= 2.3.2 =
+* workaround for [stale options-data in external object cache such as Redis, Memcached (core bug)](https://core.trac.wordpress.org/ticket/31245) resulting in Autoptimize continuously executing the upgrade-procedure including clearing the cache and trying to preload it with HTTP-requests with "cachebuster" in the query string, thanks to [Haroon Q. Raja](https://hqraja.com/) and [Tomas Trkulja](https://twitter.com/zytzagoo) for their great assistance!
+* fixes for "undefined index" notices on Extra settings page
+* now removing respective dns-prefetch resource hints when "remove emojis" or when Google Fonts are optimized or removed.
+* changed JS code to load webfont.js deferred instead of asynced to make sure the js-file or fonts are not consider render blocking.
 
-* first release as "Autoptimize Beta"
-* refactored significantly (no more "classlesses", all is OO), classes are autoloaded, tests added (travis-ci) by zytzagoo
-* updated minifiers (with very significant improvements for YUI CSS compressor PHP port)
-* you can now disable JS/ CSS-files being aggregated, having them minified individually instead
-* local JS/ CSS-files that are excluded from optimization are minified by default (can be overridden by filter)
+= 2.3.1 =
+* fix for issue with update-code in some circumstances, thanks to [Rajendra Zore](https://rajendrazore.com/) to report & help fix!
+
+= 2.3.0 =
+* new: optimize Google fonts with "combine & link" and "combine and load async" (with webload.js), intelligently preconnecting to Google's domains to limit performance impact even further
+* new: Async JS, can be applied to local or 3rd party JS (if local it will be auto-excluded from autoptimization)
+* new: support to tell browsers to preconnect (= dns lookup + tcp/ip connection + ssl negotiation) to 3rd party domains (depends on browser support, works in Chrome & Firefox)
+* new: remove WordPress' core's emoji CSS & JS
+* new: remove (version parameter from) Querystring
+* new: support to clear cache through WP CLI thanks to [junaidbhura](https://junaidbhura.com)
+* lots of [bugfixes and small improvements done by some seriously smart people via GitHub](https://github.com/futtta/autoptimize/commits/master) (thanks all!!), including [a fix for AO 2.2 which saw the HTML minifier go PacMan on spaces](https://github.com/futtta/autoptimize/commit/0f6ac683c35bc82d1ac2d496ae3b66bb53e49f88) in some circumstances.
+
+= 2.2.2 =
+* roll-back to previous battle-tested version of the CSS minifier
+* tweaks to Autoptimize toolbar menu (visual + timeout of "delete cache" AJAX call)
+* readme update
+
+= 2.2.1 =
+* fix for images being referenced in CSS not all being translated to correct path, leading to 404's as reported by Jeff Inho
+* fix for "[] operator not supported for strings" error in PHP7.1 as reported by falk-wussow.de
+* fix for security hash busting AO's cache in some cases (esp. in 2.1.1)
+
+= 2.2.0 =
+* new: Autoptimize minifies first (caching the individual snippets) and aggregrates the minified snippets, resulting in huge performance improvements for uncached JS/ CSS.
+* new: option to enable/ disable AO for logged in users (on by default)
+* new: option to enable/ disable AO on WooCommerce, Easy Digital Downloads or WP eCommerce cart/ checkout page (on by default)
+* improvement: switched to [rel=preload + Filamentgroup's loadCSS for CSS deferring](http://blog.futtta.be/2017/02/24/autoptimize-css-defer-switching-to-loadcss-soon/)
+* improvement: switched to YUI CSS minifier PHP-port 2.8.4-p10 (so not to the 3.x branch yet)
+* improvements to the logic of which JS/ CSS can be optimized (getPath function) increasing reliability of the aggregation process
+* security: made placeholder replacement less naive to protect against XSS and LFI vulnerability as reported by Matthew Barry and fixed with great help from Matthew and Tomas Trkulja. Thanks guys!!
+* API: Lots of extra filters, making AO (even) more flexible.
+* Lots of bugfixes and smaller improvements (see [GitHub commit log](https://github.com/futtta/autoptimize/commits/master))
+* tested and confirmed working in WordPress 4.8
+
+= 2.1.2 =
+* fix for security hash busting AO's cache in some cases (esp. in 2.1.1)
+* identical to 2.1.0 except for the security fix backported from 2.2.0
+
+= 2.1.1 =
+* identical to 2.1.0 except for the security fix backported from 2.2.0
+
+= 2.1.0 =
+* new: Autoptimize now appears in admin-toolbar with an easy view on cache size and the possibility to purge the cache (pass `false` to `autoptimize_filter_toolbar_show` filter to disable), a big thanks to [Pablo Custo](https://github.com/pablocusto) for his hard work on this nice feature!
+* new: An extra "More Optimization"-tab is shown (can be hidden with Â´autoptimize_filter_show_partner_tabsÂ´-filter) with information about related optimization tools- and services.
+* new: If cache size becomes too big, a mail will be sent to the site admin (pass `false` to `autoptimize_filter_cachecheck_sendmail` filter to disable or pass alternative email to the `autoptimize_filter_cachecheck_mailto` filter to change email-address)
+* new: power-users can enable Autoptimize to pre-gzip the autoptimized files by passing `true` to `autoptimize_filter_cache_create_static_gzip`, kudo's to (Draikin)[https://github.com/Draikin] for this!
+* improvement: admin GUI updated (again; thanks Pablo!) with some responsiveness added in the mix (not showing the right hand column on smaller screen-sizes)
+* improvement: settings-screen now accepts protocol-relative URL for CDN base URL
+* improvement: new (smarter) defaults for JS (don't force in head + exclude jquery.js) and CSS optimization (include inline CSS)
+* Misc. bugfixes & small improvements (see [commit-log on GitHub](https://github.com/futtta/autoptimize/commits/master))
+* Minimal version updated from 2.7 (!) to 4.0
+* Tested and confirmed working on WordPress 4.6
+
+= 2.0.2 =
+* bugfix: disallow moving non-aggregated JS by default (can be re-enabled by passing false to the `autoptimize_filter_js_unmovable`)
+* bugfix: hook autoptimize_action_cachepurged into init to avoid ugly error-message for ZenCache (Comet Cache) users
+* bugfix to allow for Autoptimize to work with PHP 5.2 (although [you really should upgrade](http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/))
+
+= 2.0.1 =
+* Improvement: Autoptimize now also tries to purge WP Engine cache when AO's cache is cleared
+* Improvement: for AMP pages (which are pretty optimized anyway) Autoptimize will not optimize to avoid issues with e.g. "inline & defer" and with AO adding attributes to link-tags that are not allowed in the subset of HTML that AMP is
+* Improvement: refactored the page cache purging mechanism (removing duplicate code, now nicely hooking into AO's own `autoptimize_action_cachepurged` action)
+* Improvement: Re-enable functionality to move non-aggregated JS if "also aggregate inline JS" is active (can be disabled with `autoptimize_filter_js_unmovable` filter)
+* Improvement: script tags with `data-noptimize` attribute will be excluded from optimization
+* Bugfix: Better support for renamed wp-content directories
+* Bugfix: Multiple fixes for late-injected CSS/ JS (changes in those files were not always picked up, fonts or background images were not being CDN'ed, ...)
+* Misc. other fixes & improvements, go read [the commit-log on GitHub](https://github.com/futtta/autoptimize/commits/master) if you're that curious
+* Tested & confirmed working with WordPress 4.5 (beta 3)
+
+= 2.0.0 =
+* On average 30% faster minification (more info [in this blogpost](http://blog.futtta.be/2015/12/22/making-autoptimize-faster/))!
+* New: Option to (de-)activate aggregation of inline JS and CSS.
+* New: Option to remove Google Fonts.
+* New: Cache-size will be checked daily and a notice will be shown on wp-admin if cache size goes over 512 MB (can be changed by filter).
+* New: Small autoptimized CSS (less then 256 characters, can be changed by filter) will be inlined instead of linked.
+* New in API: filters to declare a JS and CSS whitelist, where only files in that whitelist are autoptimized and all others are left untouched.
+* New in API: filters to declare removable CSS and JS, upon which Autoptimize will simply delete that code (emoji CSS/JS for example, if you prefer not to dequeue them).
+* New in API: filter to move fonts to CDN as well.
+* lots of small and bigger bugfixes, I won't bother you with a full list but have a look at [the commmit log on GitHub](https://github.com/futtta/autoptimize/commits/master).
+* tested and confirmed working with PHP7
+
+= older =
+* see [https://plugins.svn.wordpress.org/autoptimize/tags/2.3.4/readme.txt](https://plugins.svn.wordpress.org/autoptimize/tags/2.3.4/readme.txt)
