@@ -133,6 +133,8 @@ class autoptimizeMain
         $with_mbstring = apply_filters( 'autoptimize_filter_with_mbstring', false );
         if ( $with_mbstring ) {
             autoptimizeUtils::mbstring_available( \extensions_loaded( 'mbstring' ) );
+        } else {
+            autoptimizeUtils::mbstring_available( false );
         }
 
         do_action( 'autoptimize_setup_done' );
