@@ -183,6 +183,9 @@ class autoptimizeMain
         if ( apply_filters( 'autoptimize_filter_extra_activate', true ) ) {
             $ao_extra = new autoptimizeExtra();
             $ao_extra->run();
+
+            // And show the imgopt notice.
+            add_action( 'admin_notices', 'autoptimizeMain::notice_imgopt' );
         }
     }
 
@@ -535,4 +538,12 @@ class autoptimizeMain
         echo '</p></div>';
     }
 
+    public static function notice_imgopt()
+    {
+        $_ao_imgopt_plug_notice = __('Did you know Autoptimize includes on-the-fly image optimization and CDN via ShortPixel? Check out the <a href="options-general.php?page=autoptimize_extra">Autoptimize Extra settings</a> to activate this option.', 'autoptimize' );
+        $_ao_imgopt_plug_notice = apply_filters( 'autoptimize_filter_main_imgopt_plug_notice', $_ao_imgopt_plug_notice );
+        echo '<div class="notice notice-info is-dismissible"><p>';
+        echo $_ao_imgopt_plug_notice;
+        echo '</p></div>';
+    }
 }
