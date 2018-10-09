@@ -652,7 +652,7 @@ class autoptimizeExtra
 
     public static function imgopt_launch_ok_wrapper()
     {
-        // needed for "plug" notice in autopttimizeMain.php.
+        // needed for "plug" notice in autoptimizeMain.php.
         $self = new self();
         return $self->imgopt_launch_ok();
     }
