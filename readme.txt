@@ -254,6 +254,13 @@ add_filter('autoptimize_filter_main_hookpagecachepurge','__return_false');`
 
 Main reason (apart from occasional hickups that seem to be inherent to plugin upgrades) is that AO 2.4 requires you to be running PHP 5.3 or higher. And let's face it; you should actually be running PHP 7.x if you value performance (and security and support), no?
 
+= Some of the non-ASCII characters get lost after optimization =
+
+By default AO uses non multibyte-safe string methods, but if your PHP has the mbstring extension you can enable multibyte-safe string functions with this filter;
+
+`
+add_filter('autoptimize_filter_main_use_mbstring', '__return_true');`
+
 = Where can I get help? =
 
 You can get help on the [wordpress.org support forum](http://wordpress.org/support/plugin/autoptimize). If you are 100% sure this your problem cannot be solved using Autoptimize configuration and that you in fact discovered a bug in the code, you can [create an issue on GitHub](https://github.com/futtta/autoptimize/issues). If you're looking for premium support, check out our [Autoptimize Pro Support and Web Performance Optimization services](http://autoptimize.com/).
@@ -269,6 +276,13 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.4.1 =
+* bugfix for CSS minifier throwing a HTTP 500 error when a `}` is missing.
+* bugfix for slowness when iconv was used for multibyte string replacements (ditched iconv).
+* bugfix for occasional issues with broken/ missing </html> strings due to mbstring (also for multibyte string replacement) weirdness.
+* bugfix for wrong sizes in image optimization.
+* bugfix for Google Font subset getting lost in optimization.
 
 = 2.4.0 =
 * refactored significantly (no more "classlesses", all is OO), classes are autoloaded, tests added (travis-ci) by zytzagoo who deserves praise for his hard work!
