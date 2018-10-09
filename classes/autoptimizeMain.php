@@ -130,7 +130,7 @@ class autoptimizeMain
 
         // Multibyte-capable string replacements are available with a filter.
         // Also requires 'mbstring' extension.
-        $with_mbstring = apply_filters( 'autoptimize_filter_with_mbstring', false );
+        $with_mbstring = apply_filters( 'autoptimize_filter_main_use_mbstring', false );
         if ( $with_mbstring ) {
             autoptimizeUtils::mbstring_available( \extensions_loaded( 'mbstring' ) );
         } else {
