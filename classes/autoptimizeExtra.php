@@ -632,6 +632,13 @@ class autoptimizeExtra
         return $launch_status;
     }
 
+    public static function imgopt_launch_ok_wrapper()
+    {
+        // needed for "plug" notice in autoptimizeMain.php.
+        $self = new self();
+        return $self->imgopt_launch_ok();
+    }
+
     public function get_imgopt_host()
     {
         static $imgopt_host = null;
