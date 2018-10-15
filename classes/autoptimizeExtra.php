@@ -569,7 +569,9 @@ class autoptimizeExtra
         static $_img_q = null;
 
         if ( is_null( $_img_q ) ) {
-            $_setting = $this->options['autoptimize_extra_select_field_6'];
+            if ( is_array( $this->options ) && array_key_exists( 'autoptimize_extra_select_field_6', $this_options ) ) {
+                $_setting = $this->options['autoptimize_extra_select_field_6'];
+            }
 
             if ( ! $_setting || empty( $_setting ) || ( '1' !== $_setting && '3' !== $_setting ) ) {
                 // default image opt. value is 2 ("glossy").
