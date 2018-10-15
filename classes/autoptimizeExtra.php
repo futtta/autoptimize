@@ -637,7 +637,7 @@ class autoptimizeExtra
             $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
             $magic_number = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
             $has_launched = get_option( 'autoptimize_imgopt_launched', '' );
-            if ( $has_launched || ( array_key_exists( 'launch-threshold', $avail_imgopt ) && $magic_number < $avail_imgopt['launch-threshold'] ) ) {
+            if ( $has_launched || ( is_array( $avail_imgopt ) && array_key_exists( 'launch-threshold', $avail_imgopt ) && $magic_number < $avail_imgopt['launch-threshold'] ) ) {
                 $launch_status = true;
                 if ( ! $has_launched ) {
                     update_option( 'autoptimize_imgopt_launched', 'on' );
