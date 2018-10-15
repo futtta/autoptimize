@@ -204,6 +204,7 @@ class autoptimizeExtra
                     // And add subset if any!
                     $subset = ( is_array( $font ) ) ? end( $font ) : '';
                     if ( false !== strpos( $subset, 'subset=' ) ) {
+                        $subset                            = str_replace( array( '%2C', '%2c' ), ',', $subset );
                         $subset                            = explode( 'subset=', $subset );
                         $fonts_collection[ $i ]['subsets'] = explode( ',', $subset[1] );
                     }
@@ -227,11 +228,12 @@ class autoptimizeExtra
             foreach ( $fonts_collection as $font ) {
                 $fonts_string .= '|' . trim( implode( '|', $font['fonts'] ), '|' );
                 if ( ! empty( $font['subsets'] ) ) {
-                    $subset_string .= implode( ',', $font['subsets'] );
+                    $subset_string .= ',' . trim( implode( ',', $font['subsets'] ), ',' );
                 }
             }
 
             if ( ! empty( $subset_string ) ) {
+                $subset_string = str_replace( ',', '%2C', ltrim( $subset_string, ',' ) );
                 $fonts_string = $fonts_string . '&#038;subset=' . $subset_string;
             }
 
