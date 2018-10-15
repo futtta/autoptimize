@@ -579,7 +579,7 @@ class autoptimizeExtra
         static $_img_q = null;
 
         if ( is_null( $_img_q ) ) {
-            if ( is_array( $this->options ) && array_key_exists( 'autoptimize_extra_select_field_6', $this_options ) ) {
+            if ( is_array( $this->options ) && array_key_exists( 'autoptimize_extra_select_field_6', $this->options ) ) {
                 $_setting = $this->options['autoptimize_extra_select_field_6'];
             }
 
