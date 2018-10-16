@@ -481,7 +481,7 @@ class autoptimizeExtra
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
-        } elseif ( str_ireplace( array( '.png', '.gif', '.jpg', '.jpeg' ), '', $url_parsed['path'] ) === $url_parsed['path'] ) {
+        } elseif ( str_ireplace( array( '.png', '.gif', '.jpg', '.jpeg', '.webp' ), '', $url_parsed['path'] ) === $url_parsed['path'] ) {
             // fixme: better check against end of string.
             return false;
         } elseif ( ! empty( $nopti_images ) ) {
