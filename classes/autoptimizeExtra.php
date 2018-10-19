@@ -836,7 +836,7 @@ class autoptimizeExtra
                         // translators: link points to shortpixel.
                         $upsell_msg_1 = '<p>' . sprintf( __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by %1$sShortPixel%2$s and then cached and served fast from a CDN.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
                         if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] ) {
-                            $upsell_msg_2 = __( 'For a limited time only, this service is offered free-for-all, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
+                            $upsell_msg_2 = __( 'For a limited time only, this service is offered free for all Autoptimize users, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
                         } else {
                             $upsell_msg_2 = __( 'The service is offered for free for 100 images/month regardless of the traffic used. More image optimizations can be purchased starting with $4.99.', 'autoptimize' );
                         }
