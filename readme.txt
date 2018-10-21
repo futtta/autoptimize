@@ -191,7 +191,7 @@ NextGen Galleries does some nifty stuff to add JavaScript. In order for Autoptim
 = What is noptimize? =
 
 Starting with version 1.6.6 Autoptimize excludes everything inside noptimize tags, e.g.:
-`&lt;!--noptimize-->&lt;script>alert('this will not get autoptimized');&lt;/script>&lt;!--/noptimize-->`
+`&lt;!&#45;&#45;noptimize&#45;&#45;>&lt;script>alert('this will not get autoptimized');&lt;/script>&lt;!&#45;&#45;/noptimize&#45;&#45;>`
 
 You can do this in your page/ post content, in widgets and in your theme files (consider creating [a child theme](http://codex.wordpress.org/Child_Themes) to avoid your work being overwritten by theme updates).
 
@@ -260,6 +260,12 @@ By default AO uses non multibyte-safe string methods, but if your PHP has the mb
 
 `
 add_filter('autoptimize_filter_main_use_mbstring', '__return_true');`
+
+= The Shortpixel image optimizing notice cannot be dismissed? =
+
+In some rare cases the logic to dismiss the notice does not work due to the transient (WordPress cache) not keeping the dismissed state. If this happens you can use this code snippet to make the notice go away;
+
+`add_filter( 'autoptimize_filter_main_imgopt_plug_notice', '__return_empty_string' );`
 
 = Where can I get help? =
 
