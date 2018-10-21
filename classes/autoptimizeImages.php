@@ -132,7 +132,7 @@ class autoptimizeImages
             $magic_number  = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
             $has_launched  = get_option( 'autoptimize_imgopt_launched', '' );
             $launch_status = false;
-            if ( $has_launched || ( array_key_exists( 'launch-threshold', $avail_imgopt ) && $magic_number < $avail_imgopt['launch-threshold'] ) ) {
+            if ( $has_launched || ( is_array( $avail_imgopt ) && array_key_exists( 'launch-threshold', $avail_imgopt ) && $magic_number < $avail_imgopt['launch-threshold'] ) ) {
                 $launch_status = true;
                 if ( ! $has_launched ) {
                     update_option( 'autoptimize_imgopt_launched', 'on' );
@@ -267,7 +267,9 @@ class autoptimizeImages
         static $q = null;
 
         if ( null === $q ) {
-            $setting = $this->options['autoptimize_extra_select_field_6'];
+            if ( is_array( $this->options ) && array_key_exists( 'autoptimize_extra_select_field_6', $this->options ) ) {
+                $_setting = $this->options['autoptimize_extra_select_field_6'];
+            }
 
             if ( ! $setting || empty( $setting ) || ( '1' !== $setting && '3' !== $setting ) ) {
                 // default image opt. value is 2 ("glossy").
@@ -395,7 +397,7 @@ class autoptimizeImages
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
-        } elseif ( str_ireplace( array( '.png', '.gif', '.jpg', '.jpeg' ), '', $url_parsed['path'] ) === $url_parsed['path'] ) {
+        } elseif ( str_ireplace( array( '.png', '.gif', '.jpg', '.jpeg', '.webp' ), '', $url_parsed['path'] ) === $url_parsed['path'] ) {
             // fixme: better check against end of string.
             return false;
         } elseif ( ! empty( $nopti_images ) ) {
@@ -411,6 +413,16 @@ class autoptimizeImages
 
     private function build_imgopt_url( $orig_url, $width = 0, $height = 0 )
     {
+        // sanitize width and height.
+        if ( strpos( $width, '%' ) !== false ) {
+            $width = 0;
+        }
+        if ( strpos( $height, '%' ) !== false ) {
+            $height = 0;
+        }
+        $width  = (int) $width;
+        $height = (int) $height;
+        
         $filtered_url = apply_filters(
             'autoptimize_filter_extra_imgopt_build_url',
             $orig_url,
