@@ -252,7 +252,7 @@ class autoptimizeExtra
 
             if ( ! empty( $subset_string ) ) {
                 $subset_string = str_replace( ',', '%2C', ltrim( $subset_string, ',' ) );
-                $fonts_string = $fonts_string . '&#038;subset=' . $subset_string;
+                $fonts_string  = $fonts_string . '&#038;subset=' . $subset_string;
             }
 
             $fonts_string = str_replace( '|', '%7C', ltrim( $fonts_string, '|' ) );
@@ -838,7 +838,8 @@ class autoptimizeExtra
                         if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] ) {
                             $upsell_msg_2 = __( 'For a limited time only, this service is offered free for all Autoptimize users, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
                         } else {
-                            $upsell_msg_2 = __( 'The service is offered for free for 100 images/month regardless of the traffic used. More image optimizations can be purchased starting with $4.99.', 'autoptimize' );
+                            // translators: link points to shortpixel.
+                            $upsell_msg_2 = sprintf( __( '%1$sSign-up now%2$s to receive a 1 000 bonus + 50&#37; more image optimization credits regardless of the traffic used. More image optimizations can be purchased starting with $4.99.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
                         }
                         echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', $upsell_msg_1 . ' ' . $upsell_msg_2 . '</p>' );
                     }
