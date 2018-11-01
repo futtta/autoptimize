@@ -178,11 +178,6 @@ class autoptimizeScripts extends autoptimizeBase
                             if ( ! empty( $minified_url ) ) {
                                 $newTag = str_replace( $url, $minified_url, $newTag );
                             }
-
-                            // remove querystring from URL in newTag
-                            if ( ! empty( $explUrl[1] ) ) {
-                                $newTag = str_replace( '?' . $explUrl[1], '', $newTag );
-                            }
                         }
 
                         if ( $this->ismovable($newTag) ) {
