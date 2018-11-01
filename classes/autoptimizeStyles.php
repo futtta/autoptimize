@@ -212,11 +212,6 @@ class autoptimizeStyles extends autoptimizeBase
                                 $new_tag = $tag;
                             }
 
-                            // Removes querystring from URL.
-                            if ( ! empty( $exploded_url[1] ) ) {
-                                $new_tag = str_replace( '?' . $exploded_url[1], '', $new_tag );
-                            }
-
                             // Defer single CSS if "inline & defer" is ON and there is inline CSS.
                             if ( $this->defer && ! empty( $this->defer_inline ) ) {
                                 // Get/ set (via filter) the JS to be triggers onload of the preloaded CSS.
