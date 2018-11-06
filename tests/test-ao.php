@@ -1758,7 +1758,7 @@ HTML;
         // Proving that setup() sets the schedule as needed.
         $checker = new autoptimizeCacheChecker();
         $checker->setup();
-        $this->assertEquals( 'daily', wp_get_schedule( autoptimizeCacheChecker::SCHEDULE_HOOK ) );
+        $this->assertEquals( 'twicedaily', wp_get_schedule( autoptimizeCacheChecker::SCHEDULE_HOOK ) );
     }
 
     public function test_cache_size_checker_disabled_with_filter()
