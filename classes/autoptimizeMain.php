@@ -514,13 +514,6 @@ class autoptimizeMain
         if ( wp_get_schedule( 'ao_cachechecker' ) ) {
             wp_clear_scheduled_hook( 'ao_cachechecker' );
         }
-
-        // remove "persist admin noctice dismissal" options
-        global $wpdb;
-        $table         = is_multisite() ? $wpdb->base_prefix . 'sitemeta' : $wpdb->base_prefix . 'options';
-        $column        = is_multisite() ? 'meta_key' : 'option_name';
-        $delete_string = 'DELETE FROM ' . $table . ' WHERE ' . $column . ' LIKE %s LIMIT 1000';
-        $wpdb->query( $wpdb->prepare( $delete_string, array( '%pand-%' ) ) );
     }
 
     public static function notice_cache_unavailable()
