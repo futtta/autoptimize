@@ -196,7 +196,7 @@ class JSMin {
                 // fallthrough intentional
             case self::ACTION_DELETE_A: // 2
                 $this->a = $this->b;
-                if ($this->a === "'" || $this->a === '"') { // string literal
+                if ($this->a === "'" || $this->a === '"'|| $this->a === '`') { // string/template literal
                     $str = $this->a; // in case needed for exception
                     for(;;) {
                         $this->output .= $this->a;
