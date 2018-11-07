@@ -2437,4 +2437,19 @@ MARKUP;
         $actual       = $instance->run_minifier_on( $css_unquoted );
         $this->assertEquals( $css_unquoted, $actual );
     }
+
+    public function test_jsminphp_string_literal_minification()
+    {
+        $js = '
+// comment
+`line
+break` + `he  llo`; foo`hel( \'\');lo`; `he\nl\`lo`; (`he${one + two}`)
+';
+
+        $expected = '`line
+break`+`he  llo`;foo`hel( \'\');lo`;`he\nl\`lo`;(`he${one + two}`)';
+
+        $actual = JSMin::minify( $js );
+        $this->assertEquals( $expected, $actual );
+    }
 }

@@ -196,7 +196,8 @@ class JSMin {
                 // fallthrough intentional
             case self::ACTION_DELETE_A: // 2
                 $this->a = $this->b;
-                if ($this->a === "'" || $this->a === '"'|| $this->a === '`') { // string/template literal
+                if ($this->a === "'" || $this->a === '"' || $this->a === '`') { // string/template literal
+                    $delimiter = $this->a;
                     $str = $this->a; // in case needed for exception
                     for(;;) {
                         $this->output .= $this->a;
@@ -206,7 +207,9 @@ class JSMin {
                         if ($this->a === $this->b) { // end quote
                             break;
                         }
-                        if ($this->isEOF($this->a)) {
+                        if ($delimiter === '`' && $this->a === "\n") {
+                            // leave the newline
+                        } elseif ($this->isEOF($this->a)) {
                             $byte = $this->inputIndex - 1;
                             throw new JSMin_UnterminatedStringException(
                                 "JSMin: Unterminated String at byte {$byte}: {$str}");
@@ -216,7 +219,7 @@ class JSMin {
                             $this->output .= $this->a;
                             $this->lastByteOut = $this->a;
 
-                            $this->a       = $this->get();
+                            $this->a = $this->get();
                             $str .= $this->a;
                         }
                     }
