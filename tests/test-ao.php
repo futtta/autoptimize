@@ -638,7 +638,6 @@ CSS;
 
     /**
      * @dataProvider provider_test_should_aggregate_script_types
-     * @covers autoptimizeScripts::should_aggregate
      */
     public function test_should_aggregate_script_types( $input, $expected )
     {
@@ -706,7 +705,6 @@ CSS;
 
     /**
      * @dataProvider provider_is_valid_buffer
-     * @covers autoptimizeMain::is_valid_buffer
      */
     public function test_valid_buffers( $input, $expected )
     {
@@ -773,7 +771,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
 
     /**
      * @dataProvider provider_is_amp_markup
-     * @covers autoptimizeMain::is_amp_markup
      */
     public function test_autoptimize_is_amp_markup( $input, $expected )
     {
@@ -918,7 +915,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
 
     /**
      * @dataProvider provider_test_url_replace_cdn
-     * @covers autoptimizeBase::url_replace_cdn
      */
     public function test_url_replace_cdn( $cdn_url, $input, $expected )
     {
@@ -1195,7 +1191,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
 
     /**
      * @dataProvider provider_getpath
-     * @covers autoptimizeBase::getpath
      */
     public function test_getpath( $input, $expected )
     {
