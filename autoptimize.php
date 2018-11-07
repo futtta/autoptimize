@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AUTOPTIMIZE_PLUGIN_VERSION', '2.4.0' );
+define( 'AUTOPTIMIZE_PLUGIN_VERSION', '2.4.1' );
 
 // plugin_dir_path() returns the trailing slash!
 define( 'AUTOPTIMIZE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
