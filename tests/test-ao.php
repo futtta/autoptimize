@@ -2481,4 +2481,19 @@ MARKUP;
         $this->assertFalse( autoptimizeUtils::is_plugin_active( 'autoptimize/autoptimize.php' ) );
         $this->assertFalse( autoptimizeUtils::is_plugin_active( 'async-javascript/async-javascript.php' ) );
     }
+    
+    public function test_jsminphp_string_literal_minification()
+    {
+        $js = '
+// comment
+`line
+break` + `he  llo`; foo`hel( \'\');lo`; `he\nl\`lo`; (`he${one + two}`)
+';
+
+        $expected = '`line
+break`+`he  llo`;foo`hel( \'\');lo`;`he\nl\`lo`;(`he${one + two}`)';
+
+        $actual = JSMin::minify( $js );
+        $this->assertEquals( $expected, $actual );
+    }
 }
