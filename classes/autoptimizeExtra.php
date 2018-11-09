@@ -605,7 +605,8 @@ class autoptimizeExtra
                 $_img_stat_resp = wp_remote_get( $_img_provider_stat_url );
                 if ( ! is_wp_error( $_img_stat_resp ) ) {
                     if ( '200' == wp_remote_retrieve_response_code( $_img_stat_resp ) ) {
-                        $_img_provider_stat = json_decode( wp_remote_retrieve_body( $_img_stat_resp ), true );
+                        $_img_provider_stat              = json_decode( wp_remote_retrieve_body( $_img_stat_resp ), true );
+                        $_img_provider_stat['timestamp'] = time();
                         update_option( 'autoptimize_imgopt_provider_stat', $_img_provider_stat );
                     }
                 }
@@ -678,7 +679,19 @@ class autoptimizeExtra
                     $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                 } elseif ( -1 == $_stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                    $_imgopt_notice            = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                    $_imgopt_stats_refresh_url = add_query_arg( array(
+                        'page'                => 'autoptimize_extra',
+                        'refreshImgProvStats' => '1',
+                    ), admin_url( 'options-general.php' ) );
+                    if ( $_stat && array_key_exists( 'timestamp', $_stat ) && ! empty( $_stat['timestamp'] ) ) {
+                        $_imgopt_stats_last_run = __( 'based on status on ', 'autoptimize' ) . date_i18n( get_option( 'time_format' ), $_stat['timestamp'] );
+                    } else {
+                        $_imgopt_stats_last_run = __( 'based on previously fetched data', 'autoptimize' );
+                    }
+                    $_imgopt_notice .= ' (' . $_imgopt_stats_last_run . ', ';
+                    // translators: "here to refresh" links to the Autoptimize Extra page and forces a refresh of the img opt stats.
+                    $_imgopt_notice .= sprintf( __( 'click %1$shere to refresh%2$s', 'autoptimize' ), '<a href="' . $_imgopt_stats_refresh_url . '">', '</a>).' );
                 } else {
                     $_imgopt_upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';
                     // translators: "log in to check your account" will appear in a "a href".
@@ -723,6 +736,11 @@ class autoptimizeExtra
 
     public function options_page()
     {
+        // Check querystring for "refreshCacheChecker" and call cachechecker if so.
+        if ( array_key_exists( 'refreshImgProvStats', $_GET ) && 1 == $_GET['refreshImgProvStats'] ) {
+            $this->query_img_provider_stats();
+        }
+
         // Working with actual option values from the database here.
         // That way any saves are still processed as expected, but we can still
         // override behavior by using `new autoptimizeExtra($custom_options)` and not have that custom
