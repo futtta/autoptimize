@@ -549,12 +549,24 @@ class autoptimizeExtra
 
     private function normalize_img_urls( $in )
     {
+        static $cdn_domain = null;
+        if ( is_null( $cdn_domain ) ) {
+            $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', get_option( 'autoptimize_cdn_url', '' ) );
+            if ( ! empty( $cdn_url ) ) {
+                $cdn_domain = parse_url( $cdn_url, PHP_URL_HOST );
+            } else {
+                $cdn_domain = '';
+            }
+        }
+
         $parsed_site_url = parse_url( site_url() );
 
         if ( strpos( $in, 'http' ) !== 0 && strpos( $in, '//' ) === 0 ) {
             $in = $parsed_site_url['scheme'] . ':' . $in;
         } elseif ( strpos( $in, '/' ) === 0 ) {
             $in = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $in;
+        } elseif ( ! empty( $cdn_domain ) && strpos( $in, $cdn_domain ) !== 0 ) {
+            $in = str_replace( $cdn_domain, $parsed_site_url['host'], $in );
         }
 
         return apply_filters( 'autoptimize_filter_extra_imgopt_normalized_url', $in );
