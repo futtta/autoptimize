@@ -727,7 +727,7 @@ class autoptimizeExtra
                         'refreshImgProvStats' => '1',
                     ), admin_url( 'options-general.php' ) );
                     if ( $_stat && array_key_exists( 'timestamp', $_stat ) && ! empty( $_stat['timestamp'] ) ) {
-                        $_imgopt_stats_last_run = __( 'based on status on ', 'autoptimize' ) . date_i18n( get_option( 'time_format' ), $_stat['timestamp'] );
+                        $_imgopt_stats_last_run = __( 'based on status at ', 'autoptimize' ) . date_i18n( get_option( 'time_format' ), $_stat['timestamp'] );
                     } else {
                         $_imgopt_stats_last_run = __( 'based on previously fetched data', 'autoptimize' );
                     }
