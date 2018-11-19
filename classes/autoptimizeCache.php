@@ -282,12 +282,14 @@ class autoptimizeCache
 
         // Returns the list of files without '.' and '..' elements.
         $files = self::get_dir_contents( $parent );
-        foreach ( $files as $file ) {
-            $path     = $parent . '/' . $file;
-            $prefixed = ( false !== strpos( $path, $prefix ) );
-            // Removing only our own (prefixed) directories...
-            if ( is_dir( $path ) && $prefixed ) {
-                $ok = self::rmdir( $path );
+        if ( is_array( $files ) && ! empty( $files ) ) {
+            foreach ( $files as $file ) {
+                $path     = $parent . '/' . $file;
+                $prefixed = ( false !== strpos( $path, $prefix ) );
+                // Removing only our own (prefixed) directories...
+                if ( is_dir( $path ) && $prefixed ) {
+                    $ok = self::rmdir( $path );
+                }
             }
         }
 
