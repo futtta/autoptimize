@@ -551,7 +551,8 @@ class autoptimizeMain
         if ( is_array( $_ao_extra_options ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $_ao_extra_options ) && ! empty( $_ao_extra_options['autoptimize_extra_checkbox_field_5'] ) ) {
             $_ao_imgopt_active = true;
         }
-        if ( '' !== $_ao_imgopt_plug_notice && ! $_ao_imgopt_active && $_ao_imgopt_launch_ok && PAnD::is_admin_notice_active( $_ao_imgopt_plug_dismissible ) ) {
+
+        if ( current_user_can( 'manage_options' ) && '' !== $_ao_imgopt_plug_notice && ! $_ao_imgopt_active && $_ao_imgopt_launch_ok && PAnD::is_admin_notice_active( $_ao_imgopt_plug_dismissible ) ) {
             echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_imgopt_plug_dismissible . '"><p>';
             echo $_ao_imgopt_plug_notice;
             echo '</p></div>';
