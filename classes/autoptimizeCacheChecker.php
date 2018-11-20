@@ -85,7 +85,7 @@ class autoptimizeCacheChecker
     public function show_admin_notice()
     {
         // fixme: make notices dismissable.
-        if ( (bool) get_option( 'autoptimize_cachesize_notice', false ) ) {
+        if ( (bool) get_option( 'autoptimize_cachesize_notice', false ) && current_user_can( 'manage_options' ) ) {
             echo '<div class="notice notice-warning"><p>';
             _e( '<strong>Autoptimize\'s cache size is getting big</strong>, consider purging the cache. Have a look at <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank" rel="noopener noreferrer">the Autoptimize FAQ</a> to see how you can keep the cache size under control.', 'autoptimize' );
             echo '</p></div>';
@@ -94,7 +94,7 @@ class autoptimizeCacheChecker
 
         // Notice for image proxy usage.
         $_imgopt_notice = autoptimizeExtra::get_imgopt_status_notice_wrapper();
-        if ( is_array( $_imgopt_notice ) && array_key_exists( 'status', $_imgopt_notice ) && in_array( $_imgopt_notice['status'], array( 1, -1 ) ) ) {
+        if ( current_user_can( 'manage_options' ) && is_array( $_imgopt_notice ) && array_key_exists( 'status', $_imgopt_notice ) && in_array( $_imgopt_notice['status'], array( 1, -1 ) ) ) {
             $_dismissible = 'ao-img-opt-notice-';
             $_hide_notice = '7';
 
