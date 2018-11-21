@@ -677,7 +677,7 @@ class autoptimizeExtra
                 if ( 1 == $_stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
-                } elseif ( -1 == $_stat['Status'] ) {
+                } elseif ( -1 == $_stat['Status'] || -2 == $_stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
                     $_imgopt_notice            = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                     $_imgopt_stats_refresh_url = add_query_arg( array(
@@ -808,6 +808,9 @@ class autoptimizeExtra
                                 $_notice_color = 'orange';
                                 break;
                             case -1:
+                                $_notice_color = 'red';
+                                break;
+                            case -2:
                                 $_notice_color = 'red';
                                 break;
                             default:
