@@ -153,8 +153,18 @@ class autoptimizeExtra
             add_filter( 'wp_resource_hints', array( $this, 'filter_preconnect' ), 10, 2 );
         }
 
-        // Optimize Images!
-        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && 'down' !== $options['availabilities']['extra_imgopt']['status'] && ( 'launch' !== $options['availabilities']['extra_imgopt']['status'] || $this->imgopt_launch_ok() ) ) {
+        // Optimize Images kicks in if;
+        // * the option is activated by user
+        // * imgopt user stats does not have status -2.
+        // * imgopt status is not "down"
+        // * imgopt status is not "launch" or imgopt_launch_ok() returns be true
+        
+        $_do_cdn = true;
+        if ( -2 == $this->get_imgopt_provider_userstatus() ) {
+            $_do_cdn = false;
+        }
+        
+        if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && $_do_cdn && 'down' !== $options['availabilities']['extra_imgopt']['status'] && ( 'launch' !== $options['availabilities']['extra_imgopt']['status'] || $this->imgopt_launch_ok() ) ) {
             if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
                 add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
                 $_imgopt_active = true;
@@ -719,7 +729,7 @@ class autoptimizeExtra
                 if ( 1 == $_stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
-                } elseif ( -1 == $_stat['Status'] ) {
+                } elseif ( -1 == $_stat['Status'] || -2 == $_stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
                     $_imgopt_notice            = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                     $_imgopt_stats_refresh_url = add_query_arg( array(
@@ -754,6 +764,22 @@ class autoptimizeExtra
         // needed for notice being shown in autoptimizeCacheChecker.php.
         $self = new self();
         return $self->get_imgopt_status_notice();
+    }
+
+    public function get_imgopt_provider_userstatus() {
+        static $_provider_userstatus = null;
+
+        if ( is_null( $_provider_userstatus ) ) {
+            $_stat  = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            if ( is_array( $_stat ) && array_key_exists( 'Status', $_stat ) ) {
+                $_provider_userstatus = $_stat['Status'];
+            } else {
+                // if no stats then we assume all is well.
+                $_provider_userstatus = 2;
+            }
+        }
+        
+        return $_provider_userstatus;
     }
 
     public function admin_menu()
@@ -856,6 +882,9 @@ class autoptimizeExtra
                                 $_notice_color = 'orange';
                                 break;
                             case -1:
+                                $_notice_color = 'red';
+                                break;
+                            case -2:
                                 $_notice_color = 'red';
                                 break;
                             default:
