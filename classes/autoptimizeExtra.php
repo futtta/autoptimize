@@ -154,16 +154,16 @@ class autoptimizeExtra
         }
 
         // Optimize Images kicks in if;
-        // * the option is activated by user
+        // * the option is activated by user.
         // * imgopt user stats does not have status -2.
-        // * imgopt status is not "down"
-        // * imgopt status is not "launch" or imgopt_launch_ok() returns be true
-        
-        $_do_cdn = true;
-        if ( -2 == $this->get_imgopt_provider_userstatus() ) {
+        // * imgopt status is not "down".
+        // * imgopt status is not "launch" or imgopt_launch_ok() returns be true.
+        $_do_cdn     = true;
+        $_userstatus = $this->get_imgopt_provider_userstatus();
+        if ( -2 == $_userstatus['Status'] ) {
             $_do_cdn = false;
         }
-        
+
         if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && $_do_cdn && 'down' !== $options['availabilities']['extra_imgopt']['status'] && ( 'launch' !== $options['availabilities']['extra_imgopt']['status'] || $this->imgopt_launch_ok() ) ) {
             if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
                 add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_images' ), 10, 1 );
@@ -721,7 +721,7 @@ class autoptimizeExtra
         $_extra_options = $this->options;
         if ( ! empty( $_extra_options ) && is_array( $_extra_options ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $_extra_options ) && ! empty( $_extra_options['autoptimize_extra_checkbox_field_5'] ) ) {
             $_imgopt_notice = '';
-            $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            $_stat          = $this->get_imgopt_provider_userstatus();
             $_site_host     = AUTOPTIMIZE_SITE_DOMAIN;
             $_imgopt_upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
 
@@ -770,15 +770,23 @@ class autoptimizeExtra
         static $_provider_userstatus = null;
 
         if ( is_null( $_provider_userstatus ) ) {
-            $_stat  = get_option( 'autoptimize_imgopt_provider_stat', '' );
-            if ( is_array( $_stat ) && array_key_exists( 'Status', $_stat ) ) {
-                $_provider_userstatus = $_stat['Status'];
-            } else {
-                // if no stats then we assume all is well.
-                $_provider_userstatus = 2;
+            $_stat = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            if ( is_array( $_stat ) ) {
+                if ( array_key_exists( 'Status', $_stat ) ) {
+                    $_provider_userstatus['Status'] = $_stat['Status'];
+                } else {
+                    // if no stats then we assume all is well.
+                    $_provider_userstatus['Status'] = 2;
+                }
+                if ( array_key_exists( 'timestamp', $_stat ) ) {
+                    $_provider_userstatus['timestamp'] = $_stat['timestamp'];
+                } else {
+                    // if no timestamp then we return "".
+                    $_provider_userstatus['timestamp'] = '';
+                }
             }
         }
-        
+
         return $_provider_userstatus;
     }
 
