@@ -283,6 +283,14 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.4.2 =
+* misc. improvements to image optimization logic
+* update PAnD framework to latest version to fix issues with notices not staying dismissed
+* patched JS minifying component to not break template literals as reported by Alex Kozack
+* bugfix for Google fonts subset concatenation by Rocco Aliberti, thanks!
+* bugfix not to remove querystrings if that option is not on in "Extra", kudo's to Diego Versiani for pointing out the inconsistency
+* tested and confirmed working with WordPress 5.0 (beta 5)
+
 = 2.4.1 =
 * bugfix for CSS minifier throwing a HTTP 500 error when a `}` is missing.
 * bugfix for slowness when iconv was used for multibyte string replacements (ditched iconv).
