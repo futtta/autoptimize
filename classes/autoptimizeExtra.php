@@ -485,9 +485,9 @@ class autoptimizeExtra
         $site_host       = AUTOPTIMIZE_SITE_DOMAIN;
         $url_parsed      = parse_url( $url );
 
-        if ( $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
+        if ( array_key_exists( 'host', $url_parsed ) && $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
             return false;
-        } elseif ( ! empty( $cdn_url ) && strpos( $url, $cdn_url ) === false && $url_parsed['host'] !== $site_host ) {
+        } elseif ( ! empty( $cdn_url ) && strpos( $url, $cdn_url ) === false && array_key_exists( 'host', $url_parsed ) && $url_parsed['host'] !== $site_host ) {
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
