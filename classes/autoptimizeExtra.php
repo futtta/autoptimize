@@ -607,7 +607,7 @@ class autoptimizeExtra
                 $_setting = $this->options['autoptimize_extra_select_field_6'];
             }
 
-            if ( ! $_setting || empty( $_setting ) || ( '1' !== $_setting && '3' !== $_setting ) ) {
+            if ( ! isset( $_setting ) || empty( $_setting ) || ( '1' !== $_setting && '3' !== $_setting ) ) {
                 // default image opt. value is 2 ("glossy").
                 $_img_q = '2';
             } else {
