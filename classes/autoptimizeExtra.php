@@ -269,7 +269,7 @@ class autoptimizeExtra
             $fonts_markup .= '] },classes:false, events:false, timeout:1500};</script>';
 
             $fonts_library_markup = '<script data-cfasync="false" id="ao_optimized_gfonts" type="text/javascript">(function() {var wf = document.createElement(\'script\');wf.src=\'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js\';wf.type=\'text/javascript\';wf.async=\'true\';var s=document.getElementsByTagName(\'script\')[0];s.parentNode.insertBefore(wf, s);})();</script>';
-            $in = substr_replace( $in, $fonts_library_markup . '</head>', strpos( $in, '</head>' ), strlen( '</head>' ) );
+            $in                   = substr_replace( $in, $fonts_library_markup . '</head>', strpos( $in, '</head>' ), strlen( '</head>' ) );
         }
 
         // Replace back in markup.
