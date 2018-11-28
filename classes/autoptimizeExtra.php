@@ -222,7 +222,7 @@ class autoptimizeExtra
         foreach ( $matches[2] as $font ) {
             if ( ! preg_match( '/rel=["\']dns-prefetch["\']/', $matches[0][ $i ] ) ) {
                 // Get fonts name.
-                $font = str_replace( array( '%7C', '%7c' ), '|', $font );
+                $font = str_replace( array( '%7C', '%7c' ), '|', urldecode($font) );
                 $font = explode( 'family=', $font );
                 $font = ( isset( $font[1] ) ) ? explode( '&', $font[1] ) : array();
                 // Add font to $fonts[$i] but make sure not to pollute with an empty family!
