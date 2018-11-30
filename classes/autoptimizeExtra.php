@@ -291,7 +291,10 @@ class autoptimizeExtra
 
             $fonts_array = array_map('urldecode', $fonts_array);
 
-            $fonts_markup = '<script data-cfasync="false" id="ao_optimized_gfonts" type="text/javascript">WebFontConfig={google:{families:' . wp_json_encode($fonts_array) . ' },classes:false, events:false, timeout:1500};(function() {var wf = document.createElement(\'script\');wf.src=\'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js\';wf.type=\'text/javascript\';wf.async=\'true\';var s=document.getElementsByTagName(\'script\')[0];s.parentNode.insertBefore(wf, s);})();</script>';
+            $fonts_markup = '<script data-cfasync="false" id="ao_optimized_gfonts" type="text/javascript">WebFontConfig={google:{families:' . wp_json_encode($fonts_array) . ' },classes:false, events:false, timeout:1500};</script>';
+
+            $fonts_library_markup = '<script data-cfasync="false" id="ao_optimized_gfonts" type="text/javascript">(function() {var wf = document.createElement(\'script\');wf.src=\'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js\';wf.type=\'text/javascript\';wf.async=\'true\';var s=document.getElementsByTagName(\'script\')[0];s.parentNode.insertBefore(wf, s);})();</script>';
+            $in                   = substr_replace( $in, $fonts_library_markup . '</head>', strpos( $in, '</head>' ), strlen( '</head>' ) );
         }
 
         // Replace back in markup.
@@ -482,9 +485,9 @@ class autoptimizeExtra
         $site_host       = AUTOPTIMIZE_SITE_DOMAIN;
         $url_parsed      = parse_url( $url );
 
-        if ( $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
+        if ( array_key_exists( 'host', $url_parsed ) && $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
             return false;
-        } elseif ( ! empty( $cdn_url ) && strpos( $url, $cdn_url ) === false && $url_parsed['host'] !== $site_host ) {
+        } elseif ( ! empty( $cdn_url ) && strpos( $url, $cdn_url ) === false && array_key_exists( 'host', $url_parsed ) && $url_parsed['host'] !== $site_host ) {
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
@@ -604,7 +607,7 @@ class autoptimizeExtra
                 $_setting = $this->options['autoptimize_extra_select_field_6'];
             }
 
-            if ( ! $_setting || empty( $_setting ) || ( '1' !== $_setting && '3' !== $_setting ) ) {
+            if ( ! isset( $_setting ) || empty( $_setting ) || ( '1' !== $_setting && '3' !== $_setting ) ) {
                 // default image opt. value is 2 ("glossy").
                 $_img_q = '2';
             } else {
