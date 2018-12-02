@@ -41,6 +41,9 @@ class autoptimizeCacheChecker
             $frequency = 'twicedaily';
         }
         if ( $do_cache_check && ( ! $schedule || $schedule !== $frequency ) ) {
+            if ( $schedule ) {
+                wp_clear_scheduled_hook( self::SCHEDULE_HOOK );
+            }
             wp_schedule_event( time(), $frequency, self::SCHEDULE_HOOK );
         } elseif ( $schedule && ! $do_cache_check ) {
             wp_clear_scheduled_hook( self::SCHEDULE_HOOK );
@@ -84,7 +87,6 @@ class autoptimizeCacheChecker
 
     public function show_admin_notice()
     {
-        // fixme: make notices dismissable.
         if ( (bool) get_option( 'autoptimize_cachesize_notice', false ) && current_user_can( 'manage_options' ) ) {
             echo '<div class="notice notice-warning"><p>';
             _e( '<strong>Autoptimize\'s cache size is getting big</strong>, consider purging the cache. Have a look at <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank" rel="noopener noreferrer">the Autoptimize FAQ</a> to see how you can keep the cache size under control.', 'autoptimize' );
