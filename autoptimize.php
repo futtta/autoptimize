@@ -3,7 +3,7 @@
 Plugin Name: Autoptimize
 Plugin URI: https://autoptimize.com/
 Description: Optimize your website's performance: JS, CSS, HTML, images, Google Fonts and more!
-Version: 2.4.2
+Version: 2.4.3
 Author: Frank Goossens (futtta)
 Author URI: https://autoptimize.com/
 Text Domain: autoptimize
