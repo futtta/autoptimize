@@ -176,6 +176,10 @@ class autoptimizeStyles extends autoptimizeBase
                             $this->css[] = array( $media, $path );
                         } else {
                             // Link is dynamic (.php etc).
+                            $new_tag = $this->optionally_defer_excluded( $tag, 'none' );
+                            if ( $new_tag !== $tag ) {
+                                $this->content = str_replace( $tag, $new_tag, $this->content );
+                            }
                             $tag = '';
                         }
                     } else {
@@ -212,24 +216,7 @@ class autoptimizeStyles extends autoptimizeBase
                                 $new_tag = $tag;
                             }
 
-                            // Defer single CSS if "inline & defer" is ON and there is inline CSS.
-                            if ( $this->defer && ! empty( $this->defer_inline ) ) {
-                                // Get/ set (via filter) the JS to be triggers onload of the preloaded CSS.
-                                $_preload_onload = apply_filters(
-                                    'autoptimize_filter_css_preload_onload',
-                                    "this.onload=null;this.rel='stylesheet'",
-                                    $url
-                                );
-                                // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
-                                $new_tag = '<noscript>' . $new_tag . '</noscript>' . str_replace(
-                                    array(
-                                        "rel='stylesheet'",
-                                        'rel="stylesheet"',
-                                    ),
-                                    "rel='preload' as='style' onload=\"" . $_preload_onload . "\"",
-                                    $new_tag
-                                );
-                            }
+                            $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
 
                             // And replace!
                             $this->content = str_replace( $tag, $new_tag, $this->content );
@@ -242,6 +229,38 @@ class autoptimizeStyles extends autoptimizeBase
 
         // Really, no styles?
         return false;
+    }
+
+    /**
+     * Checks if non-optimized CSS is to be preloaded and if so return
+     * the tag with preload code.
+     *
+     * @param string $new_tag (required).
+     * @param string $url (optional).
+     *
+     * @return string $new_tag
+     */
+    private function optionally_defer_excluded( $new_tag, $url = '' )
+    {
+        // Defer single CSS if "inline & defer" is ON and there is inline CSS.
+        if ( $this->defer && ! empty( $this->defer_inline ) ) {
+            // Get/ set (via filter) the JS to be triggers onload of the preloaded CSS.
+            $_preload_onload = apply_filters(
+                'autoptimize_filter_css_preload_onload',
+                "this.onload=null;this.rel='stylesheet'",
+                $url
+            );
+            // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
+            $new_tag = '<noscript>' . $new_tag . '</noscript>' . str_replace(
+                array(
+                    "rel='stylesheet'",
+                    'rel="stylesheet"',
+                ),
+                "rel='preload' as='style' onload=\"" . $_preload_onload . "\"",
+                $new_tag
+            );
+        }
+        return $new_tag;
     }
 
     /**
