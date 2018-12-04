@@ -284,7 +284,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.4.4 =
-* bugfix: safer way or removing extra cronjobs
+* bugfix: safer way of removing extra cronjobs
 
 = 2.4.3 =
 * improved Google Fonts optimzation, praise to @nextendweb (of Smartslider3 fame)!
