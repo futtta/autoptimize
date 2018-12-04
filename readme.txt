@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
 Tested up to: 5.0
 Requires PHP: 5.3
-Stable tag: 2.4.3
+Stable tag: 2.4.4
 
 Autoptimize speeds up your website by optimizing JS, CSS, HTML, Google Fonts and images, async-ing JS, removing emoji cruft and more.
 
@@ -282,6 +282,9 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.4.4 =
+* bugfix: safer way or removing extra cronjobs
 
 = 2.4.3 =
 * improved Google Fonts optimzation, praise to @nextendweb (of Smartslider3 fame)!
