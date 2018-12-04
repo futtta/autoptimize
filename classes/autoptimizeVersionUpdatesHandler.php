@@ -214,6 +214,20 @@ class autoptimizeVersionUpdatesHandler
      * 2.4.2 introduced too many cronned ao_cachecheckers, make this right
      */
     private function upgrade_from_2_4_2() {
-        wp_clear_scheduled_hook( 'ao_cachechecker' );
+        // below code by Thomas Sjolshagen (http://eighty20results.com/)
+        // as found on https://www.paidmembershipspro.com/deleting-oldextra-cron-events/.
+        $jobs = _get_cron_array();
+
+        // Remove all ao_cachechecker cron jobs (for now).
+        foreach ( $jobs as $when => $job ) {
+            $name = key( $job );
+
+            if ( false !== strpos( $name, 'ao_cachechecker' ) ) {
+                unset( $jobs[ $when ] );
+            }
+        }
+
+        // Save the data.
+        _set_cron_array( $jobs );
     }
 }
