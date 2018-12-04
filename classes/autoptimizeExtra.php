@@ -261,14 +261,9 @@ class autoptimizeExtra
                 $fonts_array = array_merge( $fonts_array, $_fonts['fonts'] );
             }
 
-            $fonts_markup = '<script data-cfasync="false" id="ao_optimized_gfonts" type="text/javascript">WebFontConfig={google:{families:[\'';
-            foreach ( $fonts_array as $fnt ) {
-                $fonts_markup .= $fnt . "','";
-            }
-            $fonts_markup  = trim( trim( $fonts_markup, "'" ), ',' );
-            $fonts_markup .= '] },classes:false, events:false, timeout:1500};</script>';
-
-            $fonts_library_markup = '<script data-cfasync="false" id="ao_optimized_gfonts" type="text/javascript">(function() {var wf = document.createElement(\'script\');wf.src=\'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js\';wf.type=\'text/javascript\';wf.async=\'true\';var s=document.getElementsByTagName(\'script\')[0];s.parentNode.insertBefore(wf, s);})();</script>';
+            $fonts_array          = array_map( 'urldecode', $fonts_array );
+            $fonts_markup         = '<script data-cfasync="false" id="ao_optimized_gfonts_config" type="text/javascript">WebFontConfig={google:{families:' . wp_json_encode( $fonts_array ) . ' },classes:false, events:false, timeout:1500};</script>';
+            $fonts_library_markup = '<script data-cfasync="false" id="ao_optimized_gfonts_webfontloader" type="text/javascript">(function() {var wf = document.createElement(\'script\');wf.src=\'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js\';wf.type=\'text/javascript\';wf.async=\'true\';var s=document.getElementsByTagName(\'script\')[0];s.parentNode.insertBefore(wf, s);})();</script>';
             $in                   = substr_replace( $in, $fonts_library_markup . '</head>', strpos( $in, '</head>' ), strlen( '</head>' ) );
         }
 
