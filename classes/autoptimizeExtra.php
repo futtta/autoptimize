@@ -887,13 +887,8 @@ class autoptimizeExtra
                         // translators: link points Async Javascript settings page.
                         printf( __( 'You have "Async JavaScript" installed, %1$sconfiguration of async javascript is best done there%2$s.', 'autoptimize' ), '<a href="' . 'options-general.php?page=async-javascript' . '">', '</a>' );
                     } else {
-<<<<<<< HEAD
-                        ?>
-                        <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php echo esc_attr( $options['autoptimize_extra_text_field_3'] ); ?>'>
-=======
                     ?>
                         <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php if ( array_key_exists( 'autoptimize_extra_text_field_3', $options ) ) { echo esc_attr( $options['autoptimize_extra_text_field_3'] ); } ?>'>
->>>>>>> 0f3d73f... check if key exists in options array before trying to output it
                         <br />
                         <?php
                             _e( 'Comma-separated list of local or 3rd party JS-files that should loaded with the <code>async</code> flag. JS-files from your own site will be automatically excluded if added here. ', 'autoptimize' );
