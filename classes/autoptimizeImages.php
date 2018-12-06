@@ -107,6 +107,11 @@ class autoptimizeImages
         $service_not_down  = ( 'down' !== $opts['availabilities']['extra_imgopt']['status'] );
         $not_launch_status = ( 'launch' !== $opts['availabilities']['extra_imgopt']['status'] );
 
+        $_do_cdn = true;
+        if ( -2 == $this->get_imgopt_provider_userstatus() ) {
+            $_do_cdn = false;
+        }
+
         if (
             ! empty( $opts['autoptimize_extra_checkbox_field_5'] )
             && $service_not_down
@@ -158,6 +163,22 @@ class autoptimizeImages
         return $imgopt_host;
     }
 
+    public function get_imgopt_provider_userstatus() {
+        static $_provider_userstatus = null;
+
+        if ( is_null( $_provider_userstatus ) ) {
+            $_stat = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            if ( is_array( $_stat ) && array_key_exists( 'Status', $_stat ) ) {
+                $_provider_userstatus = $_stat['Status'];
+            } else {
+                // if no stats then we assume all is well.
+                $_provider_userstatus = 2;
+            }
+        }
+        
+        return $_provider_userstatus;
+    }
+
     public function get_status_notice()
     {
         $opts = $this->options;
@@ -170,7 +191,7 @@ class autoptimizeImages
                 if ( 1 == $stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
                     $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
-                } elseif ( -1 == $stat['Status'] ) {
+                } elseif ( -1 == $stat['Status'] || -2 == $_stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
                     $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
                 } else {
