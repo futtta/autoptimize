@@ -306,6 +306,17 @@ class autoptimizeImages
             $parsed_site_url = parse_url( site_url() );
         }
 
+        // get CDN domain once.
+        static $cdn_domain = null;
+        if ( is_null( $cdn_domain ) ) {
+            $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', get_option( 'autoptimize_cdn_url', '' ) );
+            if ( ! empty( $cdn_url ) ) {
+                $cdn_domain = parse_url( $cdn_url, PHP_URL_HOST );
+            } else {
+                $cdn_domain = '';
+            }
+        }
+
         /**
          * This method gets called a lot, often for identical urls it seems.
          * `filter_optimize_css_images()` calls us, uses the resulting url and
@@ -334,6 +345,8 @@ class autoptimizeImages
                     $result .= $parsed_site_url['path'];
                 }
                 $result .= $in;
+            } elseif ( ! empty( $cdn_domain ) && strpos( $in, $cdn_domain ) !== 0 ) {
+                $result = str_replace( $cdn_domain, $parsed_site_url['host'], $in );
             }
 
             $result = apply_filters( 'autoptimize_filter_extra_imgopt_normalized_url', $result );
