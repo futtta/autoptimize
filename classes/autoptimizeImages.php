@@ -302,7 +302,7 @@ class autoptimizeImages
                 $_setting = $this->options['autoptimize_extra_select_field_6'];
             }
 
-            if ( ! $setting || empty( $setting ) || ( '1' !== $setting && '3' !== $setting ) ) {
+            if ( ! isset( $setting ) || empty( $setting ) || ( '1' !== $setting && '3' !== $setting ) ) {
                 // default image opt. value is 2 ("glossy").
                 $q = '2';
             } else {
