@@ -498,8 +498,13 @@ class autoptimizeImages
 
     public function replace_data_thumbs( $matches )
     {
+        $this->replace_img_callback( $matches, 150, 150 );
+    }
+
+    public function replace_img_callback( $matches, $width=0 , $height=0 )
+    {
         if ( $this->can_optimize_image( $matches[1] ) ) {
-            return str_replace( $matches[1], $this->build_imgopt_url( $matches[1], 150, 150 ), $matches[0] );
+            return str_replace( $matches[1], $this->build_imgopt_url( $matches[1], $width, $height ), $matches[0] );
         } else {
             return $matches[0];
         }
@@ -575,6 +580,15 @@ class autoptimizeImages
             $out = preg_replace_callback(
                 '/\<div(?:[^>]?)\sdata-thumb\=(?:\"|\')(.+?)(?:\"|\')(?:[^>]*)?\>/s',
                 array( $this, 'replace_data_thumbs' ),
+                $out
+            );
+        }
+
+        // background-image in inline style
+        if ( strpos( $out, 'background-image:' ) !== false && apply_filters( 'autoptimize_filter_extra_imgopt_backgroundimages', true ) ) {
+            $out = preg_replace_callback(
+                '/style=(?:"|\').*background-image:\s?url\((?:"|\')?([^"\')]*)/s',
+                array( $this, 'replace_img_callback' ),
                 $out
             );
         }
