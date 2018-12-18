@@ -60,6 +60,15 @@ class autoptimizeImages
 
     public function run()
     {
+        if ( is_admin() ) {
+            add_action( 'admin_menu', array( $this, 'imgopt_admin_menu' ) );
+            add_filter( 'autoptimize_filter_settingsscreen_tabs', array( $this, 'add_imgopt_tab' ), 9 );
+        } else {
+            $this->run_on_frontend();
+        }
+    }
+    
+    public function run_on_frontend() {
         if ( ! $this->should_run() ) {
             return;
         }
@@ -95,6 +104,7 @@ class autoptimizeImages
             );
         }
     }
+
 
     /**
      * Basic checks before we can run.
@@ -580,5 +590,161 @@ class autoptimizeImages
         }
 
         return $out;
+    }
+
+    public function imgopt_admin_menu()
+    {
+        add_submenu_page(
+            null,
+            'autoptimize_imgopt',
+            'autoptimize_imgopt',
+            'manage_options',
+            'autoptimize_imgopt',
+            array( $this, 'imgopt_options_page' )
+        );
+        register_setting( 'autoptimize_extra_settings', 'autoptimize_extra_settings' );
+    }
+
+    public function add_imgopt_tab( $in )
+    {
+        $in = array_merge( $in, array( 'autoptimize_imgopt' => __( 'Images', 'autoptimize' ) ) );
+
+        return $in;
+    }
+
+    public function imgopt_options_page()
+    {
+        // Check querystring for "refreshCacheChecker" and call cachechecker if so.
+        if ( array_key_exists( 'refreshImgProvStats', $_GET ) && 1 == $_GET['refreshImgProvStats'] ) {
+            autoptimizeExtra::query_img_provider_stats();
+        }
+
+        // Working with actual option values from the database here.
+        // That way any saves are still processed as expected, but we can still
+        // override behavior by using `new autoptimizeExtra($custom_options)` and not have that custom
+        // behavior being persisted in the DB even if save is done here.
+        $options       = autoptimizeExtra::fetch_options();
+        $sp_url_suffix = $this->get_service_url_suffix();
+        ?>
+    <style>
+        #ao_settings_form {background: white;border: 1px solid #ccc;padding: 1px 15px;margin: 15px 10px 10px 0;}
+        #ao_settings_form .form-table th {font-weight: normal;}
+        #autoptimize_extra_descr{font-size: 120%;}
+    </style>
+    <div class="wrap">
+    <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
+        <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
+        <?php if ( 'down' === $options['availabilities']['extra_imgopt']['status'] ) { ?>
+            <div class="notice-warning notice"><p>
+            <?php
+            // translators: "Autoptimize support forum" will appear in a "a href".
+            echo sprintf( __( 'The image optimization service is currently down, image optimization will be skipped until further notice. Check the %1$sAutoptimize support forum%2$s for more info.', 'autoptimize' ), '<a href="https://wordpress.org/support/plugin/autoptimize/" target="_blank">', '</a>' );
+            ?>
+            </p></div>
+        <?php } ?>
+
+        <?php if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] && ! autoptimizeImages::instance()->launch_ok() ) { ?>
+            <div class="notice-warning notice"><p>
+            <?php _e( 'The image optimization service is launching, but not yet available for this domain, it should become available in the next couple of days.', 'autoptimize' ); ?>
+            </p></div>
+        <?php } ?>
+    <form id='ao_settings_form' action='options.php' method='post'>
+        <?php settings_fields( 'autoptimize_extra_settings' ); ?>
+        <h2><?php _e( 'Image optimization', 'autoptimize' ); ?></h2>
+        <span id='autoptimize_extra_descr'><?php _e( 'Optimize all your images with one click of a checkbox!', 'autoptimize' ); ?></span>
+        <table class="form-table">
+            <tr>
+                <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_5]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' === $options['autoptimize_extra_checkbox_field_5'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from a CDN.', 'autoptimize' ); ?></label>
+                    <?php
+                    // show shortpixel status.
+                    $_notice = autoptimizeImages::instance()->get_status_notice();
+                    if ( $_notice ) {
+                        switch ( $_notice['status'] ) {
+                            case 2:
+                                $_notice_color = 'green';
+                                break;
+                            case 1:
+                                $_notice_color = 'orange';
+                                break;
+                            case -1:
+                                $_notice_color = 'red';
+                                break;
+                            case -2:
+                                $_notice_color = 'red';
+                                break;
+                            default:
+                                $_notice_color = 'green';
+                        }
+                        echo apply_filters( 'autoptimize_filter_imgopt_settings_status', '<p><strong><span style="color:' . $_notice_color . ';">' . __( 'Shortpixel status: ', 'autoptimize' ) . '</span></strong>' . $_notice['notice'] . '</p>' );
+                    } else {
+                        // translators: link points to shortpixel.
+                        $upsell_msg_1 = '<p>' . sprintf( __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by %1$sShortPixel%2$s and then cached and served fast from a CDN.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
+                        if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] ) {
+                            $upsell_msg_2 = __( 'For a limited time only, this service is offered free for all Autoptimize users, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
+                        } else {
+                            // translators: link points to shortpixel.
+                            $upsell_msg_2 = sprintf( __( '%1$sSign-up now%2$s to receive a 1 000 bonus + 50&#37; more image optimization credits regardless of the traffic used. More image optimizations can be purchased starting with $4.99.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
+                        }
+                        echo apply_filters( 'autoptimize_extra_imgopt_settings_copy', $upsell_msg_1 . ' ' . $upsell_msg_2 . '</p>' );
+                    }
+                    // translators: link points to shortpixel FAQ.
+                    $faqcopy = sprintf( __( '<strong>Questions</strong>? Have a look at the %1$sShortPixel FAQ%2$s!', 'autoptimize' ), '<strong><a href="https://shortpixel.helpscoutdocs.com/category/60-shortpixel-ai-cdn" target="_blank">', '</strong></a>' );
+                    // translators: links points to shortpixel TOS & Privacy Policy.
+                    $toscopy = sprintf( __( 'Usage of this feature is subject to Shortpixel\'s %1$sTerms of Use%2$s and %3$sPrivacy policy%4$s.', 'autoptimize' ), '<a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">', '</a>', '<a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">', '</a>' );
+                    echo apply_filters( 'autoptimize_extra_imgopt_settings_tos', '<p>' . $faqcopy . ' ' . $toscopy . '</p>' );
+                    ?>
+                </td>
+            </tr>
+            <tr id='autoptimize_imgopt_quality' <?php if ( ! array_key_exists( 'autoptimize_extra_checkbox_field_5', $options ) || ( ! empty( $options['autoptimize_extra_checkbox_field_5'] ) && '1' !== $options['autoptimize_extra_checkbox_field_5'] ) ) { echo 'class="hidden"'; } ?>>
+                <th scope="row"><?php _e( 'Image Optimization quality', 'autoptimize' ); ?></th>
+                <td>
+                    <label>
+                    <select name='autoptimize_extra_settings[autoptimize_extra_select_field_6]'>
+                        <?php
+                        $_imgopt_array = autoptimizeImages::instance()->get_img_quality_array();
+                        $_imgopt_val   = autoptimizeImages::instance()->get_img_quality_setting();
+
+                        foreach ( $_imgopt_array as $key => $value ) {
+                            echo '<option value="' . $key . '"';
+                            if ( $_imgopt_val == $key ) {
+                                echo ' selected';
+                            }
+                            echo '>' . ucfirst( $value ) . '</option>';
+                        }
+                        echo "\n";
+                        ?>
+                    </select>
+                    </label>
+                    <p>
+                        <?php
+                            // translators: link points to shortpixel image test page.
+                            echo apply_filters( 'autoptimize_extra_imgopt_quality_copy', sprintf( __( 'You can %1$stest compression levels here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/oic' . $sp_url_suffix . '" target="_blank">', '</a>' ) );
+                        ?>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e( 'Lazy-load images?', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_0]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_0'] ) && '1' === $options['autoptimize_extra_checkbox_field_0'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Image lazy-loading will delay the loading of non-visible images to allow the browser to optimally load all resources for the "above the fold"-page first. Moreover, if Image Optimization is active, webp-images will be loaded in browsers that support it.', 'autoptimize' ); ?></label>
+                </td>
+            </tr>
+        </table>
+        <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Changes', 'autoptimize' ); ?>" /></p>
+    </form>
+    <script>
+        jQuery(document).ready(function() {
+            jQuery( "#autoptimize_imgopt_checkbox" ).change(function() {
+                if (this.checked) {
+                    jQuery("#autoptimize_imgopt_quality").show("slow");
+                } else {
+                    jQuery("#autoptimize_imgopt_quality").hide("slow");
+                }
+            });
+        });
+    </script>
+        <?php
     }
 }

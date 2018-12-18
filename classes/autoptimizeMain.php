@@ -154,7 +154,7 @@ class autoptimizeMain
     {
         if ( autoptimizeCache::cacheavail() ) {
             $conf = autoptimizeConfig::instance();
-            if ( $conf->get( 'autoptimize_html' ) || $conf->get( 'autoptimize_js' ) || $conf->get( 'autoptimize_css' ) ) {
+            if ( $conf->get( 'autoptimize_html' ) || $conf->get( 'autoptimize_js' ) || $conf->get( 'autoptimize_css' ) || $conf->get( 'autoptimize_img' ) ) {
                 // Hook into WordPress frontend.
                 if ( defined( 'AUTOPTIMIZE_INIT_EARLIER' ) ) {
                     add_action(
@@ -183,6 +183,8 @@ class autoptimizeMain
         if ( apply_filters( 'autoptimize_filter_extra_activate', true ) ) {
             $ao_extra = new autoptimizeExtra();
             $ao_extra->run();
+            $ao_imgopt = new autoptimizeImages();
+            $ao_imgopt->run();
 
             // And show the imgopt notice.
             add_action( 'admin_notices', 'autoptimizeMain::notice_plug_imgopt' );
@@ -255,7 +257,7 @@ class autoptimizeMain
                     ob_end_clean();
                 }
             }
-
+            error_log('start buffering');
             // Now, start the real thing!
             ob_start( array( $this, 'end_buffering' ) );
         }
@@ -393,6 +395,7 @@ class autoptimizeMain
      */
     public function end_buffering( $content )
     {
+        error_log('start buffering');
         // Bail early without modifying anything if we can't handle the content.
         if ( ! $this->is_valid_buffer( $content ) ) {
             return $content;
