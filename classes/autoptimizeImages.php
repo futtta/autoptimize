@@ -597,7 +597,7 @@ class autoptimizeImages
         // background-image in inline style
         if ( strpos( $out, 'background-image:' ) !== false && apply_filters( 'autoptimize_filter_extra_imgopt_backgroundimages', true ) ) {
             $out = preg_replace_callback(
-                '/style=(?:"|\').*background-image:\s?url\((?:"|\')?([^"\')]*)/s',
+                '/style=(?:"|\').*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)/s',
                 array( $this, 'replace_img_callback' ),
                 $out
             );
