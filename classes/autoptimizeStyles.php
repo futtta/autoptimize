@@ -797,19 +797,7 @@ class autoptimizeStyles extends autoptimizeBase
     // Returns the content.
     public function getcontent()
     {
-        // restore comments.
-        $this->content = $this->restore_comments( $this->content );
-
-        // restore IE hacks.
-        $this->content = $this->restore_iehacks( $this->content );
-
-        // restore (no)script.
-        $this->content = $this->restore_marked_content( 'SCRIPT', $this->content );
-
-        // Restore noptimize.
-        $this->content = $this->restore_noptimize( $this->content );
-
-        // Restore the full content.
+        // Restore the full content (only applies when "autoptimize_filter_css_justhead" filter is true).
         if ( ! empty( $this->restofcontent ) ) {
             $this->content .= $this->restofcontent;
             $this->restofcontent = '';
@@ -885,6 +873,18 @@ class autoptimizeStyles extends autoptimizeBase
                 );
             }
         }
+
+        // restore comments.
+        $this->content = $this->restore_comments( $this->content );
+
+        // restore IE hacks.
+        $this->content = $this->restore_iehacks( $this->content );
+
+        // restore (no)script.
+        $this->content = $this->restore_marked_content( 'SCRIPT', $this->content );
+
+        // Restore noptimize.
+        $this->content = $this->restore_noptimize( $this->content );
 
         // Return the modified stylesheet.
         return $this->content;
