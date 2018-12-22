@@ -847,8 +847,9 @@ class autoptimizeStyles extends autoptimizeBase
                             }
                         }
                     }
-                    $code_out = '<style type="text/css" id="aoatfcss" media="all">' . $defer_inline_code . '</style>';
-                    $this->inject_in_html( $code_out, $replaceTag );
+                    // inlined critical css set here, but injected when full CSS is injected
+                    // to avoid CSS containing SVG with <title tag receiving the full CSS link.
+                    $inlined_ccss_block = '<style type="text/css" id="aoatfcss" media="all">' . $defer_inline_code . '</style>';
                 }
             }
 
@@ -874,7 +875,8 @@ class autoptimizeStyles extends autoptimizeBase
             if ( $this->defer ) {
                 $preload_polyfill = autoptimizeConfig::get_ao_css_preload_polyfill();
                 $noScriptCssBlock .= '</noscript>';
-                $this->inject_in_html( $preloadCssBlock . $noScriptCssBlock, $replaceTag );
+                // Inject inline critical CSS, the preloaded full CSS and the noscript-CSS.
+                $this->inject_in_html( $inlined_ccss_block . $preloadCssBlock . $noScriptCssBlock, $replaceTag );
 
                 // Adds preload polyfill at end of body tag.
                 $this->inject_in_html(
