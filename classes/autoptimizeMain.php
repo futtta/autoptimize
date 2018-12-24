@@ -257,7 +257,7 @@ class autoptimizeMain
                     ob_end_clean();
                 }
             }
-            error_log('start buffering');
+
             // Now, start the real thing!
             ob_start( array( $this, 'end_buffering' ) );
         }
@@ -395,7 +395,6 @@ class autoptimizeMain
      */
     public function end_buffering( $content )
     {
-        error_log('start buffering');
         // Bail early without modifying anything if we can't handle the content.
         if ( ! $this->is_valid_buffer( $content ) ) {
             return $content;
