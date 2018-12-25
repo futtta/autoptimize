@@ -728,10 +728,26 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_extra_radio_field_4'    => '1',
             'autoptimize_extra_text_field_2'     => '',
             'autoptimize_extra_text_field_3'     => '',
-            'autoptimize_extra_checkbox_field_5' => '0',
-            'autoptimize_extra_select_field_6'   => '2',
+            'autoptimize_extra_checkbox_field_5' => '0', // img opt, to be removed.
+            'autoptimize_extra_select_field_6'   => '2', // img opt quality, to be removed.
         );
 
+        return $defaults;
+    }
+
+    /**
+     * Returns default option values for autoptimizeExtra.
+     *
+     * @return array
+     */
+    public static function get_ao_imgopt_default_options()
+    {
+        $defaults = array(
+            'autoptimize_imgopt_checkbox_field_1' => '1', // toggle imgopt (in)active.
+            'autoptimize_imgopt_select_field_2'   => '3', // quality.
+            'autoptimize_imgopt_checkbox_field_3' => '0', // lazy load.
+            'autoptimize_imgopt_checkbox_field_4' => '0', // webp.
+        );
         return $defaults;
     }
 
