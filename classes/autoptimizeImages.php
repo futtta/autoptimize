@@ -871,7 +871,12 @@ class autoptimizeImages
             });
             jQuery( "#autoptimize_imgopt_webp_checkbox" ).change(function() {
                 if (this.checked) {
-                    jQuery("#autoptimize_imgopt_lazyload_checkbox")[0].checked = true;;
+                    jQuery("#autoptimize_imgopt_lazyload_checkbox")[0].checked = true;
+                }
+            });
+            jQuery( "#autoptimize_imgopt_lazyload_checkbox" ).change(function() {
+                if (!this.checked) {
+                    jQuery("#autoptimize_imgopt_webp_checkbox")[0].checked = false;
                 }
             });
         });
