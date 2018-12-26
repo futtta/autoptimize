@@ -843,10 +843,16 @@ class autoptimizeImages
                     </p>
                 </td>
             </tr>
+            <tr id='autoptimize_imgopt_webp' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
+                <th scope="row"><?php _e( 'Load webp in supported browsers?', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='checkbox' id='autoptimize_imgopt_webp_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Allow image optimization to load webp-images in browsers that support it (requires lazy load to be active).', 'autoptimize' ); ?></label>
+                </td>
+            </tr>
             <tr>
                 <th scope="row"><?php _e( 'Lazy-load images?', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input type='checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_3]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Image lazy-loading will delay the loading of non-visible images to allow the browser to optimally load all resources for the "above the fold"-page first. Moreover, if Image Optimization is active, webp-images will be loaded in browsers that support it.', 'autoptimize' ); ?></label>
+                    <label><input type='checkbox' id='autoptimize_imgopt_lazyload_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_3]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Image lazy-loading will delay the loading of non-visible images to allow the browser to optimally load all resources for the "above the fold"-page first.', 'autoptimize' ); ?></label>
                 </td>
             </tr>
         </table>
@@ -857,8 +863,15 @@ class autoptimizeImages
             jQuery( "#autoptimize_imgopt_checkbox" ).change(function() {
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_quality").show("slow");
+                    jQuery("#autoptimize_imgopt_webp").show("slow");
                 } else {
                     jQuery("#autoptimize_imgopt_quality").hide("slow");
+                    jQuery("#autoptimize_imgopt_webp").hide("slow");
+                }
+            });
+            jQuery( "#autoptimize_imgopt_webp_checkbox" ).change(function() {
+                if (this.checked) {
+                    jQuery("#autoptimize_imgopt_lazyload_checkbox")[0].checked = true;;
                 }
             });
         });
