@@ -728,8 +728,8 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_extra_radio_field_4'    => '1',
             'autoptimize_extra_text_field_2'     => '',
             'autoptimize_extra_text_field_3'     => '',
-            'autoptimize_extra_checkbox_field_5' => '0', // img opt, to be removed.
-            'autoptimize_extra_select_field_6'   => '2', // img opt quality, to be removed.
+            'autoptimize_extra_checkbox_field_5' => '0', // fixme: img opt, to be removed.
+            'autoptimize_extra_select_field_6'   => '2', // fixme: img opt quality, to be removed.
         );
 
         return $defaults;
@@ -743,10 +743,10 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
     public static function get_ao_imgopt_default_options()
     {
         $defaults = array(
-            'autoptimize_imgopt_checkbox_field_1' => '1', // toggle imgopt (in)active.
-            'autoptimize_imgopt_select_field_2'   => '3', // quality.
-            'autoptimize_imgopt_checkbox_field_3' => '0', // lazy load.
-            'autoptimize_imgopt_checkbox_field_4' => '0', // webp.
+            'autoptimize_imgopt_checkbox_field_1' => '0', // imgopt off.
+            'autoptimize_imgopt_select_field_2'   => '2', // quality glossy.
+            'autoptimize_imgopt_checkbox_field_3' => '0', // lazy load off.
+            'autoptimize_imgopt_checkbox_field_4' => '0', // webp, might not be a separate setting though, so fixme.
         );
         return $defaults;
     }
@@ -832,7 +832,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
     // based on http://wordpress.stackexchange.com/a/58826
     static function ao_admin_tabs()
     {
-        $tabs = apply_filters( 'autoptimize_filter_settingsscreen_tabs' ,array( 'autoptimize' => __( 'JS &amp; CSS', 'autoptimize' ) ) );
+        $tabs = apply_filters( 'autoptimize_filter_settingsscreen_tabs' ,array( 'autoptimize' => __( 'JS, CSS  &amp; HTML', 'autoptimize' ) ) );
         $tabContent = '';
         $tabs_count = count($tabs);
         if ( $tabs_count > 1 ) {

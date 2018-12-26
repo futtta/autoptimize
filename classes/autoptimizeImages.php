@@ -57,6 +57,25 @@ class autoptimizeImages
 
         return $value;
     }
+    
+    public static function is_active()
+    {
+        // function to quickly check if imgopt is active, used below but also in
+        // autoptimizeMain.php to start ob_ even if no HTML, JS or CSS optimizing is done
+        // and does not use/ request the availablity data (which could slow things down).
+        static $imgopt_active = null;
+
+        if ( null === $imgopt_active ) {
+            $opts = get_option( 'autoptimize_imgopt_settings', '' );
+            if ( ! empty( $opts ) && is_array( $opts ) && array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $opts ) && ! empty( $opts['autoptimize_imgopt_checkbox_field_1'] ) && '1' === $opts['autoptimize_imgopt_checkbox_field_1'] ) {
+                $imgopt_active = true;
+            } else {
+                $imgopt_active = false;
+            }
+        }
+        
+        return $imgopt_active;
+    }
 
     /**
      * Helper for getting a singleton instance. While being an
@@ -114,7 +133,7 @@ class autoptimizeImages
 
         if ( $active ) {
             add_filter(
-                'autoptimize_imgopt_filter_tobepreconn',
+                'autoptimize_extra_filter_tobepreconn',
                 array( $this, 'filter_preconnect_imgopt_url' ),
                 10,
                 1
@@ -141,7 +160,7 @@ class autoptimizeImages
         }
 
         if (
-            ! empty( $opts['autoptimize_imgopt_checkbox_field_5'] )
+            ! empty( $opts['autoptimize_imgopt_checkbox_field_1'] )
             && $do_cdn 
             && $service_not_down
             && ( $not_launch_status || $this->launch_ok() )
@@ -232,8 +251,7 @@ class autoptimizeImages
 
     public function get_status_notice()
     {
-        $opts = $this->options;
-        if ( ! empty( $opts ) && is_array( $opts ) && array_key_exists( 'autoptimize_imgopt_checkbox_field_5', $opts ) && ! empty( $opts['autoptimize_imgopt_checkbox_field_5'] ) ) {
+        if ( $this->is_active() ) {
             $notice = '';
             $stat   = $this->get_imgopt_provider_userstatus();
             $upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
@@ -270,7 +288,7 @@ class autoptimizeImages
 
     public function query_img_provider_stats()
     {
-        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_5'] ) ) {
+        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_1'] ) ) {
             $url      = '';
             $endpoint = $this->get_imgopt_host() . 'read-domain/';
             $domain   = AUTOPTIMIZE_SITE_DOMAIN;
@@ -645,8 +663,7 @@ class autoptimizeImages
     }
 
     public function get_imgopt_status_notice() {
-        $_extra_options = $this->options;
-        if ( ! empty( $_extra_options ) && is_array( $_extra_options ) && array_key_exists( 'autoptimize_imgopt_checkbox_field_5', $_extra_options ) && ! empty( $_extra_options['autoptimize_imgopt_checkbox_field_5'] ) ) {
+        if ( $this->is_active() ) {
             $_imgopt_notice = '';
             $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
             $_site_host     = AUTOPTIMIZE_SITE_DOMAIN;
@@ -725,7 +742,6 @@ class autoptimizeImages
         }
 
         $options       = $this->fetch_options();
-        print_r($options);
         $sp_url_suffix = $this->get_service_url_suffix();
         ?>
     <style>
@@ -799,7 +815,7 @@ class autoptimizeImages
                     ?>
                 </td>
             </tr>
-            <tr id='autoptimize_imgopt_quality' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( ! empty( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
+            <tr id='autoptimize_imgopt_quality' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
                 <th scope="row"><?php _e( 'Image Optimization quality', 'autoptimize' ); ?></th>
                 <td>
                     <label>

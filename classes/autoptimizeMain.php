@@ -154,7 +154,7 @@ class autoptimizeMain
     {
         if ( autoptimizeCache::cacheavail() ) {
             $conf = autoptimizeConfig::instance();
-            if ( $conf->get( 'autoptimize_html' ) || $conf->get( 'autoptimize_js' ) || $conf->get( 'autoptimize_css' ) || $conf->get( 'autoptimize_img' ) ) {
+            if ( $conf->get( 'autoptimize_html' ) || $conf->get( 'autoptimize_js' ) || $conf->get( 'autoptimize_css' ) || autoptimizeImages::is_active() ) {
                 // Hook into WordPress frontend.
                 if ( defined( 'AUTOPTIMIZE_INIT_EARLIER' ) ) {
                     add_action(
@@ -181,10 +181,10 @@ class autoptimizeMain
     public function maybe_run_ao_extra()
     {
         if ( apply_filters( 'autoptimize_filter_extra_activate', true ) ) {
-            $ao_extra = new autoptimizeExtra();
-            $ao_extra->run();
             $ao_imgopt = new autoptimizeImages();
             $ao_imgopt->run();
+            $ao_extra = new autoptimizeExtra();
+            $ao_extra->run();
 
             // And show the imgopt notice.
             add_action( 'admin_notices', 'autoptimizeMain::notice_plug_imgopt' );
@@ -494,6 +494,7 @@ class autoptimizeMain
             'autoptimize_service_availablity',
             'autoptimize_imgopt_provider_stat',
             'autoptimize_imgopt_launched',
+            'autoptimize_imgopt_settings',
         );
 
         if ( ! is_multisite() ) {

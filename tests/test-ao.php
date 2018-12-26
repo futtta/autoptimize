@@ -73,7 +73,7 @@ class AOTest extends WP_UnitTestcase
 
         static $imgopt_host = null;
         if ( null === $imgopt_host ) {
-            $optimizer   = new autoptimizeImages( autoptimizeExtra::fetch_options() );
+            $optimizer   = new autoptimizeImages();
             $imgopt_host = rtrim( $optimizer->get_imgopt_host(), '/' );
         }
 
