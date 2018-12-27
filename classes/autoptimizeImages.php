@@ -25,7 +25,7 @@ class autoptimizeImages
 
     public function __construct( array $options = array() )
     {
-        // If options are not provided, fetch them
+        // If options are not provided, fetch them.
         if ( empty( $options ) ) {
             $options = $this->fetch_options();
         }
@@ -57,7 +57,7 @@ class autoptimizeImages
 
         return $value;
     }
-    
+
     public static function is_active()
     {
         // function to quickly check if imgopt is active, used below but also in
@@ -73,7 +73,7 @@ class autoptimizeImages
                 $imgopt_active = false;
             }
         }
-        
+
         return $imgopt_active;
     }
 
@@ -103,7 +103,7 @@ class autoptimizeImages
             $this->run_on_frontend();
         }
     }
-    
+
     public function run_on_frontend() {
         if ( ! $this->should_run() ) {
             return;
@@ -153,7 +153,7 @@ class autoptimizeImages
         $service_not_down  = ( 'down' !== $opts['availabilities']['extra_imgopt']['status'] );
         $not_launch_status = ( 'launch' !== $opts['availabilities']['extra_imgopt']['status'] );
 
-        $do_cdn     = true;
+        $do_cdn      = true;
         $_userstatus = $this->get_imgopt_provider_userstatus();
         if ( -2 == $_userstatus['Status'] ) {
             $do_cdn = false;
@@ -161,7 +161,7 @@ class autoptimizeImages
 
         if (
             ! empty( $opts['autoptimize_imgopt_checkbox_field_1'] )
-            && $do_cdn 
+            && $do_cdn
             && $service_not_down
             && ( $not_launch_status || $this->launch_ok() )
         ) {
@@ -245,7 +245,7 @@ class autoptimizeImages
                 }
             }
         }
-        
+
         return $_provider_userstatus;
     }
 
@@ -532,7 +532,7 @@ class autoptimizeImages
         }
         $width  = (int) $width;
         $height = (int) $height;
-        
+
         $filtered_url = apply_filters(
             'autoptimize_filter_extra_imgopt_build_url',
             $orig_url,
@@ -567,7 +567,7 @@ class autoptimizeImages
         $this->replace_img_callback( $matches, 150, 150 );
     }
 
-    public function replace_img_callback( $matches, $width=0 , $height=0 )
+    public function replace_img_callback( $matches, $width = 0, $height = 0 )
     {
         if ( $this->can_optimize_image( $matches[1] ) ) {
             return str_replace( $matches[1], $this->build_imgopt_url( $matches[1], $width, $height ), $matches[0] );
@@ -650,7 +650,7 @@ class autoptimizeImages
             );
         }
 
-        // background-image in inline style
+        // background-image in inline style.
         if ( strpos( $out, 'background-image:' ) !== false && apply_filters( 'autoptimize_filter_extra_imgopt_backgroundimages', true ) ) {
             $out = preg_replace_callback(
                 '/style=(?:"|\').*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)/s',
@@ -710,10 +710,9 @@ class autoptimizeImages
         return $self->get_imgopt_status_notice();
     }
 
-    /*
+    /**
      * Admin page logic below.
-     */ 
-
+     */
     public function imgopt_admin_menu()
     {
         add_submenu_page(

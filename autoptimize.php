@@ -26,15 +26,15 @@ define( 'AUTOPTIMIZE_PLUGIN_VERSION', '2.5.0-beta-1' );
 define( 'AUTOPTIMIZE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'AUTOPTIMIZE_PLUGIN_FILE', __FILE__ );
 
-// AO beta only; load plugin-update-checker.php and check for updates from GitHub
-if (is_admin()) {
+// AO beta only; load plugin-update-checker.php and check for updates from GitHub.
+if ( is_admin() ) {
     require AUTOPTIMIZE_PLUGIN_DIR . 'classes/external/php/plugin-update-checker/plugin-update-checker.php';
-    $AOUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+    $ao_update_checker = Puc_v4_Factory::buildUpdateChecker(
         'https://github.com/futtta/autoptimize/',
         __FILE__,
         'autoptimize'
     );
-    $AOUpdateChecker->setBranch('beta');
+    $ao_update_checker->setBranch( 'beta' );
 }
 
 // Bail early if attempting to run on non-supported php versions.

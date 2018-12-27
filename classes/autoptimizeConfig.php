@@ -728,8 +728,6 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_extra_radio_field_4'    => '1',
             'autoptimize_extra_text_field_2'     => '',
             'autoptimize_extra_text_field_3'     => '',
-            'autoptimize_extra_checkbox_field_5' => '0', // fixme: img opt, to be removed.
-            'autoptimize_extra_select_field_6'   => '2', // fixme: img opt quality, to be removed.
         );
 
         return $defaults;

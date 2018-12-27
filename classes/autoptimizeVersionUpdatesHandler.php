@@ -233,7 +233,7 @@ class autoptimizeVersionUpdatesHandler
     }
 
     /**
-     * migrate imgopt options from autoptimize_extra_settings to autoptimize_imgopt_settings
+     * Migrate imgopt options from autoptimize_extra_settings to autoptimize_imgopt_settings
      */
     private function upgrade_from_2_4() {
         $extra_settings  = get_option( 'autoptimize_extra_settings' );

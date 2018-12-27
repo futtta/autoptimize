@@ -349,8 +349,8 @@ class autoptimizeExtra
         // That way any saves are still processed as expected, but we can still
         // override behavior by using `new autoptimizeExtra($custom_options)` and not have that custom
         // behavior being persisted in the DB even if save is done here.
-        $options       = $this->fetch_options();
-        $gfonts        = $options['autoptimize_extra_radio_field_4'];
+        $options = $this->fetch_options();
+        $gfonts  = $options['autoptimize_extra_radio_field_4'];
         ?>
     <style>
         #ao_settings_form {background: white;border: 1px solid #ccc;padding: 1px 15px;margin: 15px 10px 10px 0;}
@@ -360,7 +360,7 @@ class autoptimizeExtra
     <div class="wrap">
     <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
-        <?php if ( 'on' !== get_option( 'autoptimize_js' ) && 'on' !== get_option( 'autoptimize_css' ) && 'on' !== get_option( 'autoptimize_html' ) && !autoptimizeImages::is_active() ) { ?>
+        <?php if ( 'on' !== get_option( 'autoptimize_js' ) && 'on' !== get_option( 'autoptimize_css' ) && 'on' !== get_option( 'autoptimize_html' ) && ! autoptimizeImages::is_active() ) { ?>
             <div class="notice-warning notice"><p>
             <?php _e( 'Most of below Extra optimizations require at least one of HTML, JS, CSS or Image autoptimizations being active.', 'autoptimize' ); ?>
             </p></div>
