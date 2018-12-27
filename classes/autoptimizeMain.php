@@ -378,6 +378,11 @@ class autoptimizeMain
      */
     public static function is_amp_markup( $content )
     {
+        // Short-circuit when a function is available to determine whether the response is (or will be) an AMP page.
+        if ( function_exists( 'is_amp_endpoint' ) ) {
+            return is_amp_endpoint();
+        }
+        
         $is_amp_markup = preg_match( '/<html[^>]*(?:amp|⚡)/i', $content );
 
         return (bool) $is_amp_markup;
