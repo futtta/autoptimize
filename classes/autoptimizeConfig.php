@@ -746,7 +746,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_imgopt_checkbox_field_1' => '0', // imgopt off.
             'autoptimize_imgopt_select_field_2'   => '2', // quality glossy.
             'autoptimize_imgopt_checkbox_field_3' => '0', // lazy load off.
-            'autoptimize_imgopt_checkbox_field_4' => '0', // webp, might not be a separate setting though, so fixme.
+            'autoptimize_imgopt_checkbox_field_4' => '0', // webp off (might be removed).
         );
         return $defaults;
     }
@@ -787,8 +787,6 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
                     $config[ $name ] = $conf;
                 }
             }
-            // fixme: tmp force imgopt in $config
-            $config['autoptimize_img'] = 'on';
 
             // Save for next call.
             $this->config = apply_filters( 'autoptimize_filter_get_config', $config );
