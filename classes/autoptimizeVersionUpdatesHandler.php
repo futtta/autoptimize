@@ -50,6 +50,7 @@ class autoptimizeVersionUpdatesHandler
                 if ( get_option( 'autoptimize_version', 'none' ) == '2.4.2' ) {
                     $this->upgrade_from_2_4_2();
                 }
+                $this->upgrade_from_2_4();
                 $major_update = false;
                 // No break, intentionally, so all upgrades are ran during a single request...
         }
@@ -78,7 +79,7 @@ class autoptimizeVersionUpdatesHandler
             }
 
             // Versions differed, upgrades happened if needed, store the new version.
-            update_option( 'autoptimize_version', $target );
+            // update_option( 'autoptimize_version', $target );
         }
     }
 
@@ -229,5 +230,19 @@ class autoptimizeVersionUpdatesHandler
 
         // Save the data.
         _set_cron_array( $jobs );
+    }
+
+    /**
+     * migrate imgopt options from autoptimize_extra_settings to autoptimize_imgopt_settings
+     */
+    private function upgrade_from_2_4() {
+        $extra_settings  = get_option('autoptimize_extra_settings');
+        $imgopt_settings = get_option('autoptimize_imgopt_settings');
+        if ( empty( $imgopt_settings ) ) {
+            $imgopt_settings                                        = autoptimizeConfig::get_ao_imgopt_default_options();
+            $imgopt_settings['autoptimize_imgopt_checkbox_field_1'] = $extra_settings['autoptimize_extra_checkbox_field_5'];
+            $imgopt_settings['autoptimize_imgopt_select_field_2']   = $extra_settings['autoptimize_extra_select_field_6'];
+            update_option('autoptimize_imgopt_settings',$imgopt_settings);
+        }
     }
 }
