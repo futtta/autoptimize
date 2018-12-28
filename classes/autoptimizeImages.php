@@ -842,7 +842,7 @@ class autoptimizeImages
                     </p>
                 </td>
             </tr>
-            <tr id='autoptimize_imgopt_webp' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
+            <!-- tr id='autoptimize_imgopt_webp' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
                 <th scope="row"><?php _e( 'Load webp in supported browsers?', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' id='autoptimize_imgopt_webp_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Allow image optimization to load webp-images in browsers that support it (requires lazy load to be active).', 'autoptimize' ); ?></label>
@@ -853,7 +853,7 @@ class autoptimizeImages
                 <td>
                     <label><input type='checkbox' id='autoptimize_imgopt_lazyload_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_3]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Image lazy-loading will delay the loading of non-visible images to allow the browser to optimally load all resources for the "above the fold"-page first.', 'autoptimize' ); ?></label>
                 </td>
-            </tr>
+            </tr -->
         </table>
         <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Changes', 'autoptimize' ); ?>" /></p>
     </form>
