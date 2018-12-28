@@ -553,12 +553,7 @@ class autoptimizeMain
         $_ao_imgopt_plug_notice      = apply_filters( 'autoptimize_filter_main_imgopt_plug_notice', $_ao_imgopt_plug_notice );
         $_ao_imgopt_launch_ok        = autoptimizeImages::launch_ok_wrapper();
         $_ao_imgopt_plug_dismissible = 'ao-img-opt-plug-123';
-        // check if AO is optimizing images already.
-        $_ao_imgopt_active = false;
-        $_ao_extra_options = get_option( 'autoptimize_extra_settings', '' );
-        if ( is_array( $_ao_extra_options ) && array_key_exists( 'autoptimize_extra_checkbox_field_5', $_ao_extra_options ) && ! empty( $_ao_extra_options['autoptimize_extra_checkbox_field_5'] ) ) {
-            $_ao_imgopt_active = true;
-        }
+        $_ao_imgopt_active           = autoptimizeImages::is_active();
 
         if ( current_user_can( 'manage_options' ) && '' !== $_ao_imgopt_plug_notice && ! $_ao_imgopt_active && $_ao_imgopt_launch_ok && PAnD::is_admin_notice_active( $_ao_imgopt_plug_dismissible ) ) {
             echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_imgopt_plug_dismissible . '"><p>';
