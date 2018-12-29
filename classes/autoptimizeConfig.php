@@ -215,21 +215,6 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <ul>
 
 <li class="itemDetail">
-<h2 class="itemTitle"><?php _e('HTML Options','autoptimize'); ?></h2>
-<table class="form-table">
-<tr valign="top">
-<th scope="row"><?php _e('Optimize HTML Code?','autoptimize'); ?></th>
-<td><input type="checkbox" id="autoptimize_html" name="autoptimize_html" <?php echo get_option('autoptimize_html')?'checked="checked" ':''; ?>/></td>
-</tr>
-<tr class="<?php echo $hiddenClass;?>html_sub ao_adv" valign="top">
-<th scope="row"><?php _e('Keep HTML comments?','autoptimize'); ?></th>
-<td><label class="cb_label"><input type="checkbox" name="autoptimize_html_keepcomments" <?php echo get_option('autoptimize_html_keepcomments')?'checked="checked" ':''; ?>/>
-<?php _e('Enable this if you want HTML comments to remain in the page.','autoptimize'); ?></label></td>
-</tr>
-</table>
-</li>
-
-<li class="itemDetail">
 <h2 class="itemTitle"><?php _e('JavaScript Options','autoptimize'); ?></h2>
 <table class="form-table">
 <tr valign="top">
@@ -326,6 +311,21 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
 <th scope="row"><?php _e('Exclude CSS from Autoptimize:','autoptimize'); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo get_option('autoptimize_css_exclude','wp-content/cache/, wp-content/uploads/, admin-bar.min.css, dashicons.min.css'); ?>"/><br />
 <?php _e('A comma-separated list of CSS you want to exclude from being optimized.','autoptimize'); ?></label></td>
+</tr>
+</table>
+</li>
+
+<li class="itemDetail">
+<h2 class="itemTitle"><?php _e('HTML Options','autoptimize'); ?></h2>
+<table class="form-table">
+<tr valign="top">
+<th scope="row"><?php _e('Optimize HTML Code?','autoptimize'); ?></th>
+<td><input type="checkbox" id="autoptimize_html" name="autoptimize_html" <?php echo get_option('autoptimize_html')?'checked="checked" ':''; ?>/></td>
+</tr>
+<tr class="<?php echo $hiddenClass;?>html_sub ao_adv" valign="top">
+<th scope="row"><?php _e('Keep HTML comments?','autoptimize'); ?></th>
+<td><label class="cb_label"><input type="checkbox" name="autoptimize_html_keepcomments" <?php echo get_option('autoptimize_html_keepcomments')?'checked="checked" ':''; ?>/>
+<?php _e('Enable this if you want HTML comments to remain in the page.','autoptimize'); ?></label></td>
 </tr>
 </table>
 </li>
@@ -728,10 +728,24 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_extra_radio_field_4'    => '1',
             'autoptimize_extra_text_field_2'     => '',
             'autoptimize_extra_text_field_3'     => '',
-            'autoptimize_extra_checkbox_field_5' => '0',
-            'autoptimize_extra_select_field_6'   => '2',
         );
 
+        return $defaults;
+    }
+
+    /**
+     * Returns default option values for autoptimizeExtra.
+     *
+     * @return array
+     */
+    public static function get_ao_imgopt_default_options()
+    {
+        $defaults = array(
+            'autoptimize_imgopt_checkbox_field_1' => '0', // imgopt off.
+            'autoptimize_imgopt_select_field_2'   => '2', // quality glossy.
+            'autoptimize_imgopt_checkbox_field_3' => '0', // lazy load off.
+            'autoptimize_imgopt_checkbox_field_4' => '0', // webp off (might be removed).
+        );
         return $defaults;
     }
 
@@ -814,7 +828,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
     // based on http://wordpress.stackexchange.com/a/58826
     static function ao_admin_tabs()
     {
-        $tabs = apply_filters( 'autoptimize_filter_settingsscreen_tabs' ,array( 'autoptimize' => __( 'Main', 'autoptimize' ) ) );
+        $tabs = apply_filters( 'autoptimize_filter_settingsscreen_tabs' ,array( 'autoptimize' => __( 'JS, CSS  &amp; HTML', 'autoptimize' ) ) );
         $tabContent = '';
         $tabs_count = count($tabs);
         if ( $tabs_count > 1 ) {
