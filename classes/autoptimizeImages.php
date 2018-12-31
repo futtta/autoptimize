@@ -977,7 +977,7 @@ class autoptimizeImages
             jQuery( "#autoptimize_imgopt_checkbox" ).change(function() {
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_quality").show("slow");
-                    jQuery("#autoptimize_imgopt_webp").show("slow");
+                    // jQuery("#autoptimize_imgopt_webp").show("slow");
                 } else {
                     jQuery("#autoptimize_imgopt_quality").hide("slow");
                     jQuery("#autoptimize_imgopt_webp").hide("slow");
