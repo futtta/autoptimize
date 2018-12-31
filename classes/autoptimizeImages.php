@@ -159,6 +159,7 @@ class autoptimizeImages
         }
     }
 
+
     /**
      * Basic checks before we can run.
      *
