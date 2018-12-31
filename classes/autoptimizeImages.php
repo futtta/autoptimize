@@ -58,7 +58,7 @@ class autoptimizeImages
         return $value;
     }
 
-    public static function is_active()
+    public static function imgopt_active()
     {
         // function to quickly check if imgopt is active, used below but also in
         // autoptimizeMain.php to start ob_ even if no HTML, JS or CSS optimizing is done
@@ -106,12 +106,26 @@ class autoptimizeImages
 
     public function run_on_frontend() {
         if ( ! $this->should_run() ) {
+            if ( $this->should_lazyload() ) {
+                add_filter(
+                    'autoptimize_html_after_minify',
+                    array( $this, 'filter_lazyload_images' ),
+                    10,
+                    1
+                );
+                add_action(
+                    'wp_footer',
+                    array( $this, 'add_lazyload_js' ),
+                    10,
+                    0
+                );
+            }
             return;
         }
 
         $active = false;
 
-        if ( apply_filters( 'autoptimize_filter_extra_imgopt_do', true ) ) {
+        if ( apply_filters( 'autoptimize_filter_imgopt_do', true ) ) {
             add_filter(
                 'autoptimize_html_after_minify',
                 array( $this, 'filter_optimize_images' ),
@@ -121,7 +135,7 @@ class autoptimizeImages
             $active = true;
         }
 
-        if ( apply_filters( 'autoptimize_filter_extra_imgopt_do_css', true ) ) {
+        if ( apply_filters( 'autoptimize_filter_imgopt_do_css', true ) ) {
             add_filter(
                 'autoptimize_filter_base_replace_cdn',
                 array( $this, 'filter_optimize_css_images' ),
@@ -139,8 +153,11 @@ class autoptimizeImages
                 1
             );
         }
-    }
 
+        if ( $this->should_lazyload() ) {
+            add_action( 'wp_footer', array( $this, 'add_lazyload_js' ) );
+        }
+    }
 
     /**
      * Basic checks before we can run.
@@ -160,14 +177,13 @@ class autoptimizeImages
         }
 
         if (
-            ! empty( $opts['autoptimize_imgopt_checkbox_field_1'] )
+            $this->imgopt_active()
             && $do_cdn
             && $service_not_down
             && ( $not_launch_status || $this->launch_ok() )
         ) {
             return true;
         }
-
         return false;
     }
 
@@ -251,7 +267,7 @@ class autoptimizeImages
 
     public function get_status_notice()
     {
-        if ( $this->is_active() ) {
+        if ( $this->imgopt_active() ) {
             $notice = '';
             $stat   = $this->get_imgopt_provider_userstatus();
             $upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
@@ -299,7 +315,7 @@ class autoptimizeImages
             }
 
             $url = apply_filters(
-                'autoptimize_filter_extra_imgopt_stat_url',
+                'autoptimize_filter_imgopt_stat_url',
                 $url
             );
 
@@ -332,7 +348,7 @@ class autoptimizeImages
             $q_array = $this->get_img_quality_array();
             $setting = $this->get_img_quality_setting();
             $quality = apply_filters(
-                'autoptimize_filter_extra_imgopt_quality',
+                'autoptimize_filter_imgopt_quality',
                 'q_' . $q_array[ $setting ]
             );
         }
@@ -351,7 +367,7 @@ class autoptimizeImages
                 '3' => 'lossless',
             );
             $map = apply_filters(
-                'autoptimize_filter_extra_imgopt_quality_array',
+                'autoptimize_filter_imgopt_quality_array',
                 $map
             );
         }
@@ -446,7 +462,7 @@ class autoptimizeImages
                 $result = str_replace( $cdn_domain, $parsed_site_url['host'], $in );
             }
 
-            $result = apply_filters( 'autoptimize_filter_extra_imgopt_normalized_url', $result );
+            $result = apply_filters( 'autoptimize_filter_imgopt_normalized_url', $result );
 
             // Store in cache.
             $cache[ $in ] = $result;
@@ -473,9 +489,9 @@ class autoptimizeImages
         if ( null === $imgopt_base_url ) {
             $imgopt_host     = $this->get_imgopt_host();
             $quality         = $this->get_img_quality_string();
-            $ret_val         = apply_filters( 'autoptimize_filter_extra_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
+            $ret_val         = apply_filters( 'autoptimize_filter_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
             $imgopt_base_url = $imgopt_host . 'client/' . $quality . ',' . $ret_val;
-            $imgopt_base_url = apply_filters( 'autoptimize_filter_extra_imgopt_base_url', $imgopt_base_url );
+            $imgopt_base_url = apply_filters( 'autoptimize_filter_imgopt_base_url', $imgopt_base_url );
         }
 
         return $imgopt_base_url;
@@ -494,7 +510,7 @@ class autoptimizeImages
         }
 
         if ( null === $nopti_images ) {
-            $nopti_images = apply_filters( 'autoptimize_filter_extra_imgopt_noptimize', '' );
+            $nopti_images = apply_filters( 'autoptimize_filter_imgopt_noptimize', '' );
         }
 
         $site_host  = AUTOPTIMIZE_SITE_DOMAIN;
@@ -534,7 +550,7 @@ class autoptimizeImages
         $height = (int) $height;
 
         $filtered_url = apply_filters(
-            'autoptimize_filter_extra_imgopt_build_url',
+            'autoptimize_filter_imgopt_build_url',
             $orig_url,
             $width,
             $height
@@ -607,6 +623,9 @@ class autoptimizeImages
                                 $imgopt_url              = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
                                 $tag                     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
                                 $to_replace[ $orig_tag ] = $tag;
+                            } elseif ( $this->should_lazyload() && ! array_key_exists( $orig_tag, $to_replace ) ) {
+                                // keep tag in replacement array so it can be forced to lazyload.
+                                $to_replace[ $orig_tag ] = $orig_tag;
                             }
                         }
                     }
@@ -633,16 +652,29 @@ class autoptimizeImages
                             $full_imgopt_src         = str_replace( $url, $imgopt_url, $full_src_orig );
                             $tag                     = str_replace( $full_src_orig, $full_imgopt_src, $tag );
                             $to_replace[ $orig_tag ] = $tag;
+                        } elseif ( $this->should_lazyload() && ! array_key_exists( $orig_tag, $to_replace ) ) {
+                            // keep image in replacement array so it can be forced to lazyload.
+                            $to_replace[ $orig_tag ] = $orig_tag;
                         }
                     }
                 }
             }
         }
 
+        // add lazyload attribs.
+        if ( $this->should_lazyload() ) {
+            foreach ( $to_replace as $orig_tag => $tag ) {
+                if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+                    $to_replace[ $orig_tag ] = $this->add_lazyload( $tag );
+                }
+            }
+        }
+
+        // and replace all.
         $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
 
         // img thumbnails in e.g. woocommerce.
-        if ( strpos( $out, 'data-thumb' ) !== false && apply_filters( 'autoptimize_filter_extra_imgopt_datathumbs', true ) ) {
+        if ( strpos( $out, 'data-thumb' ) !== false && apply_filters( 'autoptimize_filter_imgopt_datathumbs', true ) ) {
             $out = preg_replace_callback(
                 '/\<div(?:[^>]?)\sdata-thumb\=(?:\"|\')(.+?)(?:\"|\')(?:[^>]*)?\>/s',
                 array( $this, 'replace_data_thumbs' ),
@@ -651,7 +683,7 @@ class autoptimizeImages
         }
 
         // background-image in inline style.
-        if ( strpos( $out, 'background-image:' ) !== false && apply_filters( 'autoptimize_filter_extra_imgopt_backgroundimages', true ) ) {
+        if ( strpos( $out, 'background-image:' ) !== false && apply_filters( 'autoptimize_filter_imgopt_backgroundimages', true ) ) {
             $out = preg_replace_callback(
                 '/style=(?:"|\').*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)/s',
                 array( $this, 'replace_img_callback' ),
@@ -663,7 +695,7 @@ class autoptimizeImages
     }
 
     public function get_imgopt_status_notice() {
-        if ( $this->is_active() ) {
+        if ( $this->imgopt_active() ) {
             $_imgopt_notice = '';
             $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
             $_site_host     = AUTOPTIMIZE_SITE_DOMAIN;
@@ -708,6 +740,85 @@ class autoptimizeImages
         // needed for notice being shown in autoptimizeCacheChecker.php.
         $self = new self();
         return $self->get_imgopt_status_notice();
+    }
+
+    public static function should_lazyload() {
+        static $lazyload_return = null;
+
+        if ( is_null( $lazyload_return ) ) {
+            $self = new self();
+            if ( ! empty( $self->options['autoptimize_imgopt_checkbox_field_3'] ) ) {
+                $lazyload_return = true;
+            } else {
+                $lazyload_return = false;
+            }
+        }
+
+        return $lazyload_return;
+    }
+
+    public function should_webp() {
+        static $webp_return = null;
+
+        if ( is_null( $webp_return ) ) {
+            // webp only works if imgopt and lazyload are also active.
+            if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_4'] ) && ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && $this->imgopt_active() ) {
+                $webp_return = true;
+            } else {
+                $webp_return = false;
+            }
+        }
+
+        return $webp_return;
+    }
+
+    public function filter_lazyload_images( $in )
+    {
+        // only used is image optimization is NOT active but lazyload is.
+        $to_replace = array();
+
+        // extract img tags and add lazyload attribs.
+        if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
+            foreach ( $matches[0] as $tag ) {
+                $to_replace[ $tag ] = $this->add_lazyload( $tag );
+            }
+            $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
+        } else {
+            $out = $in;
+        }
+
+        return $out;
+    }
+
+    public function add_lazyload( $tag ) {
+        $target_class = 'lazyload ';
+
+        if ( $this->should_webp() ) {
+            $target_class .= 'webp ';
+        }
+
+        if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+            if ( strpos( $tag, 'class=' ) !== false ) {
+                $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
+            } else {
+                $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . q'" ', $tag );
+            }
+
+            $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mPcuGOBMQAGaQI+RTWDqQAAAABJRU5ErkJggg==' );
+            $tag         = str_replace( ' src=', ' src="' . $placeholder . '" data-src=', $tag );
+            $tag         = str_replace( ' srcset=', ' data-srcset=', $tag );
+        }
+
+        return $tag;
+    }
+
+    public function add_lazyload_js() {
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script data-noptimize=\'1\'>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=0;</script>' );
+        echo '<script data-noptimize=\'1\' async src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
+    }
+
+    public functioni get_lazyload_exclusions() {
+        return apply_filters( 'autoptimize_filter_imgopt_lazyload_exclude_array', array( 'skip-lazy', 'data-no-lazy', 'notlazy', 'rev-slidebg' ) );
     }
 
     /**
@@ -842,7 +953,7 @@ class autoptimizeImages
                     </p>
                 </td>
             </tr>
-            <!-- tr id='autoptimize_imgopt_webp' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
+            <tr class='hidden' id='autoptimize_imgopt_webp' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
                 <th scope="row"><?php _e( 'Load webp in supported browsers?', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' id='autoptimize_imgopt_webp_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Allow image optimization to load webp-images in browsers that support it (requires lazy load to be active).', 'autoptimize' ); ?></label>
@@ -853,7 +964,7 @@ class autoptimizeImages
                 <td>
                     <label><input type='checkbox' id='autoptimize_imgopt_lazyload_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_3]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Image lazy-loading will delay the loading of non-visible images to allow the browser to optimally load all resources for the "above the fold"-page first.', 'autoptimize' ); ?></label>
                 </td>
-            </tr -->
+            </tr>
         </table>
         <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Changes', 'autoptimize' ); ?>" /></p>
     </form>
