@@ -791,6 +791,7 @@ class autoptimizeImages
     }
 
     public function add_lazyload( $tag ) {
+        // adds actual lazyload-attributes to a script node.
         $target_class = 'lazyload ';
 
         if ( $this->should_webp() ) {
@@ -813,12 +814,14 @@ class autoptimizeImages
     }
 
     public function add_lazyload_js() {
+        // adds lazyload JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script data-noptimize=\'1\'>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=0;</script>' );
         echo '<script data-noptimize=\'1\' async src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
     }
 
     public function get_lazyload_exclusions() {
-        return apply_filters( 'autoptimize_filter_imgopt_lazyload_exclude_array', array( 'skip-lazy', 'data-no-lazy', 'notlazy', 'rev-slidebg' ) );
+        // returns array of strings that if found in an <img tag will stop the img from being lazy-loaded.
+        return apply_filters( 'autoptimize_filter_imgopt_lazyload_exclude_array', array( 'skip-lazy', 'data-no-lazy', 'notlazy', 'rev-slidebg', 'data-src', 'data-srcset' ) );
     }
 
     /**
