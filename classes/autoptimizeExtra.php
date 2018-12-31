@@ -258,8 +258,8 @@ class autoptimizeExtra
         }
 
         // Replace back in markup.
-        $injectpoint = apply_filters( 'autoptimize_filter_extra_gfont_injectpoint', '<link' );
-        $out         = substr_replace( $in, $fonts_markup . $inject_point, strpos( $in, $inject_point ), strlen( $inject_point ) );
+        $inject_point = apply_filters( 'autoptimize_filter_extra_gfont_injectpoint', '<link' );
+        $out          = substr_replace( $in, $fonts_markup . $inject_point, strpos( $in, $inject_point ), strlen( $inject_point ) );
         unset( $fonts_collection );
 
         // and insert preload polyfill if "link preload" and if the polyfill isn't there yet (courtesy of inline&defer).
