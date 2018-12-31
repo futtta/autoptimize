@@ -154,7 +154,7 @@ class autoptimizeMain
     {
         if ( autoptimizeCache::cacheavail() ) {
             $conf = autoptimizeConfig::instance();
-            if ( $conf->get( 'autoptimize_html' ) || $conf->get( 'autoptimize_js' ) || $conf->get( 'autoptimize_css' ) || autoptimizeImages::is_active() ) {
+            if ( $conf->get( 'autoptimize_html' ) || $conf->get( 'autoptimize_js' ) || $conf->get( 'autoptimize_css' ) || autoptimizeImages::imgopt_active() || autoptimizeImages::should_lazyload() ) {
                 // Hook into WordPress frontend.
                 if ( defined( 'AUTOPTIMIZE_INIT_EARLIER' ) ) {
                     add_action(
@@ -384,7 +384,7 @@ class autoptimizeMain
         if ( function_exists( 'is_amp_endpoint' ) ) {
             return is_amp_endpoint();
         }
-        
+
         $is_amp_markup = preg_match( '/<html[^>]*(?:amp|⚡)/i', $content );
 
         return (bool) $is_amp_markup;
@@ -553,7 +553,7 @@ class autoptimizeMain
         $_ao_imgopt_plug_notice      = apply_filters( 'autoptimize_filter_main_imgopt_plug_notice', $_ao_imgopt_plug_notice );
         $_ao_imgopt_launch_ok        = autoptimizeImages::launch_ok_wrapper();
         $_ao_imgopt_plug_dismissible = 'ao-img-opt-plug-123';
-        $_ao_imgopt_active           = autoptimizeImages::is_active();
+        $_ao_imgopt_active           = autoptimizeImages::imgopt_active();
 
         if ( current_user_can( 'manage_options' ) && '' !== $_ao_imgopt_plug_notice && ! $_ao_imgopt_active && $_ao_imgopt_launch_ok && PAnD::is_admin_notice_active( $_ao_imgopt_plug_dismissible ) ) {
             echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_imgopt_plug_dismissible . '"><p>';
