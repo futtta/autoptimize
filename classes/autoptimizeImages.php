@@ -807,8 +807,7 @@ class autoptimizeImages
             }
 
             $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mPcuGOBMQAGaQI+RTWDqQAAAABJRU5ErkJggg==' );
-            // $tag         = str_replace( ' src=', ' src="' . $placeholder . '" data-src=', $tag );
-            $tag         = str_replace( ' src=', ' data-sizes="auto" data-src="' . $placeholder . '" src=', $tag );
+            $tag         = str_replace( ' src=', ' src="' . $placeholder . '" data-src=', $tag );
             $tag         = str_replace( ' srcset=', ' data-srcset=', $tag );
         }
 
@@ -817,7 +816,7 @@ class autoptimizeImages
 
     public function add_lazyload_js() {
         // adds lazyload JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
-        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script data-noptimize=\'1\'>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=0;window.lazySizesConfig.init=false;</script>' );
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script data-noptimize=\'1\'>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
         echo '<script data-noptimize=\'1\' async src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
     }
 
