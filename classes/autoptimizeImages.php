@@ -743,19 +743,20 @@ class autoptimizeImages
         return $self->get_imgopt_status_notice();
     }
 
-    public static function should_lazyload() {
-        static $lazyload_return = null;
-
-        if ( is_null( $lazyload_return ) ) {
-            $self = new self();
-            if ( ! empty( $self->options['autoptimize_imgopt_checkbox_field_3'] ) ) {
-                $lazyload_return = true;
-            } else {
-                $lazyload_return = false;
-            }
+    public function should_lazyload() {
+        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) ) {
+            $lazyload_return = true;
+        } else {
+            $lazyload_return = false;
         }
 
         return $lazyload_return;
+    }
+
+    public static function should_lazyload_wrapper() {
+        // needed in autoptimizeMain.php.
+        $self = new self();
+        return $self->should_lazyload();
     }
 
     public function should_webp() {

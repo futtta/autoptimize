@@ -2290,9 +2290,12 @@ MARKUP;
      */
     public function test_imgopt()
     {
-        $urls       = $this->get_urls();
-        $siteurl    = $urls['siteurl'];
-        $imgopthost = $urls['imgopthost'];
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
 
         $markup = <<<MARKUP
 <img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
@@ -2301,8 +2304,9 @@ MARKUP;
         $expected = <<<MARKUP
 <img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
-
-        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
 
@@ -2314,12 +2318,12 @@ MARKUP;
      * BROKEN: can't get autoptimizeImages' should_lazyload to "see" the settings passed through the $opts array below??
      * 
      */
-    /* public function test_imgopt_with_lazyload()
+    public function test_imgopt_with_lazyload()
     {
         $urls                                        = $this->get_urls();
         $siteurl                                     = $urls['siteurl'];
         $imgopthost                                  = $urls['imgopthost'];
-        $opts                                        = array();
+        $opts                                        = autoptimizeImages::fetch_options();
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '1';
 
@@ -2331,9 +2335,11 @@ MARKUP;
 <img class="lazyload" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mPcuGOBMQAGaQI+RTWDqQAAAABJRU5ErkJggg==" data-src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $actual = autoptimizeImages::instance( $opts )->filter_optimize_images( $markup );
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
-    } */
+    }
 
     /**
      * Test lazyloading in autoptimizeImages.php.
@@ -2356,7 +2362,9 @@ MARKUP;
 <img class="lazyload" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mPcuGOBMQAGaQI+RTWDqQAAAABJRU5ErkJggg==" data-src='$siteurl/wp-content/image.jpg' width='400' height='200' data-srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $actual = autoptimizeImages::instance( $opts )->filter_lazyload_images( $markup );
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_lazyload_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
 
@@ -2367,11 +2375,18 @@ MARKUP;
      */
     public function test_imgopt_php()
     {
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
+
         $markup = <<<MARKUP
 <img src='/wp-content/plugins/imageplugin/image.php?id=16' width='400' height='200'>
 MARKUP;
 
-        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+
         // Expecting $markup since replacement should not happen.
         $this->assertEquals( $markup, $actual );
     }
@@ -2381,11 +2396,14 @@ MARKUP;
      *
      * Alternate case: lazy loaded images with srcsets (using wp rocket variant HTML)
      */
-    public function test_imgopt_lazy()
+    public function test_imgopt_alreadylazied()
     {
-        $urls       = $this->get_urls();
-        $siteurl    = $urls['siteurl'];
-        $imgopthost = $urls['imgopthost'];
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
 
         $markup = <<<MARKUP
 <img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
@@ -2395,7 +2413,10 @@ MARKUP;
 <img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+
         $this->assertEquals( $expected, $actual );
     }
 
@@ -2404,9 +2425,12 @@ MARKUP;
      */
     public function test_imgopt_url_normalize_root_relative()
     {
-        $urls       = $this->get_urls();
-        $siteurl    = $urls['siteurl'];
-        $imgopthost = $urls['imgopthost'];
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
 
         $markup = <<<MARKUP
 <img src='/wp-content/image.jpg' width='400' height='200' srcset="/wp-content/image-300X150.jpg 300w, /wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
@@ -2416,7 +2440,10 @@ MARKUP;
 <img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+
         $this->assertEquals( $expected, $actual );
     }
 
@@ -2425,10 +2452,13 @@ MARKUP;
      */
     public function test_imgopt_url_normalize_protocol_relative()
     {
-        $urls       = $this->get_urls();
-        $siteurl    = $urls['siteurl'];
-        $prsiteurl  = $urls['prsiteurl'];
-        $imgopthost = $urls['imgopthost'];
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $prsiteurl                                   = $urls['prsiteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
 
         $markup = <<<MARKUP
 <img src='$prsiteurl/wp-content/image.jpg' width='400' height='200' srcset="$prsiteurl/wp-content/image-300X150.jpg 300w, $prsiteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
@@ -2438,7 +2468,10 @@ MARKUP;
 <img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $actual = autoptimizeImages::instance()->filter_optimize_images( $markup );
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+
         $this->assertEquals( $expected, $actual );
     }
 
