@@ -2314,9 +2314,6 @@ MARKUP;
      * Test image optimization in autoptimizeImages.php.
      *
      * case: img with srcsets and lazyload
-     * 
-     * BROKEN: can't get autoptimizeImages' should_lazyload to "see" the settings passed through the $opts array below??
-     * 
      */
     public function test_imgopt_with_lazyload()
     {
@@ -2478,9 +2475,9 @@ MARKUP;
     /**
      * @dataProvider provider_str_is_valid_regex
      */
-    public function test_str_is_valid_regex($str, $expected)
+    public function test_str_is_valid_regex( $str, $expected )
     {
-        $actual = autoptimizeUtils::str_is_valid_regex($str);
+        $actual = autoptimizeUtils::str_is_valid_regex( $str );
 
         $this->assertEquals( $expected, $actual );
     }
@@ -2488,10 +2485,10 @@ MARKUP;
     public function provider_str_is_valid_regex()
     {
         return [
-            ['<!--[if', false],
-            ['&lt;--[if', false],
-            ['/booya/i', true],
-            ['~Valid(Regular)Expression~', true],
+            [ '<!--[if', false ],
+            [ '&lt;--[if', false ],
+            [ '/booya/i', true ],
+            [ '~Valid(Regular)Expression~', true ],
         ];
     }
 
@@ -2508,14 +2505,14 @@ MARKUP;
     public function provider_protocol_relative_tests()
     {
         return [
-            ['//something-that-might-be-an-url-but-isnt-really', true],
-            ['', false],
-            [null, false],
-            ['booya/i', false],
-            ['/root-relative', false],
-            ['http://what.ever/', false],
-            ['https://booya.kasha', false],
-            ['1/', false],
+            [ '//something-that-might-be-an-url-but-isnt-really', true ],
+            [ '', false ],
+            [ null, false ],
+            [ 'booya/i', false ],
+            [ '/root-relative', false ],
+            [ 'http://what.ever/', false ],
+            [ 'https://booya.kasha', false ],
+            [ '1/', false ],
         ];
     }
 
@@ -2563,7 +2560,7 @@ MARKUP;
         $this->assertFalse( autoptimizeUtils::is_plugin_active( 'autoptimize/autoptimize.php' ) );
         $this->assertFalse( autoptimizeUtils::is_plugin_active( 'async-javascript/async-javascript.php' ) );
     }
-    
+
     public function test_jsminphp_string_literal_minification()
     {
         $js = '

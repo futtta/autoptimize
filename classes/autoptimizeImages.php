@@ -804,7 +804,7 @@ class autoptimizeImages
             if ( strpos( $tag, 'class=' ) !== false ) {
                 $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
             } else {
-                $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) .   '" ', $tag );
+                $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . '" ', $tag );
             }
 
             $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mPcuGOBMQAGaQI+RTWDqQAAAABJRU5ErkJggg==' );

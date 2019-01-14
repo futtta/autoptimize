@@ -364,7 +364,7 @@ class autoptimizeCache
 
         // Warm cache (part of speedupper)!
         if ( apply_filters( 'autoptimize_filter_speedupper', true ) && false == get_transient( 'autoptimize_cache_warmer_protector' ) ) {
-            set_transient( 'autoptimize_cache_warmer_protector', 'I shall not warm cache for another 10 minutes.', 60*10 );
+            set_transient( 'autoptimize_cache_warmer_protector', 'I shall not warm cache for another 10 minutes.', 60 * 10 );
             $url   = site_url() . '/?ao_speedup_cachebuster=' . rand( 1, 100000 );
             $cache = @wp_remote_get( $url ); // @codingStandardsIgnoreLine
             unset( $cache );
