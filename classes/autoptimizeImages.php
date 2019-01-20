@@ -818,7 +818,8 @@ class autoptimizeImages
     }
 
     public function add_lazyload_js() {
-        // adds lazyload JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
+        // adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload{display:block;}.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script data-noptimize=\'1\'>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
         echo '<script data-noptimize=\'1\' async src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
     }
