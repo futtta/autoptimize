@@ -801,7 +801,7 @@ class autoptimizeImages
         }
 
         if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
-            $noscript_tag = '<noscript>'.$tag.'</noscript>';
+            $noscript_tag = '<noscript>' . $tag . '</noscript>';
             if ( strpos( $tag, 'class=' ) !== false ) {
                 $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
             } else {
@@ -837,7 +837,7 @@ class autoptimizeImages
             // add from setting.
             if ( array_key_exists( 'autoptimize_imgopt_text_field_5', $options ) ) {
                 $exclude_lazyload_option = $options['autoptimize_imgopt_text_field_5'];
-                if (! empty( $exclude_lazyload_option ) ) {
+                if ( ! empty( $exclude_lazyload_option ) ) {
                     $exclude_lazyload_array = array_merge( $exclude_lazyload_array, array_filter( array_map( 'trim', explode( ',', $options['autoptimize_imgopt_text_field_5'] ) ) ) );
                 }
             }
