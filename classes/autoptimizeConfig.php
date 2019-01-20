@@ -745,6 +745,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_imgopt_select_field_2'   => '2', // quality glossy.
             'autoptimize_imgopt_checkbox_field_3' => '0', // lazy load off.
             'autoptimize_imgopt_checkbox_field_4' => '0', // webp off (might be removed).
+            'autoptimize_imgopt_text_field_5'     => '',  // lazy load exclusions empty.
         );
         return $defaults;
     }

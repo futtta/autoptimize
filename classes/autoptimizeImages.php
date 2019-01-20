@@ -826,7 +826,27 @@ class autoptimizeImages
 
     public function get_lazyload_exclusions() {
         // returns array of strings that if found in an <img tag will stop the img from being lazy-loaded.
-        return apply_filters( 'autoptimize_filter_imgopt_lazyload_exclude_array', array( 'skip-lazy', 'data-no-lazy', 'notlazy', 'rev-slidebg', 'data-src', 'data-srcset' ) );
+        static $exclude_lazyload_array = null;
+
+        if ( null === $exclude_lazyload_array ) {
+            $options = $this->options;
+
+            // set default exclusions.
+            $exclude_lazyload_array = array( 'skip-lazy', 'data-no-lazy', 'notlazy', 'data-src', 'data-srcset' );
+
+            // add from setting.
+            if ( array_key_exists( 'autoptimize_imgopt_text_field_5', $options ) ) {
+                $exclude_lazyload_option = $options['autoptimize_imgopt_text_field_5'];
+                if (! empty( $exclude_lazyload_option ) ) {
+                    $exclude_lazyload_array = array_merge( $exclude_lazyload_array, array_filter( array_map( 'trim', explode( ',', $options['autoptimize_imgopt_text_field_5'] ) ) ) );
+                }
+            }
+
+            // and filter for developer-initiated changes.
+            $exclude_lazyload_array = apply_filters( 'autoptimize_filter_imgopt_lazyload_exclude_array', $exclude_lazyload_array );
+        }
+
+        return $exclude_lazyload_array;
     }
 
     /**
@@ -973,6 +993,12 @@ class autoptimizeImages
                     <label><input type='checkbox' id='autoptimize_imgopt_lazyload_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_3]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Image lazy-loading will delay the loading of non-visible images to allow the browser to optimally load all resources for the "above the fold"-page first.', 'autoptimize' ); ?></label>
                 </td>
             </tr>
+            <tr id='autoptimize_imgopt_lazyload_exclusions' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_3', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_3'] ) ) { echo 'class="hidden"'; } ?>>
+                <th scope="row"><?php _e( 'Lazy-load exclusions', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='text' style='width:80%' id='autoptimize_imgopt_lazyload_exclusions' name='autoptimize_imgopt_settings[autoptimize_imgopt_text_field_5]' value='<?php if ( ! empty( $options['autoptimize_imgopt_text_field_5'] ) ) { echo esc_attr( $options['autoptimize_imgopt_text_field_5'] ); } ?>'><br /><?php _e( 'Comma-separated list of to be excluded image classes or filenames.', 'autoptimize' ); ?></label>
+                </td>
+            </tr>
         </table>
         <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Changes', 'autoptimize' ); ?>" /></p>
     </form>
@@ -993,8 +1019,10 @@ class autoptimizeImages
                 }
             });
             jQuery( "#autoptimize_imgopt_lazyload_checkbox" ).change(function() {
-                if (!this.checked) {
-                    jQuery("#autoptimize_imgopt_webp_checkbox")[0].checked = false;
+                if (this.checked) {
+                    jQuery("#autoptimize_imgopt_lazyload_exclusions").show("slow");
+                } else {
+                    jQuery("#autoptimize_imgopt_lazyload_exclusions").hide("slow");
                 }
             });
         });
