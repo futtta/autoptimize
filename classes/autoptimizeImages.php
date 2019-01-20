@@ -801,6 +801,7 @@ class autoptimizeImages
         }
 
         if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+            $noscript_tag = '<noscript>'.$tag.'</noscript>';
             if ( strpos( $tag, 'class=' ) !== false ) {
                 $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
             } else {
@@ -810,6 +811,7 @@ class autoptimizeImages
             $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mPcuGOBMQAGaQI+RTWDqQAAAABJRU5ErkJggg==' );
             $tag         = str_replace( ' src=', ' src="' . $placeholder . '" data-src=', $tag );
             $tag         = str_replace( ' srcset=', ' data-srcset=', $tag );
+            $tag         = $noscript_tag . $tag;
         }
 
         return $tag;
