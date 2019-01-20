@@ -808,7 +808,7 @@ class autoptimizeImages
                 $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . '" ', $tag );
             }
 
-            $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mPcuGOBMQAGaQI+RTWDqQAAAABJRU5ErkJggg==' );
+            $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII==' );
             $tag         = str_replace( ' src=', ' src="' . $placeholder . '" data-src=', $tag );
             $tag         = str_replace( ' srcset=', ' data-srcset=', $tag );
             $tag         = $noscript_tag . $tag;
