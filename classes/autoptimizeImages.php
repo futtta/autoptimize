@@ -801,17 +801,34 @@ class autoptimizeImages
         }
 
         if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+            // store original tag for use in noscript version.
             $noscript_tag = '<noscript>' . $tag . '</noscript>';
+
+            // insert lazyload class.
             if ( strpos( $tag, 'class=' ) !== false ) {
                 $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
             } else {
                 $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . '" ', $tag );
             }
 
-            $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=' );
-            $tag         = str_replace( ' src=', ' src="' . $placeholder . '" data-src=', $tag );
+            // (re-)get image width & heigth for placeholder fun (and to prevent content reflow)
+            // see https://css-tricks.com/preventing-content-reflow-from-lazy-loaded-images/
+            $width  = '210'; // default width used if none is given.
+            $height = '140'; // default height used if none is given.
+            if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $_width ) ) {
+                $width = $_width[2];
+            }
+            if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $_height ) ) {
+                $height = $_height[2];
+            }
+
+            // insert the actual lazyload stuff.
+            $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $width . ' ' . $height . '"%3E%3C/svg%3E' );
+            $tag         = str_replace( ' src=', ' src=\'' . $placeholder . '\' data-src=', $tag );
             $tag         = str_replace( ' srcset=', ' data-srcset=', $tag );
-            $tag         = $noscript_tag . $tag;
+
+            // add the lazyload from earlier.
+            $tag = $noscript_tag . $tag;
         }
 
         return $tag;
@@ -819,7 +836,7 @@ class autoptimizeImages
 
     public function add_lazyload_js() {
         // adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
-        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload{display:block;}.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script data-noptimize=\'1\'>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
         echo '<script data-noptimize=\'1\' async src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
     }
