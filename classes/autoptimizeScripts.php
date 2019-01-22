@@ -40,7 +40,7 @@ class autoptimizeScripts extends autoptimizeBase
     private $jsremovables    = array();
     private $inject_min_late = '';
 
-    // Reads the page and collects script tags
+    // Reads the page and collects script tags.
     public function read($options)
     {
         $noptimizeJS = apply_filters( 'autoptimize_filter_js_noptimize', false, $this->content );
@@ -54,7 +54,7 @@ class autoptimizeScripts extends autoptimizeBase
             $this->whitelist = array_filter( array_map( 'trim', explode( ',', $whitelistJS ) ) );
         }
 
-        // is there JS we should simply remove
+        // is there JS we should simply remove?
         $removableJS = apply_filters( 'autoptimize_filter_js_removables', '', $this->content );
         if (!empty($removableJS)) {
             $this->jsremovables = array_filter( array_map( 'trim', explode( ',', $removableJS ) ) );
@@ -81,15 +81,15 @@ class autoptimizeScripts extends autoptimizeBase
             $this->include_inline = true;
         }
 
-        // filter to "late inject minified JS", default to true for now (it is faster)
+        // filter to "late inject minified JS", default to true for now (it is faster).
         $this->inject_min_late = apply_filters( 'autoptimize_filter_js_inject_min_late', true );
 
-        // filters to override hardcoded do(nt)move(last) array contents (array in, array out!)
+        // filters to override hardcoded do(nt)move(last) array contents (array in, array out!).
         $this->dontmove = apply_filters( 'autoptimize_filter_js_dontmove', $this->dontmove );
         $this->domovelast = apply_filters( 'autoptimize_filter_js_movelast', $this->domovelast );
         $this->domove = apply_filters( 'autoptimize_filter_js_domove', $this->domove );
 
-        // get extra exclusions settings or filter
+        // get extra exclusions settings or filter.
         $excludeJS = $options['js_exclude'];
         $excludeJS = apply_filters( 'autoptimize_filter_js_exclude', $excludeJS, $this->content );
 
@@ -122,22 +122,22 @@ class autoptimizeScripts extends autoptimizeBase
 
         $this->forcehead = apply_filters( 'autoptimize_filter_js_forcehead', $this->forcehead );
 
-        // get cdn url
+        // get cdn url.
         $this->cdn_url = $options['cdn_url'];
 
-        // noptimize me
+        // noptimize me.
         $this->content = $this->hide_noptimize($this->content);
 
-        // Save IE hacks
+        // Save IE hacks.
         $this->content = $this->hide_iehacks($this->content);
 
-        // comments
+        // comments.
         $this->content = $this->hide_comments($this->content);
 
-        // Get script files
+        // Get script files.
         if ( preg_match_all( '#<script.*</script>#Usmi', $this->content, $matches ) ) {
             foreach( $matches[0] as $tag ) {
-                // only consider script aggregation for types whitelisted in should_aggregate-function
+                // only consider script aggregation for types whitelisted in should_aggregate-function.
                 $should_aggregate = $this->should_aggregate($tag);
                 if ( ! $should_aggregate ) {
                     $tag = '';
@@ -145,7 +145,7 @@ class autoptimizeScripts extends autoptimizeBase
                 }
 
                 if ( preg_match( '#<script[^>]*src=("|\')([^>]*)("|\')#Usmi', $tag, $source ) ) {
-                    // non-inline script
+                    // non-inline script.
                     if ( $this->isremovable($tag, $this->jsremovables) ) {
                         $this->content = str_replace( $tag, '', $this->content );
                         continue;
@@ -155,13 +155,13 @@ class autoptimizeScripts extends autoptimizeBase
                     $url = current( explode( '?', $source[2], 2 ) );
                     $path = $this->getpath($url);
                     if ( false !== $path && preg_match( '#\.js$#', $path ) && $this->ismergeable($tag) ) {
-                        // ok to optimize, add to array
+                        // ok to optimize, add to array.
                         $this->scripts[] = $path;
                     } else {
                         $origTag = $tag;
                         $newTag  = $tag;
 
-                        // non-mergeable script (excluded or dynamic or external)
+                        // non-mergeable script (excluded or dynamic or external).
                         if ( is_array( $excludeJS ) ) {
                             // should we add flags?
                             foreach ( $excludeJS as $exclTag => $exclFlags) {
@@ -176,7 +176,7 @@ class autoptimizeScripts extends autoptimizeBase
                             $consider_minified_array = apply_filters( 'autoptimize_filter_js_consider_minified', false );
                             if ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) {
                                 $minified_url = $this->minify_single( $path );
-                                // replace orig URL with minified URL from cache if so
+                                // replace orig URL with minified URL from cache if so.
                                 if ( ! empty( $minified_url ) ) {
                                     $newTag = str_replace( $url, $minified_url, $newTag );
                                 }
@@ -184,30 +184,30 @@ class autoptimizeScripts extends autoptimizeBase
                         }
 
                         if ( $this->ismovable($newTag) ) {
-                            // can be moved, flags and all
+                            // can be moved, flags and all.
                             if ( $this->movetolast($newTag) )  {
                                 $this->move['last'][] = $newTag;
                             } else {
                                 $this->move['first'][] = $newTag;
                             }
                         } else {
-                            // cannot be moved, so if flag was added re-inject altered tag immediately
+                            // cannot be moved, so if flag was added re-inject altered tag immediately.
                             if ( $origTag !== $newTag ) {
                                 $this->content = str_replace( $origTag, $newTag, $this->content );
                                 $origTag = '';
                             }
-                            // and forget about the $tag (not to be touched any more)
+                            // and forget about the $tag (not to be touched any more).
                             $tag = '';
                         }
                     }
                 } else {
-                    // Inline script
+                    // Inline script.
                     if ( $this->isremovable($tag, $this->jsremovables) ) {
                         $this->content = str_replace( $tag, '', $this->content );
                         continue;
                     }
 
-                    // unhide comments, as javascript may be wrapped in comment-tags for old times' sake
+                    // unhide comments, as javascript may be wrapped in comment-tags for old times' sake.
                     $tag = $this->restore_comments($tag);
                     if ( $this->ismergeable($tag) && $this->include_inline ) {
                         preg_match( '#<script.*>(.*)</script>#Usmi', $tag , $code );
@@ -224,15 +224,15 @@ class autoptimizeScripts extends autoptimizeBase
                                 $this->move['first'][] = $tag;
                             }
                         } else {
-                            // We shouldn't touch this
+                            // We shouldn't touch this.
                             $tag = '';
                         }
                     }
-                    // Re-hide comments to be able to do the removal based on tag from $this->content
+                    // Re-hide comments to be able to do the removal based on tag from $this->content.
                     $tag = $this->hide_comments($tag);
                 }
 
-                //Remove the original script tag
+                //Remove the original script tag.
                 $this->content = str_replace( $tag, '', $this->content );
             }
 
