@@ -869,7 +869,7 @@ class autoptimizeStyles extends autoptimizeBase
                 // Adds preload polyfill at end of body tag.
                 $this->inject_in_html(
                     apply_filters( 'autoptimize_css_preload_polyfill', $preload_polyfill ),
-                    array( '</body>', 'before' )
+                    apply_filters( 'autoptimize_css_preload_polyfill_injectat', array( '</body>', 'before' ) )
                 );
             }
         }
