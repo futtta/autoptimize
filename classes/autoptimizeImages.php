@@ -655,10 +655,9 @@ class autoptimizeImages
                 // do lazyload stuff.
                 if ( $this->should_lazyload() && str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
                     $noscript_tag = '<noscript>' . $tag . '</noscript>';
-                    $lqip_img     = $this->get_imgopt_host() . 'client/q_lqip,ret_wait,w_' . $imgopt_w . ',h_' . $imgopt_h . '/' . $url;
-                    $lqip_img     = apply_filters( 'autoptimize_filter_imgopt_lpiq_url', $lqip_img );
                     $tag          = str_replace( 'srcset=', 'data-srcset=', $tag );
 
+                    // add lazyload (and webp) class.
                     $target_class = 'lazyload ';
                     if ( $this->should_webp() ) {
                         $target_class .= 'webp ';
@@ -669,7 +668,16 @@ class autoptimizeImages
                         $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . '" ', $tag );
                     }
 
-                    $tag = $noscript_tag . str_replace( 'src=', 'src="' . $lqip_img . '" data-src=', $tag );
+                    // set placeholder.
+                    if ( $this->can_optimize_image( $url ) ) {
+                        $placeholder = $this->get_imgopt_host() . 'client/q_lqip,ret_wait,w_' . $imgopt_w . ',h_' . $imgopt_h . '/' . $url;
+                    } else {
+                        $placeholder = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $imgopt_w . ' ' . $imgopt_h . '"%3E%3C/svg%3E';
+                    }
+                    $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $placeholder );
+
+                    // add noscript & placeholder.
+                    $tag = $noscript_tag . str_replace( 'src=', 'src="' . $placeholder . '" data-src=', $tag );
                 }
 
                 // add tag to array for later replacement.
@@ -833,7 +841,7 @@ class autoptimizeImages
                 }
             }
             if ( false === $height ) {
-                $heigth = $width / 3 * 2; // if not height, base it on width using the 3/2 aspect ratio.
+                $heigth = $width / 3 * 2; // if no height, base it on width using the 3/2 aspect ratio.
             }
 
             // insert the actual lazyload stuff.
@@ -842,7 +850,7 @@ class autoptimizeImages
             $tag         = str_replace( ' src=', ' src=\'' . $placeholder . '\' data-src=', $tag );
             $tag         = str_replace( ' srcset=', ' data-srcset=', $tag );
 
-            // add the lazyload from earlier.
+            // add the noscript-tag from earlier.
             $tag = $noscript_tag . $tag;
         }
 
