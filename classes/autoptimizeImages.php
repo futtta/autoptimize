@@ -669,7 +669,7 @@ class autoptimizeImages
                     }
 
                     // set placeholder.
-                    if ( $this->can_optimize_image( $url ) ) {
+                    if ( $this->can_optimize_image( $url ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
                         $placeholder = $this->get_imgopt_host() . 'client/q_lqip,ret_wait,w_' . $imgopt_w . ',h_' . $imgopt_h . '/' . $url;
                     } else {
                         $placeholder = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $imgopt_w . ' ' . $imgopt_h . '"%3E%3C/svg%3E';
@@ -809,7 +809,7 @@ class autoptimizeImages
     }
 
     public function add_lazyload( $tag ) {
-        // adds actual lazyload-attributes to a script node.
+        // adds actual lazyload-attributes to an image node.
         $target_class = 'lazyload ';
 
         if ( $this->should_webp() ) {
