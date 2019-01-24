@@ -621,12 +621,8 @@ class autoptimizeImages
                                 $imgopt_w = rtrim( $indiv_srcset_parts[1], 'w' );
                             }
                             if ( $this->can_optimize_image( $indiv_srcset_parts[0] ) ) {
-                                $imgopt_url              = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
-                                $tag                     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
-                                $to_replace[ $orig_tag ] = $tag;
-                            } elseif ( $this->should_lazyload() && ! array_key_exists( $orig_tag, $to_replace ) ) {
-                                // keep tag in replacement array so it can be forced to lazyload.
-                                $to_replace[ $orig_tag ] = $orig_tag;
+                                $imgopt_url = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
+                                $tag        = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
                             }
                         }
                     }
@@ -649,24 +645,36 @@ class autoptimizeImages
                         $full_src_orig = $url[0];
                         $url           = $url[1];
                         if ( $this->can_optimize_image( $url ) ) {
-                            $imgopt_url              = $this->build_imgopt_url( $url, $imgopt_w, $imgopt_h );
-                            $full_imgopt_src         = str_replace( $url, $imgopt_url, $full_src_orig );
-                            $tag                     = str_replace( $full_src_orig, $full_imgopt_src, $tag );
-                            $to_replace[ $orig_tag ] = $tag;
-                        } elseif ( $this->should_lazyload() && ! array_key_exists( $orig_tag, $to_replace ) ) {
-                            // keep image in replacement array so it can be forced to lazyload.
-                            $to_replace[ $orig_tag ] = $orig_tag;
+                            $imgopt_url      = $this->build_imgopt_url( $url, $imgopt_w, $imgopt_h );
+                            $full_imgopt_src = str_replace( $url, $imgopt_url, $full_src_orig );
+                            $tag             = str_replace( $full_src_orig, $full_imgopt_src, $tag );
                         }
                     }
                 }
-            }
-        }
 
-        // add lazyload attribs.
-        if ( $this->should_lazyload() ) {
-            foreach ( $to_replace as $orig_tag => $tag ) {
-                if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
-                    $to_replace[ $orig_tag ] = $this->add_lazyload( $tag );
+                // do lazyload stuff.
+                if ( $this->should_lazyload() && str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+                    $noscript_tag = '<noscript>' . $tag . '</noscript>';
+                    $lqip_img     = $this->get_imgopt_host() . 'client/q_lqip,ret_wait,w_' . $imgopt_w . ',h_' . $imgopt_h . '/' . $url;
+                    $lqip_img     = apply_filters( 'autoptimize_filter_imgopt_lpiq_url', $lqip_img );
+                    $tag          = str_replace( 'srcset=', 'data-srcset=', $tag );
+
+                    $target_class = 'lazyload ';
+                    if ( $this->should_webp() ) {
+                        $target_class .= 'webp ';
+                    }
+                    if ( strpos( $tag, 'class=' ) !== false ) {
+                        $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
+                    } else {
+                        $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . '" ', $tag );
+                    }
+
+                    $tag = $noscript_tag . str_replace( 'src=', 'src="' . $lqip_img . '" data-src=', $tag );
+                }
+
+                // add tag to array for later replacement.
+                if ( $tag !== $orig_tag ) {
+                    $to_replace[ $orig_tag ] = $tag;
                 }
             }
         }
@@ -812,17 +820,24 @@ class autoptimizeImages
             }
 
             // (re-)get image width & heigth for placeholder fun (and to prevent content reflow)
-            // see https://css-tricks.com/preventing-content-reflow-from-lazy-loaded-images/
-            $width  = '210'; // default width used if none is given.
-            $height = '140'; // default height used if none is given.
+            $width  = 210; // default width used if none is given.
+            $height = false;
             if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $_width ) ) {
-                $width = $_width[2];
+                if ( strpos( $_width[2], '%' ) === false ) {
+                    $width = (int) $_width[2];
+                }
             }
             if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $_height ) ) {
-                $height = $_height[2];
+                if ( strpos( $_height[2], '%' ) === false ) {
+                    $height = (int) $_height[2];
+                }
+            }
+            if ( false === $height ) {
+                $heigth = $width / 3 * 2; // if not height, base it on width using the 3/2 aspect ratio.
             }
 
             // insert the actual lazyload stuff.
+            // see https://css-tricks.com/preventing-content-reflow-from-lazy-loaded-images/ for great read on why we're using empty svg's.
             $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $width . ' ' . $height . '"%3E%3C/svg%3E' );
             $tag         = str_replace( ' src=', ' src=\'' . $placeholder . '\' data-src=', $tag );
             $tag         = str_replace( ' srcset=', ' data-srcset=', $tag );
