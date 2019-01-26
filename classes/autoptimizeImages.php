@@ -155,7 +155,10 @@ class autoptimizeImages
         }
 
         if ( $this->should_lazyload() ) {
-            add_action( 'wp_footer', array( $this, 'add_lazyload_js' ) );
+            add_action(
+                'wp_footer',
+                array( $this, 'add_lazyload_js' )
+            );
         }
     }
 
@@ -672,12 +675,12 @@ class autoptimizeImages
                     if ( $this->can_optimize_image( $url ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
                         $placeholder = $this->get_imgopt_host() . 'client/q_lqip,ret_wait,w_' . $imgopt_w . ',h_' . $imgopt_h . '/' . $url;
                     } else {
-                        $placeholder = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $imgopt_w . ' ' . $imgopt_h . '"%3E%3C/svg%3E';
+                        $placeholder = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 ' . $imgopt_w . ' ' . $imgopt_h . '\'%3E%3C/svg%3E';
                     }
                     $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $placeholder );
 
-                    // add noscript & placeholder.
-                    $tag = $noscript_tag . str_replace( 'src=', 'src="' . $placeholder . '" data-src=', $tag );
+                    // add noscript & placeholder & data-aspectratio.
+                    $tag = $noscript_tag . str_replace( 'src=', 'data-aspectratio="' . $imgopt_w . '/' . $imgopt_h . '" src="' . $placeholder . '" data-src=', $tag );
                 }
 
                 // add tag to array for later replacement.
@@ -861,6 +864,10 @@ class autoptimizeImages
         // adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script data-noptimize=\'1\'>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
+        if ( $this->should_run() ) {
+            // when doing imgopt load lazysizes aspectratio plugin to avoid content jumps.
+            echo '<script data-noptimize=\'1\' async src=\'' . plugins_url( 'external/js/ls.aspectratio.min.js', __FILE__ ) . '\'></script>';
+        }
         echo '<script data-noptimize=\'1\' async src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
     }
 
