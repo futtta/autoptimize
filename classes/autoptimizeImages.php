@@ -159,12 +159,6 @@ class autoptimizeImages
                 'wp_footer',
                 array( $this, 'add_lazyload_js_footer' )
             );
-            if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_do_aspectratio', true ) ) {
-                add_action(
-                    'wp_head',
-                    array( $this, 'add_lazyload_js_head' )
-                );
-            }
         }
     }
 
@@ -685,14 +679,14 @@ class autoptimizeImages
                     }
                     $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $placeholder );
 
-                    // declare aspectratio.
-                    $aspect_ratio = '';
-                    if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_do_aspectratio', true ) ) {
-                        $aspect_ratio = 'data-aspectratio="' . $imgopt_w . '/' . $imgopt_h . '"';
+                    // add min-heigth by default, can be disabled with filter.
+                    $min_height = '';
+                    if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_addminheight', true ) ) {
+                        $min_height = 'min-height="' . $imgopt_h . 'px" src="';
                     }
 
-                    // add noscript & placeholder & data-aspectratio.
-                    $tag = $noscript_tag . str_replace( 'src=', $aspect_ratio . ' src="' . $placeholder . '" data-src=', $tag );
+                    // add noscript & placeholder.
+                    $tag = $noscript_tag . str_replace( 'src=', $min_height . $placeholder . '" data-src=', $tag );
                 }
 
                 // add tag to array for later replacement.
@@ -876,21 +870,11 @@ class autoptimizeImages
         // adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script data-noptimize=\'1\'>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
-        echo '<script async' . $this->lazyload_js_getnoptimize() . 'src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
-    }
-
-    public function add_lazyload_js_head() {
-        // when doing imgopt load lazysizes aspectratio plugin to avoid content jumps.
-        echo '<script async' . $this->lazyload_js_getnoptimize() . 'src=\'' . plugins_url( 'external/js/ls.aspectratio.min.js', __FILE__ ) . '\'></script>';
-    }
-
-    public function lazyload_js_getnoptimize() {
-        // helper function enable/ disable noptimize flag on injected JS with a filter.
         $noptimize_flag = '';
         if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_js_noptimize', true ) ) {
-            $noptimize_flag = ' data-noptimize="true" ';
+            $noptimize_flag = 'data-noptimize="true" ';
         }
-        return $noptimize_flag;
+        echo '<script async ' . $noptimize_flag . 'src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
     }
 
     public function get_lazyload_exclusions() {
