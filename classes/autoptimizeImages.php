@@ -682,7 +682,7 @@ class autoptimizeImages
                     // add min-heigth by default, can be disabled with filter.
                     $min_height = '';
                     if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_addminheight', true ) ) {
-                        $min_height = 'min-height="' . $imgopt_h . 'px" src="';
+                        $min_height = 'style="min-height:' . $imgopt_h . 'px;" src="';
                     }
 
                     // add noscript & placeholder.
