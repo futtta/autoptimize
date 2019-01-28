@@ -857,6 +857,7 @@ class autoptimizeImages
 
     public function add_lazyload_js_footer() {
         // adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
+        // the JS will by default be excluded form autoptimization but this can be changed with a filter.
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script data-noptimize=\'1\'>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
         $noptimize_flag = '';
@@ -892,6 +893,8 @@ class autoptimizeImages
     }
 
     public function get_size_from_tag( $tag ) {
+        // reusable function to extract widht and height from an image tag
+        // enforcing a filterable maximum width and height (default 4999X4999).
         $width  = '';
         $height = '';
 
