@@ -632,15 +632,10 @@ class autoptimizeImages
                 }
 
                 // proceed with img src.
-                // first reset and then get width and height and add to $imgopt_size.
-                $imgopt_w = '';
-                $imgopt_h = '';
-                if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $width ) ) {
-                    $imgopt_w = $width[2];
-                }
-                if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $height ) ) {
-                    $imgopt_h = $height[2];
-                }
+                // get width and height and add to $imgopt_size.
+                $_get_size = $this->get_size_from_tag( $tag );
+                $imgopt_w  = $_get_size['width'];
+                $imgopt_h  = $_get_size['height'];
 
                 // then start replacing images src.
                 if ( preg_match_all( '#src=(?:"|\')(?!data)(.*)(?:"|\')#Usmi', $tag, $urls, PREG_SET_ORDER ) ) {
@@ -836,18 +831,12 @@ class autoptimizeImages
                 $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . '" ', $tag );
             }
 
-            // (re-)get image width & heigth for placeholder fun (and to prevent content reflow)
-            $width  = 210; // default width used if none is given.
-            $height = false;
-            if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $_width ) ) {
-                if ( strpos( $_width[2], '%' ) === false ) {
-                    $width = (int) $_width[2];
-                }
-            }
-            if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $_height ) ) {
-                if ( strpos( $_height[2], '%' ) === false ) {
-                    $height = (int) $_height[2];
-                }
+            // get image width & heigth for placeholder fun (and to prevent content reflow).
+            $_get_size = $this->get_size_from_tag( $tag );
+            $width     = $_get_size['width'];
+            $height    = $_get_size['height'];
+            if ( false === $width ) {
+                $widht = 210; // default width for SVG placeholder.
             }
             if ( false === $height ) {
                 $heigth = $width / 3 * 2; // if no height, base it on width using the 3/2 aspect ratio.
@@ -900,6 +889,41 @@ class autoptimizeImages
         }
 
         return $exclude_lazyload_array;
+    }
+
+    public function get_size_from_tag( $tag ) {
+        $width  = '';
+        $height = '';
+
+        if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $_width ) ) {
+            if ( strpos( $_width[2], '%' ) === false ) {
+                $width = (int) $_width[2];
+            }
+        }
+        if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $_height ) ) {
+            if ( strpos( $_height[2], '%' ) === false ) {
+                $height = (int) $_height[2];
+            }
+        }
+
+        // check for and enforce (filterable) max sizes.
+        $_max_width = apply_filters( 'autoptimize_filter_imgopt_max_width', 4999 );
+        if ( $width > $_max_width ) {
+            $_width = $_max_width;
+            $height = $_width / $width * $height;
+            $width  = $_width;
+        }
+        $_max_height = apply_filters( 'autoptimize_filter_imgopt_max_height', 4999 );
+        if ( $height > $_max_height ) {
+            $_height = $_max_height;
+            $width   = $_height / $height * $width;
+            $height  = $_height;
+        }
+
+        return array(
+            'width'  => $width,
+            'height' => $height,
+        );
     }
 
     /**
