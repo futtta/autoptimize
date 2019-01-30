@@ -50,7 +50,12 @@ class autoptimizeMain
 
     protected function add_hooks()
     {
-        add_action( 'plugins_loaded', array( $this, 'setup' ) );
+        if ( ! defined( 'AUTOPTIMIZE_SETUP_INITHOOK' ) ) {
+            define( 'AUTOPTIMIZE_SETUP_INITHOOK', 'plugins_loaded' );
+        }
+
+        add_action( AUTOPTIMIZE_SETUP_INITHOOK, array( $this, 'setup' ) );
+        add_action( AUTOPTIMIZE_SETUP_INITHOOK, array( $this, 'hook_page_cache_purge' ) );
 
         add_action( 'autoptimize_setup_done', array( $this, 'version_upgrades_check' ) );
         add_action( 'autoptimize_setup_done', array( $this, 'check_cache_and_run' ) );
@@ -58,7 +63,6 @@ class autoptimizeMain
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ) );
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
-        add_action( 'plugins_loaded', array( $this, 'hook_page_cache_purge' ) );
         add_action( 'admin_init', array( 'PAnD', 'init' ) );
 
         register_activation_hook( $this->filepath, array( $this, 'on_activate' ) );
