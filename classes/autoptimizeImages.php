@@ -660,28 +660,31 @@ class autoptimizeImages
                     if ( $this->should_webp() ) {
                         $target_class .= 'webp ';
                     }
-                    if ( strpos( $tag, 'class=' ) !== false ) {
-                        $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
-                    } else {
-                        $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . '" ', $tag );
-                    }
+                    $tag = $this->inject_classes_in_tag( $tag, $target_class );
 
                     // set placeholder.
-                    if ( $this->can_optimize_image( $url ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
-                        $placeholder = $this->get_imgopt_host() . 'client/q_lqip,ret_wait,w_' . $imgopt_w . ',h_' . $imgopt_h . '/' . $url;
+                    if ( strpos( $url, $this->get_imgopt_host() ) === 0 ) {
+                        // if all img src have been replaced during srcset, we have to extract the
+                        // origin url from the imgopt one to be able to set a lqip placeholder.
+                        $_url = substr( $url, strpos( $url, '/http' ) + 1 );
                     } else {
-                        $placeholder = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 ' . $imgopt_w . ' ' . $imgopt_h . '\'%3E%3C/svg%3E';
+                        $_url = $url;
                     }
-                    $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $placeholder );
+                    if ( $this->can_optimize_image( $_url ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
+                        $placeholder = $this->get_imgopt_host() . 'client/q_lqip,ret_wait,w_' . $imgopt_w . ',h_' . $imgopt_h . '/' . $_url;
+                    } else {
+                        $placeholder = $this->get_default_lazyload_placeholder( $imgopt_w, $imgopt_h );
+                    }
+                    $placeholder = ' src=\'' . apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $placeholder );
 
                     // add min-heigth by default, can be disabled with filter.
                     $min_height = '';
                     if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_addminheight', true ) ) {
-                        $min_height = 'style="min-height:' . $imgopt_h . 'px;" src="';
+                        $min_height = ' style="min-height:' . $imgopt_h . 'px;"';
                     }
 
                     // add noscript & placeholder.
-                    $tag = $noscript_tag . str_replace( 'src=', $min_height . $placeholder . '" data-src=', $tag );
+                    $tag = $noscript_tag . str_replace( ' src=', $min_height . $placeholder . '\' data-src=', $tag );
                 }
 
                 // add tag to array for later replacement.
@@ -706,7 +709,7 @@ class autoptimizeImages
         // background-image in inline style.
         if ( strpos( $out, 'background-image:' ) !== false && apply_filters( 'autoptimize_filter_imgopt_backgroundimages', true ) ) {
             $out = preg_replace_callback(
-                '/style=(?:"|\').*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)/s',
+                '/style=(?:"|\').*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)/',
                 array( $this, 'replace_img_callback' ),
                 $out
             );
@@ -825,11 +828,7 @@ class autoptimizeImages
             $noscript_tag = '<noscript>' . $tag . '</noscript>';
 
             // insert lazyload class.
-            if ( strpos( $tag, 'class=' ) !== false ) {
-                $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
-            } else {
-                $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . '" ', $tag );
-            }
+            $tag = $this->inject_classes_in_tag( $tag, $target_class );
 
             // get image width & heigth for placeholder fun (and to prevent content reflow).
             $_get_size = $this->get_size_from_tag( $tag );
@@ -844,7 +843,7 @@ class autoptimizeImages
 
             // insert the actual lazyload stuff.
             // see https://css-tricks.com/preventing-content-reflow-from-lazy-loaded-images/ for great read on why we're using empty svg's.
-            $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $width . ' ' . $height . '"%3E%3C/svg%3E' );
+            $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $this->get_default_lazyload_placeholder( $width, $height ) );
             $tag         = str_replace( ' src=', ' src=\'' . $placeholder . '\' data-src=', $tag );
             $tag         = str_replace( ' srcset=', ' data-srcset=', $tag );
 
@@ -927,6 +926,20 @@ class autoptimizeImages
             'width'  => $width,
             'height' => $height,
         );
+    }
+
+    public function inject_classes_in_tag( $tag, $target_class ) {
+        if ( strpos( $tag, 'class=' ) !== false ) {
+            $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
+        } else {
+            $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . '" ', $tag );
+        }
+
+        return $tag;
+    }
+
+    public function get_default_lazyload_placeholder( $imgopt_w, $imgopt_h ) {
+        return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $imgopt_w . ' ' . $imgopt_h . '"%3E%3C/svg%3E';
     }
 
     /**
