@@ -2329,7 +2329,35 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<noscript><img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" /></noscript><img class="lazyload" style="min-height:200px;" src="$imgopthost/client/q_lqip,ret_wait,w_400,h_200/$siteurl/wp-content/image.jpg" data-src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+<noscript><img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" /></noscript><img class="lazyload" style="min-height:200px;" src='$imgopthost/client/q_lqip,ret_wait,w_400,h_200/$siteurl/wp-content/image.jpg' data-src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test image optimization in autoptimizeImages.php.
+     *
+     * case: background image in a style attribute
+     */
+    public function test_imgopt_bgimg()
+    {
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
+
+        $markup = <<<MARKUP
+<div class="textwidget custom-html-widget"><div class="et_parallax_bg et_pb_parallax_css" style="height:200px; background-image: url($siteurl/wp-content/uploads/2018/05/DSC_1615-300x201.jpg);"></div>
+MARKUP;
+
+        $expected = <<<MARKUP
+<div class="textwidget custom-html-widget"><div class="et_parallax_bg et_pb_parallax_css" style="height:200px; background-image: url($imgopthost/client/q_glossy,ret_img/$siteurl/wp-content/uploads/2018/05/DSC_1615-300x201.jpg);"></div>
 MARKUP;
 
         $instance = autoptimizeImages::instance();
