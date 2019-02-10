@@ -606,6 +606,16 @@ class autoptimizeImages
          */
         $to_replace = array();
 
+        // hide noscript tags to avoid nesting noscript tags (as lazyloaded images add noscript).
+        if ( $this->should_lazyload() ) {
+            $in = autoptimizeBase::replace_contents_with_marker_if_exists(
+                'NOSCRIPT',
+                '<noscript',
+                '#<noscript.*?<\/noscript>#is',
+                $in
+            );
+        }
+
         // extract img tags.
         if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
             foreach ( $matches[0] as $tag ) {
@@ -715,6 +725,14 @@ class autoptimizeImages
             );
         }
 
+        // and restore noscript tags if these were hidden for lazyload purposes.
+        if ( $this->should_lazyload() ) {
+            $in = autoptimizeBase::restore_marked_content(
+                'NOSCRIPT',
+                $in
+            );
+        }
+
         return $out;
     }
 
@@ -802,15 +820,27 @@ class autoptimizeImages
         // only used is image optimization is NOT active but lazyload is.
         $to_replace = array();
 
+        // hide noscript tags to avoid nesting noscript tags (as lazyloaded images add noscript).
+        $out = autoptimizeBase::replace_contents_with_marker_if_exists(
+            'NOSCRIPT',
+            '<noscript',
+            '#<noscript.*?<\/noscript>#is',
+            $in
+        );
+
         // extract img tags and add lazyload attribs.
-        if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
+        if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $out, $matches ) ) {
             foreach ( $matches[0] as $tag ) {
                 $to_replace[ $tag ] = $this->add_lazyload( $tag );
             }
-            $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
-        } else {
-            $out = $in;
+            $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $out );
         }
+
+        // restore noscript tags.
+        $out = autoptimizeBase::restore_marked_content(
+            'NOSCRIPT',
+            $out
+        );
 
         return $out;
     }
