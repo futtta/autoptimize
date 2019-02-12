@@ -158,6 +158,12 @@ Make sure you're not running other HTML, CSS or JS minification plugins (BWP min
 
 If you are running Apache, the htaccess file written by Autoptimize can in some cases conflict with the AllowOverrides settings of your Apache configuration (as is the case with the default configuration of some Ubuntu installations), which results in "internal server errors" on the autoptimize CSS- and JS-files. This can be solved by [setting AllowOverrides to All](http://httpd.apache.org/docs/2.4/mod/core.html#allowoverride).
 
+= Can't log in on domain mapped multisites =
+
+Domain mapped multisites require Autoptimize to be initialized at a different WordPress action, add this line of code to your wp-config.php to make it so to hook into `setup_theme` for example:
+
+`define( 'AUTOPTIMIZE_SETUP_INITHOOK', 'setup_theme' );`
+
 = I get no error, but my pages are not optimized at all? =
 
 Autoptimize does a number of checks before actually optimizing. When one of the following is true, your pages won't be optimized:
@@ -289,6 +295,8 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 = 2.5.0 =
 * moved image optimization logic to a separate file.
+* added lazyloading (using lazysizes)
+* misc. bugfixes and smaller improvements
 
 = 2.4.4 =
 * bugfix: safer way of removing extra cronjobs
