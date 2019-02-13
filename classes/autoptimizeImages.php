@@ -727,9 +727,9 @@ class autoptimizeImages
 
         // and restore noscript tags if these were hidden for lazyload purposes.
         if ( $this->should_lazyload() ) {
-            $in = autoptimizeBase::restore_marked_content(
+            $out = autoptimizeBase::restore_marked_content(
                 'NOSCRIPT',
-                $in
+                $out
             );
         }
 
