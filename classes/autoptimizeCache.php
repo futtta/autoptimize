@@ -90,6 +90,14 @@ class autoptimizeCache
      */
     public function cache( $data, $mime )
     {
+        // off by default; check if cachedirs exist every time before caching
+        //
+        // to be activated for users that experience these ugly errors;
+        // PHP Warning: file_put_contents failed to open stream: No such file or directory.
+        if ( apply_filters( 'autoptimize_filter_cache_checkdirs_on_write', false ) ) {
+            $this->check_and_create_dirs();
+        }
+
         if ( false === $this->nogzip ) {
             // We handle gzipping ourselves.
             $file    = 'default.php';
@@ -482,15 +490,8 @@ class autoptimizeCache
      */
     public static function cacheavail()
     {
-        if ( ! defined( 'AUTOPTIMIZE_CACHE_DIR' ) ) {
-            // We didn't set a cache.
+        if ( false === autoptimizeCache::check_and_create_dirs() ) {
             return false;
-        }
-
-        foreach ( array( '', 'js', 'css' ) as $dir ) {
-            if ( ! self::check_cache_dir( AUTOPTIMIZE_CACHE_DIR . $dir ) ) {
-                return false;
-            }
         }
 
         // Using .htaccess inside our cache folder to overrule wp-super-cache.
@@ -561,6 +562,26 @@ class autoptimizeCache
         }
 
         // All OK!
+        return true;
+    }
+
+    /**
+     * Checks if cache dirs exist and create if not.
+     * Returns false if not succesful.
+     *
+     * @return bool
+     */
+    public static function check_and_create_dirs() {
+        if ( ! defined( 'AUTOPTIMIZE_CACHE_DIR' ) ) {
+            // We didn't set a cache.
+            return false;
+        }
+
+        foreach ( array( '', 'js', 'css' ) as $dir ) {
+            if ( ! self::check_cache_dir( AUTOPTIMIZE_CACHE_DIR . $dir ) ) {
+                return false;
+            }
+        }
         return true;
     }
 
