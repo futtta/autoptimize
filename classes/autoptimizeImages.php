@@ -969,7 +969,7 @@ class autoptimizeImages
     }
 
     public function get_default_lazyload_placeholder( $imgopt_w, $imgopt_h ) {
-        return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $imgopt_w . ' ' . $imgopt_h . '"%3E%3C/svg%3E';
+        return 'data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20'.$imgopt_w.'%20'.$imgopt_h.'%22%3E%3C/svg%3E';
     }
 
     /**
