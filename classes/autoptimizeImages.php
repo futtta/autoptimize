@@ -695,6 +695,7 @@ class autoptimizeImages
 
                     // add noscript & placeholder.
                     $tag = $noscript_tag . str_replace( ' src=', $min_height . $placeholder . '\' data-src=', $tag );
+                    $tag = apply_filters( 'autoptimize_filter_image_lazyloaded_img', $tag );
                 }
 
                 // add tag to array for later replacement.
@@ -879,6 +880,7 @@ class autoptimizeImages
 
             // add the noscript-tag from earlier.
             $tag = $noscript_tag . $tag;
+            $tag = apply_filters( 'autoptimize_filter_image_lazyloaded_img', $tag );
         }
 
         return $tag;
@@ -969,7 +971,7 @@ class autoptimizeImages
     }
 
     public function get_default_lazyload_placeholder( $imgopt_w, $imgopt_h ) {
-        return 'data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20'.$imgopt_w.'%20'.$imgopt_h.'%22%3E%3C/svg%3E';
+        return 'data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20' . $imgopt_w . '%20' . $imgopt_h . '%22%3E%3C/svg%3E';
     }
 
     /**
