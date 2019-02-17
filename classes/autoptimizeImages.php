@@ -695,7 +695,7 @@ class autoptimizeImages
 
                     // add noscript & placeholder.
                     $tag = $noscript_tag . str_replace( ' src=', $min_height . $placeholder . '\' data-src=', $tag );
-                    $tag = apply_filters( 'autoptimize_filter_image_lazyloaded_img', $tag );
+                    $tag = apply_filters( 'autoptimize_filter_imgopt_lazyloaded_img', $tag );
                 }
 
                 // add tag to array for later replacement.
@@ -880,7 +880,7 @@ class autoptimizeImages
 
             // add the noscript-tag from earlier.
             $tag = $noscript_tag . $tag;
-            $tag = apply_filters( 'autoptimize_filter_image_lazyloaded_img', $tag );
+            $tag = apply_filters( 'autoptimize_filter_imgopt_lazyloaded_img', $tag );
         }
 
         return $tag;
