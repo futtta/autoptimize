@@ -112,9 +112,7 @@ class autoptimizeCache
             if ( apply_filters( 'autoptimize_filter_cache_create_static_gzip', false ) ) {
                 // Create an additional cached gzip file.
                 file_put_contents( $this->cachedir . $this->filename . '.gz', gzencode( $data, 9, FORCE_GZIP ) );
-            }
-            if ( apply_filters( 'autoptimize_filter_cache_create_static_brotli', false ) ) {
-                // Create an additional cached brotli file.
+                // If PHP Brotli extension is installed, create an additional cached Brotli file
                 if ( function_exists( 'brotli_compress' ) ) {
                     file_put_contents( $this->cachedir . $this->filename . '.br', brotli_compress($returnContent, 11, BROTLI_GENERIC) );
                 }
