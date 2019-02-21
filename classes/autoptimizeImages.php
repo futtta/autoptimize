@@ -275,6 +275,7 @@ class autoptimizeImages
             $notice = '';
             $stat   = $this->get_imgopt_provider_userstatus();
             $upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
+			$assoc  = 'https://shortpixel.helpscoutdocs.com/article/94-how-to-associate-a-domain-to-my-account';
 
             if ( is_array( $stat ) ) {
                 if ( 1 == $stat['Status'] ) {
@@ -283,6 +284,8 @@ class autoptimizeImages
                 } elseif ( -1 == $stat['Status'] || -2 == $stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
                     $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
+                    // translators: "associate your domain" will appear in a "a href".
+                    $notice = $notice . ' ' . sprintf( __( 'If you already have enough credits then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $assoc . '" target="_blank">', '</a>' );
                 } else {
                     $upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';
                     // translators: "log in to check your account" will appear in a "a href".
