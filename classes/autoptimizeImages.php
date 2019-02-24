@@ -899,6 +899,12 @@ class autoptimizeImages
             $noptimize_flag = 'data-noptimize="true" ';
         }
         echo '<script async ' . $noptimize_flag . 'src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
+        if ( $this->should_webp() ) {
+            // fixme: don't add to_webp if already there or if lpiq.
+            $_webp_detect = '<script>/*! npm.im/supports-webp 1.0.7 */var supportsWebP=function(){"use strict";var e="object"==typeof document?document.createElement("canvas"):{};return e.width=e.height=1,!!e.toDataURL&&5===e.toDataURL("image/webp").indexOf("image/webp")}();</script>';
+            $_webp_load   = "<script>document.addEventListener('lazybeforeunveil', function({target}){if(!supportsWebP){return;} datasrc=target.getAttribute('data-src'); console.log(datasrc);target.setAttribute('data-src', datasrc.replace(/client\//, 'client/to_webp,'));console.log(target.getAttribute('data-src'));});</script>";
+            echo apply_filters( 'autoptimize_filter_imgopt_webp_js', $_webp_detect . $_webp_load );
+        }
     }
 
     public function get_lazyload_exclusions() {
@@ -1109,7 +1115,7 @@ class autoptimizeImages
                     </p>
                 </td>
             </tr>
-            <tr class='hidden' id='autoptimize_imgopt_webp' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
+            <tr id='autoptimize_imgopt_webp' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
                 <th scope="row"><?php _e( 'Load webp in supported browsers?', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' id='autoptimize_imgopt_webp_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Allow image optimization to load webp-images in browsers that support it (requires lazy load to be active).', 'autoptimize' ); ?></label>
@@ -1135,7 +1141,7 @@ class autoptimizeImages
             jQuery( "#autoptimize_imgopt_checkbox" ).change(function() {
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_quality").show("slow");
-                    // jQuery("#autoptimize_imgopt_webp").show("slow");
+                    jQuery("#autoptimize_imgopt_webp").show("slow");
                 } else {
                     jQuery("#autoptimize_imgopt_quality").hide("slow");
                     jQuery("#autoptimize_imgopt_webp").hide("slow");
