@@ -1130,7 +1130,7 @@ class autoptimizeImages
     </form>
     <script>
         jQuery(document).ready(function() {
-            jQuery( "#autoptimize_imgopt_checkbox" ).change(function() {
+            jQuery("#autoptimize_imgopt_checkbox").change(function() {
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_quality").show("slow");
                     jQuery("#autoptimize_imgopt_webp").show("slow");
@@ -1139,16 +1139,18 @@ class autoptimizeImages
                     jQuery("#autoptimize_imgopt_webp").hide("slow");
                 }
             });
-            jQuery( "#autoptimize_imgopt_webp_checkbox" ).change(function() {
+            jQuery("#autoptimize_imgopt_webp_checkbox").change(function() {
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_lazyload_checkbox")[0].checked = true;
+                    jQuery("#autoptimize_imgopt_lazyload_exclusions").show("slow");
                 }
             });
-            jQuery( "#autoptimize_imgopt_lazyload_checkbox" ).change(function() {
+            jQuery("#autoptimize_imgopt_lazyload_checkbox").change(function() {
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_lazyload_exclusions").show("slow");
                 } else {
                     jQuery("#autoptimize_imgopt_lazyload_exclusions").hide("slow");
+                    jQuery("#autoptimize_imgopt_webp_checkbox")[0].checked = false;
                 }
             });
         });
