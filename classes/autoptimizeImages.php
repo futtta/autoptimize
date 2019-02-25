@@ -890,20 +890,20 @@ class autoptimizeImages
     }
 
     public function add_lazyload_js_footer() {
+        $noptimize_flag = '';
+        if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_js_noptimize', true ) ) {
+            $noptimize_flag = 'data-noptimize="1" ';
+        }
+
         // adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
         // the JS will by default be excluded form autoptimization but this can be changed with a filter.
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
-        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script data-noptimize=\'1\'>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
-        $noptimize_flag = '';
-        if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_js_noptimize', true ) ) {
-            $noptimize_flag = 'data-noptimize="true" ';
-        }
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script ' . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
         echo '<script async ' . $noptimize_flag . 'src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
         if ( $this->should_webp() ) {
-            // fixme: don't add to_webp if already there or if lpiq.
-            $_webp_detect = '<script>/*! npm.im/supports-webp 1.0.7 */var supportsWebP=function(){"use strict";var e="object"==typeof document?document.createElement("canvas"):{};return e.width=e.height=1,!!e.toDataURL&&5===e.toDataURL("image/webp").indexOf("image/webp")}();</script>';
-            $_webp_load   = "<script>document.addEventListener('lazybeforeunveil', function({target}){if(!supportsWebP){return;} datasrc=target.getAttribute('data-src'); console.log(datasrc);target.setAttribute('data-src', datasrc.replace(/client\//, 'client/to_webp,'));console.log(target.getAttribute('data-src'));});</script>";
-            echo apply_filters( 'autoptimize_filter_imgopt_webp_js', $_webp_detect . $_webp_load );
+            $_webp_detect = "function c_webp(A){var n=new Image;n.onload=function(){var e=0<n.width&&0<n.height;A(e)},n.onerror=function(){A(!1)},n.src='data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA=='}function s_webp(e){window.supportsWebP=e}c_webp(s_webp);";
+            $_webp_load   = "document.addEventListener('lazybeforeunveil',function({target:a}){supportsWebP&&['data-src','data-srcset'].forEach(function(b){attr=a.getAttribute(b),a.setAttribute(b,attr.replace(/\/client\//,'/client/to_webp,'))})});";
+            echo apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script ' . $noptimize_flag . '>'. $_webp_detect . $_webp_load . '</script>' );
         }
     }
 
