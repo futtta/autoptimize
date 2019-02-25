@@ -668,12 +668,8 @@ class autoptimizeImages
                     $noscript_tag = '<noscript>' . $tag . '</noscript>';
                     $tag          = str_replace( 'srcset=', 'data-srcset=', $tag );
 
-                    // add lazyload (and webp) class.
-                    $target_class = 'lazyload ';
-                    if ( $this->should_webp() ) {
-                        $target_class .= 'webp ';
-                    }
-                    $tag = $this->inject_classes_in_tag( $tag, $target_class );
+                    // add lazyload class.
+                    $tag = $this->inject_classes_in_tag( $tag, 'lazyload ' );
 
                     // set placeholder.
                     if ( strpos( $url, $this->get_imgopt_host() ) === 0 ) {
@@ -851,18 +847,13 @@ class autoptimizeImages
 
     public function add_lazyload( $tag ) {
         // adds actual lazyload-attributes to an image node.
-        $target_class = 'lazyload ';
-
-        if ( $this->should_webp() ) {
-            $target_class .= 'webp ';
-        }
 
         if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
             // store original tag for use in noscript version.
             $noscript_tag = '<noscript>' . $tag . '</noscript>';
 
             // insert lazyload class.
-            $tag = $this->inject_classes_in_tag( $tag, $target_class );
+            $tag = $this->inject_classes_in_tag( $tag, 'lazyload ' );
 
             // get image width & heigth for placeholder fun (and to prevent content reflow).
             $_get_size = $this->get_size_from_tag( $tag );
