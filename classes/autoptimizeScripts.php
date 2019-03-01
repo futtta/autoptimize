@@ -39,6 +39,7 @@ class autoptimizeScripts extends autoptimizeBase
     private $whitelist       = '';
     private $jsremovables    = array();
     private $inject_min_late = '';
+    private $minify_excluded = true;
 
     // Reads the page and collects script tags.
     public function read($options)
@@ -88,6 +89,11 @@ class autoptimizeScripts extends autoptimizeBase
         $this->dontmove = apply_filters( 'autoptimize_filter_js_dontmove', $this->dontmove );
         $this->domovelast = apply_filters( 'autoptimize_filter_js_movelast', $this->domovelast );
         $this->domove = apply_filters( 'autoptimize_filter_js_domove', $this->domove );
+
+        // Determine whether excluded files should be minified if not yet so.
+        if ( ! $options['minify_excluded'] ) {
+            $this->minify_excluded = false;
+        }
 
         // get extra exclusions settings or filter.
         $excludeJS = $options['js_exclude'];
@@ -172,7 +178,7 @@ class autoptimizeScripts extends autoptimizeBase
                         }
 
                         // Should we minify the non-aggregated script?
-                        if ( $path && apply_filters( 'autoptimize_filter_js_minify_excluded', true, $url ) ) {
+                        if ( $path && ( $this->minify_excluded || apply_filters( 'autoptimize_filter_js_minify_excluded', false, $url ) ) ) {
                             $consider_minified_array = apply_filters( 'autoptimize_filter_js_consider_minified', false );
                             if ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) {
                                 $minified_url = $this->minify_single( $path );

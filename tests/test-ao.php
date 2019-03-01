@@ -28,16 +28,17 @@ class AOTest extends WP_UnitTestcase
         $conf = autoptimizeConfig::instance();
 
         return [
-            'aggregate'      => $conf->get( 'autoptimize_css_aggregate' ),
-            'justhead'       => $conf->get( 'autoptimize_css_justhead' ),
-            'datauris'       => $conf->get( 'autoptimize_css_datauris' ),
-            'defer'          => $conf->get( 'autoptimize_css_defer' ),
-            'defer_inline'   => $conf->get( 'autoptimize_css_defer_inline' ),
-            'inline'         => $conf->get( 'autoptimize_css_inline' ),
-            'css_exclude'    => $conf->get( 'autoptimize_css_exclude' ),
-            'cdn_url'        => $conf->get( 'autoptimize_cdn_url' ),
-            'include_inline' => $conf->get( 'autoptimize_css_include_inline' ),
-            'nogooglefont'   => $conf->get( 'autoptimize_css_nogooglefont' ),
+            'aggregate'       => $conf->get( 'autoptimize_css_aggregate' ),
+            'justhead'        => $conf->get( 'autoptimize_css_justhead' ),
+            'datauris'        => $conf->get( 'autoptimize_css_datauris' ),
+            'defer'           => $conf->get( 'autoptimize_css_defer' ),
+            'defer_inline'    => $conf->get( 'autoptimize_css_defer_inline' ),
+            'inline'          => $conf->get( 'autoptimize_css_inline' ),
+            'css_exclude'     => $conf->get( 'autoptimize_css_exclude' ),
+            'cdn_url'         => $conf->get( 'autoptimize_cdn_url' ),
+            'include_inline'  => $conf->get( 'autoptimize_css_include_inline' ),
+            'nogooglefont'    => $conf->get( 'autoptimize_css_nogooglefont' ),
+            'minify_excluded' => $conf->get( 'autoptimize_minify_excluded' ),
         ];
     }
 
@@ -46,13 +47,14 @@ class AOTest extends WP_UnitTestcase
         $conf = autoptimizeConfig::instance();
 
         return [
-            'aggregate'      => $conf->get( 'autoptimize_js_aggregate' ),
-            'justhead'       => $conf->get( 'autoptimize_js_justhead' ),
-            'forcehead'      => $conf->get( 'autoptimize_js_forcehead' ),
-            'trycatch'       => $conf->get( 'autoptimize_js_trycatch' ),
-            'js_exclude'     => $conf->get( 'autoptimize_js_exclude' ),
-            'cdn_url'        => $conf->get( 'autoptimize_cdn_url' ),
-            'include_inline' => $conf->get( 'autoptimize_js_include_inline' ),
+            'aggregate'       => $conf->get( 'autoptimize_js_aggregate' ),
+            'justhead'        => $conf->get( 'autoptimize_js_justhead' ),
+            'forcehead'       => $conf->get( 'autoptimize_js_forcehead' ),
+            'trycatch'        => $conf->get( 'autoptimize_js_trycatch' ),
+            'js_exclude'      => $conf->get( 'autoptimize_js_exclude' ),
+            'cdn_url'         => $conf->get( 'autoptimize_cdn_url' ),
+            'include_inline'  => $conf->get( 'autoptimize_js_include_inline' ),
+            'minify_excluded' => $conf->get( 'autoptimize_minify_excluded' ),
         ];
     }
 

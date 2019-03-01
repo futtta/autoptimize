@@ -378,6 +378,11 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
     <?php _e('By default files saved are static css/js, uncheck this option if your webserver doesn\'t properly handle the compression and expiry.','autoptimize'); ?></label></td>
     </tr>
     <tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
+    <th scope="row"><?php _e('Minify excluded CSS and JS files?','autoptimize'); ?></th>
+    <td><label class="cb_label"><input type="checkbox" name="autoptimize_minify_excluded" <?php echo get_option('autoptimize_minify_excluded','1')?'checked="checked" ':''; ?>/>
+    <?php _e('By default excluded files that are not minified (based on filename) are minified, uncheck this option if anything breaks despite excluding.','autoptimize'); ?></label></td>
+    </tr>
+    <tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
     <th scope="row"><?php _e('Also optimize for logged in users?','autoptimize'); ?></th>
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo get_option('autoptimize_optimize_logged','1')?'checked="checked" ':''; ?>/>
     <?php _e('By default Autoptimize is also active for logged on users, uncheck not to optimize when logged in e.g. to use a pagebuilder.','autoptimize'); ?></label></td>
@@ -654,6 +659,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
         register_setting( 'autoptimize', 'autoptimize_show_adv' );
         register_setting( 'autoptimize', 'autoptimize_optimize_logged' );
         register_setting( 'autoptimize', 'autoptimize_optimize_checkout' );
+        register_setting( 'autoptimize', 'autoptimize_minify_excluded' );
     }
 
     public function setmeta($links, $file = null)
@@ -709,7 +715,8 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_cache_nogzip' => 1,
             'autoptimize_show_adv' => 0,
             'autoptimize_optimize_logged' => 1,
-            'autoptimize_optimize_checkout' => 1
+            'autoptimize_optimize_checkout' => 1,
+            'autoptimize_minify_excluded' => 1,
         );
 
         return $config;

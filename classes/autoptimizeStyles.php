@@ -44,6 +44,7 @@ class autoptimizeStyles extends autoptimizeBase
     private $cssremovables   = array();
     private $include_inline  = false;
     private $inject_min_late = '';
+    private $minify_excluded = true;
 
     // public $cdn_url; // Used all over the place implicitly, so will have to be either public or protected :/ .
 
@@ -121,6 +122,11 @@ class autoptimizeStyles extends autoptimizeBase
 
         // Store data: URIs setting for later use.
         $this->datauris = $options['datauris'];
+
+        // Determine whether excluded files should be minified if not yet so.
+        if ( ! $options['minify_excluded'] ) {
+            $this->minify_excluded = false;
+        }
 
         // noptimize me.
         $this->content = $this->hide_noptimize( $this->content );
@@ -207,7 +213,7 @@ class autoptimizeStyles extends autoptimizeBase
                         $url          = $exploded_url[0];
                         $path         = $this->getpath( $url );
 
-                        if ( $path && apply_filters( 'autoptimize_filter_css_minify_excluded', true, $url ) ) {
+                        if ( $path && ( $this->minify_excluded || apply_filters( 'autoptimize_filter_css_minify_excluded', false, $url ) ) ) {
                             $minified_url = $this->minify_single( $path );
                             if ( ! empty( $minified_url ) ) {
                                 // Replace orig URL with cached minified URL.
