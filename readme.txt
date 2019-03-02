@@ -150,6 +150,10 @@ If your blog doesn't function normally after having turned on Autoptimize, here 
 * If you can't get either CSS or JS optimization working, you can off course always continue using the other two optimization-techniques.
 * If you tried the troubleshooting tips above and you still can't get CSS and JS working at all, you can ask for support on the [WordPress Autoptimize support forum](http://wordpress.org/support/plugin/autoptimize). See below for a description of what information you should provide in your "trouble ticket"
 
+= I excluded files but they are still being autoptimized? =
+
+AO minifies excluded JS/ CSS if the filename indicates the file is not minified yet. As of AO 2.5 you can disable this on the "JS, CSS & HTML"-tab under misc. options by unticking "minify excluded files".
+
 = Help, I have a blank page or an internal server error after enabling Autoptimize!! =
 
 Make sure you're not running other HTML, CSS or JS minification plugins (BWP minify, WP minify, ...) simultaneously with Autoptimize or disable that functionality your page caching plugin (W3 Total Cache, WP Fastest Cache, ...). Try enabling only CSS or only JS optimization to see which one causes the server error and follow the generic troubleshooting steps to find a workaround.
@@ -245,14 +249,6 @@ When image optimization is on, Autoptimize will look for png, gif, jpeg (.jpg) f
 
 Have a look at [Shortpixel's FAQ](https://shortpixel.helpscoutdocs.com/category/60-shortpixel-ai-cdn).
 
-= Can I disable the minification of excluded JS/ CSS? =
-
-As from AO 2.4 excluded JS/ CSS are minified if the (filename indicates the) file is not minified yet. You can disable this with these filters;
-
-`
-add_filter('autoptimize_filter_js_minify_excluded','__return_false');
-add_filter('autoptimize_filter_css_minify_excluded','__return_false');`
-
 = Can I disable AO listening to page cache purges? =
 
 As from AO 2.4 AO "listens" to page cache purges to clear its own cache. You can disable this behavior with this filter;
@@ -271,12 +267,6 @@ By default AO uses non multibyte-safe string methods, but if your PHP has the mb
 `
 add_filter('autoptimize_filter_main_use_mbstring', '__return_true');`
 
-= The Shortpixel image optimizing notice cannot be dismissed? =
-
-In some rare cases the logic to dismiss the notice does not work due to the transient (WordPress cache) not keeping the dismissed state. If this happens you can use this code snippet to make the notice go away;
-
-`add_filter( 'autoptimize_filter_main_imgopt_plug_notice', '__return_empty_string' );`
-
 = Where can I get help? =
 
 You can get help on the [wordpress.org support forum](http://wordpress.org/support/plugin/autoptimize). If you are 100% sure this your problem cannot be solved using Autoptimize configuration and that you in fact discovered a bug in the code, you can [create an issue on GitHub](https://github.com/futtta/autoptimize/issues). If you're looking for premium support, check out our [Autoptimize Pro Support and Web Performance Optimization services](http://autoptimize.com/).
@@ -294,8 +284,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.5.0 =
-* moved image optimization logic to a separate file.
+* moved image optimization to a separate tab and move all code to a separate file.
 * added lazyloading (using lazysizes)
+* added webp support (requires image optimization and lazyloading to be active)
+* added option to enable/ disable the minification of excluded JS/ CSS files (on by default)
 * misc. bugfixes and smaller improvements
 
 = 2.4.4 =
