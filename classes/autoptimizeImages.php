@@ -686,9 +686,9 @@ class autoptimizeImages
                     }
                     $placeholder = ' src=\'' . apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $placeholder );
 
-                    // add min-heigth by default, can be disabled with filter.
+                    // add min-heigth off by default as it can deform images, can be enabled with filter.
                     $min_height = '';
-                    if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_addminheight', true ) ) {
+                    if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_addminheight', false ) ) {
                         $min_height = ' style="min-height:' . $imgopt_h . 'px;"';
                     }
 
