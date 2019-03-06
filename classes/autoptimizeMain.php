@@ -232,6 +232,8 @@ class autoptimizeMain
      */
     public function start_buffering()
     {
+        $_should_disable_jetpack_cdn = false;
+
         if ( $this->should_buffer() ) {
 
             // Load speedupper conditionally (true by default).
@@ -248,12 +250,20 @@ class autoptimizeMain
                 if ( ! defined( 'COMPRESS_SCRIPTS' ) ) {
                     define( 'COMPRESS_SCRIPTS', false );
                 }
+                $_should_disable_jetpack_cdn = true;
             }
 
             if ( $conf->get( 'autoptimize_css' ) ) {
                 if ( ! defined( 'COMPRESS_CSS' ) ) {
                     define( 'COMPRESS_CSS', false );
                 }
+                $_should_disable_jetpack_cdn = true;
+            }
+
+            if ( $_should_disable_jetpack_cdn && apply_filters( 'autoptimize_filter_main_disable_jetpack_cdn', true ) ) {
+                // if JS or CSS optimization are active we need to stop Jetpack from putting files on the
+                // CDN to avoid things breaking due to some files not being optimized and breaking order.
+                add_filter( 'jetpack_force_disable_site_accelerator', '__return_true' );
             }
 
             if ( apply_filters( 'autoptimize_filter_obkiller', false ) ) {
