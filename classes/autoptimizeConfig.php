@@ -377,10 +377,16 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_nogzip" <?php echo get_option('autoptimize_cache_nogzip','1')?'checked="checked" ':''; ?>/>
     <?php _e('By default files saved are static css/js, uncheck this option if your webserver doesn\'t properly handle the compression and expiry.','autoptimize'); ?></label></td>
     </tr>
-    <tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
-    <th scope="row"><?php _e('Minify excluded CSS and JS files?','autoptimize'); ?></th>
-    <td><label class="cb_label"><input type="checkbox" name="autoptimize_minify_excluded" <?php echo get_option('autoptimize_minify_excluded','1')?'checked="checked" ':''; ?>/>
-    <?php _e('By default excluded files that are not minified (based on filename) are minified, uncheck this option if anything breaks despite excluding.','autoptimize'); ?></label></td>
+    <?php
+    $_min_excl_class = 'ao_adv';
+    if ( !$conf->get( 'autoptimize_css_aggregate' ) && !$conf->get( 'autoptimize_js_aggregate' ) ) {
+        $_min_excl_class = ' hidden';
+    }
+    ?>
+    <tr valign="top" id="min_excl_row" class="<?php echo $hiddenClass.$_min_excl_class; ?>">
+        <th scope="row"><?php _e('Minify excluded CSS and JS files?','autoptimize'); ?></th>
+        <td><label class="cb_label"><input type="checkbox" name="autoptimize_minify_excluded" <?php echo get_option('autoptimize_minify_excluded','1')?'checked="checked" ':''; ?>/>
+        <?php _e('When aggregating JS or CSS, excluded files that are not minified (based on filename) are by default minified by Autoptimize despite being excluded. Uncheck this option if anything breaks despite excluding.','autoptimize'); ?></label></td>
     </tr>
     <tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
     <th scope="row"><?php _e('Also optimize for logged in users?','autoptimize'); ?></th>
@@ -527,8 +533,12 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
         jQuery( "#autoptimize_js_aggregate" ).change(function() {
             if (this.checked && jQuery("#autoptimize_js").attr('checked')) {
                 jQuery(".js_aggregate:visible").fadeTo("fast",1);
+                jQuery( "#min_excl_row" ).show();
             } else {
                 jQuery(".js_aggregate:visible").fadeTo("fast",.33);
+                if ( jQuery( "#autoptimize_css_aggregate" ).prop('checked') == false ) {
+                    jQuery( "#min_excl_row" ).hide();
+                }
             }
         });
 
@@ -543,8 +553,12 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
         jQuery( "#autoptimize_css_aggregate" ).change(function() {
             if (this.checked && jQuery("#autoptimize_css").attr('checked')) {
                 jQuery(".css_aggregate:visible").fadeTo("fast",1);
+                jQuery( "#min_excl_row" ).show();
             } else {
                 jQuery(".css_aggregate:visible").fadeTo("fast",.33);
+                if ( jQuery( "#autoptimize_js_aggregate" ).prop('checked') == false ) {
+                    jQuery( "#min_excl_row" ).hide();
+                }
             }
         });
 
