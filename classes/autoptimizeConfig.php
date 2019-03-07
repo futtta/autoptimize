@@ -243,7 +243,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <?php _e('Mostly useful in combination with previous option when using jQuery-based templates, but might help keeping cache size under control.','autoptimize'); ?></label></td>
 </tr>
 <?php } ?>
-<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv js_aggregate">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"seal.js, js/tinymce/, js/jquery/jquery.js"); ?>"/><br />
 <?php _e('A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated by Autoptimize.','autoptimize'); ?></label></td>
@@ -307,7 +307,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
 <td><label class="cb_label"><input type="checkbox" id="autoptimize_css_inline" name="autoptimize_css_inline" <?php echo get_option('autoptimize_css_inline')?'checked="checked" ':''; ?>/>
 <?php _e('Inlining all CSS can improve performance for sites with a low pageviews/ visitor-rate, but may slow down performance otherwise.','autoptimize'); ?></label></td>
 </tr>
-<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub css_aggregate">
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub">
 <th scope="row"><?php _e('Exclude CSS from Autoptimize:','autoptimize'); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo get_option('autoptimize_css_exclude','wp-content/cache/, wp-content/uploads/, admin-bar.min.css, dashicons.min.css'); ?>"/><br />
 <?php _e('A comma-separated list of CSS you want to exclude from being optimized.','autoptimize'); ?></label></td>
