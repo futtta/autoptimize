@@ -124,7 +124,7 @@ class autoptimizeStyles extends autoptimizeBase
         $this->datauris = $options['datauris'];
 
         // Determine whether excluded files should be minified if not yet so.
-        if ( ! $options['minify_excluded'] ) {
+        if ( ! $options['minify_excluded'] && $options['aggregate'] ) {
             $this->minify_excluded = false;
         }
 
@@ -207,25 +207,30 @@ class autoptimizeStyles extends autoptimizeBase
                     // Remove the original style tag.
                     $this->content = str_replace( $tag, '', $this->content );
                 } else {
-                    // Excluded CSS, minify if getpath and filter says so...
+                    // Excluded CSS, minify that file:
+                    // -> if aggregate is on and exclude minify is on
+                    // -> if aggregate is off and the file is not in dontmove.
                     if ( preg_match( '#<link.*href=("|\')(.*)("|\')#Usmi', $tag, $source ) ) {
                         $exploded_url = explode( '?', $source[2], 2 );
                         $url          = $exploded_url[0];
                         $path         = $this->getpath( $url );
 
                         if ( $path && ( $this->minify_excluded || apply_filters( 'autoptimize_filter_css_minify_excluded', false, $url ) ) ) {
-                            $minified_url = $this->minify_single( $path );
-                            if ( ! empty( $minified_url ) ) {
-                                // Replace orig URL with cached minified URL.
-                                $new_tag = str_replace( $url, $minified_url, $tag );
-                            } else {
-                                $new_tag = $tag;
+                            $consider_minified_array = apply_filters( 'autoptimize_filter_css_consider_minified', false );
+                            if ( ( false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path ) || ( true === $this->aggregate && ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) ) ) {
+                                $minified_url = $this->minify_single( $path );
+                                if ( ! empty( $minified_url ) ) {
+                                    // Replace orig URL with cached minified URL.
+                                    $new_tag = str_replace( $url, $minified_url, $tag );
+                                } else {
+                                    $new_tag = $tag;
+                                }
+
+                                $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
+
+                                // And replace!
+                                $this->content = str_replace( $tag, $new_tag, $this->content );
                             }
-
-                            $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
-
-                            // And replace!
-                            $this->content = str_replace( $tag, $new_tag, $this->content );
                         }
                     }
                 }

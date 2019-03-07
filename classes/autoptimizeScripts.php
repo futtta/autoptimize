@@ -91,7 +91,7 @@ class autoptimizeScripts extends autoptimizeBase
         $this->domove = apply_filters( 'autoptimize_filter_js_domove', $this->domove );
 
         // Determine whether excluded files should be minified if not yet so.
-        if ( ! $options['minify_excluded'] ) {
+        if ( ! $options['minify_excluded'] && $options['aggregate'] ) {
             $this->minify_excluded = false;
         }
 
@@ -178,9 +178,11 @@ class autoptimizeScripts extends autoptimizeBase
                         }
 
                         // Should we minify the non-aggregated script?
+                        // -> if aggregate is on and exclude minify is on
+                        // -> if aggregate is off and the file is not in dontmove.
                         if ( $path && ( $this->minify_excluded || apply_filters( 'autoptimize_filter_js_minify_excluded', false, $url ) ) ) {
                             $consider_minified_array = apply_filters( 'autoptimize_filter_js_consider_minified', false );
-                            if ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) {
+                            if ( ( false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path ) || ( true === $this->aggregate && ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) ) ) {
                                 $minified_url = $this->minify_single( $path );
                                 // replace orig URL with minified URL from cache if so.
                                 if ( ! empty( $minified_url ) ) {
