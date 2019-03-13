@@ -1038,7 +1038,7 @@ class autoptimizeImages
             <tr>
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_1]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_1'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from Shortpixel\' global CDN.', 'autoptimize' ); ?></label>
+                    <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_1]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_1'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from Shortpixel\'s global CDN.', 'autoptimize' ); ?></label>
                     <?php
                     // show shortpixel status.
                     $_notice = autoptimizeImages::instance()->get_status_notice();
@@ -1062,7 +1062,7 @@ class autoptimizeImages
                         echo apply_filters( 'autoptimize_filter_imgopt_settings_status', '<p><strong><span style="color:' . $_notice_color . ';">' . __( 'Shortpixel status: ', 'autoptimize' ) . '</span></strong>' . $_notice['notice'] . '</p>' );
                     } else {
                         // translators: link points to shortpixel.
-                        $upsell_msg_1 = '<p>' . sprintf( __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly by %1$sShortPixel%2$s and then cached and served fast from Shortpixel\'s global CDN.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
+                        $upsell_msg_1 = '<p>' . sprintf( __( 'Get more Google love and improve your website\'s loading speed by having the images optimized on the fly (also in the "next-gen" WebP image format) by %1$sShortPixel%2$s and then cached and served fast from Shortpixel\'s global CDN.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
                         if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] ) {
                             $upsell_msg_2 = __( 'For a limited time only, this service is offered free for all Autoptimize users, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
                         } else {
