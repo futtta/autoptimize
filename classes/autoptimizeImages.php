@@ -162,7 +162,6 @@ class autoptimizeImages
         }
     }
 
-
     /**
      * Basic checks before we can run.
      *
@@ -191,38 +190,6 @@ class autoptimizeImages
         return false;
     }
 
-    /**
-     * Determines and returns the service launch status.
-     *
-     * @return bool
-     */
-    public function launch_ok()
-    {
-        static $launch_status = null;
-
-        if ( null === $launch_status ) {
-            $avail_imgopt  = $this->options['availabilities']['extra_imgopt'];
-            $magic_number  = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
-            $has_launched  = get_option( 'autoptimize_imgopt_launched', '' );
-            $launch_status = false;
-            if ( $has_launched || ( is_array( $avail_imgopt ) && array_key_exists( 'launch-threshold', $avail_imgopt ) && $magic_number < $avail_imgopt['launch-threshold'] ) ) {
-                $launch_status = true;
-                if ( ! $has_launched ) {
-                    update_option( 'autoptimize_imgopt_launched', 'on' );
-                }
-            }
-        }
-
-        return $launch_status;
-    }
-
-    public static function launch_ok_wrapper()
-    {
-        // needed for "plug" notice in autoptimizeMain.php.
-        $self = new self();
-        return $self->launch_ok();
-    }
-
     public function get_imgopt_host()
     {
         static $imgopt_host = null;
@@ -245,106 +212,11 @@ class autoptimizeImages
         return $self->get_imgopt_host();
     }
 
-    public function get_imgopt_provider_userstatus() {
-        static $_provider_userstatus = null;
-
-        if ( is_null( $_provider_userstatus ) ) {
-            $_stat = get_option( 'autoptimize_imgopt_provider_stat', '' );
-            if ( is_array( $_stat ) ) {
-                if ( array_key_exists( 'Status', $_stat ) ) {
-                    $_provider_userstatus['Status'] = $_stat['Status'];
-                } else {
-                    // if no stats then we assume all is well.
-                    $_provider_userstatus['Status'] = 2;
-                }
-                if ( array_key_exists( 'timestamp', $_stat ) ) {
-                    $_provider_userstatus['timestamp'] = $_stat['timestamp'];
-                } else {
-                    // if no timestamp then we return "".
-                    $_provider_userstatus['timestamp'] = '';
-                }
-            }
-        }
-
-        return $_provider_userstatus;
-    }
-
-    public function get_status_notice()
-    {
-        if ( $this->imgopt_active() ) {
-            $notice = '';
-            $stat   = $this->get_imgopt_provider_userstatus();
-            $upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
-            $assoc  = 'https://shortpixel.helpscoutdocs.com/article/94-how-to-associate-a-domain-to-my-account';
-
-            if ( is_array( $stat ) ) {
-                if ( 1 == $stat['Status'] ) {
-                    // translators: "add more credits" will appear in a "a href".
-                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
-                } elseif ( -1 == $stat['Status'] || -2 == $stat['Status'] ) {
-                    // translators: "add more credits" will appear in a "a href".
-                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
-                    // translators: "associate your domain" will appear in a "a href".
-                    $notice = $notice . ' ' . sprintf( __( 'If you already have enough credits then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $assoc . '" target="_blank">', '</a>' );
-                } else {
-                    $upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';
-                    // translators: "log in to check your account" will appear in a "a href".
-                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape, %1$slog in to check your account%2$s.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
-                }
-                $notice = apply_filters( 'autoptimize_filter_imgopt_notice', $notice );
-
-                return array(
-                    'status' => $stat['Status'],
-                    'notice' => $notice,
-                );
-            }
-        }
-        return false;
-    }
-
     public static function get_service_url_suffix()
     {
         $suffix = '/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
 
         return $suffix;
-    }
-
-    public function query_img_provider_stats()
-    {
-        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_1'] ) ) {
-            $url      = '';
-            $endpoint = $this->get_imgopt_host() . 'read-domain/';
-            $domain   = AUTOPTIMIZE_SITE_DOMAIN;
-
-            // make sure parse_url result makes sense, keeping $url empty if not.
-            if ( $domain && ! empty( $domain ) ) {
-                $url = $endpoint . $domain;
-            }
-
-            $url = apply_filters(
-                'autoptimize_filter_imgopt_stat_url',
-                $url
-            );
-
-            // only do the remote call if $url is not empty to make sure no parse_url
-            // weirdness results in useless calls.
-            if ( ! empty( $url ) ) {
-                $response = wp_remote_get( $url );
-                if ( ! is_wp_error( $response ) ) {
-                    if ( '200' == wp_remote_retrieve_response_code( $response ) ) {
-                        $stats = json_decode( wp_remote_retrieve_body( $response ), true );
-                        update_option( 'autoptimize_imgopt_provider_stat', $stats );
-                    }
-                }
-            }
-        }
-    }
-
-    public static function get_img_provider_stats()
-    {
-        // wrapper around query_img_provider_stats() so we can get to $this->options from cronjob() in autoptimizeCacheChecker.
-        $self = new self();
-        return $self->query_img_provider_stats();
     }
 
     public function get_img_quality_string()
@@ -736,54 +608,46 @@ class autoptimizeImages
         return $out;
     }
 
-    public function get_imgopt_status_notice() {
-        if ( $this->imgopt_active() ) {
-            $_imgopt_notice = '';
-            $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
-            $_site_host     = AUTOPTIMIZE_SITE_DOMAIN;
-            $_imgopt_upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
+    public function get_size_from_tag( $tag ) {
+        // reusable function to extract widht and height from an image tag
+        // enforcing a filterable maximum width and height (default 4999X4999).
+        $width  = '';
+        $height = '';
 
-            if ( is_array( $_stat ) ) {
-                if ( 1 == $_stat['Status'] ) {
-                    // translators: "add more credits" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
-                } elseif ( -1 == $_stat['Status'] || -2 == $_stat['Status'] ) {
-                    // translators: "add more credits" will appear in a "a href".
-                    $_imgopt_notice            = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
-                    $_imgopt_stats_refresh_url = add_query_arg( array(
-                        'page'                => 'autoptimize_imgopt',
-                        'refreshImgProvStats' => '1',
-                    ), admin_url( 'options-general.php' ) );
-                    if ( $_stat && array_key_exists( 'timestamp', $_stat ) && ! empty( $_stat['timestamp'] ) ) {
-                        $_imgopt_stats_last_run = __( 'based on status at ', 'autoptimize' ) . date_i18n( get_option( 'time_format' ), $_stat['timestamp'] );
-                    } else {
-                        $_imgopt_stats_last_run = __( 'based on previously fetched data', 'autoptimize' );
-                    }
-                    $_imgopt_notice .= ' (' . $_imgopt_stats_last_run . ', ';
-                    // translators: "here to refresh" links to the Autoptimize Extra page and forces a refresh of the img opt stats.
-                    $_imgopt_notice .= sprintf( __( 'click %1$shere to refresh%2$s', 'autoptimize' ), '<a href="' . $_imgopt_stats_refresh_url . '">', '</a>).' );
-                } else {
-                    $_imgopt_upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';
-                    // translators: "log in to check your account" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape, %1$slog in to check your account%2$s.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
-                }
-                $_imgopt_notice = apply_filters( 'autoptimize_filter_imgopt_notice', $_imgopt_notice );
-
-                return array(
-                    'status' => $_stat['Status'],
-                    'notice' => $_imgopt_notice,
-                );
+        if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $_width ) ) {
+            if ( strpos( $_width[2], '%' ) === false ) {
+                $width = (int) $_width[2];
             }
         }
-        return false;
+        if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $_height ) ) {
+            if ( strpos( $_height[2], '%' ) === false ) {
+                $height = (int) $_height[2];
+            }
+        }
+
+        // check for and enforce (filterable) max sizes.
+        $_max_width = apply_filters( 'autoptimize_filter_imgopt_max_width', 4999 );
+        if ( $width > $_max_width ) {
+            $_width = $_max_width;
+            $height = $_width / $width * $height;
+            $width  = $_width;
+        }
+        $_max_height = apply_filters( 'autoptimize_filter_imgopt_max_height', 4999 );
+        if ( $height > $_max_height ) {
+            $_height = $_max_height;
+            $width   = $_height / $height * $width;
+            $height  = $_height;
+        }
+
+        return array(
+            'width'  => $width,
+            'height' => $height,
+        );
     }
 
-    public static function get_imgopt_status_notice_wrapper() {
-        // needed for notice being shown in autoptimizeCacheChecker.php.
-        $self = new self();
-        return $self->get_imgopt_status_notice();
-    }
-
+    /**
+     * Lazyload functions
+     */
     public function should_lazyload() {
         if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) ) {
             $lazyload_return = true;
@@ -798,21 +662,6 @@ class autoptimizeImages
         // needed in autoptimizeMain.php.
         $self = new self();
         return $self->should_lazyload();
-    }
-
-    public function should_webp() {
-        static $webp_return = null;
-
-        if ( is_null( $webp_return ) ) {
-            // webp only works if imgopt and lazyload are also active.
-            if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_4'] ) && ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && $this->imgopt_active() ) {
-                $webp_return = true;
-            } else {
-                $webp_return = false;
-            }
-        }
-
-        return $webp_return;
     }
 
     public function filter_lazyload_images( $in )
@@ -924,43 +773,6 @@ class autoptimizeImages
         return $exclude_lazyload_array;
     }
 
-    public function get_size_from_tag( $tag ) {
-        // reusable function to extract widht and height from an image tag
-        // enforcing a filterable maximum width and height (default 4999X4999).
-        $width  = '';
-        $height = '';
-
-        if ( preg_match( '#width=("|\')(.*)("|\')#Usmi', $tag, $_width ) ) {
-            if ( strpos( $_width[2], '%' ) === false ) {
-                $width = (int) $_width[2];
-            }
-        }
-        if ( preg_match( '#height=("|\')(.*)("|\')#Usmi', $tag, $_height ) ) {
-            if ( strpos( $_height[2], '%' ) === false ) {
-                $height = (int) $_height[2];
-            }
-        }
-
-        // check for and enforce (filterable) max sizes.
-        $_max_width = apply_filters( 'autoptimize_filter_imgopt_max_width', 4999 );
-        if ( $width > $_max_width ) {
-            $_width = $_max_width;
-            $height = $_width / $width * $height;
-            $width  = $_width;
-        }
-        $_max_height = apply_filters( 'autoptimize_filter_imgopt_max_height', 4999 );
-        if ( $height > $_max_height ) {
-            $_height = $_max_height;
-            $width   = $_height / $height * $width;
-            $height  = $_height;
-        }
-
-        return array(
-            'width'  => $width,
-            'height' => $height,
-        );
-    }
-
     public function inject_classes_in_tag( $tag, $target_class ) {
         if ( strpos( $tag, 'class=' ) !== false ) {
             $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
@@ -975,8 +787,23 @@ class autoptimizeImages
         return 'data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20' . $imgopt_w . '%20' . $imgopt_h . '%22%3E%3C/svg%3E';
     }
 
+    public function should_webp() {
+        static $webp_return = null;
+
+        if ( is_null( $webp_return ) ) {
+            // webp only works if imgopt and lazyload are also active.
+            if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_4'] ) && ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && $this->imgopt_active() ) {
+                $webp_return = true;
+            } else {
+                $webp_return = false;
+            }
+        }
+
+        return $webp_return;
+    }
+
     /**
-     * Admin page logic below.
+     * Admin page logic and related functions below.
      */
     public function imgopt_admin_menu()
     {
@@ -1156,5 +983,183 @@ class autoptimizeImages
         });
     </script>
         <?php
+    }
+
+    /**
+     * Ïmg opt status as used on dashboard.
+     */
+    public function get_imgopt_status_notice() {
+        if ( $this->imgopt_active() ) {
+            $_imgopt_notice = '';
+            $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            $_site_host     = AUTOPTIMIZE_SITE_DOMAIN;
+            $_imgopt_upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
+
+            if ( is_array( $_stat ) ) {
+                if ( 1 == $_stat['Status'] ) {
+                    // translators: "add more credits" will appear in a "a href".
+                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                } elseif ( -1 == $_stat['Status'] || -2 == $_stat['Status'] ) {
+                    // translators: "add more credits" will appear in a "a href".
+                    $_imgopt_notice            = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                    $_imgopt_stats_refresh_url = add_query_arg( array(
+                        'page'                => 'autoptimize_imgopt',
+                        'refreshImgProvStats' => '1',
+                    ), admin_url( 'options-general.php' ) );
+                    if ( $_stat && array_key_exists( 'timestamp', $_stat ) && ! empty( $_stat['timestamp'] ) ) {
+                        $_imgopt_stats_last_run = __( 'based on status at ', 'autoptimize' ) . date_i18n( get_option( 'time_format' ), $_stat['timestamp'] );
+                    } else {
+                        $_imgopt_stats_last_run = __( 'based on previously fetched data', 'autoptimize' );
+                    }
+                    $_imgopt_notice .= ' (' . $_imgopt_stats_last_run . ', ';
+                    // translators: "here to refresh" links to the Autoptimize Extra page and forces a refresh of the img opt stats.
+                    $_imgopt_notice .= sprintf( __( 'click %1$shere to refresh%2$s', 'autoptimize' ), '<a href="' . $_imgopt_stats_refresh_url . '">', '</a>).' );
+                } else {
+                    $_imgopt_upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';
+                    // translators: "log in to check your account" will appear in a "a href".
+                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape, %1$slog in to check your account%2$s.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                }
+                $_imgopt_notice = apply_filters( 'autoptimize_filter_imgopt_notice', $_imgopt_notice );
+
+                return array(
+                    'status' => $_stat['Status'],
+                    'notice' => $_imgopt_notice,
+                );
+            }
+        }
+        return false;
+    }
+
+    public static function get_imgopt_status_notice_wrapper() {
+        // needed for notice being shown in autoptimizeCacheChecker.php.
+        $self = new self();
+        return $self->get_imgopt_status_notice();
+    }
+
+    /**
+     * Get img provider stats (used to display notice).
+     */
+    public function query_img_provider_stats() {
+        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_1'] ) ) {
+            $url      = '';
+            $endpoint = $this->get_imgopt_host() . 'read-domain/';
+            $domain   = AUTOPTIMIZE_SITE_DOMAIN;
+
+            // make sure parse_url result makes sense, keeping $url empty if not.
+            if ( $domain && ! empty( $domain ) ) {
+                $url = $endpoint . $domain;
+            }
+
+            $url = apply_filters(
+                'autoptimize_filter_imgopt_stat_url',
+                $url
+            );
+
+            // only do the remote call if $url is not empty to make sure no parse_url
+            // weirdness results in useless calls.
+            if ( ! empty( $url ) ) {
+                $response = wp_remote_get( $url );
+                if ( ! is_wp_error( $response ) ) {
+                    if ( '200' == wp_remote_retrieve_response_code( $response ) ) {
+                        $stats = json_decode( wp_remote_retrieve_body( $response ), true );
+                        update_option( 'autoptimize_imgopt_provider_stat', $stats );
+                    }
+                }
+            }
+        }
+    }
+
+    public static function get_img_provider_stats()
+    {
+        // wrapper around query_img_provider_stats() so we can get to $this->options from cronjob() in autoptimizeCacheChecker.
+        $self = new self();
+        return $self->query_img_provider_stats();
+    }
+
+    /**
+     * Determines and returns the service launch status.
+     *
+     * @return bool
+     */
+    public function launch_ok()
+    {
+        static $launch_status = null;
+
+        if ( null === $launch_status ) {
+            $avail_imgopt  = $this->options['availabilities']['extra_imgopt'];
+            $magic_number  = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
+            $has_launched  = get_option( 'autoptimize_imgopt_launched', '' );
+            $launch_status = false;
+            if ( $has_launched || ( is_array( $avail_imgopt ) && array_key_exists( 'launch-threshold', $avail_imgopt ) && $magic_number < $avail_imgopt['launch-threshold'] ) ) {
+                $launch_status = true;
+                if ( ! $has_launched ) {
+                    update_option( 'autoptimize_imgopt_launched', 'on' );
+                }
+            }
+        }
+
+        return $launch_status;
+    }
+
+    public static function launch_ok_wrapper() {
+        // needed for "plug" notice in autoptimizeMain.php.
+        $self = new self();
+        return $self->launch_ok();
+    }
+
+    public function get_imgopt_provider_userstatus() {
+        static $_provider_userstatus = null;
+
+        if ( is_null( $_provider_userstatus ) ) {
+            $_stat = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            if ( is_array( $_stat ) ) {
+                if ( array_key_exists( 'Status', $_stat ) ) {
+                    $_provider_userstatus['Status'] = $_stat['Status'];
+                } else {
+                    // if no stats then we assume all is well.
+                    $_provider_userstatus['Status'] = 2;
+                }
+                if ( array_key_exists( 'timestamp', $_stat ) ) {
+                    $_provider_userstatus['timestamp'] = $_stat['timestamp'];
+                } else {
+                    // if no timestamp then we return "".
+                    $_provider_userstatus['timestamp'] = '';
+                }
+            }
+        }
+
+        return $_provider_userstatus;
+    }
+
+    public function get_status_notice() {
+        if ( $this->imgopt_active() ) {
+            $notice = '';
+            $stat   = $this->get_imgopt_provider_userstatus();
+            $upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
+            $assoc  = 'https://shortpixel.helpscoutdocs.com/article/94-how-to-associate-a-domain-to-my-account';
+
+            if ( is_array( $stat ) ) {
+                if ( 1 == $stat['Status'] ) {
+                    // translators: "add more credits" will appear in a "a href".
+                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
+                } elseif ( -1 == $stat['Status'] || -2 == $stat['Status'] ) {
+                    // translators: "add more credits" will appear in a "a href".
+                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
+                    // translators: "associate your domain" will appear in a "a href".
+                    $notice = $notice . ' ' . sprintf( __( 'If you already have enough credits then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $assoc . '" target="_blank">', '</a>' );
+                } else {
+                    $upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';
+                    // translators: "log in to check your account" will appear in a "a href".
+                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape, %1$slog in to check your account%2$s.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
+                }
+                $notice = apply_filters( 'autoptimize_filter_imgopt_notice', $notice );
+
+                return array(
+                    'status' => $stat['Status'],
+                    'notice' => $notice,
+                );
+            }
+        }
+        return false;
     }
 }
