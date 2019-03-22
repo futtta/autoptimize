@@ -505,7 +505,7 @@ class autoptimizeImages
                         $srcsets = explode( ',', $srcset );
                         foreach ( $srcsets as $indiv_srcset ) {
                             $indiv_srcset_parts = explode( ' ', trim( $indiv_srcset ) );
-                            if ( $indiv_srcset_parts[1] && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
+                            if ( isset( $indiv_srcset_parts[1] ) && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
                                 $imgopt_w = rtrim( $indiv_srcset_parts[1], 'w' );
                             }
                             if ( $this->can_optimize_image( $indiv_srcset_parts[0] ) ) {
