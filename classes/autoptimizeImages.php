@@ -857,6 +857,15 @@ class autoptimizeImages
             <?php _e( 'The image optimization service is launching, but not yet available for this domain, it should become available in the next couple of days.', 'autoptimize' ); ?>
             </p></div>
         <?php } ?>
+
+        <?php if ( class_exists( 'Jetpack' ) && method_exists( 'Jetpack', 'get_active_modules' ) && in_array( 'photon', Jetpack::get_active_modules() ) ) { ?>
+            <div class="notice-warning notice"><p>
+            <?php
+            // translators: "disable  Jetpack's site accelerator for images" will appear in a "a href" linking to the jetpack settings page.
+            echo sprintf( __( 'Please %1$sdisable Jetpack\'s site accelerator for images%2$s to be able to use Autoptomize\'s advanced image optimization features below.', 'autoptimize' ), '<a href="admin.php?page=jetpack#/settings">', '</a>' );
+            ?>
+            </p></div>
+        <?php } ?>
     <form id='ao_settings_form' action='options.php' method='post'>
         <?php settings_fields( 'autoptimize_imgopt_settings' ); ?>
         <h2><?php _e( 'Image optimization', 'autoptimize' ); ?></h2>
