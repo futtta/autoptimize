@@ -2,7 +2,7 @@
 /*
 Plugin Name: Autoptimize
 Plugin URI: https://autoptimize.com/
-Description: Optimizes your website, concatenating the CSS and JavaScript code, and compressing it.
+Description: Makes your site faster by optimizing CSS, JS, Images, Google fonts and more.
 Version: 2.5.0-beta-4
 Author: Frank Goossens (futtta)
 Author URI: https://autoptimize.com/
