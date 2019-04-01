@@ -245,7 +245,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <?php } ?>
 <tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
-<td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"seal.js, js/tinymce/, js/jquery/jquery.js"); ?>"/><br />
+<td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js"); ?>"/><br />
 <?php _e('A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated by Autoptimize.','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv js_aggregate">
@@ -711,7 +711,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_html_keepcomments' => 0,
             'autoptimize_js' => 0,
             'autoptimize_js_aggregate' => 1,
-            'autoptimize_js_exclude' => 'seal.js, js/tinymce/, js/jquery/jquery.js',
+            'autoptimize_js_exclude' => 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js',
             'autoptimize_js_trycatch' => 0,
             'autoptimize_js_justhead' => 0,
             'autoptimize_js_include_inline' => 0,
