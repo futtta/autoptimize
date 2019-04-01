@@ -459,7 +459,7 @@ class autoptimizeImages
 
     public function replace_data_thumbs( $matches )
     {
-        $this->replace_img_callback( $matches, 150, 150 );
+        return $this->replace_img_callback( $matches, 150, 150 );
     }
 
     public function replace_img_callback( $matches, $width = 0, $height = 0 )
