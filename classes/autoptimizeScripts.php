@@ -213,12 +213,13 @@ class autoptimizeScripts extends autoptimizeBase
                         $this->scripts[] = 'INLINE;' . $code;
                     } else {
                         // Can we move this?
-                        $autoptimize_js_moveable = apply_filters( 'autoptimize_js_moveable', '', $tag );
-                        if ( $this->ismovable($tag) || '' !== $autoptimize_js_moveable ) {
-                            if ( $this->movetolast($tag) || 'last' === $autoptimize_js_moveable ) {
-                                $this->move['last'][] = $tag;
+                        $changedTag = apply_filters( 'autoptimize_inline_js_tag', $tag );
+                        $autoptimize_js_moveable = apply_filters( 'autoptimize_js_moveable', '', $changedTag );
+                        if ( $this->ismovable($changedTag) || '' !== $autoptimize_js_moveable ) {
+                            if ( $this->movetolast($changedTag) || 'last' === $autoptimize_js_moveable ) {
+                                $this->move['last'][] = $changedTag;
                             } else {
-                                $this->move['first'][] = $tag;
+                                $this->move['first'][] = $changedTag;
                             }
                         } else {
                             // We shouldn't touch this
