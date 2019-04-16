@@ -60,11 +60,11 @@ class autoptimizeCacheChecker
         if ( ( $cache_size > $max_size ) && ( $do_cache_check ) ) {
             update_option( 'autoptimize_cachesize_notice', true );
             if ( apply_filters( 'autoptimize_filter_cachecheck_sendmail', true ) ) {
-                $site_url  = esc_url( site_url() );
+                $home_url  = esc_url( home_url() );
                 $ao_mailto = apply_filters( 'autoptimize_filter_cachecheck_mailto', get_option( 'admin_email', '' ) );
 
-                $ao_mailsubject = __( 'Autoptimize cache size warning', 'autoptimize' ) . ' (' . $site_url . ')';
-                $ao_mailbody    = __( 'Autoptimize\'s cache size is getting big, consider purging the cache. Have a look at https://wordpress.org/plugins/autoptimize/faq/ to see how you can keep the cache size under control.', 'autoptimize' ) . ' (site: ' . $site_url . ')';
+                $ao_mailsubject = __( 'Autoptimize cache size warning', 'autoptimize' ) . ' (' . $home_url . ')';
+                $ao_mailbody    = __( 'Autoptimize\'s cache size is getting big, consider purging the cache. Have a look at https://wordpress.org/plugins/autoptimize/faq/ to see how you can keep the cache size under control.', 'autoptimize' ) . ' (site: ' . $home_url . ')';
 
                 if ( ! empty( $ao_mailto ) ) {
                     $ao_mailresult = wp_mail( $ao_mailto, $ao_mailsubject, $ao_mailbody );
