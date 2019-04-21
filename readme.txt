@@ -3,11 +3,11 @@ Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, pagespeed, google fonts, images
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
-Tested up to: 5.1
+Tested up to: 5.2
 Requires PHP: 5.3
-Stable tag: 2.4.4
+Stable tag: 2.5.0
 
-Autoptimize (Beta) speeds up your website by optimizing JS, CSS, HTML, Google Fonts and images, async-ing JS, removing emoji cruft and more.
+Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images, HTML and Google Fonts, async-ing JS, removing emoji cruft and more.
 
 == Description ==
 
