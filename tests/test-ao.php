@@ -28,16 +28,17 @@ class AOTest extends WP_UnitTestcase
         $conf = autoptimizeConfig::instance();
 
         return [
-            'aggregate'      => $conf->get( 'autoptimize_css_aggregate' ),
-            'justhead'       => $conf->get( 'autoptimize_css_justhead' ),
-            'datauris'       => $conf->get( 'autoptimize_css_datauris' ),
-            'defer'          => $conf->get( 'autoptimize_css_defer' ),
-            'defer_inline'   => $conf->get( 'autoptimize_css_defer_inline' ),
-            'inline'         => $conf->get( 'autoptimize_css_inline' ),
-            'css_exclude'    => $conf->get( 'autoptimize_css_exclude' ),
-            'cdn_url'        => $conf->get( 'autoptimize_cdn_url' ),
-            'include_inline' => $conf->get( 'autoptimize_css_include_inline' ),
-            'nogooglefont'   => $conf->get( 'autoptimize_css_nogooglefont' ),
+            'aggregate'       => $conf->get( 'autoptimize_css_aggregate' ),
+            'justhead'        => $conf->get( 'autoptimize_css_justhead' ),
+            'datauris'        => $conf->get( 'autoptimize_css_datauris' ),
+            'defer'           => $conf->get( 'autoptimize_css_defer' ),
+            'defer_inline'    => $conf->get( 'autoptimize_css_defer_inline' ),
+            'inline'          => $conf->get( 'autoptimize_css_inline' ),
+            'css_exclude'     => $conf->get( 'autoptimize_css_exclude' ),
+            'cdn_url'         => $conf->get( 'autoptimize_cdn_url' ),
+            'include_inline'  => $conf->get( 'autoptimize_css_include_inline' ),
+            'nogooglefont'    => $conf->get( 'autoptimize_css_nogooglefont' ),
+            'minify_excluded' => $conf->get( 'autoptimize_minify_excluded' ),
         ];
     }
 
@@ -46,13 +47,14 @@ class AOTest extends WP_UnitTestcase
         $conf = autoptimizeConfig::instance();
 
         return [
-            'aggregate'      => $conf->get( 'autoptimize_js_aggregate' ),
-            'justhead'       => $conf->get( 'autoptimize_js_justhead' ),
-            'forcehead'      => $conf->get( 'autoptimize_js_forcehead' ),
-            'trycatch'       => $conf->get( 'autoptimize_js_trycatch' ),
-            'js_exclude'     => $conf->get( 'autoptimize_js_exclude' ),
-            'cdn_url'        => $conf->get( 'autoptimize_cdn_url' ),
-            'include_inline' => $conf->get( 'autoptimize_js_include_inline' ),
+            'aggregate'       => $conf->get( 'autoptimize_js_aggregate' ),
+            'justhead'        => $conf->get( 'autoptimize_js_justhead' ),
+            'forcehead'       => $conf->get( 'autoptimize_js_forcehead' ),
+            'trycatch'        => $conf->get( 'autoptimize_js_trycatch' ),
+            'js_exclude'      => $conf->get( 'autoptimize_js_exclude' ),
+            'cdn_url'         => $conf->get( 'autoptimize_cdn_url' ),
+            'include_inline'  => $conf->get( 'autoptimize_js_include_inline' ),
+            'minify_excluded' => $conf->get( 'autoptimize_minify_excluded' ),
         ];
     }
 
@@ -73,7 +75,8 @@ class AOTest extends WP_UnitTestcase
 
         static $imgopt_host = null;
         if ( null === $imgopt_host ) {
-            $imgopt_host = rtrim( autoptimizeExtra::get_imgopt_host_wrapper(), '/' );
+            $optimizer   = new autoptimizeImages();
+            $imgopt_host = rtrim( $optimizer->get_imgopt_host(), '/' );
         }
 
         static $urls = [];
@@ -303,7 +306,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script></body>
+<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}f452d67a906f6ee73da68e553e43da58.js"></script></body>
 </html>
 MARKUP;
 
@@ -370,7 +373,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script></body>
+<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}f452d67a906f6ee73da68e553e43da58.js"></script></body>
 </html>
 MARKUP;
 
@@ -437,7 +440,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
+<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}f452d67a906f6ee73da68e553e43da58.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
 </html>
 MARKUP;
 
@@ -504,7 +507,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}730dfe55780a3a6fc98224e18fa27340.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
+<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}f452d67a906f6ee73da68e553e43da58.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
 </html>
 MARKUP;
 
@@ -2283,15 +2286,18 @@ MARKUP;
     }
 
     /**
-     * Test image optimization in autoptimizeExtra.php.
+     * Test image optimization in autoptimizeImages.php.
      *
      * Default case: img with srcsets
      */
-    public function test_extra_imgopt()
+    public function test_imgopt()
     {
-        $urls       = $this->get_urls();
-        $siteurl    = $urls['siteurl'];
-        $imgopthost = $urls['imgopthost'];
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
 
         $markup = <<<MARKUP
 <img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
@@ -2300,44 +2306,131 @@ MARKUP;
         $expected = <<<MARKUP
 <img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
-
-        $instance = new autoptimizeExtra();
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
         $actual = $instance->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
 
     /**
-     * Test image optimization in autoptimizeExtra.php.
+     * Test image optimization in autoptimizeImages.php.
      *
-     * Exception case: image served by .php, should not be proxied
+     * case: img with srcsets and lazyload
      */
-    public function test_extra_imgopt_php()
+    public function test_imgopt_with_lazyload()
     {
-        $siteurl = $this->get_urls()['siteurl'];
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '1';
 
         $markup = <<<MARKUP
-<img src='$siteurl/wp-content/plugins/imageplugin/image.php?id=16' width='400' height='200'>
+<img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
         $expected = <<<MARKUP
-<img src='$siteurl/wp-content/plugins/imageplugin/image.php?id=16' width='400' height='200'>
+<noscript><img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" /></noscript><img class="lazyload" src='$imgopthost/client/q_lqip,ret_wait,w_400,h_200/$siteurl/wp-content/image.jpg' data-src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $instance = new autoptimizeExtra();
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
         $actual = $instance->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
 
     /**
-     * Test image optimization in autoptimizeExtra.php.
+     * Test image optimization in autoptimizeImages.php.
+     *
+     * case: background image in a style attribute
+     */
+    public function test_imgopt_bgimg()
+    {
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
+
+        $markup = <<<MARKUP
+<div class="textwidget custom-html-widget"><div class="et_parallax_bg et_pb_parallax_css" style="height:200px; background-image: url($siteurl/wp-content/uploads/2018/05/DSC_1615-300x201.jpg);"></div>
+MARKUP;
+
+        $expected = <<<MARKUP
+<div class="textwidget custom-html-widget"><div class="et_parallax_bg et_pb_parallax_css" style="height:200px; background-image: url($imgopthost/client/q_glossy,ret_img/$siteurl/wp-content/uploads/2018/05/DSC_1615-300x201.jpg);"></div>
+MARKUP;
+
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test lazyloading in autoptimizeImages.php.
+     *
+     * case: no image optimization
+     */
+    public function test_lazyload()
+    {
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '1';
+
+        $markup = <<<MARKUP
+<img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $expected = <<<MARKUP
+<noscript><img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" /></noscript><img class="lazyload" src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20400%20200%22%3E%3C/svg%3E' data-src='$siteurl/wp-content/image.jpg' width='400' height='200' data-srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_lazyload_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test image optimization in autoptimizeImages.php.
+     *
+     * Exception case: image served by .php, should not be proxied.
+     */
+    public function test_imgopt_php()
+    {
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
+
+        $markup = <<<MARKUP
+<img src='/wp-content/plugins/imageplugin/image.php?id=16' width='400' height='200'>
+MARKUP;
+
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+
+        // Expecting $markup since replacement should not happen.
+        $this->assertEquals( $markup, $actual );
+    }
+
+    /**
+     * Test image optimization in autoptimizeImages.php.
      *
      * Alternate case: lazy loaded images with srcsets (using wp rocket variant HTML)
      */
-    public function test_extra_imgopt_lazy()
+    public function test_imgopt_alreadylazied()
     {
-        $urls       = $this->get_urls();
-        $siteurl    = $urls['siteurl'];
-        $imgopthost = $urls['imgopthost'];
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
 
         $markup = <<<MARKUP
 <img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
@@ -2347,17 +2440,74 @@ MARKUP;
 <img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
-        $instance = new autoptimizeExtra();
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
         $actual = $instance->filter_optimize_images( $markup );
+
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test image optimization when image urls have no explict host provided.
+     */
+    public function test_imgopt_url_normalize_root_relative()
+    {
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
+
+        $markup = <<<MARKUP
+<img src='/wp-content/image.jpg' width='400' height='200' srcset="/wp-content/image-300X150.jpg 300w, /wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $expected = <<<MARKUP
+<img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test image optimization when image urls have a protocol-relative url.
+     */
+    public function test_imgopt_url_normalize_protocol_relative()
+    {
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $prsiteurl                                   = $urls['prsiteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
+
+        $markup = <<<MARKUP
+<img src='$prsiteurl/wp-content/image.jpg' width='400' height='200' srcset="$prsiteurl/wp-content/image-300X150.jpg 300w, $prsiteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $expected = <<<MARKUP
+<img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+
         $this->assertEquals( $expected, $actual );
     }
 
     /**
      * @dataProvider provider_str_is_valid_regex
      */
-    public function test_str_is_valid_regex($str, $expected)
+    public function test_str_is_valid_regex( $str, $expected )
     {
-        $actual = autoptimizeUtils::str_is_valid_regex($str);
+        $actual = autoptimizeUtils::str_is_valid_regex( $str );
 
         $this->assertEquals( $expected, $actual );
     }
@@ -2365,10 +2515,10 @@ MARKUP;
     public function provider_str_is_valid_regex()
     {
         return [
-            ['<!--[if', false],
-            ['&lt;--[if', false],
-            ['/booya/i', true],
-            ['~Valid(Regular)Expression~', true],
+            [ '<!--[if', false ],
+            [ '&lt;--[if', false ],
+            [ '/booya/i', true ],
+            [ '~Valid(Regular)Expression~', true ],
         ];
     }
 
@@ -2385,13 +2535,14 @@ MARKUP;
     public function provider_protocol_relative_tests()
     {
         return [
-            ['//something-that-might-be-an-url-but-isnt-really', true],
-            ['', false],
-            [null, false],
-            ['booya/i', false],
-            ['/root-relative', false],
-            ['http://what.ever/', false],
-            ['https://booya.kasha', false],
+            [ '//something-that-might-be-an-url-but-isnt-really', true ],
+            [ '', false ],
+            [ null, false ],
+            [ 'booya/i', false ],
+            [ '/root-relative', false ],
+            [ 'http://what.ever/', false ],
+            [ 'https://booya.kasha', false ],
+            [ '1/', false ],
         ];
     }
 
@@ -2431,6 +2582,13 @@ MARKUP;
         $instance     = new autoptimizeStyles( $css_unquoted );
         $actual       = $instance->run_minifier_on( $css_unquoted );
         $this->assertEquals( $css_unquoted, $actual );
+    }
+
+    public function test_is_plugin_active_utils_wrapper()
+    {
+        // Our plugin is loaded via "muplugins_loaded" filter in tests/bootstrap.php
+        $this->assertFalse( autoptimizeUtils::is_plugin_active( 'autoptimize/autoptimize.php' ) );
+        $this->assertFalse( autoptimizeUtils::is_plugin_active( 'async-javascript/async-javascript.php' ) );
     }
 
     public function test_jsminphp_string_literal_minification()

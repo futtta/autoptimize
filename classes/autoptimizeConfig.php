@@ -210,21 +210,6 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <ul>
 
 <li class="itemDetail">
-<h2 class="itemTitle"><?php _e('HTML Options','autoptimize'); ?></h2>
-<table class="form-table">
-<tr valign="top">
-<th scope="row"><?php _e('Optimize HTML Code?','autoptimize'); ?></th>
-<td><input type="checkbox" id="autoptimize_html" name="autoptimize_html" <?php echo get_option('autoptimize_html')?'checked="checked" ':''; ?>/></td>
-</tr>
-<tr class="<?php echo $hiddenClass;?>html_sub ao_adv" valign="top">
-<th scope="row"><?php _e('Keep HTML comments?','autoptimize'); ?></th>
-<td><label class="cb_label"><input type="checkbox" name="autoptimize_html_keepcomments" <?php echo get_option('autoptimize_html_keepcomments')?'checked="checked" ':''; ?>/>
-<?php _e('Enable this if you want HTML comments to remain in the page.','autoptimize'); ?></label></td>
-</tr>
-</table>
-</li>
-
-<li class="itemDetail">
 <h2 class="itemTitle"><?php _e('JavaScript Options','autoptimize'); ?></h2>
 <table class="form-table">
 <tr valign="top">
@@ -253,9 +238,9 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <?php _e('Mostly useful in combination with previous option when using jQuery-based templates, but might help keeping cache size under control.','autoptimize'); ?></label></td>
 </tr>
 <?php } ?>
-<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv js_aggregate">
+<tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv">
 <th scope="row"><?php _e('Exclude scripts from Autoptimize:','autoptimize'); ?></th>
-<td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"seal.js, js/jquery/jquery.js"); ?>"/><br />
+<td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo get_option('autoptimize_js_exclude',"wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js"); ?>"/><br />
 <?php _e('A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated by Autoptimize.','autoptimize'); ?></label></td>
 </tr>
 <tr valign="top" class="<?php echo $hiddenClass;?>js_sub ao_adv js_aggregate">
@@ -317,10 +302,25 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
 <td><label class="cb_label"><input type="checkbox" id="autoptimize_css_inline" name="autoptimize_css_inline" <?php echo get_option('autoptimize_css_inline')?'checked="checked" ':''; ?>/>
 <?php _e('Inlining all CSS can improve performance for sites with a low pageviews/ visitor-rate, but may slow down performance otherwise.','autoptimize'); ?></label></td>
 </tr>
-<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub css_aggregate">
+<tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub">
 <th scope="row"><?php _e('Exclude CSS from Autoptimize:','autoptimize'); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo get_option('autoptimize_css_exclude','wp-content/cache/, wp-content/uploads/, admin-bar.min.css, dashicons.min.css'); ?>"/><br />
 <?php _e('A comma-separated list of CSS you want to exclude from being optimized.','autoptimize'); ?></label></td>
+</tr>
+</table>
+</li>
+
+<li class="itemDetail">
+<h2 class="itemTitle"><?php _e('HTML Options','autoptimize'); ?></h2>
+<table class="form-table">
+<tr valign="top">
+<th scope="row"><?php _e('Optimize HTML Code?','autoptimize'); ?></th>
+<td><input type="checkbox" id="autoptimize_html" name="autoptimize_html" <?php echo get_option('autoptimize_html')?'checked="checked" ':''; ?>/></td>
+</tr>
+<tr class="<?php echo $hiddenClass;?>html_sub ao_adv" valign="top">
+<th scope="row"><?php _e('Keep HTML comments?','autoptimize'); ?></th>
+<td><label class="cb_label"><input type="checkbox" name="autoptimize_html_keepcomments" <?php echo get_option('autoptimize_html_keepcomments')?'checked="checked" ':''; ?>/>
+<?php _e('Enable this if you want HTML comments to remain in the page.','autoptimize'); ?></label></td>
 </tr>
 </table>
 </li>
@@ -371,6 +371,17 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
     <th scope="row"><?php _e('Save aggregated script/css as static files?','autoptimize'); ?></th>
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_nogzip" <?php echo get_option('autoptimize_cache_nogzip','1')?'checked="checked" ':''; ?>/>
     <?php _e('By default files saved are static css/js, uncheck this option if your webserver doesn\'t properly handle the compression and expiry.','autoptimize'); ?></label></td>
+    </tr>
+    <?php
+    $_min_excl_class = 'ao_adv';
+    if ( !$conf->get( 'autoptimize_css_aggregate' ) && !$conf->get( 'autoptimize_js_aggregate' ) ) {
+        $_min_excl_class = ' hidden';
+    }
+    ?>
+    <tr valign="top" id="min_excl_row" class="<?php echo $hiddenClass.$_min_excl_class; ?>">
+        <th scope="row"><?php _e('Minify excluded CSS and JS files?','autoptimize'); ?></th>
+        <td><label class="cb_label"><input type="checkbox" name="autoptimize_minify_excluded" <?php echo get_option('autoptimize_minify_excluded','1')?'checked="checked" ':''; ?>/>
+        <?php _e('When aggregating JS or CSS, excluded files that are not minified (based on filename) are by default minified by Autoptimize despite being excluded. Uncheck this option if anything breaks despite excluding.','autoptimize'); ?></label></td>
     </tr>
     <tr valign="top" class="<?php echo $hiddenClass;?>ao_adv">
     <th scope="row"><?php _e('Also optimize for logged in users?','autoptimize'); ?></th>
@@ -517,8 +528,12 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
         jQuery( "#autoptimize_js_aggregate" ).change(function() {
             if (this.checked && jQuery("#autoptimize_js").attr('checked')) {
                 jQuery(".js_aggregate:visible").fadeTo("fast",1);
+                jQuery( "#min_excl_row" ).show();
             } else {
                 jQuery(".js_aggregate:visible").fadeTo("fast",.33);
+                if ( jQuery( "#autoptimize_css_aggregate" ).prop('checked') == false ) {
+                    jQuery( "#min_excl_row" ).hide();
+                }
             }
         });
 
@@ -533,8 +548,12 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
         jQuery( "#autoptimize_css_aggregate" ).change(function() {
             if (this.checked && jQuery("#autoptimize_css").attr('checked')) {
                 jQuery(".css_aggregate:visible").fadeTo("fast",1);
+                jQuery( "#min_excl_row" ).show();
             } else {
                 jQuery(".css_aggregate:visible").fadeTo("fast",.33);
+                if ( jQuery( "#autoptimize_js_aggregate" ).prop('checked') == false ) {
+                    jQuery( "#min_excl_row" ).hide();
+                }
             }
         });
 
@@ -649,6 +668,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
         register_setting( 'autoptimize', 'autoptimize_show_adv' );
         register_setting( 'autoptimize', 'autoptimize_optimize_logged' );
         register_setting( 'autoptimize', 'autoptimize_optimize_checkout' );
+        register_setting( 'autoptimize', 'autoptimize_minify_excluded' );
     }
 
     public function setmeta($links, $file = null)
@@ -686,7 +706,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_html_keepcomments' => 0,
             'autoptimize_js' => 0,
             'autoptimize_js_aggregate' => 1,
-            'autoptimize_js_exclude' => 'seal.js, js/jquery/jquery.js',
+            'autoptimize_js_exclude' => 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js',
             'autoptimize_js_trycatch' => 0,
             'autoptimize_js_justhead' => 0,
             'autoptimize_js_include_inline' => 0,
@@ -704,7 +724,8 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_cache_nogzip' => 1,
             'autoptimize_show_adv' => 0,
             'autoptimize_optimize_logged' => 1,
-            'autoptimize_optimize_checkout' => 1
+            'autoptimize_optimize_checkout' => 1,
+            'autoptimize_minify_excluded' => 1,
         );
 
         return $config;
@@ -723,10 +744,25 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_extra_radio_field_4'    => '1',
             'autoptimize_extra_text_field_2'     => '',
             'autoptimize_extra_text_field_3'     => '',
-            'autoptimize_extra_checkbox_field_5' => '0',
-            'autoptimize_extra_select_field_6'   => '2',
         );
 
+        return $defaults;
+    }
+
+    /**
+     * Returns default option values for autoptimizeExtra.
+     *
+     * @return array
+     */
+    public static function get_ao_imgopt_default_options()
+    {
+        $defaults = array(
+            'autoptimize_imgopt_checkbox_field_1' => '0', // imgopt off.
+            'autoptimize_imgopt_select_field_2'   => '2', // quality glossy.
+            'autoptimize_imgopt_checkbox_field_3' => '0', // lazy load off.
+            'autoptimize_imgopt_checkbox_field_4' => '0', // webp off (might be removed).
+            'autoptimize_imgopt_text_field_5'     => '',  // lazy load exclusions empty.
+        );
         return $defaults;
     }
 
@@ -809,7 +845,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
     // based on http://wordpress.stackexchange.com/a/58826
     static function ao_admin_tabs()
     {
-        $tabs = apply_filters( 'autoptimize_filter_settingsscreen_tabs' ,array( 'autoptimize' => __( 'Main', 'autoptimize' ) ) );
+        $tabs = apply_filters( 'autoptimize_filter_settingsscreen_tabs' ,array( 'autoptimize' => __( 'JS, CSS  &amp; HTML', 'autoptimize' ) ) );
         $tabContent = '';
         $tabs_count = count($tabs);
         if ( $tabs_count > 1 ) {
