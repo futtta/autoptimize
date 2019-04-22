@@ -419,7 +419,7 @@ abstract class autoptimizeBase
         // Grab the parts we need.
         $parts = explode( '|', $matches[1] );
         if ( ! empty( $parts ) ) {
-            $filepath = isset( $parts[0] ) ? base64_decode($parts[0]) : null;
+            $filepath = isset( $parts[0] ) ? base64_decode( $parts[0] ) : null;
             $filehash = isset( $parts[1] ) ? $parts[1] : null;
         }
 
@@ -559,7 +559,7 @@ abstract class autoptimizeBase
      *
      * @return string
      */
-    protected function replace_contents_with_marker_if_exists( $marker, $search, $re_replace_pattern, $content )
+    public static function replace_contents_with_marker_if_exists( $marker, $search, $re_replace_pattern, $content )
     {
         $found = false;
 
@@ -591,7 +591,7 @@ abstract class autoptimizeBase
      *
      * @return string
      */
-    protected function restore_marked_content( $marker, $content )
+    public static function restore_marked_content( $marker, $content )
     {
         if ( false !== strpos( $content, $marker ) ) {
             $content = preg_replace_callback(

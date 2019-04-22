@@ -44,6 +44,7 @@ class autoptimizeStyles extends autoptimizeBase
     private $cssremovables   = array();
     private $include_inline  = false;
     private $inject_min_late = '';
+    private $minify_excluded = true;
 
     // public $cdn_url; // Used all over the place implicitly, so will have to be either public or protected :/ .
 
@@ -121,6 +122,11 @@ class autoptimizeStyles extends autoptimizeBase
 
         // Store data: URIs setting for later use.
         $this->datauris = $options['datauris'];
+
+        // Determine whether excluded files should be minified if not yet so.
+        if ( ! $options['minify_excluded'] && $options['aggregate'] ) {
+            $this->minify_excluded = false;
+        }
 
         // noptimize me.
         $this->content = $this->hide_noptimize( $this->content );
@@ -201,25 +207,30 @@ class autoptimizeStyles extends autoptimizeBase
                     // Remove the original style tag.
                     $this->content = str_replace( $tag, '', $this->content );
                 } else {
-                    // Excluded CSS, minify if getpath and filter says so...
+                    // Excluded CSS, minify that file:
+                    // -> if aggregate is on and exclude minify is on
+                    // -> if aggregate is off and the file is not in dontmove.
                     if ( preg_match( '#<link.*href=("|\')(.*)("|\')#Usmi', $tag, $source ) ) {
                         $exploded_url = explode( '?', $source[2], 2 );
                         $url          = $exploded_url[0];
                         $path         = $this->getpath( $url );
 
-                        if ( $path && apply_filters( 'autoptimize_filter_css_minify_excluded', true, $url ) ) {
-                            $minified_url = $this->minify_single( $path );
-                            if ( ! empty( $minified_url ) ) {
-                                // Replace orig URL with cached minified URL.
-                                $new_tag = str_replace( $url, $minified_url, $tag );
-                            } else {
-                                $new_tag = $tag;
+                        if ( $path && ( $this->minify_excluded || apply_filters( 'autoptimize_filter_css_minify_excluded', false, $url ) ) ) {
+                            $consider_minified_array = apply_filters( 'autoptimize_filter_css_consider_minified', false );
+                            if ( ( false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path ) || ( true === $this->aggregate && ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) ) ) {
+                                $minified_url = $this->minify_single( $path );
+                                if ( ! empty( $minified_url ) ) {
+                                    // Replace orig URL with cached minified URL.
+                                    $new_tag = str_replace( $url, $minified_url, $tag );
+                                } else {
+                                    $new_tag = $tag;
+                                }
+
+                                $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
+
+                                // And replace!
+                                $this->content = str_replace( $tag, $new_tag, $this->content );
                             }
-
-                            $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
-
-                            // And replace!
-                            $this->content = str_replace( $tag, $new_tag, $this->content );
                         }
                     }
                 }
@@ -797,19 +808,7 @@ class autoptimizeStyles extends autoptimizeBase
     // Returns the content.
     public function getcontent()
     {
-        // restore comments.
-        $this->content = $this->restore_comments( $this->content );
-
-        // restore IE hacks.
-        $this->content = $this->restore_iehacks( $this->content );
-
-        // restore (no)script.
-        $this->content = $this->restore_marked_content( 'SCRIPT', $this->content );
-
-        // Restore noptimize.
-        $this->content = $this->restore_noptimize( $this->content );
-
-        // Restore the full content.
+        // Restore the full content (only applies when "autoptimize_filter_css_justhead" filter is true).
         if ( ! empty( $this->restofcontent ) ) {
             $this->content .= $this->restofcontent;
             $this->restofcontent = '';
@@ -847,8 +846,9 @@ class autoptimizeStyles extends autoptimizeBase
                             }
                         }
                     }
-                    $code_out = '<style type="text/css" id="aoatfcss" media="all">' . $defer_inline_code . '</style>';
-                    $this->inject_in_html( $code_out, $replaceTag );
+                    // inlined critical css set here, but injected when full CSS is injected
+                    // to avoid CSS containing SVG with <title tag receiving the full CSS link.
+                    $inlined_ccss_block = '<style type="text/css" id="aoatfcss" media="all">' . $defer_inline_code . '</style>';
                 }
             }
 
@@ -874,15 +874,28 @@ class autoptimizeStyles extends autoptimizeBase
             if ( $this->defer ) {
                 $preload_polyfill = autoptimizeConfig::get_ao_css_preload_polyfill();
                 $noScriptCssBlock .= '</noscript>';
-                $this->inject_in_html( $preloadCssBlock . $noScriptCssBlock, $replaceTag );
+                // Inject inline critical CSS, the preloaded full CSS and the noscript-CSS.
+                $this->inject_in_html( $inlined_ccss_block . $preloadCssBlock . $noScriptCssBlock, $replaceTag );
 
                 // Adds preload polyfill at end of body tag.
                 $this->inject_in_html(
                     apply_filters( 'autoptimize_css_preload_polyfill', $preload_polyfill ),
-                    array( '</body>', 'before' )
+                    apply_filters( 'autoptimize_css_preload_polyfill_injectat', array( '</body>', 'before' ) )
                 );
             }
         }
+
+        // restore comments.
+        $this->content = $this->restore_comments( $this->content );
+
+        // restore IE hacks.
+        $this->content = $this->restore_iehacks( $this->content );
+
+        // restore (no)script.
+        $this->content = $this->restore_marked_content( 'SCRIPT', $this->content );
+
+        // Restore noptimize.
+        $this->content = $this->restore_noptimize( $this->content );
 
         // Return the modified stylesheet.
         return $this->content;
