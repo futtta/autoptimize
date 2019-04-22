@@ -45,7 +45,7 @@ class autoptimizeUtils
     public static function strpos( $haystack, $needle, $offset = 0, $encoding = null )
     {
         if ( self::mbstring_available() ) {
-            return ( null === $encoding ) ? \mb_strpos( $haystack, $needle, $offset ) : \mb_strlen( $haystack, $needle, $offset, $encoding );
+            return ( null === $encoding ) ? \mb_strpos( $haystack, $needle, $offset ) : \mb_strpos( $haystack, $needle, $offset, $encoding );
         } else {
             return \strpos( $haystack, $needle, $offset );
         }
@@ -301,9 +301,11 @@ class autoptimizeUtils
     /**
      * Checks to see if 3rd party services are available and stores result in option
      *
+     * TODO This should be two separate methods.
+     *
      * @param string $return_result should we return resulting service status array (default no).
      *
-     * @return none if $return_result is false (default), array if $return_result is true.
+     * @return null|array Service status or null.
      */
     public static function check_service_availability( $return_result = false )
     {
@@ -319,6 +321,7 @@ class autoptimizeUtils
                 }
             }
         }
+        return null;
     }
 
     /**
