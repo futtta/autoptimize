@@ -663,6 +663,7 @@ class autoptimizeImages
         } else {
             $lazyload_return = false;
         }
+        $lazyload_return = apply_filters( 'autoptimize_filter_imgopt_should_lazyload', $lazyload_return );
 
         return $lazyload_return;
     }
