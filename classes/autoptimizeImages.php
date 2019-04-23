@@ -200,7 +200,7 @@ class autoptimizeImages
             if ( ! empty( $avail_imgopt ) && array_key_exists( 'hosts', $avail_imgopt ) && is_array( $avail_imgopt['hosts'] ) ) {
                 $imgopt_host = array_rand( array_flip( $avail_imgopt['hosts'] ) );
             }
-            $imgopt_host = apply_filters('autoptimize_filter_imgopt_host', $imgopt_host );
+            $imgopt_host = apply_filters( 'autoptimize_filter_imgopt_host', $imgopt_host );
         }
 
         return $imgopt_host;
@@ -555,10 +555,10 @@ class autoptimizeImages
                     if ( $this->can_optimize_image( $_url ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
                         $lqip_w = '';
                         $lqip_h = '';
-                        if isset( $imgopt_w ) {
+                        if ( isset( $imgopt_w ) ) {
                             $lqip_w = ',w_' . $imgopt_w;
                         }
-                        if isset( $imgopt_h ) {
+                        if ( isset( $imgopt_h ) ) {
                             $lqip_h = ',h_' . $imgopt_h;
                         }
                         $placeholder = $this->get_imgopt_host() . 'client/q_lqip,ret_wait' . $lqip_w . $lqip_h . '/' . $_url;
