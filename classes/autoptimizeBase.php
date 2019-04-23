@@ -23,6 +23,9 @@ abstract class autoptimizeBase
      */
     public $debug_log = false;
 
+    /** @var string */
+    public $cdn_url = '';
+
     public function __construct( $content )
     {
         $this->content = $content;

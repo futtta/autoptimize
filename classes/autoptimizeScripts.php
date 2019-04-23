@@ -26,6 +26,7 @@ class autoptimizeScripts extends autoptimizeBase
         'addthis.com','/afsonline/show_afs_search.js','disqus.js','networkedblogs.com/getnetworkwidget','infolinks.com/js/',
         'jd.gallery.js.php','jd.gallery.transitions.js','swfobject.embedSWF(','linkwithin.com/widget.js','tiny_mce.js','tinyMCEPreInit.go'
     );
+    public $cdn_url = '';
 
     private $aggregate       = true;
     private $trycatch        = false;

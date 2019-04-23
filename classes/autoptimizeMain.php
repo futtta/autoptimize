@@ -108,7 +108,7 @@ class autoptimizeMain
             }
         }
         if ( ! defined( 'AUTOPTIMIZE_WP_CONTENT_URL' ) ) {
-            if ( function_exists( 'domain_mapping_siteurl' ) ) {
+            if ( function_exists( 'get_original_url' ) ) {
                 define( 'AUTOPTIMIZE_WP_CONTENT_URL', str_replace( get_original_url( AUTOPTIMIZE_WP_SITE_URL ), AUTOPTIMIZE_WP_SITE_URL, content_url() ) );
             } else {
                 define( 'AUTOPTIMIZE_WP_CONTENT_URL', content_url() );
@@ -136,7 +136,7 @@ class autoptimizeMain
         // Also requires 'mbstring' extension.
         $with_mbstring = apply_filters( 'autoptimize_filter_main_use_mbstring', false );
         if ( $with_mbstring ) {
-            autoptimizeUtils::mbstring_available( \extensions_loaded( 'mbstring' ) );
+            autoptimizeUtils::mbstring_available( \extension_loaded( 'mbstring' ) );
         } else {
             autoptimizeUtils::mbstring_available( false );
         }
