@@ -889,14 +889,13 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
     /**
      * Returns true if doing ajax.
      *
-     * @return type
+     * @return bool
      */
     protected static function doing_ajax()
     {
         if ( function_exists( 'wp_doing_ajax' ) ) {
             return wp_doing_ajax();
-        } else {
-            return ( defined( 'DOING_AJAX' ) && DOING_AJAX );
         }
+        return ( defined( 'DOING_AJAX' ) && DOING_AJAX );
     }
 }

@@ -44,6 +44,8 @@ class autoptimizeStyles extends autoptimizeBase
     private $cssremovables   = array();
     private $include_inline  = false;
     private $inject_min_late = '';
+    private $dontmove        = array();
+    private $options         = array();
     private $minify_excluded = true;
 
     // public $cdn_url; // Used all over the place implicitly, so will have to be either public or protected :/ .

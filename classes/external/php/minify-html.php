@@ -18,6 +18,9 @@
  */
 class Minify_HTML {
 
+    /** @var string */
+    private $_html;
+
     /**
      * "Minify" an HTML page
      *
