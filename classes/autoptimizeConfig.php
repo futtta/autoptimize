@@ -193,7 +193,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
     <div id="ao_title_and_button">
         <h1 id="ao_title"><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?>
         <span id="ao_adv_button">
-        <?php if ( get_option( 'autoptimize_show_adv', '0' ) == '1' ) { ?>
+        <?php if ( get_option( 'autoptimize_show_adv', '1' ) == '1' ) { ?>
             <a href="javascript:void(0);" id="ao_show_adv" class="button" style="display:none;"><span><?php _e("Show advanced settings","autoptimize") ?></span></a>
             <a href="javascript:void(0);" id="ao_hide_adv" class="button"><span><?php _e("Hide advanced settings","autoptimize") ?></span></a>
             <style>tr.ao_adv{display:table-row;} li.ao_adv{display:list-item;}</style>
@@ -408,7 +408,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
 
 </ul>
 
-<input type="hidden" id="autoptimize_show_adv" name="autoptimize_show_adv" value="<?php echo get_option('autoptimize_show_adv','0'); ?>">
+<input type="hidden" id="autoptimize_show_adv" name="autoptimize_show_adv" value="<?php echo get_option('autoptimize_show_adv','1'); ?>">
 
 <p class="submit">
 <input type="submit" class="button-secondary" value="<?php _e('Save Changes','autoptimize') ?>" />
@@ -727,7 +727,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             'autoptimize_css_datauris' => 0,
             'autoptimize_cdn_url' => '',
             'autoptimize_cache_nogzip' => 1,
-            'autoptimize_show_adv' => 0,
+            'autoptimize_show_adv' => 1,
             'autoptimize_optimize_logged' => 1,
             'autoptimize_optimize_checkout' => 1,
             'autoptimize_minify_excluded' => 1,
