@@ -236,12 +236,16 @@ class autoptimizeVersionUpdatesHandler
      * Migrate imgopt options from autoptimize_extra_settings to autoptimize_imgopt_settings
      */
     private function upgrade_from_2_4() {
-        $extra_settings  = get_option( 'autoptimize_extra_settings' );
-        $imgopt_settings = get_option( 'autoptimize_imgopt_settings' );
-        if ( empty( $imgopt_settings ) ) {
-            $imgopt_settings                                        = autoptimizeConfig::get_ao_imgopt_default_options();
-            $imgopt_settings['autoptimize_imgopt_checkbox_field_1'] = $extra_settings['autoptimize_extra_checkbox_field_5'];
-            $imgopt_settings['autoptimize_imgopt_select_field_2']   = $extra_settings['autoptimize_extra_select_field_6'];
+        $extra_settings  = get_option( 'autoptimize_extra_settings', '' );
+        $imgopt_settings = get_option( 'autoptimize_imgopt_settings', '' );
+        if ( empty( $imgopt_settings ) && ! empty( $extra_settings ) ) {
+            $imgopt_settings = autoptimizeConfig::get_ao_imgopt_default_options();
+            if ( array_key_exists( 'autoptimize_extra_checkbox_field_5', $extra_settings ) ) {
+                $imgopt_settings['autoptimize_imgopt_checkbox_field_1'] = $extra_settings['autoptimize_extra_checkbox_field_5'];
+            }
+            if ( array_key_exists( 'autoptimize_extra_select_field_6', $extra_settings ) ) {
+                $imgopt_settings['autoptimize_imgopt_select_field_2'] = $extra_settings['autoptimize_extra_select_field_6'];
+            }
             update_option( 'autoptimize_imgopt_settings', $imgopt_settings );
         }
     }
