@@ -485,9 +485,9 @@ class autoptimizeImages
         // hide noscript tags to avoid nesting noscript tags (as lazyloaded images add noscript).
         if ( $this->should_lazyload() ) {
             $in = autoptimizeBase::replace_contents_with_marker_if_exists(
-                'NOSCRIPT',
-                '<noscript',
-                '#<noscript.*?<\/noscript>#is',
+                'SCRIPT',
+                '<script',
+                '#<(?:no)?script.*?<\/(?:no)?script>#is',
                 $in
             );
         }
@@ -609,7 +609,7 @@ class autoptimizeImages
         // lazyload: restore noscript tags + lazyload picture source tags.
         if ( $this->should_lazyload() ) {
             $out = autoptimizeBase::restore_marked_content(
-                'NOSCRIPT',
+                'SCRIPT',
                 $out
             );
 
@@ -684,10 +684,11 @@ class autoptimizeImages
         $to_replace = array();
 
         // hide noscript tags to avoid nesting noscript tags (as lazyloaded images add noscript).
+        // fixme; also SCRIPT to avoid messing up blocks of JS that include <img
         $out = autoptimizeBase::replace_contents_with_marker_if_exists(
-            'NOSCRIPT',
-            '<noscript',
-            '#<noscript.*?<\/noscript>#is',
+            'SCRIPT',
+            '<script',
+            '#<(?:no)?script.*?<\/(?:no)?script>#is',
             $in
         );
 
@@ -704,7 +705,7 @@ class autoptimizeImages
 
         // restore noscript tags.
         $out = autoptimizeBase::restore_marked_content(
-            'NOSCRIPT',
+            'SCRIPT',
             $out
         );
 
