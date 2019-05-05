@@ -284,7 +284,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.5.1 =
-* Also optimize & lazyload <picture><source>
+* Also optimize & lazyload &lt;picture>&lt;source>
 * Misc. improvements to lazyload
 * Updated to LazySizes 5.0.0 (rc1)
 * Show "JS, CSS & HTML" advanced options by default (many people did not see the button)
