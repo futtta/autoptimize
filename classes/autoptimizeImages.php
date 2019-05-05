@@ -606,12 +606,16 @@ class autoptimizeImages
             );
         }
 
-        // and restore noscript tags if these were hidden for lazyload purposes.
+        // lazyload: restore noscript tags + lazyload picture source tags.
         if ( $this->should_lazyload() ) {
             $out = autoptimizeBase::restore_marked_content(
                 'NOSCRIPT',
                 $out
             );
+
+            $out = $this->process_picture_tag( $out, true, true );
+        } else {
+            $out = $this->process_picture_tag( $out, true, false );
         }
 
         return $out;
@@ -694,6 +698,9 @@ class autoptimizeImages
             }
             $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $out );
         }
+
+        // and also lazyload picture tag.
+        $out = $this->process_picture_tag( $out, false, true );
 
         // restore noscript tags.
         $out = autoptimizeBase::restore_marked_content(
@@ -810,6 +817,41 @@ class autoptimizeImages
         }
 
         return $webp_return;
+    }
+
+    public function process_picture_tag( $in, $imgopt = false, $lazy = false ) {
+        // check if "<picture" is present and if filter allows us to process <picture>.
+        if ( strpos( $in, '<picture' ) === false || apply_filters( 'autoptimize_filter_imgopt_dopicture', true ) === false ) {
+            return $in;
+        }
+
+        $_exclusions     = $this->get_lazyload_exclusions();
+        $to_replace_pict = array();
+
+        // extract and process each picture-node.
+        preg_match_all( '#<picture.*</picture>#Usmi', $in, $_pictures, PREG_SET_ORDER );
+        foreach ( $_pictures as $_picture ) {
+            if ( strpos( $_picture[0], '<source ' ) !== false && preg_match_all( '#<source .*srcset=(?:"|\')(?!data)(.*)(?:"|\').*>#Usmi', $_picture[0], $_sources, PREG_SET_ORDER ) !== false ) {
+                foreach ( $_sources as $_source ) {
+                    $_picture_replacement = $_source[0];
+
+                    // should we optimize the image?
+                    if ( $imgopt && $this->can_optimize_image( $_source[1] ) ) {
+                        $_picture_replacement = str_replace( $_source[1], $this->build_imgopt_url( $_source[1] ), $_picture_replacement );
+                    }
+                    // should we lazy-load?
+                    if ( $lazy && str_ireplace( $_exclusions, '', $_picture_replacement ) === $_picture_replacement ) {
+                        $_picture_replacement = str_replace( ' srcset=', ' data-srcset=', $_picture_replacement );
+                    }
+                    $to_replace_pict[ $_source[0] ] = $_picture_replacement;
+                }
+            }
+        }
+
+        // and return the fully procesed $in.
+        $out = str_replace( array_keys( $to_replace_pict ), array_values( $to_replace_pict ), $in );
+
+        return $out;
     }
 
     /**
