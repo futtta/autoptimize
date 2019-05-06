@@ -538,6 +538,7 @@ class autoptimizeImages
 
                 // do lazyload stuff.
                 if ( $this->should_lazyload() && str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+                    $tag          = $this->maybe_fix_missing_quotes( $tag );
                     $noscript_tag = '<noscript>' . $tag . '</noscript>';
                     $tag          = str_replace( 'srcset=', 'data-srcset=', $tag );
 
@@ -683,8 +684,7 @@ class autoptimizeImages
         // only used is image optimization is NOT active but lazyload is.
         $to_replace = array();
 
-        // hide noscript tags to avoid nesting noscript tags (as lazyloaded images add noscript).
-        // fixme; also SCRIPT to avoid messing up blocks of JS that include <img
+        // hide (no)script tags to avoid nesting noscript tags (as lazyloaded images add noscript).
         $out = autoptimizeBase::replace_contents_with_marker_if_exists(
             'SCRIPT',
             '<script',
@@ -715,6 +715,8 @@ class autoptimizeImages
     public function add_lazyload( $tag ) {
         // adds actual lazyload-attributes to an image node.
         if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+            $tag = $this->maybe_fix_missing_quotes( $tag );
+
             // store original tag for use in noscript version.
             $noscript_tag = '<noscript>' . $tag . '</noscript>';
 
@@ -832,6 +834,7 @@ class autoptimizeImages
         // extract and process each picture-node.
         preg_match_all( '#<picture.*</picture>#Usmi', $in, $_pictures, PREG_SET_ORDER );
         foreach ( $_pictures as $_picture ) {
+            $_picture = $this->maybe_fix_missing_quotes( $_picture );
             if ( strpos( $_picture[0], '<source ' ) !== false && preg_match_all( '#<source .*srcset=(?:"|\')(?!data)(.*)(?:"|\').*>#Usmi', $_picture[0], $_sources, PREG_SET_ORDER ) !== false ) {
                 foreach ( $_sources as $_source ) {
                     $_picture_replacement = $_source[0];
@@ -853,6 +856,15 @@ class autoptimizeImages
         $out = str_replace( array_keys( $to_replace_pict ), array_values( $to_replace_pict ), $in );
 
         return $out;
+    }
+
+    public function maybe_fix_missing_quotes( $tag_in ) {
+        // W3TC's Minify_HTML class removes quotes around attribute value, this re-adds them.
+        if ( file_exists( WP_PLUGIN_DIR . '/w3-total-cache/w3-total-cache.php' ) && class_exists( 'Minify_HTML' ) && apply_filters( 'autoptimize_filter_imgopt_fixquotes', true ) ) {
+            return preg_replace( '/=([^("|\')]*)(\s|>)/U', '=\'$1\'$2', $tag_in );
+        } else {
+            return $tag_in;
+        }
     }
 
     /**
