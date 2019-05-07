@@ -333,10 +333,6 @@ class autoptimizeImages
             } elseif ( 0 === strpos( $in, '/' ) ) {
                 // Root-relative...
                 $result = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'];
-                // Add the path for subfolder installs.
-                if ( isset( $parsed_site_url['path'] ) ) {
-                    $result .= $parsed_site_url['path'];
-                }
                 $result .= $in;
             } elseif ( ! empty( $cdn_domain ) && strpos( $in, $cdn_domain ) !== 0 ) {
                 $result = str_replace( $cdn_domain, $parsed_site_url['host'], $in );
