@@ -156,7 +156,8 @@ class autoptimizeExtra
     public function filter_remove_dns_prefetch( $urls, $relation_type, $url_to_remove )
     {
         if ( 'dns-prefetch' === $relation_type ) {
-            $cnt = 0;
+            $cnt           = 0;
+            $url_to_remove = (string) $url_to_remove;
             foreach ( $urls as $url ) {
                 if ( false !== strpos( $url, $url_to_remove ) ) {
                     unset( $urls[ $cnt ] );
