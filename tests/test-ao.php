@@ -2454,6 +2454,8 @@ MARKUP;
     {
         $urls                                        = $this->get_urls();
         $siteurl                                     = $urls['siteurl'];
+        $siteurlparsed                               = parse_url( $siteurl );
+        $sitedomain                                  = $siteurlparsed['scheme'] . '://' . $siteurlparsed['host'];
         $imgopthost                                  = $urls['imgopthost'];
         $opts                                        = autoptimizeImages::fetch_options();
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
@@ -2464,7 +2466,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+<img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$sitedomain/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$sitedomain/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$sitedomain/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
         $instance = autoptimizeImages::instance();
