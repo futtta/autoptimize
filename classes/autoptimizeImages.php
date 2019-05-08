@@ -327,12 +327,12 @@ class autoptimizeImages
         // Do the work on cache miss only.
         if ( ! isset( $cache[ $in ] ) ) {
             // Default to what was given to us.
-            $result = $in;
+            $result = trim( $in );
             if ( autoptimizeUtils::is_protocol_relative( $in ) ) {
                 $result = $parsed_site_url['scheme'] . ':' . $in;
             } elseif ( 0 === strpos( $in, '/' ) ) {
                 // Root-relative...
-                $result = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'];
+                $result  = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'];
                 $result .= $in;
             } elseif ( ! empty( $cdn_domain ) && strpos( $in, $cdn_domain ) !== 0 ) {
                 $result = str_replace( $cdn_domain, $parsed_site_url['host'], $in );
@@ -461,8 +461,9 @@ class autoptimizeImages
 
     public function replace_img_callback( $matches, $width = 0, $height = 0 )
     {
+        $_normalized_img_url = $this->normalize_img_url( $matches[1] );
         if ( $this->can_optimize_image( $matches[1] ) ) {
-            return str_replace( $matches[1], $this->build_imgopt_url( $matches[1], $width, $height ), $matches[0] );
+            return str_replace( $matches[1], $this->build_imgopt_url( $_normalized_img_url, $width, $height ), $matches[0] );
         } else {
             return $matches[0];
         }
