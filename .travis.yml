@@ -24,9 +24,9 @@ matrix:
   include:
     - php: 5.6
       env: WP_VERSION=latest WP_MULTISITE=1
-    - php: 7.2
+    - php: 7.3
       env: WP_VERSION=latest WP_MULTISITE=1 CUSTOM_CONSTANTS=1
-    - php: 7.2
+    - php: 7.3
       env: WP_VERSION=latest WP_MULTISITE=0 CUSTOM_CONSTANTS=1
 
 install:
