@@ -2358,7 +2358,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<picture><source data-srcset="$imgopthost/client/q_glossy,ret_img/http://example.org/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img src="$imgopthost/client/q_glossy,ret_img/http://example.org/wp-content/image.jpg"/></noscript><img class="lazyload" src='$imgopthost/client/q_lqip,ret_wait/http://example.org/wp-content/image.jpg' data-src="https://cdn.shortpixel.ai/client/q_glossy,ret_img/http://example.org/wp-content/image.jpg"/></picture>
+<picture><source data-srcset="$imgopthost/client/q_glossy,ret_img/$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img src="$imgopthost/client/q_glossy,ret_img/$siteurl/wp-content/image.jpg"/></noscript><img class="lazyload" src='$imgopthost/client/q_lqip,ret_wait/$siteurl/wp-content/image.jpg' data-src="https://cdn.shortpixel.ai/client/q_glossy,ret_img/http://example.org/wp-content/image.jpg"/></picture>
 MARKUP;
         $instance = autoptimizeImages::instance();
         $instance->set_options( $opts );
@@ -2467,7 +2467,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<picture><source data-srcset="$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img src="$siteurl/wp-content/image.jpg"/></noscript><img class="lazyload" src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20%20%22%3E%3C/svg%3E' data-src="http://example.org/wp-content/image.jpg"/></picture>
+<picture><source data-srcset="$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img src="$siteurl/wp-content/image.jpg"/></noscript><img class="lazyload" src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20%20%22%3E%3C/svg%3E' data-src="$siteurl/wp-content/image.jpg"/></picture>
 MARKUP;
 
         $instance = autoptimizeImages::instance();
