@@ -534,7 +534,7 @@ class autoptimizeImages
                 }
 
                 // do lazyload stuff.
-                if ( $this->should_lazyload() && str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+                if ( $this->should_lazyload( $in ) && str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
                     $tag          = $this->maybe_fix_missing_quotes( $tag );
                     $noscript_tag = '<noscript>' . $tag . '</noscript>';
                     $tag          = str_replace( 'srcset=', 'data-srcset=', $tag );
@@ -664,21 +664,21 @@ class autoptimizeImages
     /**
      * Lazyload functions
      */
-    public function should_lazyload() {
+    public static function should_lazyload_wrapper() {
+        // needed in autoptimizeMain.php.
+        $self = new self();
+        return $self->should_lazyload();
+    }
+
+    public function should_lazyload( $context = '' ) {
         if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) ) {
             $lazyload_return = true;
         } else {
             $lazyload_return = false;
         }
-        $lazyload_return = apply_filters( 'autoptimize_filter_imgopt_should_lazyload', $lazyload_return );
+        $lazyload_return = apply_filters( 'autoptimize_filter_imgopt_should_lazyload', $lazyload_return, $context );
 
         return $lazyload_return;
-    }
-
-    public static function should_lazyload_wrapper() {
-        // needed in autoptimizeMain.php.
-        $self = new self();
-        return $self->should_lazyload();
     }
 
     public function filter_lazyload_images( $in )
@@ -697,7 +697,9 @@ class autoptimizeImages
         // extract img tags and add lazyload attribs.
         if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $out, $matches ) ) {
             foreach ( $matches[0] as $tag ) {
-                $to_replace[ $tag ] = $this->add_lazyload( $tag );
+                if ( $this->should_lazyload( $out ) ) {
+                    $to_replace[ $tag ] = $this->add_lazyload( $tag );
+                }
             }
             $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $out );
         }
