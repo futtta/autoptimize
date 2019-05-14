@@ -474,7 +474,6 @@ class autoptimizeImages
         /*
          * potential future functional improvements:
          *
-         * picture element.
          * filter for critical CSS.
          */
         $to_replace = array();
@@ -534,15 +533,8 @@ class autoptimizeImages
                 }
 
                 // do lazyload stuff.
-                if ( $this->should_lazyload( $in ) && str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
-                    $tag          = $this->maybe_fix_missing_quotes( $tag );
-                    $noscript_tag = '<noscript>' . $tag . '</noscript>';
-                    $tag          = str_replace( 'srcset=', 'data-srcset=', $tag );
-
-                    // add lazyload class.
-                    $tag = $this->inject_classes_in_tag( $tag, 'lazyload ' );
-
-                    // set placeholder.
+                if ( $this->should_lazyload( $in ) ) {
+                    // first do lpiq placeholder logic.
                     if ( strpos( $url, $this->get_imgopt_host() ) === 0 ) {
                         // if all img src have been replaced during srcset, we have to extract the
                         // origin url from the imgopt one to be able to set a lqip placeholder.
@@ -550,6 +542,7 @@ class autoptimizeImages
                     } else {
                         $_url = $url;
                     }
+
                     if ( $this->can_optimize_image( $_url ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
                         $lqip_w = '';
                         $lqip_h = '';
@@ -560,28 +553,12 @@ class autoptimizeImages
                             $lqip_h = ',h_' . $imgopt_h;
                         }
                         $placeholder = $this->get_imgopt_host() . 'client/q_lqip,ret_wait' . $lqip_w . $lqip_h . '/' . $_url;
-                    } else {
-                        $placeholder = $this->get_default_lazyload_placeholder( $imgopt_w, $imgopt_h );
                     }
-                    $placeholder = ' src=\'' . apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $placeholder );
-
-                    // add min-heigth off by default as it can deform images, can be enabled with filter.
-                    $min_height = '';
-                    if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_addminheight', false ) ) {
-                        $min_height = ' style="min-height:' . $imgopt_h . 'px;"';
-                    }
-
-                    // move sizes to data-sizes unless filter says no.
-                    if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_move_sizes', true ) ) {
-                        $tag = str_replace( 'sizes=', 'data-sizes=', $tag );
-                    }
-
-                    // add noscript & placeholder.
-                    $tag = $noscript_tag . str_replace( ' src=', $min_height . $placeholder . '\' data-src=', $tag );
-                    $tag = apply_filters( 'autoptimize_filter_imgopt_lazyloaded_img', $tag );
+                    // then call add_lazyload-function with lpiq placeholder if set.
+                    $tag = $this->add_lazyload( $tag, $placeholder );
                 }
 
-                // add tag to array for later replacement.
+                // and add tag to array for later replacement.
                 if ( $tag !== $orig_tag ) {
                     $to_replace[ $orig_tag ] = $tag;
                 }
@@ -716,7 +693,7 @@ class autoptimizeImages
         return $out;
     }
 
-    public function add_lazyload( $tag ) {
+    public function add_lazyload( $tag, $placeholder = '' ) {
         // adds actual lazyload-attributes to an image node.
         if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
             $tag = $this->maybe_fix_missing_quotes( $tag );
@@ -727,22 +704,24 @@ class autoptimizeImages
             // insert lazyload class.
             $tag = $this->inject_classes_in_tag( $tag, 'lazyload ' );
 
-            // get image width & heigth for placeholder fun (and to prevent content reflow).
-            $_get_size = $this->get_size_from_tag( $tag );
-            $width     = $_get_size['width'];
-            $height    = $_get_size['height'];
-            if ( false === $width ) {
-                $widht = 210; // default width for SVG placeholder.
-            }
-            if ( false === $height ) {
-                $heigth = $width / 3 * 2; // if no height, base it on width using the 3/2 aspect ratio.
-            }
+            if ( ! $placeholder || empty( $placeholder ) ) {
+                // get image width & heigth for placeholder fun (and to prevent content reflow).
+                $_get_size = $this->get_size_from_tag( $tag );
+                $width     = $_get_size['width'];
+                $height    = $_get_size['height'];
+                if ( false === $width ) {
+                    $widht = 210; // default width for SVG placeholder.
+                }
+                if ( false === $height ) {
+                    $heigth = $width / 3 * 2; // if no height, base it on width using the 3/2 aspect ratio.
+                }
 
-            // insert the actual lazyload stuff.
-            // see https://css-tricks.com/preventing-content-reflow-from-lazy-loaded-images/ for great read on why we're using empty svg's.
-            $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $this->get_default_lazyload_placeholder( $width, $height ) );
-            $tag         = str_replace( ' src=', ' src=\'' . $placeholder . '\' data-src=', $tag );
-            $tag         = str_replace( ' srcset=', ' data-srcset=', $tag );
+                // insert the actual lazyload stuff.
+                // see https://css-tricks.com/preventing-content-reflow-from-lazy-loaded-images/ for great read on why we're using empty svg's.
+                $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $this->get_default_lazyload_placeholder( $width, $height ) );
+            }
+            $tag = str_replace( ' src=', ' src=\'' . $placeholder . '\' data-src=', $tag );
+            $tag = str_replace( ' srcset=', ' data-srcset=', $tag );
 
             // move sizes to data-sizes unless filter says no.
             if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_move_sizes', true ) ) {
