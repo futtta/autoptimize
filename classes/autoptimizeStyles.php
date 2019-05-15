@@ -209,14 +209,15 @@ class autoptimizeStyles extends autoptimizeBase
                     // Remove the original style tag.
                     $this->content = str_replace( $tag, '', $this->content );
                 } else {
-                    // Excluded CSS, minify that file:
-                    // -> if aggregate is on and exclude minify is on
-                    // -> if aggregate is off and the file is not in dontmove.
                     if ( preg_match( '#<link.*href=("|\')(.*)("|\')#Usmi', $tag, $source ) ) {
                         $exploded_url = explode( '?', $source[2], 2 );
                         $url          = $exploded_url[0];
                         $path         = $this->getpath( $url );
+                        $new_tag      = $tag;
 
+                        // Excluded CSS, minify that file:
+                        // -> if aggregate is on and exclude minify is on
+                        // -> if aggregate is off and the file is not in dontmove.
                         if ( $path && ( $this->minify_excluded || apply_filters( 'autoptimize_filter_css_minify_excluded', false, $url ) ) ) {
                             $consider_minified_array = apply_filters( 'autoptimize_filter_css_consider_minified', false );
                             if ( ( false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path ) || ( true === $this->aggregate && ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) ) ) {
@@ -224,19 +225,17 @@ class autoptimizeStyles extends autoptimizeBase
                                 if ( ! empty( $minified_url ) ) {
                                     // Replace orig URL with cached minified URL.
                                     $new_tag = str_replace( $url, $minified_url, $tag );
-                                } else {
-                                    $new_tag = $tag;
                                 }
-                                $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
-                            } else {
-                                $new_tag = $this->optionally_defer_excluded( $tag, $url );
                             }
-                        } else {
-                            $new_tag = $this->optionally_defer_excluded( $tag, $url );
                         }
 
+                        // Optionally defer (preload) non-aggregated CSS.
+                        $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
+
                         // And replace!
-                        $this->content = str_replace( $tag, $new_tag, $this->content );
+                        if ( $new_tag !== $tag ) {
+                            $this->content = str_replace( $tag, $new_tag, $this->content );
+                        }
                     }
                 }
             }
@@ -251,12 +250,12 @@ class autoptimizeStyles extends autoptimizeBase
      * Checks if non-optimized CSS is to be preloaded and if so return
      * the tag with preload code.
      *
-     * @param string $new_tag (required).
+     * @param string $tag (required).
      * @param string $url (optional).
      *
      * @return string $new_tag
      */
-    private function optionally_defer_excluded( $new_tag, $url = '' )
+    private function optionally_defer_excluded( $tag, $url = '' )
     {
         // Defer single CSS if "inline & defer" is ON and there is inline CSS.
         if ( $this->defer && ! empty( $this->defer_inline ) ) {
@@ -267,13 +266,13 @@ class autoptimizeStyles extends autoptimizeBase
                 $url
             );
             // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
-            $new_tag = '<noscript>' . $new_tag . '</noscript>' . str_replace(
+            $new_tag = '<noscript>' . $tag . '</noscript>' . str_replace(
                 array(
                     "rel='stylesheet'",
                     'rel="stylesheet"',
                 ),
                 "rel='preload' as='style' onload=\"" . $_preload_onload . "\"",
-                $new_tag
+                $tag
             );
         }
         return $new_tag;
