@@ -227,13 +227,16 @@ class autoptimizeStyles extends autoptimizeBase
                                 } else {
                                     $new_tag = $tag;
                                 }
-
                                 $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
-
-                                // And replace!
-                                $this->content = str_replace( $tag, $new_tag, $this->content );
+                            } else {
+                                $new_tag = $this->optionally_defer_excluded( $tag, $url );
                             }
+                        } else {
+                            $new_tag = $this->optionally_defer_excluded( $tag, $url );
                         }
+
+                        // And replace!
+                        $this->content = str_replace( $tag, $new_tag, $this->content );
                     }
                 }
             }
