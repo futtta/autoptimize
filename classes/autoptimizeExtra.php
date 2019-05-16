@@ -33,7 +33,12 @@ class autoptimizeExtra
     public function run()
     {
         if ( is_admin() ) {
-            add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+			if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
+				add_action( 'network_admin_menu', array( $this, 'admin_menu' ) );
+			} else {
+				add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+			}
+			add_action( 'admin_init', array( $this, 'registersettings' ) );
             add_filter( 'autoptimize_filter_settingsscreen_tabs', array( $this, 'add_extra_tab' ) );
         } else {
             $this->run_on_frontend();
@@ -335,8 +340,11 @@ class autoptimizeExtra
             'autoptimize_extra',
             array( $this, 'options_page' )
         );
-        register_setting( 'autoptimize_extra_settings', 'autoptimize_extra_settings' );
     }
+	
+	public function registersettings() {
+		register_setting( 'autoptimize_extra_settings', 'autoptimize_extra_settings' );
+	}
 
     public function add_extra_tab( $in )
     {

@@ -15,7 +15,11 @@ class autoptimizeConfig
     {
         if ( is_admin() ) {
             // Add the admin page and settings.
-            add_action( 'admin_menu', array( $this, 'addmenu' ) );
+			if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
+				add_action( 'network_admin_menu', array( $this, 'addmenu' ) );
+			} else {
+				add_action( 'admin_menu', array( $this, 'addmenu' ) );
+			}
             add_action( 'admin_init', array( $this, 'registersettings' ) );
 
             // Set meta info.
@@ -626,7 +630,12 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
 
     public function addmenu()
     {
-        $hook = add_options_page( __( 'Autoptimize Options', 'autoptimize' ), 'Autoptimize', 'manage_options', 'autoptimize', array( $this, 'show' ) );
+		if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
+			$hook = add_submenu_page( 'settings.php',  __( 'Autoptimize Options', 'autoptimize' ), 'Autoptimize', 'manage_network_options', 'autoptimize', array( $this, 'show' ) );
+		} else {
+			$hook = add_options_page( __( 'Autoptimize Options', 'autoptimize' ), 'Autoptimize', 'manage_options', 'autoptimize', array( $this, 'show' ) );
+		}
+		
         add_action( 'admin_print_scripts-' . $hook, array( $this, 'autoptimize_admin_scripts' ) );
         add_action( 'admin_print_styles-' . $hook, array( $this, 'autoptimize_admin_styles' ) );
     }

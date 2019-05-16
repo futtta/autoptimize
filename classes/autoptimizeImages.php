@@ -97,7 +97,12 @@ class autoptimizeImages
     public function run()
     {
         if ( is_admin() ) {
-            add_action( 'admin_menu', array( $this, 'imgopt_admin_menu' ) );
+			if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
+				add_action( 'network_admin_menu', array( $this, 'imgopt_admin_menu' ) );
+			} else {
+				add_action( 'admin_menu', array( $this, 'imgopt_admin_menu' ) );
+			}
+			add_action( 'admin_init', array( $this, 'registersettings' ) );
             add_filter( 'autoptimize_filter_settingsscreen_tabs', array( $this, 'add_imgopt_tab' ), 9 );
         } else {
             $this->run_on_frontend();
@@ -868,8 +873,11 @@ class autoptimizeImages
             'autoptimize_imgopt',
             array( $this, 'imgopt_options_page' )
         );
-        register_setting( 'autoptimize_imgopt_settings', 'autoptimize_imgopt_settings' );
     }
+	
+	public function registersettings() {
+		register_setting( 'autoptimize_imgopt_settings', 'autoptimize_imgopt_settings' );
+	}
 
     public function add_imgopt_tab( $in )
     {
