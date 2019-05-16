@@ -368,7 +368,7 @@ class autoptimizeExtra
             </p></div>
         <?php } ?>
 
-    <form id='ao_settings_form' action='options.php' method='post'>
+    <form id='ao_settings_form' action='<?php echo admin_url( 'options.php' ); ?>' method='post'>
         <?php settings_fields( 'autoptimize_extra_settings' ); ?>
         <h2><?php _e( 'Extra Auto-Optimizations', 'autoptimize' ); ?></h2>
         <span id='autoptimize_extra_descr'><?php _e( 'The following settings can improve your site\'s performance even more.', 'autoptimize' ); ?></span>

@@ -204,7 +204,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 
     <?php echo $this->ao_admin_tabs(); ?>
 
-<form method="post" action="options.php">
+<form method="post" action="<?php echo admin_url( 'options.php' ); ?>">
 <?php settings_fields( 'autoptimize' ); ?>
 
 <ul>
