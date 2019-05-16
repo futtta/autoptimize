@@ -370,7 +370,7 @@ class autoptimizeExtra
     <div class="wrap">
     <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
-        <?php if ( 'on' !== get_option( 'autoptimize_js' ) && 'on' !== get_option( 'autoptimize_css' ) && 'on' !== get_option( 'autoptimize_html' ) && ! autoptimizeImages::imgopt_active() ) { ?>
+        <?php if ( 'on' !== autoptimizeOption::get_option( 'autoptimize_js' ) && 'on' !== autoptimizeOption::get_option( 'autoptimize_css' ) && 'on' !== autoptimizeOption::get_option( 'autoptimize_html' ) && ! autoptimizeImages::imgopt_active() ) { ?>
             <div class="notice-warning notice"><p>
             <?php _e( 'Most of below Extra optimizations require at least one of HTML, JS, CSS or Image autoptimizations being active.', 'autoptimize' ); ?>
             </p></div>
