@@ -185,7 +185,7 @@ class autoptimizeStyles extends autoptimizeBase
                         } else {
                             // Link is dynamic (.php etc).
                             $new_tag = $this->optionally_defer_excluded( $tag, 'none' );
-                            if ( $new_tag !== $tag ) {
+                            if ( $new_tag !== '' && $new_tag !== $tag ) {
                                 $this->content = str_replace( $tag, $new_tag, $this->content );
                             }
                             $tag = '';
@@ -233,7 +233,7 @@ class autoptimizeStyles extends autoptimizeBase
                         $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
 
                         // And replace!
-                        if ( $new_tag !== $tag ) {
+                        if ( $new_tag !== '' && $new_tag !== $tag ) {
                             $this->content = str_replace( $tag, $new_tag, $this->content );
                         }
                     }
@@ -274,7 +274,10 @@ class autoptimizeStyles extends autoptimizeBase
                 "rel='preload' as='style' onload=\"" . $_preload_onload . "\"",
                 $tag
             );
+        } else {
+            $new_tag = $tag;
         }
+
         return $new_tag;
     }
 
