@@ -56,5 +56,26 @@ class autoptimizeOption
 		}
     }
 
+	/**
+	 * Use the pre_update_option filter to check if the option to be saved if from autoptimize and
+	 * in that case, take care of multisite case.
+	 */
+	public static function check_multisite_on_saving_options()
+    {
+		if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
+			add_filter( 'pre_update_option', [$this, 'update_autoptimize_option_on_network'], 10, 3 );
+		}
+	}
+
+	public static function update_autoptimize_option_on_network( $value, $option, $old_value ) {
+		if( strpos( $option, 'autoptimize_' ) === 0 ) {
+			if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
+				 update_network_option( get_main_network_id(), $option, $value );
+				 // Return old value, to stop update_option logic.
+				 return $old_value;
+			}
+		}
+		return $value;
+	}
 }
 new autoptimizeOption();
