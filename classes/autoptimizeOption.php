@@ -19,6 +19,15 @@ class autoptimizeOption
     {
 		add_action('init', [$this, 'check_multisite_on_saving_options']);
 	}
+	
+	/**
+	 * Ensure that is_plugin_active_for_network function is declared.
+	 */
+	public static function maybe_include_plugin_functions() {
+		if( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		}
+	}
 
 	/**
 	 * Retrieves the option in standalone and multisite instances.
@@ -29,6 +38,9 @@ class autoptimizeOption
 	 */
     public static function get_option( $option, $default = false )
     {
+		// Ensure that is_plugin_active_for_network function is declared.
+		self::maybe_include_plugin_functions();
+		
 		if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
 			return get_network_option( get_main_network_id(), $option );
 		} else {
@@ -49,6 +61,10 @@ class autoptimizeOption
 	 */
     public static function update_option( $option, $value, $autoload = null )
     {
+		
+		// Ensure that is_plugin_active_for_network function is declared.
+		self::maybe_include_plugin_functions();
+		
 		if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
 			return update_network_option( get_main_network_id(), $option, $value );
 		} else {
@@ -62,6 +78,9 @@ class autoptimizeOption
 	 */
 	public static function check_multisite_on_saving_options()
     {
+		// Ensure that is_plugin_active_for_network function is declared.
+		self::maybe_include_plugin_functions();
+		
 		if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
 			add_filter( 'pre_update_option', [$this, 'update_autoptimize_option_on_network'], 10, 3 );
 		}
@@ -69,6 +88,10 @@ class autoptimizeOption
 
 	public static function update_autoptimize_option_on_network( $value, $option, $old_value ) {
 		if( strpos( $option, 'autoptimize_' ) === 0 ) {
+			
+			// Ensure that is_plugin_active_for_network function is declared.
+			self::maybe_include_plugin_functions();
+		
 			if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
 				 update_network_option( get_main_network_id(), $option, $value );
 				 // Return old value, to stop update_option logic.
