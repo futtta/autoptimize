@@ -1,17 +1,17 @@
 === Autoptimize ===
 Contributors: futtta, optimizingmatters, zytzagoo, turl
-Tags: optimize, minify, performance, pagespeed, images, google fonts
+Tags: optimize, minify, performance, pagespeed, images, lazy-load, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
 Tested up to: 5.2
 Requires PHP: 5.3
 Stable tag: 2.5.0
 
-Autoptimize speeds up your website by optimizing JS, CSS, images, HTML, Google Fonts and async-ing JS, removing emoji cruft and more.
+Autoptimize speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
 == Description ==
 
-Autoptimize makes optimizing your site really easy. It can aggregate, minify and cache scripts and styles, injects CSS in the page head by default but can also inline critical CSS and defer the aggregated full CSS, moves and defers scripts to the footer and minifies HTML. You can optimize and lazyload images, optimize Google Fonts, async non-aggregated JavaScript, remove WordPress core emoji cruft and more. As such it can improve your site's performance even when already on HTTP/2! There is extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
+Autoptimize makes optimizing your site really easy. It can aggregate, minify and cache scripts and styles, injects CSS in the page head by default but can also inline critical CSS and defer the aggregated full CSS, moves and defers scripts to the footer and minifies HTML. You can optimize and lazy-load images, optimize Google Fonts, async non-aggregated JavaScript, remove WordPress core emoji cruft and more. As such it can improve your site's performance even when already on HTTP/2! There is extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
 
 If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [WP Super Cache](http://wordpress.org/plugins/wp-super-cache/), [HyperCache](http://wordpress.org/plugins/hyper-cache/), [Comet Cache](https://wordpress.org/plugins/comet-cache/) or [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler).
 
@@ -36,7 +36,7 @@ It concatenates all scripts and styles, minifies and compresses them, adds expir
 
 = But I'm on HTTP/2, so I don't need Autoptimize? =
 
-HTTP/2 is a great step forward for sure, reducing the impact of multiple requests from the same server significantly by using the same connection to perform several concurrent requests. That being said, [concatenation of CSS/ JS can still make a lot of sense](http://engineering.khanacademy.org/posts/js-packaging-http2.htm), as described in [this css-tricks.com article](https://css-tricks.com/http2-real-world-performance-test-analysis/) and this [blogpost from one of the Ebay engineers](http://calendar.perfplanet.com/2015/packaging-for-performance/). The conclusion; configure, test, reconfigure, retest, tweak and look what works best in your context. Maybe it's just HTTP/2, maybe it's HTTP/2 + aggregation and minification, maybe it's HTTP/2 + minification (which AO can do as well, simply untick the "aggregate JS-files" and/ or "aggregate CSS-files" options).
+HTTP/2 is a great step forward for sure, reducing the impact of multiple requests from the same server significantly by using the same connection to perform several concurrent requests. That being said, [concatenation of CSS/ JS can still make a lot of sense](http://engineering.khanacademy.org/posts/js-packaging-http2.htm), as described in [this css-tricks.com article](https://css-tricks.com/http2-real-world-performance-test-analysis/) and this [blogpost from one of the Ebay engineers](http://calendar.perfplanet.com/2015/packaging-for-performance/). The conclusion; configure, test, reconfigure, retest, tweak and look what works best in your context. Maybe it's just HTTP/2, maybe it's HTTP/2 + aggregation and minification, maybe it's HTTP/2 + minification (which AO can do as well, simply untick the "aggregate JS-files" and/ or "aggregate CSS-files" options). And Autoptimize can do a lot more then "just" optimizing your JS & CSS off course ;-)
 
 = Will this work with my blog? =
 
@@ -64,15 +64,7 @@ There's no easy solution for that as "above the fold" depends on where the fold 
 
 = Or should you inline all CSS? =
 
-The short answer: probably not.
-
-Back in the days CSS optimization was easy; put all CSS in your head, aggregating everything in one CSS-file per media-type and you were good to go. But ever since Google included mobile in PageSpeed Insights and started complaining about render blocking CSS, things got messy (see "deferring CSS" elsewhere in this FAQ). One of the solutions is inlining all your CSS, which as of Autoptimize 1.8.0 is supported.
-
-Inlining all CSS has one clear advantage (better PageSpeed score) and one big disadvantage; your base HTML-page gets significantly bigger and if the amount of CSS is big, Pagespeed Insights will complain of "roundtrip times". Also when looking at a test that includes multiple requests (let's say 5 pages), performance will be worse, as the CSS-payload is sent over again and again whereas normally the separate CSS-files would not need to be sent any more as they would be in cache.
-
-So the choice should be based on your answer to some site-specific questions; how much CSS do you have? How many pages per visit do your visitors request? If you have a lot of CSS or a high number of pages/ visit, it's probably not a good idea to inline all CSS.
-
-You can find more information on this topic [in this blog post](http://blog.futtta.be/2014/02/13/should-you-inline-or-defer-blocking-css/).
+The short answer: probably not. Although inlining all CSS will make the CSS non-render blocking, it will result in your base HTML-page getting significantly bigger thus requiring more "roundtrip times". Moreover when considering multiple pages being requested in a browsing session the inline CSS is sent over each time, whereas when not inlined it would be served from cache.
 
 = My cache is getting huge, doesn't Autoptimize purge the cache? =
 
@@ -284,10 +276,11 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.5.1 =
-* Also optimize & lazyload &lt;picture>&lt;source>
-* Misc. improvements to lazyload
-* Updated to LazySizes 5.0.0
-* Show "JS, CSS & HTML" advanced options by default (many people did not see the button)
+* Images: Also optimize & lazyload &lt;picture>&lt;source>
+* Images: Misc. improvements to lazyload
+* Images: Updated to LazySizes 5.0.0
+* CSS: improvements to the deferring logic for non-aggregated CSS resources.
+* Settings-page: Show "JS, CSS & HTML" advanced options by default (many people did not see the button)
 
 = 2.5.0 =
 * moved image optimization to a separate tab and move all code to a separate file.
