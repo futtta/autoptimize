@@ -229,7 +229,7 @@ class autoptimizeExtra
                 $fonts_string  = $fonts_string . '&#038;subset=' . $subset_string;
             }
 
-            $fonts_string = str_replace( '|', '%7C', ltrim( $fonts_string, '|' ) );
+            $fonts_string = apply_filters( 'autoptimize_filter_extra_gfont_fontstring', str_replace( '|', '%7C', ltrim( $fonts_string, '|' ) ) );
 
             if ( ! empty( $fonts_string ) ) {
                 if ( '5' === $options['autoptimize_extra_radio_field_4'] ) {
