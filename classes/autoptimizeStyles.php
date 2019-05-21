@@ -1058,7 +1058,9 @@ class autoptimizeStyles extends autoptimizeBase
             // Fixurls...
             $contents = self::fixurls( $filepath, $contents );
             // CDN-replace any referenced assets if needed...
+            $contents = $this->hide_fontface_and_maybe_cdn( $contents );
             $contents = $this->replace_urls( $contents );
+            $contents = $this->restore_fontface( $contents );
             // Now minify...
             $cssmin   = new autoptimizeCSSmin();
             $contents = trim( $cssmin->run( $contents ) );
