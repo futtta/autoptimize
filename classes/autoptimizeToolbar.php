@@ -134,7 +134,7 @@ class autoptimizeToolbar
         wp_localize_script( 'autoptimize-toolbar', 'autoptimize_ajax_object', array(
             'ajaxurl'     => admin_url( 'admin-ajax.php' ),
             // translators: links to the Autoptimize settings page.
-            'error_msg'   => sprintf( __( 'Your Autoptimize cache might not have been purged successfully, please check on the <a href="%s">Autoptimize settings page</a>.', 'autoptimize' ), admin_url( 'options-general.php?page=autoptimize' ) . ' style="white-space:nowrap;"' ),
+            'error_msg'   => sprintf( __( 'Your Autoptimize cache might not have been purged successfully, please check on the <a href=%s>Autoptimize settings page</a>.', 'autoptimize' ), admin_url( 'options-general.php?page=autoptimize' ) . ' style="white-space:nowrap;"' ),
             'dismiss_msg' => __( 'Dismiss this notice.' ),
             'nonce'       => wp_create_nonce( 'ao_delcache_nonce' ),
         ) );
