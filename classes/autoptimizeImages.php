@@ -748,7 +748,7 @@ class autoptimizeImages
         // Adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
-        echo '<script async' . $noptimize_flag . ' src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>';
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $noptimize_flag . ' src=\'' . plugins_url( 'external/js/lazysizes.min.js', __FILE__ ) . '\'></script>' );
 
         // And add webp detection and loading JS.
         if ( $this->should_webp() ) {
