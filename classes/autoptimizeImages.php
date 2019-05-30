@@ -701,8 +701,10 @@ class autoptimizeImages
             // store original tag for use in noscript version.
             $noscript_tag = '<noscript>' . $tag . '</noscript>';
 
+            $lazyload_class = apply_filters( 'autoptimize_filter_imgopt_lazyload_class', 'lazyload' );
+
             // insert lazyload class.
-            $tag = $this->inject_classes_in_tag( $tag, 'lazyload ' );
+            $tag = $this->inject_classes_in_tag( $tag, "$lazyload_class " );
 
             if ( ! $placeholder || empty( $placeholder ) ) {
                 // get image width & heigth for placeholder fun (and to prevent content reflow).
