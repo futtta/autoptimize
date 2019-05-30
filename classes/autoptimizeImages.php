@@ -832,7 +832,7 @@ class autoptimizeImages
                         $_picture_replacement = str_replace( $_source[1], $this->build_imgopt_url( $_source[1] ), $_picture_replacement );
                     }
                     // should we lazy-load?
-                    if ( $lazy && $this->should_lazyload && str_ireplace( $_exclusions, '', $_picture_replacement ) === $_picture_replacement ) {
+                    if ( $lazy && $this->should_lazyload() && str_ireplace( $_exclusions, '', $_picture_replacement ) === $_picture_replacement ) {
                         $_picture_replacement = str_replace( ' srcset=', ' data-srcset=', $_picture_replacement );
                     }
                     $to_replace_pict[ $_source[0] ] = $_picture_replacement;
