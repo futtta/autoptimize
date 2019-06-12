@@ -33,7 +33,7 @@ class autoptimizeExtra
     public function run()
     {
         if ( is_admin() ) {
-			if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
+			if ( is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
 				add_action( 'network_admin_menu', array( $this, 'admin_menu' ) );
 			} else {
 				add_action( 'admin_menu', array( $this, 'admin_menu' ) );
