@@ -213,6 +213,19 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 
 <ul>
 
+<?php if( is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) { ?>
+	<li class="itemDetail">
+	<h2 class="itemTitle"><?php _e('Multisite Options','autoptimize'); ?></h2>
+	<table class="form-table">
+	<tr valign="top">
+	<th scope="row"><?php _e('Enable site configuration?','autoptimize'); ?></th>
+	<td><label class="cb_label"><input type="checkbox" id="autoptimize_enable_site_config" name="autoptimize_enable_site_config" <?php echo autoptimizeOption::get_option('autoptimize_enable_site_config')?'checked="checked" ':''; ?>/>
+	<?php _e('Enable Autoptimize configuration per site.','autoptimize'); ?></label></td>
+	</tr>
+	</table>
+	</li>
+<?php } ?>
+
 <li class="itemDetail">
 <h2 class="itemTitle"><?php _e('JavaScript Options','autoptimize'); ?></h2>
 <table class="form-table">
@@ -655,6 +668,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
     public function registersettings() {
         register_setting( 'autoptimize', 'autoptimize_html' );
         register_setting( 'autoptimize', 'autoptimize_html_keepcomments' );
+		register_setting( 'autoptimize', 'autoptimize_enable_site_config' );
         register_setting( 'autoptimize', 'autoptimize_js' );
         register_setting( 'autoptimize', 'autoptimize_js_aggregate' );
         register_setting( 'autoptimize', 'autoptimize_js_exclude' );
@@ -713,6 +727,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
         static $config = array(
             'autoptimize_html' => 0,
             'autoptimize_html_keepcomments' => 0,
+			'autoptimize_enable_site_config' => 0,
             'autoptimize_js' => 0,
             'autoptimize_js_aggregate' => 1,
             'autoptimize_js_exclude' => 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js',

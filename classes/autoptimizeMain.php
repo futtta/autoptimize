@@ -492,6 +492,7 @@ class autoptimizeMain
             'autoptimize_css_exclude',
             'autoptimize_html',
             'autoptimize_html_keepcomments',
+			'autoptimize_enable_site_config',
             'autoptimize_js',
             'autoptimize_js_aggregate',
             'autoptimize_js_exclude',
