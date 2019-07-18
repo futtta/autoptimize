@@ -157,7 +157,9 @@ class autoptimizeImages
         if ( $this->should_lazyload() ) {
             add_action(
                 'wp_footer',
-                array( $this, 'add_lazyload_js_footer' )
+                array( $this, 'add_lazyload_js_footer' ),
+                10,
+                0
             );
         }
     }
@@ -654,7 +656,7 @@ class autoptimizeImages
     }
 
     public function should_lazyload( $context = '' ) {
-        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) ) {
+        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && false !== autoptimizeMain::should_buffer() ) {
             $lazyload_return = true;
         } else {
             $lazyload_return = false;

@@ -279,7 +279,7 @@ class autoptimizeMain
      *                          deciding once per request (for use in tests).
      * @return bool
      */
-    public function should_buffer( $doing_tests = false )
+    public static function should_buffer( $doing_tests = false )
     {
         static $do_buffering = null;
 
