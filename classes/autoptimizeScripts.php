@@ -396,9 +396,13 @@ class autoptimizeScripts extends autoptimizeBase
             $defer = 'defer ';
         }
 
-        $defer = apply_filters( 'autoptimize_filter_js_defer', $defer );
+        $defer   = apply_filters( 'autoptimize_filter_js_defer', $defer );
+        $type_js = '';
+        if ( apply_filters( 'autoptimize_filter_cssjs_addtype', false ) ) {
+            $type_js = 'type="text/javascript" ';
+        }
 
-        $bodyreplacementpayload = '<script type="text/javascript" ' . $defer . 'src="' . $this->url . '"></script>';
+        $bodyreplacementpayload = '<script ' . $type_js . $defer . 'src="' . $this->url . '"></script>';
         $bodyreplacementpayload = apply_filters( 'autoptimize_filter_js_bodyreplacementpayload', $bodyreplacementpayload );
 
         $bodyreplacement = implode( '', $this->move['first'] );

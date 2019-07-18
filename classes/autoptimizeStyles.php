@@ -821,13 +821,19 @@ class autoptimizeStyles extends autoptimizeBase
             $this->restofcontent = '';
         }
 
+        // type is not added by default.
+        $type_css = '';
+        if ( apply_filters( 'autoptimize_filter_cssjs_addtype', false ) ) {
+            $type_css = 'type="text/css" ';
+        }
+
         // Inject the new stylesheets.
         $replaceTag = array( '<title', 'before' );
         $replaceTag = apply_filters( 'autoptimize_filter_css_replacetag', $replaceTag, $this->content );
 
         if ( $this->inline ) {
             foreach ( $this->csscode as $media => $code ) {
-                $this->inject_in_html( '<style type="text/css" media="' . $media . '">' . $code . '</style>', $replaceTag );
+                $this->inject_in_html( '<style ' . $type_css . 'media="' . $media . '">' . $code . '</style>', $replaceTag );
             }
         } else {
             if ( $this->defer ) {
@@ -855,7 +861,7 @@ class autoptimizeStyles extends autoptimizeBase
                     }
                     // inlined critical css set here, but injected when full CSS is injected
                     // to avoid CSS containing SVG with <title tag receiving the full CSS link.
-                    $inlined_ccss_block = '<style type="text/css" id="aoatfcss" media="all">' . $defer_inline_code . '</style>';
+                    $inlined_ccss_block = '<style ' . $type_css . 'id="aoatfcss" media="all">' . $defer_inline_code . '</style>';
                 }
             }
 
@@ -867,13 +873,12 @@ class autoptimizeStyles extends autoptimizeBase
                     $preloadOnLoad = autoptimizeConfig::get_ao_css_preload_onload();
 
                     $preloadCssBlock .= '<link rel="preload" as="style" media="' . $media . '" href="' . $url . '" onload="' . $preloadOnLoad . '" />';
-                    $noScriptCssBlock .= '<link type="text/css" media="' . $media . '" href="' . $url . '" rel="stylesheet" />';
+                    $noScriptCssBlock .= '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />';
                 } else {
-                    // $this->inject_in_html('<link type="text/css" media="' . $media . '" href="' . $url . '" rel="stylesheet" />', $replaceTag);
                     if ( strlen( $this->csscode[$media] ) > $this->cssinlinesize ) {
-                        $this->inject_in_html( '<link type="text/css" media="' . $media . '" href="' . $url . '" rel="stylesheet" />', $replaceTag );
+                        $this->inject_in_html( '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />', $replaceTag );
                     } elseif ( strlen( $this->csscode[$media] ) > 0 ) {
-                        $this->inject_in_html( '<style type="text/css" media="' . $media . '">' . $this->csscode[$media] . '</style>', $replaceTag );
+                        $this->inject_in_html( '<style ' . $type_css . 'media="' . $media . '">' . $this->csscode[$media] . '</style>', $replaceTag );
                     }
                 }
             }
