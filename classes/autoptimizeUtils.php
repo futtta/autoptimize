@@ -359,4 +359,19 @@ class autoptimizeUtils
 
         return $ipa_exists && \is_plugin_active( $plugin_file );
     }
+
+    /**
+     * Returns a node without ID attrib for use in noscript tags
+     *
+     * @param string $node
+     *
+     * @return string
+     */    
+    public static function remove_id_from_node( $node ) {
+        if ( strpos( $node, 'id=' ) === false || apply_filters( 'autoptimize_filter_utils_keep_ids', false ) ) {
+            return $node;
+        } else {
+            return preg_replace( '#(.*) id=[\'|"].*[\'|"] (.*)#Um',"$1 $2", $node );
+        }
+    }
 }

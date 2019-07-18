@@ -699,7 +699,7 @@ class autoptimizeImages
             $tag = $this->maybe_fix_missing_quotes( $tag );
 
             // store original tag for use in noscript version.
-            $noscript_tag = '<noscript>' . $tag . '</noscript>';
+            $noscript_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>';
 
             $lazyload_class = apply_filters( 'autoptimize_filter_imgopt_lazyload_class', 'lazyload' );
 

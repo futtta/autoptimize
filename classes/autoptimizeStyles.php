@@ -266,7 +266,7 @@ class autoptimizeStyles extends autoptimizeBase
                 $url
             );
             // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
-            $new_tag = '<noscript>' . $tag . '</noscript>' . str_replace(
+            $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
                 array(
                     "rel='stylesheet'",
                     'rel="stylesheet"',
