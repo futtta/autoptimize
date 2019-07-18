@@ -300,7 +300,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
 </tr>
 <tr valign="top" class="<?php echo $hiddenClass;?>css_sub ao_adv" id="autoptimize_css_defer_inline">
 <th scope="row"></th>
-<td><label><textarea rows="10" cols="10" style="width:100%;" placeholder="<?php _e('Paste the above the fold CSS here.','autoptimize'); ?>" name="autoptimize_css_defer_inline"><?php echo get_option('autoptimize_css_defer_inline'); ?></textarea></label></td>
+<td><label><textarea rows="10" cols="10" style="width:100%;" placeholder="<?php _e('Paste the above the fold CSS here. You can leave this empty when using the automated Critical CSS integration.','autoptimize'); ?>" name="autoptimize_css_defer_inline"><?php echo get_option('autoptimize_css_defer_inline'); ?></textarea></label></td>
 </tr>
 <tr valign="top" class="<?php echo $hiddenClass;?>ao_adv css_sub css_aggregate">
 <th scope="row"><?php _e('Inline all CSS?','autoptimize'); ?></th>
