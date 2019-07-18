@@ -230,6 +230,7 @@ class autoptimizeExtra
             }
 
             $fonts_string = apply_filters( 'autoptimize_filter_extra_gfont_fontstring', str_replace( '|', '%7C', ltrim( $fonts_string, '|' ) ) );
+            $fonts_string .= apply_filters( 'autoptimize_filter_extra_gfont_display', '&amp;display=swap' );
 
             if ( ! empty( $fonts_string ) ) {
                 if ( '5' === $options['autoptimize_extra_radio_field_4'] ) {
