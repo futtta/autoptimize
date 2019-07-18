@@ -100,7 +100,7 @@ class autoptimizeImages
             add_action( 'admin_menu', array( $this, 'imgopt_admin_menu' ) );
             add_filter( 'autoptimize_filter_settingsscreen_tabs', array( $this, 'add_imgopt_tab' ), 9 );
         } else {
-            $this->run_on_frontend();
+            add_action( 'wp', array( $this, 'run_on_frontend' ) );
         }
     }
 
