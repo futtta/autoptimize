@@ -327,7 +327,13 @@ class autoptimizeImages
         // Do the work on cache miss only.
         if ( ! isset( $cache[ $in ] ) ) {
             // Default to what was given to us.
-            $result = trim( $in );
+            $in = trim( $in );
+
+            // Some silly plugins wrap background images in html-encoded quotes, so remove those from the img url.
+            if ( strpos( $in, '&quot;' ) !== false ) {
+                $in = str_replace( '&quot;', '', $in );
+            }
+
             if ( autoptimizeUtils::is_protocol_relative( $in ) ) {
                 $result = $parsed_site_url['scheme'] . ':' . $in;
             } elseif ( 0 === strpos( $in, '/' ) ) {
