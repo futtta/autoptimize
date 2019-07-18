@@ -735,6 +735,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
                 false,
             ),
             array(
+                // adding doctype & html tags to make sure that this is falsed by the extended has_xsl_stylesheet test.
+                '<?xml version="2.0" encoding="UTF-8"?>
+<!doctype html><html>
+<?xml-stylesheet type="text/xsl" ',
+                false,
+            ),
+            array(
                 '<!doctype html>
 <html>',
                 true,

@@ -361,7 +361,7 @@ class autoptimizeMain
         $valid = true;
 
         $has_no_html_tag    = ( false === stripos( $content, '<html' ) );
-        $has_xsl_stylesheet = ( false !== stripos( $content, '<xsl:stylesheet' ) );
+        $has_xsl_stylesheet = ( false !== stripos( $content, '<xsl:stylesheet' ) || false !== stripos( $content, '<?xml-stylesheet' ) );
         $has_html5_doctype  = ( preg_match( '/^<!DOCTYPE.+html>/i', ltrim( $content ) ) > 0 );
 
         if ( $has_no_html_tag ) {
