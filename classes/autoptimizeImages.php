@@ -911,6 +911,7 @@ class autoptimizeImages
         #ao_settings_form .form-table th {font-weight: normal;}
         #autoptimize_imgopt_descr{font-size: 120%;}
     </style>
+    <script>document.title = "Autoptimize Images options " + document.title;</script>
     <div class="wrap">
     <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>

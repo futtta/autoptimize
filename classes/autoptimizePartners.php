@@ -132,6 +132,7 @@ class autoptimizePartners
         color: #23282d;
     }
     </style>
+    <script>document.title = "Autoptimize Optimize More " + document.title;</script>
     <div class="wrap">
         <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
