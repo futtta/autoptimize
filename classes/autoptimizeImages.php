@@ -328,22 +328,21 @@ class autoptimizeImages
 
         // Do the work on cache miss only.
         if ( ! isset( $cache[ $in ] ) ) {
-            // Default to what was given to us.
-            $in = trim( $in );
+            // Default to (the trimmed version of) what was given to us.
+            $result = trim( $in );
 
             // Some silly plugins wrap background images in html-encoded quotes, so remove those from the img url.
-            if ( strpos( $in, '&quot;' ) !== false ) {
-                $in = str_replace( '&quot;', '', $in );
+            if ( strpos( $result, '&quot;' ) !== false ) {
+                $result = str_replace( '&quot;', '', $result );
             }
 
-            if ( autoptimizeUtils::is_protocol_relative( $in ) ) {
-                $result = $parsed_site_url['scheme'] . ':' . $in;
-            } elseif ( 0 === strpos( $in, '/' ) ) {
+            if ( autoptimizeUtils::is_protocol_relative( $result ) ) {
+                $result = $parsed_site_url['scheme'] . ':' . $result;
+            } elseif ( 0 === strpos( $result, '/' ) ) {
                 // Root-relative...
-                $result  = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'];
-                $result .= $in;
-            } elseif ( ! empty( $cdn_domain ) && strpos( $in, $cdn_domain ) !== 0 ) {
-                $result = str_replace( $cdn_domain, $parsed_site_url['host'], $in );
+                $result  = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $result;
+            } elseif ( ! empty( $cdn_domain ) && strpos( $result, $cdn_domain ) !== 0 ) {
+                $result = str_replace( $cdn_domain, $parsed_site_url['host'], $result );
             }
 
             $result = apply_filters( 'autoptimize_filter_imgopt_normalized_url', $result );
