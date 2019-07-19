@@ -373,7 +373,7 @@ class autoptimizeExtra
         #ao_settings_form .form-table th {font-weight: normal;}
         #autoptimize_extra_descr{font-size: 120%;}
     </style>
-    <script>document.title = "Autoptimize Extra options " + document.title;</script>
+    <script>document.title = "Autoptimize: <?php _e( 'Extra' , 'autoptimize' ); ?> " + document.title;</script>
     <div class="wrap">
     <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
