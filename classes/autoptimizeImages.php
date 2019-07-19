@@ -656,7 +656,7 @@ class autoptimizeImages
     }
 
     public function should_lazyload( $context = '' ) {
-        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && false !== autoptimizeMain::should_buffer() ) {
+        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && false !== autoptimizeMain::should_buffer() && false === $this->check_nolazy() ) {
             $lazyload_return = true;
         } else {
             $lazyload_return = false;
@@ -664,6 +664,14 @@ class autoptimizeImages
         $lazyload_return = apply_filters( 'autoptimize_filter_imgopt_should_lazyload', $lazyload_return, $context );
 
         return $lazyload_return;
+    }
+
+    public function check_nolazy() {
+        if ( array_key_exists( 'ao_nolazy', $_GET ) && '1' === $_GET['ao_nolazy'] ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function filter_lazyload_images( $in )
