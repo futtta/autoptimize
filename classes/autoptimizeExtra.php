@@ -289,7 +289,7 @@ class autoptimizeExtra
     public function filter_preconnect( $hints, $relation_type )
     {
         $options  = $this->options;
-        $preconns = '';
+        $preconns = array();
 
         // Get settings and store in array.
         if ( array_key_exists( 'autoptimize_extra_text_field_2', $options ) ) {
