@@ -288,10 +288,13 @@ class autoptimizeExtra
 
     public function filter_preconnect( $hints, $relation_type )
     {
-        $options = $this->options;
+        $options  = $this->options;
+        $preconns = '';
 
         // Get settings and store in array.
-        $preconns = array_filter( array_map( 'trim', explode( ',', $options['autoptimize_extra_text_field_2'] ) ) );
+        if ( array_key_exists( 'autoptimize_extra_text_field_2', $options ) ) {
+            $preconns = array_filter( array_map( 'trim', explode( ',', $options['autoptimize_extra_text_field_2'] ) ) );
+        }
         $preconns = apply_filters( 'autoptimize_extra_filter_tobepreconn', $preconns );
 
         // Walk array, extract domain and add to new array with crossorigin attribute.
@@ -373,7 +376,7 @@ class autoptimizeExtra
         #ao_settings_form .form-table th {font-weight: normal;}
         #autoptimize_extra_descr{font-size: 120%;}
     </style>
-    <script>document.title = "Autoptimize: <?php _e( 'Extra' , 'autoptimize' ); ?> " + document.title;</script>
+    <script>document.title = "Autoptimize: <?php _e( 'Extra', 'autoptimize' ); ?> " + document.title;</script>
     <div class="wrap">
     <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
