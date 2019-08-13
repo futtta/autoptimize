@@ -374,4 +374,24 @@ class autoptimizeUtils
             return preg_replace( '#(.*) id=[\'|"].*[\'|"] (.*)#Um', '$1 $2', $node );
         }
     }
+
+    /**
+     * Returns true if given $str ends with given $test.
+     *
+     * @param string $str String to check.
+     * @param string $test Ending to match.
+     *
+     * @return bool
+     */
+    public static function str_ends_in( $str, $test )
+    {
+        // @codingStandardsIgnoreStart
+        // substr_compare() is bugged on 5.5.11: https://3v4l.org/qGYBH
+        // return ( 0 === substr_compare( $str, $test, -strlen( $test ) ) );
+        // @codingStandardsIgnoreEnd
+
+        $length = strlen( $test );
+
+        return ( substr( $str, -$length, $length ) === $test );
+    }
 }

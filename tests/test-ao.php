@@ -2695,4 +2695,28 @@ break`+`he  llo`;foo`hel( \'\');lo`;`he\nl\`lo`;(`he${one + two}`)';
         $actual = JSMin::minify( $js );
         $this->assertEquals( $expected, $actual );
     }
+
+    /**
+     * Test image optimization in autoptimizeImages.php.
+     *
+     * Default case: img with srcsets
+     */
+    public function test_preload()
+    {
+        $opts                                   = autoptimizeExtra::fetch_options();
+        $opts['autoptimize_extra_text_field_7'] = 'https://whatever.com/fonts/openfuttta.woff2, https://whatever.com/css/openfuttta.css';
+
+        $markup = <<<MARKUP
+<html><link rel="stylesheet" href="xyz.css">
+MARKUP;
+
+        $expected = <<<MARKUP
+<html><link rel="preload" href="https://whatever.com/fonts/openfuttta.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="https://whatever.com/css/openfuttta.css" as="style"><link rel="stylesheet" href="xyz.css">
+MARKUP;
+
+        $instance = autoptimizeExtra::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_preload( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
 }

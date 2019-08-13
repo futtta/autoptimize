@@ -275,10 +275,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.6.0 beta =
-* Add `display=swap` to Autoptimized (CSS-based) Google Font requests
+* New "Extra" option; you can specify what resources need to be preloaded
+* Add `display=swap` to Autoptimized (CSS-based) Google Fonts
 * No longer add type attributes to Autoptimized resources
 * Batch of misc. smaller improvements & fixes, more info in the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
-* Bigger changes will follow in next beta('s)
 
 = 2.5.1 =
 * Images: Also optimize & lazyload &lt;picture>&lt;source>

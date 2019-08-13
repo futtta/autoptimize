@@ -17,6 +17,13 @@ class autoptimizeExtra
     protected $options = array();
 
     /**
+     * Singleton instance.
+     *
+     * @var self|null
+     */
+    protected static $instance = null;
+
+    /**
      * Creates an instance and calls run().
      *
      * @param array $options Optional. Allows overriding options without having to specify them via admin options page.
@@ -30,6 +37,23 @@ class autoptimizeExtra
         $this->options = $options;
     }
 
+    /**
+     * Helper for getting a singleton instance. While being an
+     * anti-pattern generally, it comes in handy for now from a
+     * readability/maintainability perspective, until we get some
+     * proper dependency injection going.
+     *
+     * @return self
+     */
+    public static function instance()
+    {
+        if ( null === self::$instance ) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
     public function run()
     {
         if ( is_admin() ) {
@@ -38,6 +62,13 @@ class autoptimizeExtra
         } else {
             $this->run_on_frontend();
         }
+    }
+
+    public function set_options( array $options )
+    {
+        $this->options = $options;
+
+        return $this;
     }
 
     public static function fetch_options()
@@ -138,6 +169,11 @@ class autoptimizeExtra
         // Preconnect!
         if ( ! empty( $options['autoptimize_extra_text_field_2'] ) || has_filter( 'autoptimize_extra_filter_tobepreconn' ) ) {
             add_filter( 'wp_resource_hints', array( $this, 'filter_preconnect' ), 10, 2 );
+        }
+
+        // Preload!
+        if ( ! empty( $options['autoptimize_extra_text_field_7'] ) ) {
+            add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_preload' ), 10, 2 );
         }
     }
 
@@ -342,6 +378,55 @@ class autoptimizeExtra
         return $in;
     }
 
+    public function filter_preload( $in ) {
+        // make array from comma separated list.
+        $options  = $this->options;
+        $preloads = array();
+        if ( array_key_exists( 'autoptimize_extra_text_field_7', $options ) ) {
+            $preloads = array_filter( array_map( 'trim', explode( ',', $options['autoptimize_extra_text_field_7'] ) ) );
+        }
+        $preloads = apply_filters( 'autoptimize_filter_extra_tobepreloaded', $preloads );
+
+        // immediately return if nothing to be preloaded.
+        if ( empty( $preloads ) ) {
+            return $in;
+        }
+
+        // iterate through array and add preload link to tmp string.
+        $preload_output = '';
+        foreach ( $preloads as $preload ) {
+            $crossorigin = '';
+            $preload_as  = '';
+            $mime_type   = '';
+
+            if ( autoptimizeUtils::str_ends_in( $preload, '.css' ) ) {
+                $preload_as = 'style';
+            } elseif ( autoptimizeUtils::str_ends_in( $preload, '.js' ) ) {
+                $preload_as = 'script';
+            } elseif ( autoptimizeUtils::str_ends_in( $preload, '.woff' ) || autoptimizeUtils::str_ends_in( $preload, '.woff2' ) || autoptimizeUtils::str_ends_in( $preload, '.ttf' ) || autoptimizeUtils::str_ends_in( $preload, '.eot' ) ) {
+                $preload_as  = 'font';
+                $crossorigin = ' crossorigin';
+                $mime_type   = ' type="font/' . pathinfo( $preload, PATHINFO_EXTENSION ) . '"';
+                if ( ' type="font/eot"' === $mime_type ) {
+                    $mime_type = 'application/vnd.ms-fontobject';
+                }
+            } elseif ( autoptimizeUtils::str_ends_in( $preload, '.jpeg' ) || autoptimizeUtils::str_ends_in( $preload, '.jpg' ) || autoptimizeUtils::str_ends_in( $preload, '.webp' ) || autoptimizeUtils::str_ends_in( $preload, '.png' ) || autoptimizeUtils::str_ends_in( $preload, '.gif' ) ) {
+                $preload_as = 'image';
+            } else {
+                $preload_as = 'other';
+            }
+
+            $preload_output .= '<link rel="preload" href="' . $preload . '" as="' . $preload_as . '"' . $mime_type . $crossorigin . '>';
+        }
+        $preload_output = apply_filters( 'autoptimize_filter_extra_preload_output', $preload_output );
+
+        // add string to head (before first link node by default).
+        $preload_inject = apply_filters( 'autoptimize_filter_extra_preload_inject', '<link' );
+        $position       = autoptimizeUtils::strpos( $in, $preload_inject );
+
+        return autoptimizeUtils::substr_replace( $in, $preload_output . $preload_inject, $position, strlen( $preload_inject ) );
+    }
+
     public function admin_menu()
     {
         add_submenu_page(
@@ -417,6 +502,12 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Preconnect to 3rd party domains <em>(advanced users)</em>', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_2]' value='<?php if ( array_key_exists( 'autoptimize_extra_text_field_2', $options ) ) { echo esc_attr( $options['autoptimize_extra_text_field_2'] ); } ?>'><br /><?php _e( 'Add 3rd party domains you want the browser to <a href="https://www.keycdn.com/support/preconnect/#primary" target="_blank">preconnect</a> to, separated by comma\'s. Make sure to include the correct protocol (HTTP or HTTPS).', 'autoptimize' ); ?></label>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e( 'Preload specific requests <em>(advanced users)</em>', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_7]' value='<?php if ( array_key_exists( 'autoptimize_extra_text_field_7', $options ) ) { echo esc_attr( $options['autoptimize_extra_text_field_7'] ); } ?>'><br /><?php _e( 'Comma-separated list with full URL\'s of to to-be-preloaded resources. To be used sparingly!', 'autoptimize' ); ?></label>
                 </td>
             </tr>
             <tr>
