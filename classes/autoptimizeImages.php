@@ -340,7 +340,7 @@ class autoptimizeImages
                 $result = $parsed_site_url['scheme'] . ':' . $result;
             } elseif ( 0 === strpos( $result, '/' ) ) {
                 // Root-relative...
-                $result  = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $result;
+                $result = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $result;
             } elseif ( ! empty( $cdn_domain ) && strpos( $result, $cdn_domain ) !== 0 ) {
                 $result = str_replace( $cdn_domain, $parsed_site_url['host'], $result );
             }
@@ -655,7 +655,7 @@ class autoptimizeImages
     }
 
     public function should_lazyload( $context = '' ) {
-        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && false !== autoptimizeMain::should_buffer() && false === $this->check_nolazy() ) {
+        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && false === $this->check_nolazy() ) {
             $lazyload_return = true;
         } else {
             $lazyload_return = false;
@@ -754,6 +754,10 @@ class autoptimizeImages
     }
 
     public function add_lazyload_js_footer() {
+        if ( false === autoptimizeMain::should_buffer() ) {
+            return;
+        }
+
         // The JS will by default be excluded form autoptimization but this can be changed with a filter.
         $noptimize_flag = '';
         if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_js_noptimize', true ) ) {
@@ -910,7 +914,7 @@ class autoptimizeImages
         #ao_settings_form .form-table th {font-weight: normal;}
         #autoptimize_imgopt_descr{font-size: 120%;}
     </style>
-    <script>document.title = "Autoptimize: <?php _e( 'Images' , 'autoptimize' ); ?> " + document.title;</script>
+    <script>document.title = "Autoptimize: <?php _e( 'Images', 'autoptimize' ); ?> " + document.title;</script>
     <div class="wrap">
     <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
