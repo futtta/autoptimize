@@ -806,7 +806,7 @@ class autoptimizeImages
         if ( strpos( $tag, 'class=' ) !== false ) {
             $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
         } else {
-            $tag = str_replace( '<img ', '<img class="' . trim( $target_class ) . '" ', $tag );
+            $tag = preg_replace( '/(<img)\s/', '$1 class="' . trim( $target_class ) . '" ', $tag );
         }
 
         return $tag;
