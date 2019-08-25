@@ -2484,6 +2484,33 @@ MARKUP;
     }
 
     /**
+     * Test lazyload in autoptimizeImages.php.
+     *
+     * case: picture tag
+     */
+    public function test_bgimg_lazyload()
+    {
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '1';
+
+        $markup = <<<MARKUP
+<div id="just-an-id" style="height:250px;background-image: url(/wp-content/uploads/2018/05/DSC_1615-300x201.jpg);" class="hero background-image"></div>
+MARKUP;
+
+        $expected = <<<MARKUP
+<div id="just-an-id" data-bg="/wp-content/uploads/2018/05/DSC_1615-300x201.jpg" style="height:250px;background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20300%22%3E%3C/svg%3E);" class="lazyload hero background-image"></div>
+MARKUP;
+
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_lazyload_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
      * Test image optimization in autoptimizeImages.php.
      *
      * Exception case: image served by .php, should not be proxied.
@@ -2697,9 +2724,7 @@ break`+`he  llo`;foo`hel( \'\');lo`;`he\nl\`lo`;(`he${one + two}`)';
     }
 
     /**
-     * Test image optimization in autoptimizeImages.php.
-     *
-     * Default case: img with srcsets
+     * Test preloading of resources (e.g. fonts).
      */
     public function test_preload()
     {

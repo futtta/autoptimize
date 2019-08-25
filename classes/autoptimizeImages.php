@@ -593,7 +593,7 @@ class autoptimizeImages
             );
         }
 
-        // lazyload: restore noscript tags + lazyload picture source tags.
+        // lazyload: restore noscript tags + lazyload picture source tags and bgimage.
         if ( $this->should_lazyload() ) {
             $out = autoptimizeBase::restore_marked_content(
                 'SCRIPT',
@@ -601,6 +601,7 @@ class autoptimizeImages
             );
 
             $out = $this->process_picture_tag( $out, true, true );
+            $out = $this->process_bgimage( $out );
         } else {
             $out = $this->process_picture_tag( $out, true, false );
         }
@@ -698,6 +699,9 @@ class autoptimizeImages
 
         // and also lazyload picture tag.
         $out = $this->process_picture_tag( $out, false, true );
+
+        // and inline style blocks with background-image.
+        $out = $this->process_bgimage( $out );
 
         // restore noscript tags.
         $out = autoptimizeBase::restore_marked_content(
@@ -865,6 +869,34 @@ class autoptimizeImages
         $out = str_replace( array_keys( $to_replace_pict ), array_values( $to_replace_pict ), $in );
 
         return $out;
+    }
+
+    public function process_bgimage( $in ) {
+        if ( strpos( $in, 'background-image:' ) !== false && apply_filters( 'autoptimize_filter_imgopt_lazyload_backgroundimages', true ) ) {
+            $out = preg_replace_callback(
+                '/(<div[^>]*)\sstyle=(?:"|\').*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)[^>]*/',
+                array( $this, 'lazyload_bgimg_callback' ),
+                $in
+            );
+            return $out;
+        }
+        return $in;
+    }
+
+    public function lazyload_bgimg_callback( $matches ) {
+        if ( str_ireplace( $this->get_lazyload_exclusions(), '', $matches[0] ) === $matches[0] ) {
+            // get placeholder & lazyload class strings.
+            $placeholder    = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $this->get_default_lazyload_placeholder( 500, 300 ) );
+            $lazyload_class = apply_filters( 'autoptimize_filter_imgopt_lazyload_class', 'lazyload' );
+            // replace background-image URL with SVG placeholder.
+            $out = str_replace( $matches[2], $placeholder, $matches[0] );
+            // add data-bg attribute with real background-image URL for lazyload to pick up.
+            $out = str_replace( $matches[1], $matches[1] . ' data-bg="' . $matches[2] . '"', $out );
+            // add lazyload class to tag.
+            $out = $this->inject_classes_in_tag( $out, "$lazyload_class " );
+            return $out;
+        }
+        return $matches[0];
     }
 
     public function maybe_fix_missing_quotes( $tag_in ) {
