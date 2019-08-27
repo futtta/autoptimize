@@ -741,8 +741,9 @@ class autoptimizeImages
                 // see https://css-tricks.com/preventing-content-reflow-from-lazy-loaded-images/ for great read on why we're using empty svg's.
                 $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $this->get_default_lazyload_placeholder( $width, $height ) );
             }
-            $tag = str_replace( ' src=', ' src=\'' . $placeholder . '\' data-src=', $tag );
-            $tag = str_replace( ' srcset=', ' data-srcset=', $tag );
+
+            $tag = preg_replace( '/(\s)src=/', ' src=\'' . $placeholder . '\' data-src=', $tag );
+            $tag = preg_replace( '/(\s)srcset=/', ' data-srcset=', $tag );
 
             // move sizes to data-sizes unless filter says no.
             if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_move_sizes', true ) ) {
