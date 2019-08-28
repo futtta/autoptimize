@@ -688,7 +688,7 @@ class autoptimizeImages
         );
 
         // extract img tags and add lazyload attribs.
-        if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $out, $matches ) ) {
+        if ( preg_match_all( '#<(img|iframe)[^>]*src[^>]*>#Usmi', $out, $matches ) ) {
             foreach ( $matches[0] as $tag ) {
                 if ( $this->should_lazyload( $out ) ) {
                     $to_replace[ $tag ] = $this->add_lazyload( $tag );
@@ -811,7 +811,7 @@ class autoptimizeImages
         if ( strpos( $tag, 'class=' ) !== false ) {
             $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
         } else {
-            $tag = preg_replace( '/(<img)\s/', '$1 class="' . trim( $target_class ) . '" ', $tag );
+            $tag = preg_replace( '/(<img|<iframe)\s/', '$1 class="' . trim( $target_class ) . '" ', $tag );
         }
 
         return $tag;
