@@ -742,7 +742,8 @@ class autoptimizeImages
                 $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $this->get_default_lazyload_placeholder( $width, $height ) );
             }
 
-            $tag = preg_replace( '/(\s)src=/', ' src=\'' . $placeholder . '\' data-src=', $tag );
+            $is_iframe = strpos( $tag, '<iframe' ) === 0;
+            $tag = preg_replace( '/(\s)src=/', ( $is_iframe ? '' : " src='$placeholder'" ) . ' data-src=', $tag );
             $tag = preg_replace( '/(\s)srcset=/', ' data-srcset=', $tag );
 
             // move sizes to data-sizes unless filter says no.
