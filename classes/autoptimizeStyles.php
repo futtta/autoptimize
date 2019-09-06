@@ -129,6 +129,7 @@ class autoptimizeStyles extends autoptimizeBase
         if ( ! $options['minify_excluded'] && $options['aggregate'] ) {
             $this->minify_excluded = false;
         }
+        $this->minify_excluded = apply_filters( 'autoptimize_filter_css_minify_excluded', $this->minify_excluded );
 
         // noptimize me.
         $this->content = $this->hide_noptimize( $this->content );
@@ -218,7 +219,7 @@ class autoptimizeStyles extends autoptimizeBase
                         // Excluded CSS, minify that file:
                         // -> if aggregate is on and exclude minify is on
                         // -> if aggregate is off and the file is not in dontmove.
-                        if ( $path && ( $this->minify_excluded || apply_filters( 'autoptimize_filter_css_minify_excluded', false, $url ) ) ) {
+                        if ( $path && $this->minify_excluded ) {
                             $consider_minified_array = apply_filters( 'autoptimize_filter_css_consider_minified', false );
                             if ( ( false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path ) || ( true === $this->aggregate && ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) ) ) {
                                 $minified_url = $this->minify_single( $path );
