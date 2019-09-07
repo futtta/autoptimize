@@ -265,8 +265,11 @@ class autoptimizeExtra
                 $fonts_string  = $fonts_string . '&#038;subset=' . $subset_string;
             }
 
-            $fonts_string  = apply_filters( 'autoptimize_filter_extra_gfont_fontstring', str_replace( '|', '%7C', ltrim( $fonts_string, '|' ) ) );
-            $fonts_string .= apply_filters( 'autoptimize_filter_extra_gfont_display', '&amp;display=swap' );
+            $fonts_string = apply_filters( 'autoptimize_filter_extra_gfont_fontstring', str_replace( '|', '%7C', ltrim( $fonts_string, '|' ) ) );
+            // only add display parameter if there is none in $fonts_string (by virtue of the filter).
+            if ( strpos( $fonts_string, 'display=' ) === false ) {
+                $fonts_string .= apply_filters( 'autoptimize_filter_extra_gfont_display', '&amp;display=swap' );
+            }
 
             if ( ! empty( $fonts_string ) ) {
                 if ( '5' === $options['autoptimize_extra_radio_field_4'] ) {
