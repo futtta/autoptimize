@@ -41,11 +41,18 @@ class autoptimizeOption
 		// Ensure that is_plugin_active_for_network function is declared.
 		self::maybe_include_plugin_functions();
 		
-		if ( is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
+		// This is always a network setting.
+		if( 'autoptimize_enable_site_config' === $option ) {
 			return get_network_option( get_main_network_id(), $option );
-		} else {
-			return get_option( $option, $default );
 		}
+
+		// If the plugin is network activated and our per site setting is not on, use the network configuration.
+		$configuration_per_site = get_network_option( get_main_network_id(), 'autoptimize_enable_site_config' );
+		if ( is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) && 'on' !== $configuration_per_site ) {
+			return get_network_option( get_main_network_id(), $option );
+		}
+			
+		return get_option( $option, $default );
     }
 
 	/**
