@@ -214,7 +214,11 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 
 <ul>
 
-<?php if( is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) { ?>
+<?php
+// Only show enable site configuration in network site option.
+$blog_id = get_current_blog_id();
+if( is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) && 1 === $blog_id ) { 
+?>
 	<li class="itemDetail">
 	<h2 class="itemTitle"><?php _e('Multisite Options','autoptimize'); ?></h2>
 	<table class="form-table">
