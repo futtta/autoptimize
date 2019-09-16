@@ -17,7 +17,8 @@ class autoptimizeConfig
             // Add the admin page and settings.
 			if ( is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
 				add_action( 'network_admin_menu', array( $this, 'addmenu' ) );
-			} else {
+			} 
+			if ( 'on' === autoptimizeOption::get_option('autoptimize_enable_site_config') ) {
 				add_action( 'admin_menu', array( $this, 'addmenu' ) );
 			}
             add_action( 'admin_init', array( $this, 'registersettings' ) );
@@ -645,7 +646,8 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
     {
 		if ( is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
 			$hook = add_submenu_page( 'settings.php',  __( 'Autoptimize Options', 'autoptimize' ), 'Autoptimize', 'manage_network_options', 'autoptimize', array( $this, 'show' ) );
-		} else {
+		} 
+		if ( 'on' === autoptimizeOption::get_option('autoptimize_enable_site_config') ) {
 			$hook = add_options_page( __( 'Autoptimize Options', 'autoptimize' ), 'Autoptimize', 'manage_options', 'autoptimize', array( $this, 'show' ) );
 		}
 		
