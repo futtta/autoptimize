@@ -287,6 +287,11 @@ class autoptimizeCache
      */
     public static function delete_advanced_cache_clear_artifacts()
     {
+        // Don't go through these motions (called from the cachechecker) if advanced cache clear isn't even active.
+        if ( ! self::advanced_cache_clear_enabled() ) {
+            return false;
+        }
+
         $dir    = self::get_pathname_base();
         $prefix = self::get_advanced_cache_clear_prefix();
         $parent = dirname( $dir );
