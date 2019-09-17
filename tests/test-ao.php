@@ -2234,7 +2234,11 @@ MARKUP;
 
     public function test_delete_advanced_cache_clear_artifacts()
     {
+        add_filter( 'autoptimize_filter_cache_clear_advanced', '__return_true' );
+
         $this->assertTrue( autoptimizeCache::delete_advanced_cache_clear_artifacts() );
+
+        remove_all_filters( 'autoptimize_filter_cache_clear_advanced' );
     }
 
     public function provider_canonicalization()

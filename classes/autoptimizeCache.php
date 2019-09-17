@@ -207,6 +207,10 @@ class autoptimizeCache
      * cache directory into a new one with a unique name and then
      * re-creating the default (empty) cache directory.
      *
+     * Important/ Fixme: this does not take multisite into account, so
+     * if advanced_cache_clear_enabled is true (it is not by default)
+     * then the content for all subsites is zapped!
+     *
      * @return bool Returns true when everything is done successfully, false otherwise.
      */
     protected static function clear_cache_via_rename()
@@ -260,7 +264,7 @@ class autoptimizeCache
     {
         $pathname = self::get_pathname_base();
         $basename = basename( $pathname );
-        $prefix   = $basename . '-';
+        $prefix   = $basename . '-artifact-';
 
         return $prefix;
     }
@@ -287,6 +291,11 @@ class autoptimizeCache
      */
     public static function delete_advanced_cache_clear_artifacts()
     {
+        // Don't go through these motions (called from the cachechecker) if advanced cache clear isn't even active.
+        if ( ! self::advanced_cache_clear_enabled() ) {
+            return false;
+        }
+
         $dir    = self::get_pathname_base();
         $prefix = self::get_advanced_cache_clear_prefix();
         $parent = dirname( $dir );
