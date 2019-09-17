@@ -18,9 +18,8 @@ class autoptimizeConfig
 			if ( is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) ) {
 				add_action( 'network_admin_menu', array( $this, 'addmenu' ) );
 			}
-			if ( ! is_multisite() || 'on' === autoptimizeOption::get_option('autoptimize_enable_site_config') ) {
-				add_action( 'admin_menu', array( $this, 'addmenu' ) );
-			}
+
+			add_action( 'admin_menu', array( $this, 'addmenu' ) );
             add_action( 'admin_init', array( $this, 'registersettings' ) );
 
             // Set meta info.
@@ -59,6 +58,13 @@ class autoptimizeConfig
 
         return self::$instance;
     }
+
+	public function show_message() {
+		?>
+			<h1>Autoptimize enabled in network</h1>
+			<p>If you want to enable per site configutation for Autoptimize, please contact your network administrator.</p>
+		<?php
+	}
 
     public function show()
     {
@@ -653,8 +659,10 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
 		}
 		if ( ! is_multisite() || 'on' === autoptimizeOption::get_option('autoptimize_enable_site_config') ) {
 			$hook = add_options_page( __( 'Autoptimize Options', 'autoptimize' ), 'Autoptimize', 'manage_options', 'autoptimize', array( $this, 'show' ) );
+		} else {
+			$hook = add_options_page( __( 'Autoptimize Options', 'autoptimize' ), 'Autoptimize', 'manage_options', 'autoptimize', array( $this, 'show_message' ) );
 		}
-		
+
         add_action( 'admin_print_scripts-' . $hook, array( $this, 'autoptimize_admin_scripts' ) );
         add_action( 'admin_print_styles-' . $hook, array( $this, 'autoptimize_admin_styles' ) );
     }
