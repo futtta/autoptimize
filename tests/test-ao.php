@@ -70,7 +70,7 @@ class AOTest extends WP_UnitTestcase
 
         static $cdn_url = null;
         if ( null === $cdn_url ) {
-            $cdn_url = get_option( 'autoptimize_cdn_url' );
+            $cdn_url = autoptimizeOption::get_option( 'autoptimize_cdn_url' );
         }
 
         static $imgopt_host = null;

@@ -73,7 +73,7 @@ class autoptimizeExtra
 
     public static function fetch_options()
     {
-        $value = get_option( 'autoptimize_extra_settings' );
+        $value = autoptimizeOption::get_option( 'autoptimize_extra_settings' );
         if ( empty( $value ) ) {
             // Fallback to returning defaults when no stored option exists yet.
             $value = autoptimizeConfig::get_ao_extra_default_options();
