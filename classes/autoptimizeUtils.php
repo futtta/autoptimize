@@ -314,7 +314,7 @@ class autoptimizeUtils
             if ( '200' == wp_remote_retrieve_response_code( $service_availability_resp ) ) {
                 $availabilities = json_decode( wp_remote_retrieve_body( $service_availability_resp ), true );
                 if ( is_array( $availabilities ) ) {
-                    update_option( 'autoptimize_service_availablity', $availabilities );
+                    autoptimizeOption::update_option( 'autoptimize_service_availablity', $availabilities );
                     if ( $return_result ) {
                         return $availabilities;
                     }
