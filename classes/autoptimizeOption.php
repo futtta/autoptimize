@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * This class takes care of the set and get of option for standalone and multisite WordPress instances.
  */
-class Autoptimize_Option {
+class autoptimizeOption {
 	/**
 	 * Constructor, add filter on saving options.
 	 */
