@@ -1243,6 +1243,10 @@ class autoptimizeImages
                     // if no timestamp then we return "".
                     $_provider_userstatus['timestamp'] = '';
                 }
+            } else {
+                // no provider_stat yet, assume/ return all OK.
+                $_provider_userstatus['Status']    = 2;
+                $_provider_userstatus['timestamp'] = '';
             }
         }
 
