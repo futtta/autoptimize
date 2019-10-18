@@ -1133,19 +1133,21 @@ class autoptimizeImages
                     $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape, %1$slog in to check your account%2$s.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                 }
 
-                // add info on freshness + refresh link.
-                $_imgopt_stats_refresh_url = add_query_arg( array(
-                    'page'                => 'autoptimize_imgopt',
-                    'refreshImgProvStats' => '1',
-                ), admin_url( 'options-general.php' ) );
-                if ( $_stat && array_key_exists( 'timestamp', $_stat ) && ! empty( $_stat['timestamp'] ) ) {
-                    $_imgopt_stats_last_run = __( 'based on status at ', 'autoptimize' ) . date_i18n( get_option( 'time_format' ), $_stat['timestamp'] );
-                } else {
-                    $_imgopt_stats_last_run = __( 'based on previously fetched data', 'autoptimize' );
+                // add info on freshness + refresh link if status is not 2 (good shape).
+                if ( 2 != $_stat['Status'] ) {
+                    $_imgopt_stats_refresh_url = add_query_arg( array(
+                        'page'                => 'autoptimize_imgopt',
+                        'refreshImgProvStats' => '1',
+                    ), admin_url( 'options-general.php' ) );
+                    if ( $_stat && array_key_exists( 'timestamp', $_stat ) && ! empty( $_stat['timestamp'] ) ) {
+                        $_imgopt_stats_last_run = __( 'based on status at ', 'autoptimize' ) . date_i18n( get_option( 'time_format' ), $_stat['timestamp'] );
+                    } else {
+                        $_imgopt_stats_last_run = __( 'based on previously fetched data', 'autoptimize' );
+                    }
+                    $_imgopt_notice .= ' (' . $_imgopt_stats_last_run . ', ';
+                    // translators: "here to refresh" links to the Autoptimize Extra page and forces a refresh of the img opt stats.
+                    $_imgopt_notice .= sprintf( __( 'click %1$shere to refresh%2$s', 'autoptimize' ), '<a href="' . $_imgopt_stats_refresh_url . '">', '</a>).' );
                 }
-                $_imgopt_notice .= ' (' . $_imgopt_stats_last_run . ', ';
-                // translators: "here to refresh" links to the Autoptimize Extra page and forces a refresh of the img opt stats.
-                $_imgopt_notice .= sprintf( __( 'click %1$shere to refresh%2$s', 'autoptimize' ), '<a href="' . $_imgopt_stats_refresh_url . '">', '</a>).' );
 
                 // and make the full notice filterable.
                 $_imgopt_notice = apply_filters( 'autoptimize_filter_imgopt_notice', $_imgopt_notice );
