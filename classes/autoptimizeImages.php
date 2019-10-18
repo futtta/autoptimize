@@ -177,7 +177,8 @@ class autoptimizeImages
 
         $do_cdn      = true;
         $_userstatus = $this->get_imgopt_provider_userstatus();
-        if ( -2 == $_userstatus['Status'] ) {
+        if ( -2 == $_userstatus['Status'] || -3 == $_userstatus['Status'] ) {
+            // don't even attempt to put images on CDN if heavily exceeded threshold or if site not reachable.
             $do_cdn = false;
         }
 
@@ -584,7 +585,7 @@ class autoptimizeImages
             );
         }
 
-        // background-image in inline style
+        // background-image in inline style.
         if ( strpos( $out, 'background-image:' ) !== false && apply_filters( 'autoptimize_filter_imgopt_backgroundimages', true ) ) {
             $out = preg_replace_callback(
                 '/style=(?:"|\').*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)/',
@@ -985,7 +986,7 @@ class autoptimizeImages
                     <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_1]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_1'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from Shortpixel\'s global CDN.', 'autoptimize' ); ?></label>
                     <?php
                     // show shortpixel status.
-                    $_notice = autoptimizeImages::instance()->get_status_notice();
+                    $_notice = autoptimizeImages::instance()->get_imgopt_status_notice();
                     if ( $_notice ) {
                         switch ( $_notice['status'] ) {
                             case 2:
@@ -995,9 +996,8 @@ class autoptimizeImages
                                 $_notice_color = 'orange';
                                 break;
                             case -1:
-                                $_notice_color = 'red';
-                                break;
                             case -2:
+                            case -3:
                                 $_notice_color = 'red';
                                 break;
                             default:
@@ -1108,10 +1108,12 @@ class autoptimizeImages
      */
     public function get_imgopt_status_notice() {
         if ( $this->imgopt_active() ) {
-            $_imgopt_notice = '';
-            $_stat          = get_option( 'autoptimize_imgopt_provider_stat', '' );
-            $_site_host     = AUTOPTIMIZE_SITE_DOMAIN;
-            $_imgopt_upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
+            $_imgopt_notice  = '';
+            $_stat           = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            $_site_host      = AUTOPTIMIZE_SITE_DOMAIN;
+            $_imgopt_upsell  = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
+            $_imgopt_assoc   = 'https://shortpixel.helpscoutdocs.com/article/94-how-to-associate-a-domain-to-my-account';
+            $_imgopt_unreach = 'https://shortpixel.helpscoutdocs.com/article/148-why-are-my-images-redirected-from-cdn-shortpixel-ai';
 
             if ( is_array( $_stat ) ) {
                 if ( 1 == $_stat['Status'] ) {
@@ -1119,24 +1121,33 @@ class autoptimizeImages
                     $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                 } elseif ( -1 == $_stat['Status'] || -2 == $_stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
-                    $_imgopt_notice            = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
-                    $_imgopt_stats_refresh_url = add_query_arg( array(
-                        'page'                => 'autoptimize_imgopt',
-                        'refreshImgProvStats' => '1',
-                    ), admin_url( 'options-general.php' ) );
-                    if ( $_stat && array_key_exists( 'timestamp', $_stat ) && ! empty( $_stat['timestamp'] ) ) {
-                        $_imgopt_stats_last_run = __( 'based on status at ', 'autoptimize' ) . date_i18n( get_option( 'time_format' ), $_stat['timestamp'] );
-                    } else {
-                        $_imgopt_stats_last_run = __( 'based on previously fetched data', 'autoptimize' );
-                    }
-                    $_imgopt_notice .= ' (' . $_imgopt_stats_last_run . ', ';
-                    // translators: "here to refresh" links to the Autoptimize Extra page and forces a refresh of the img opt stats.
-                    $_imgopt_notice .= sprintf( __( 'click %1$shere to refresh%2$s', 'autoptimize' ), '<a href="' . $_imgopt_stats_refresh_url . '">', '</a>).' );
+                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                    // translators: "associate your domain" will appear in a "a href".
+                    $_imgopt_notice = $_imgopt_notice . ' ' . sprintf( __( 'If you already have enough credits then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $_imgopt_assoc . '" target="_blank">', '</a>' );
+                } elseif ( -3 == $_stat['Status'] ) {
+                    // translators: "add more credits" will appear in a "a href".
+                    $_imgopt_notice = sprintf( __( 'It seems ShortPixel image optimization is not able to fetch images from your site, %1$scheck the documentation here%2$s for more information', 'autoptimize' ), '<a href="' . $_imgopt_unreach . '" target="_blank">', '</a>' );
                 } else {
                     $_imgopt_upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';
                     // translators: "log in to check your account" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape, %1$slog in to check your account%2$s.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                 }
+
+                // add info on freshness + refresh link.
+                $_imgopt_stats_refresh_url = add_query_arg( array(
+                    'page'                => 'autoptimize_imgopt',
+                    'refreshImgProvStats' => '1',
+                ), admin_url( 'options-general.php' ) );
+                if ( $_stat && array_key_exists( 'timestamp', $_stat ) && ! empty( $_stat['timestamp'] ) ) {
+                    $_imgopt_stats_last_run = __( 'based on status at ', 'autoptimize' ) . date_i18n( get_option( 'time_format' ), $_stat['timestamp'] );
+                } else {
+                    $_imgopt_stats_last_run = __( 'based on previously fetched data', 'autoptimize' );
+                }
+                $_imgopt_notice .= ' (' . $_imgopt_stats_last_run . ', ';
+                // translators: "here to refresh" links to the Autoptimize Extra page and forces a refresh of the img opt stats.
+                $_imgopt_notice .= sprintf( __( 'click %1$shere to refresh%2$s', 'autoptimize' ), '<a href="' . $_imgopt_stats_refresh_url . '">', '</a>).' );
+
+                // and make the full notice filterable.
                 $_imgopt_notice = apply_filters( 'autoptimize_filter_imgopt_notice', $_imgopt_notice );
 
                 return array(
@@ -1251,37 +1262,5 @@ class autoptimizeImages
         }
 
         return $_provider_userstatus;
-    }
-
-    public function get_status_notice() {
-        if ( $this->imgopt_active() ) {
-            $notice = '';
-            $stat   = $this->get_imgopt_provider_userstatus();
-            $upsell = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . AUTOPTIMIZE_SITE_DOMAIN;
-            $assoc  = 'https://shortpixel.helpscoutdocs.com/article/94-how-to-associate-a-domain-to-my-account';
-
-            if ( is_array( $stat ) ) {
-                if ( 1 == $stat['Status'] ) {
-                    // translators: "add more credits" will appear in a "a href".
-                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
-                } elseif ( -1 == $stat['Status'] || -2 == $stat['Status'] ) {
-                    // translators: "add more credits" will appear in a "a href".
-                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
-                    // translators: "associate your domain" will appear in a "a href".
-                    $notice = $notice . ' ' . sprintf( __( 'If you already have enough credits then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $assoc . '" target="_blank">', '</a>' );
-                } else {
-                    $upsell = 'https://shortpixel.com/g/af/GWRGFLW109483';
-                    // translators: "log in to check your account" will appear in a "a href".
-                    $notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape, %1$slog in to check your account%2$s.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $upsell . '" target="_blank">', '</a>' );
-                }
-                $notice = apply_filters( 'autoptimize_filter_imgopt_notice', $notice );
-
-                return array(
-                    'status' => $stat['Status'],
-                    'notice' => $notice,
-                );
-            }
-        }
-        return false;
     }
 }
