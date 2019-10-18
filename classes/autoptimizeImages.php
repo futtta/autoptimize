@@ -747,7 +747,7 @@ class autoptimizeImages
 
             // move sizes to data-sizes unless filter says no.
             if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_move_sizes', true ) ) {
-                $tag = str_replace( 'sizes=', 'data-sizes=', $tag );
+                $tag = str_replace( ' sizes=', ' data-sizes=', $tag );
             }
 
             // add the noscript-tag from earlier.
