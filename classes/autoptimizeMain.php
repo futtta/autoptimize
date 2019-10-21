@@ -159,22 +159,24 @@ class autoptimizeMain
         if ( autoptimizeCache::cacheavail() ) {
             $conf = autoptimizeConfig::instance();
             if ( $conf->get( 'autoptimize_html' ) || $conf->get( 'autoptimize_js' ) || $conf->get( 'autoptimize_css' ) || autoptimizeImages::imgopt_active() || autoptimizeImages::should_lazyload_wrapper() ) {
-                // Hook into WordPress frontend.
-                if ( defined( 'AUTOPTIMIZE_INIT_EARLIER' ) ) {
-                    add_action(
-                        'init',
-                        array( $this, 'start_buffering' ),
-                        self::INIT_EARLIER_PRIORITY
-                    );
-                } else {
-                    if ( ! defined( 'AUTOPTIMIZE_HOOK_INTO' ) ) {
-                        define( 'AUTOPTIMIZE_HOOK_INTO', 'template_redirect' );
+                if ( ! defined( 'AUTOPTIMIZE_NOBUFFER_OPTIMIZE' ) ) {
+                    // Hook into WordPress frontend.
+                    if ( defined( 'AUTOPTIMIZE_INIT_EARLIER' ) ) {
+                        add_action(
+                            'init',
+                            array( $this, 'start_buffering' ),
+                            self::INIT_EARLIER_PRIORITY
+                        );
+                    } else {
+                        if ( ! defined( 'AUTOPTIMIZE_HOOK_INTO' ) ) {
+                            define( 'AUTOPTIMIZE_HOOK_INTO', 'template_redirect' );
+                        }
+                        add_action(
+                            constant( 'AUTOPTIMIZE_HOOK_INTO' ),
+                            array( $this, 'start_buffering' ),
+                            self::DEFAULT_HOOK_PRIORITY
+                        );
                     }
-                    add_action(
-                        constant( 'AUTOPTIMIZE_HOOK_INTO' ),
-                        array( $this, 'start_buffering' ),
-                        self::DEFAULT_HOOK_PRIORITY
-                    );
                 }
 
                 // And disable Jetpack's site accelerator if JS or CSS opt. are active.
@@ -473,6 +475,20 @@ class autoptimizeMain
         $content = apply_filters( 'autoptimize_html_after_minify', $content );
 
         return $content;
+    }
+
+    public static function autoptimize_nobuffer_optimize( $html_in ) {
+        $html_out = $html_in;
+
+        if ( apply_filters( 'autoptimize_filter_speedupper', true ) ) {
+            $ao_speedupper = new autoptimizeSpeedupper();
+        }
+
+        $self = new self( AUTOPTIMIZE_PLUGIN_VERSION, AUTOPTIMIZE_PLUGIN_FILE );
+        if ( $self->should_buffer() ) {
+            $html_out = $self->end_buffering( $html_in );
+        }
+        return $html_out;
     }
 
     public static function on_uninstall()
