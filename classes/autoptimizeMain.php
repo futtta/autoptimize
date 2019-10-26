@@ -65,6 +65,11 @@ class autoptimizeMain
         add_action( 'init', array( $this, 'load_textdomain' ) );
         add_action( 'admin_init', array( 'PAnD', 'init' ) );
 
+        if ( is_multisite() && is_admin() ) {
+            // Only if multisite and if in admin we want to check if we need to save options on network level.
+            add_action( 'init', 'autoptimizeOptionWrapper::check_multisite_on_saving_options' );
+        }
+
         register_activation_hook( $this->filepath, array( $this, 'on_activate' ) );
     }
 
@@ -81,7 +86,7 @@ class autoptimizeMain
     public function setup()
     {
         // Do we gzip in php when caching or is the webserver doing it?
-        define( 'AUTOPTIMIZE_CACHE_NOGZIP', (bool) get_option( 'autoptimize_cache_nogzip' ) );
+        define( 'AUTOPTIMIZE_CACHE_NOGZIP', (bool) autoptimizeOptionWrapper::get_option( 'autoptimize_cache_nogzip' ) );
 
         // These can be overridden by specifying them in wp-config.php or such.
         if ( ! defined( 'AUTOPTIMIZE_WP_CONTENT_NAME' ) ) {
@@ -313,12 +318,12 @@ class autoptimizeMain
             }
 
             // If setting says not to optimize logged in user and user is logged in...
-            if ( 'on' !== get_option( 'autoptimize_optimize_logged', 'on' ) && is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
+            if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_logged', 'on' ) && is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
                 $ao_noptimize = true;
             }
 
             // If setting says not to optimize cart/checkout.
-            if ( 'on' !== get_option( 'autoptimize_optimize_checkout', 'on' ) ) {
+            if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_checkout', 'on' ) ) {
                 // Checking for woocommerce, easy digital downloads and wp ecommerce...
                 foreach ( array( 'is_checkout', 'is_cart', 'edd_is_checkout', 'wpsc_is_cart', 'wpsc_is_checkout' ) as $func ) {
                     if ( function_exists( $func ) && $func() ) {
@@ -508,6 +513,7 @@ class autoptimizeMain
             'autoptimize_css_exclude',
             'autoptimize_html',
             'autoptimize_html_keepcomments',
+            'autoptimize_enable_site_config',
             'autoptimize_js',
             'autoptimize_js_aggregate',
             'autoptimize_js_exclude',

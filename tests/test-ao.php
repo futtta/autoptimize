@@ -70,7 +70,7 @@ class AOTest extends WP_UnitTestcase
 
         static $cdn_url = null;
         if ( null === $cdn_url ) {
-            $cdn_url = get_option( 'autoptimize_cdn_url' );
+            $cdn_url = autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url' );
         }
 
         static $imgopt_host = null;
@@ -2692,7 +2692,7 @@ MARKUP;
         $actual   = $instance->run_minifier_on( $css );
         $this->assertEquals( $css, $actual );
 
-        // When not quoted, 'Black' used to become '#000', but not anymore... :)
+        // When not quoted, 'Black' used to become '#000', but not anymore :) ...
         $css_unquoted = 'h2{font-family:Archivo Black;}';
         $expected     = 'h2{font-family:Archivo Black}';
         $instance     = new autoptimizeStyles( $css_unquoted );
@@ -2707,7 +2707,7 @@ MARKUP;
 
     public function test_is_plugin_active_utils_wrapper()
     {
-        // Our plugin is loaded via "muplugins_loaded" filter in tests/bootstrap.php
+        // Our plugin is loaded via "muplugins_loaded" filter in tests/bootstrap.php.
         $this->assertFalse( autoptimizeUtils::is_plugin_active( 'autoptimize/autoptimize.php' ) );
         $this->assertFalse( autoptimizeUtils::is_plugin_active( 'async-javascript/async-javascript.php' ) );
     }
@@ -2747,5 +2747,43 @@ MARKUP;
         $instance->set_options( $opts );
         $actual = $instance->filter_preload( $markup );
         $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test network vs site settings: network only.
+     */
+    public function test_network_no_site_settings()
+    {
+        if ( is_multisite() ) {
+            define( 'TEST_MULTISITE_FORCE_AO_ON_NETWORK', true );
+            // set options through WordPress core methods.
+            update_option( 'autoptimize_js_exclude', 'site' );
+            update_network_option( get_main_network_id(), 'autoptimize_js_exclude', 'network' );
+            update_network_option( get_main_network_id(), 'autoptimize_enable_site_config', '' );
+
+            // and then try fetching them through optionwrapper.
+            $expected = 'network';
+            $actual   = autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude' );
+            $this->assertEquals( $expected, $actual );
+        }
+    }
+
+    /**
+     * Test network vs site settings; per site.
+     */
+    public function test_network_per_site_settings()
+    {
+        if ( is_multisite() ) {
+            // define of TEST_MULTISITE_FORCE_AO_ON_NETWORK not needed, done in previous test.
+            // set options through WordPress core methods.
+            update_option( 'autoptimize_js_exclude', 'site' );
+            update_network_option( get_main_network_id(), 'autoptimize_js_exclude', 'network' );
+            update_network_option( get_main_network_id(), 'autoptimize_enable_site_config', 'on' );
+
+            // and then try fetching them through optionwrapper.
+            $expected = 'site';
+            $actual   = autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude' );
+            $this->assertEquals( $expected, $actual );
+        }
     }
 }
