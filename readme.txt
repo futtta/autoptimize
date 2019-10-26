@@ -279,6 +279,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.6.0 beta =
+* New: Autoptimize can be configured at network level or at individual site-level when on multisite
 * Extra: new option to specify what resources need to be preloaded
 * Extra: add `display=swap` to Autoptimized (CSS-based) Google Fonts
 * Images: support for lazyloading of background-images when set in the inline style attribute of a div
