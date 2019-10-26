@@ -57,7 +57,11 @@ class autoptimizeExtra
     public function run()
     {
         if ( is_admin() ) {
-            add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+            if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) && is_network_admin() ) {
+                add_action( 'network_admin_menu', array( $this, 'admin_menu' ) );
+            } else {
+                add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+            }
             add_filter( 'autoptimize_filter_settingsscreen_tabs', array( $this, 'add_extra_tab' ) );
         } else {
             $this->run_on_frontend();
@@ -73,7 +77,7 @@ class autoptimizeExtra
 
     public static function fetch_options()
     {
-        $value = get_option( 'autoptimize_extra_settings' );
+        $value = autoptimizeOptionWrapper::get_option( 'autoptimize_extra_settings' );
         if ( empty( $value ) ) {
             // Fallback to returning defaults when no stored option exists yet.
             $value = autoptimizeConfig::get_ao_extra_default_options();
@@ -432,20 +436,25 @@ class autoptimizeExtra
 
     public function admin_menu()
     {
-        add_submenu_page(
-            null,
-            'autoptimize_extra',
-            'autoptimize_extra',
-            'manage_options',
-            'autoptimize_extra',
-            array( $this, 'options_page' )
-        );
-        register_setting( 'autoptimize_extra_settings', 'autoptimize_extra_settings' );
+        // no acces if multisite and not network admin and no site config allowed.
+        if ( autoptimizeConfig::should_show_menu_tabs() ) {
+            add_submenu_page(
+                null,
+                'autoptimize_extra',
+                'autoptimize_extra',
+                'manage_options',
+                'autoptimize_extra',
+                array( $this, 'options_page' )
+            );
+            register_setting( 'autoptimize_extra_settings', 'autoptimize_extra_settings' );
+        }
     }
 
     public function add_extra_tab( $in )
     {
-        $in = array_merge( $in, array( 'autoptimize_extra' => __( 'Extra', 'autoptimize' ) ) );
+        if ( autoptimizeConfig::should_show_menu_tabs() ) {
+            $in = array_merge( $in, array( 'autoptimize_extra' => __( 'Extra', 'autoptimize' ) ) );
+        }
 
         return $in;
     }
@@ -468,13 +477,13 @@ class autoptimizeExtra
     <div class="wrap">
     <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
-        <?php if ( 'on' !== get_option( 'autoptimize_js' ) && 'on' !== get_option( 'autoptimize_css' ) && 'on' !== get_option( 'autoptimize_html' ) && ! autoptimizeImages::imgopt_active() ) { ?>
+        <?php if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_js' ) && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_css' ) && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_html' ) && ! autoptimizeImages::imgopt_active() ) { ?>
             <div class="notice-warning notice"><p>
             <?php _e( 'Most of below Extra optimizations require at least one of HTML, JS, CSS or Image autoptimizations being active.', 'autoptimize' ); ?>
             </p></div>
         <?php } ?>
 
-    <form id='ao_settings_form' action='options.php' method='post'>
+    <form id='ao_settings_form' action='<?php echo admin_url( 'options.php' ); ?>' method='post'>
         <?php settings_fields( 'autoptimize_extra_settings' ); ?>
         <h2><?php _e( 'Extra Auto-Optimizations', 'autoptimize' ); ?></h2>
         <span id='autoptimize_extra_descr'><?php _e( 'The following settings can improve your site\'s performance even more.', 'autoptimize' ); ?></span>

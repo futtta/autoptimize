@@ -42,14 +42,14 @@ class autoptimizeImages
 
     public static function fetch_options()
     {
-        $value = get_option( 'autoptimize_imgopt_settings' );
+        $value = autoptimizeOptionWrapper::get_option( 'autoptimize_imgopt_settings' );
         if ( empty( $value ) ) {
             // Fallback to returning defaults when no stored option exists yet.
             $value = autoptimizeConfig::get_ao_imgopt_default_options();
         }
 
         // get service availability and add it to the options-array.
-        $value['availabilities'] = get_option( 'autoptimize_service_availablity' );
+        $value['availabilities'] = autoptimizeOptionWrapper::get_option( 'autoptimize_service_availablity' );
 
         if ( empty( $value['availabilities'] ) ) {
             $value['availabilities'] = autoptimizeUtils::check_service_availability( true );
@@ -66,7 +66,7 @@ class autoptimizeImages
         static $imgopt_active = null;
 
         if ( null === $imgopt_active ) {
-            $opts = get_option( 'autoptimize_imgopt_settings', '' );
+            $opts = autoptimizeOptionWrapper::get_option( 'autoptimize_imgopt_settings', '' );
             if ( ! empty( $opts ) && is_array( $opts ) && array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $opts ) && ! empty( $opts['autoptimize_imgopt_checkbox_field_1'] ) && '1' === $opts['autoptimize_imgopt_checkbox_field_1'] ) {
                 $imgopt_active = true;
             } else {
@@ -97,7 +97,11 @@ class autoptimizeImages
     public function run()
     {
         if ( is_admin() ) {
-            add_action( 'admin_menu', array( $this, 'imgopt_admin_menu' ) );
+            if ( is_multisite() && is_plugin_active_for_network( 'autoptimize/autoptimize.php' ) && is_network_admin() ) {
+                add_action( 'network_admin_menu', array( $this, 'imgopt_admin_menu' ) );
+            } else {
+                add_action( 'admin_menu', array( $this, 'imgopt_admin_menu' ) );
+            }
             add_filter( 'autoptimize_filter_settingsscreen_tabs', array( $this, 'add_imgopt_tab' ), 9 );
         } else {
             add_action( 'wp', array( $this, 'run_on_frontend' ) );
@@ -305,7 +309,7 @@ class autoptimizeImages
         // get CDN domain once.
         static $cdn_domain = null;
         if ( is_null( $cdn_domain ) ) {
-            $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', get_option( 'autoptimize_cdn_url', '' ) );
+            $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' ) );
             if ( ! empty( $cdn_url ) ) {
                 $cdn_domain = parse_url( $cdn_url, PHP_URL_HOST );
             } else {
@@ -389,7 +393,7 @@ class autoptimizeImages
         if ( null === $cdn_url ) {
             $cdn_url = apply_filters(
                 'autoptimize_filter_base_cdnurl',
-                get_option( 'autoptimize_cdn_url', '' )
+                autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' )
             );
         }
 
@@ -915,20 +919,25 @@ class autoptimizeImages
      */
     public function imgopt_admin_menu()
     {
-        add_submenu_page(
-            null,
-            'autoptimize_imgopt',
-            'autoptimize_imgopt',
-            'manage_options',
-            'autoptimize_imgopt',
-            array( $this, 'imgopt_options_page' )
-        );
-        register_setting( 'autoptimize_imgopt_settings', 'autoptimize_imgopt_settings' );
+        // no acces if multisite and not network admin and no site config allowed.
+        if ( autoptimizeConfig::should_show_menu_tabs() ) {
+            add_submenu_page(
+                null,
+                'autoptimize_imgopt',
+                'autoptimize_imgopt',
+                'manage_options',
+                'autoptimize_imgopt',
+                array( $this, 'imgopt_options_page' )
+            );
+            register_setting( 'autoptimize_imgopt_settings', 'autoptimize_imgopt_settings' );
+        }
     }
 
     public function add_imgopt_tab( $in )
     {
-        $in = array_merge( $in, array( 'autoptimize_imgopt' => __( 'Images', 'autoptimize' ) ) );
+        if ( autoptimizeConfig::should_show_menu_tabs() ) {
+            $in = array_merge( $in, array( 'autoptimize_imgopt' => __( 'Images', 'autoptimize' ) ) );
+        }
 
         return $in;
     }
@@ -975,7 +984,7 @@ class autoptimizeImages
             ?>
             </p></div>
         <?php } ?>
-    <form id='ao_settings_form' action='options.php' method='post'>
+    <form id='ao_settings_form' action='<?php echo admin_url( 'options.php' ); ?>' method='post'>
         <?php settings_fields( 'autoptimize_imgopt_settings' ); ?>
         <h2><?php _e( 'Image optimization', 'autoptimize' ); ?></h2>
         <span id='autoptimize_imgopt_descr'><?php _e( 'Make your site significantly faster by just ticking a couple of checkboxes to optimize and lazy load your images, WebP support included!', 'autoptimize' ); ?></span>
@@ -1109,7 +1118,7 @@ class autoptimizeImages
     public function get_imgopt_status_notice() {
         if ( $this->imgopt_active() ) {
             $_imgopt_notice  = '';
-            $_stat           = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            $_stat           = autoptimizeOptionWrapper::get_option( 'autoptimize_imgopt_provider_stat', '' );
             $_site_host      = AUTOPTIMIZE_SITE_DOMAIN;
             $_imgopt_upsell  = 'https://shortpixel.com/aospai/af/GWRGFLW109483/' . $_site_host;
             $_imgopt_assoc   = 'https://shortpixel.helpscoutdocs.com/article/94-how-to-associate-a-domain-to-my-account';
@@ -1140,7 +1149,7 @@ class autoptimizeImages
                         'refreshImgProvStats' => '1',
                     ), admin_url( 'options-general.php' ) );
                     if ( $_stat && array_key_exists( 'timestamp', $_stat ) && ! empty( $_stat['timestamp'] ) ) {
-                        $_imgopt_stats_last_run = __( 'based on status at ', 'autoptimize' ) . date_i18n( get_option( 'time_format' ), $_stat['timestamp'] );
+                        $_imgopt_stats_last_run = __( 'based on status at ', 'autoptimize' ) . date_i18n( autoptimizeOptionWrapper::get_option( 'time_format' ), $_stat['timestamp'] );
                     } else {
                         $_imgopt_stats_last_run = __( 'based on previously fetched data', 'autoptimize' );
                     }
@@ -1193,7 +1202,7 @@ class autoptimizeImages
                 if ( ! is_wp_error( $response ) ) {
                     if ( '200' == wp_remote_retrieve_response_code( $response ) ) {
                         $stats = json_decode( wp_remote_retrieve_body( $response ), true );
-                        update_option( 'autoptimize_imgopt_provider_stat', $stats );
+                        autoptimizeOptionWrapper::update_option( 'autoptimize_imgopt_provider_stat', $stats );
                     }
                 }
             }
@@ -1219,12 +1228,12 @@ class autoptimizeImages
         if ( null === $launch_status ) {
             $avail_imgopt  = $this->options['availabilities']['extra_imgopt'];
             $magic_number  = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
-            $has_launched  = get_option( 'autoptimize_imgopt_launched', '' );
+            $has_launched  = autoptimizeOptionWrapper::get_option( 'autoptimize_imgopt_launched', '' );
             $launch_status = false;
             if ( $has_launched || ( is_array( $avail_imgopt ) && array_key_exists( 'launch-threshold', $avail_imgopt ) && $magic_number < $avail_imgopt['launch-threshold'] ) ) {
                 $launch_status = true;
                 if ( ! $has_launched ) {
-                    update_option( 'autoptimize_imgopt_launched', 'on' );
+                    autoptimizeOptionWrapper::update_option( 'autoptimize_imgopt_launched', 'on' );
                 }
             }
         }
@@ -1242,7 +1251,7 @@ class autoptimizeImages
         static $_provider_userstatus = null;
 
         if ( is_null( $_provider_userstatus ) ) {
-            $_stat = get_option( 'autoptimize_imgopt_provider_stat', '' );
+            $_stat = autoptimizeOptionWrapper::get_option( 'autoptimize_imgopt_provider_stat', '' );
             if ( is_array( $_stat ) ) {
                 if ( array_key_exists( 'Status', $_stat ) ) {
                     $_provider_userstatus['Status'] = $_stat['Status'];

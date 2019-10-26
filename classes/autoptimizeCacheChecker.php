@@ -58,10 +58,10 @@ class autoptimizeCacheChecker
         $stat_array     = autoptimizeCache::stats();
         $cache_size     = round( $stat_array[1] );
         if ( ( $cache_size > $max_size ) && ( $do_cache_check ) ) {
-            update_option( 'autoptimize_cachesize_notice', true );
+            autoptimizeOptionWrapper::update_option( 'autoptimize_cachesize_notice', true );
             if ( apply_filters( 'autoptimize_filter_cachecheck_sendmail', true ) ) {
                 $home_url  = esc_url( home_url() );
-                $ao_mailto = apply_filters( 'autoptimize_filter_cachecheck_mailto', get_option( 'admin_email', '' ) );
+                $ao_mailto = apply_filters( 'autoptimize_filter_cachecheck_mailto', autoptimizeOptionWrapper::get_option( 'admin_email', '' ) );
 
                 $ao_mailsubject = __( 'Autoptimize cache size warning', 'autoptimize' ) . ' (' . $home_url . ')';
                 $ao_mailbody    = __( 'Autoptimize\'s cache size is getting big, consider purging the cache. Have a look at https://wordpress.org/plugins/autoptimize/faq/ to see how you can keep the cache size under control.', 'autoptimize' ) . ' (site: ' . $home_url . ')';
@@ -87,11 +87,11 @@ class autoptimizeCacheChecker
 
     public function show_admin_notice()
     {
-        if ( (bool) get_option( 'autoptimize_cachesize_notice', false ) && current_user_can( 'manage_options' ) ) {
+        if ( (bool) autoptimizeOptionWrapper::get_option( 'autoptimize_cachesize_notice', false ) && current_user_can( 'manage_options' ) ) {
             echo '<div class="notice notice-warning"><p>';
             _e( '<strong>Autoptimize\'s cache size is getting big</strong>, consider purging the cache. Have a look at <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank" rel="noopener noreferrer">the Autoptimize FAQ</a> to see how you can keep the cache size under control.', 'autoptimize' );
             echo '</p></div>';
-            update_option( 'autoptimize_cachesize_notice', false );
+            autoptimizeOptionWrapper::update_option( 'autoptimize_cachesize_notice', false );
         }
 
         // Notice for image proxy usage.
