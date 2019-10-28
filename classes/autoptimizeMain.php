@@ -225,10 +225,12 @@ class autoptimizeMain
                 'w3tc_flush_posts', // exits.
                 'w3tc_flush_all', // exists.
                 'ce_action_cache_cleared', // Sven confirmed this will be added.
+                'aoce_action_cache_cleared', // Some other cache enabler.
                 'comet_cache_wipe_cache', // still to be confirmed by Raam.
                 'wp_cache_cleared', // cfr. https://github.com/Automattic/wp-super-cache/pull/537.
                 'wpfc_delete_cache', // Emre confirmed this will be added this.
                 'swift_performance_after_clear_all_cache', // swift perf. yeah!
+                'wpo_cache_flush', // wp-optimize.
             );
             $page_cache_purge_actions = apply_filters( 'autoptimize_filter_main_pagecachepurgeactions', $page_cache_purge_actions );
             foreach ( $page_cache_purge_actions as $purge_action ) {
