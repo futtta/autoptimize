@@ -838,8 +838,9 @@ class autoptimizeStyles extends autoptimizeBase
             }
         } else {
             if ( $this->defer ) {
-                $preloadCssBlock = '';
-                $noScriptCssBlock = "<noscript id=\"aonoscrcss\">";
+                $preloadCssBlock    = '';
+                $inlined_ccss_block = '':
+                $noScriptCssBlock   = "<noscript id=\"aonoscrcss\">";
 
                 $defer_inline_code = $this->defer_inline;
                 if ( ! empty( $defer_inline_code ) ) {
