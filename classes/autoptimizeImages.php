@@ -555,6 +555,7 @@ class autoptimizeImages
                         $_url = $url;
                     }
 
+                    $placeholder = '';
                     if ( $this->can_optimize_image( $_url ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
                         $lqip_w = '';
                         $lqip_h = '';
