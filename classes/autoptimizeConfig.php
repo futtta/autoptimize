@@ -418,10 +418,10 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
         <td><label class="cb_label"><input type="checkbox" name="autoptimize_minify_excluded" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_minify_excluded', '1' ) ? 'checked="checked" ' : ''; ?>/>
         <?php _e( 'When aggregating JS or CSS, excluded files that are not minified (based on filename) are by default minified by Autoptimize despite being excluded. Uncheck this option if anything breaks despite excluding.', 'autoptimize' ); ?></label></td>
     </tr>
-    <tr valign="top" >
-    <th scope="row"><?php _e( 'Also optimize for logged in users?', 'autoptimize' ); ?></th>
-    <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_logged', '1' ) ? 'checked="checked" ' : ''; ?>/>
-    <?php _e( 'By default Autoptimize is also active for logged on users, uncheck not to optimize when logged in e.g. to use a pagebuilder.', 'autoptimize' ); ?></label></td>
+    <tr valign="top">
+    <th scope="row"><?php _e('Also optimize for logged in editors/ administrators?','autoptimize'); ?></th>
+    <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo get_option('autoptimize_optimize_logged','1')?'checked="checked" ':''; ?>/>
+    <?php _e('By default Autoptimize is also active for logged on editors/ administrators, uncheck this option if you don\'t want Autoptimize to optimize when logged in e.g. to use a pagebuilder.','autoptimize'); ?></label></td>
     </tr>
     <?php
     if ( function_exists( 'is_checkout' ) || function_exists( 'is_cart' ) || function_exists( 'edd_is_checkout' ) || function_exists( 'wpsc_is_cart' ) || function_exists( 'wpsc_is_checkout' ) ) {
