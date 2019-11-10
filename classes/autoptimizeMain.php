@@ -317,6 +317,12 @@ class autoptimizeMain
                         break;
                     }
                 }
+
+                // also honor PageSpeed=off parameter as used by mod_pagespeed, in use by some pagebuilders,
+                // see https://www.modpagespeed.com/doc/experiment#ModPagespeed for info on that.
+                if ( false === $ao_noptimize && array_key_exists( 'PageSpeed', $_GET ) && 'off' === $_GET['PageSpeed'] ) {
+                    $ao_noptimize = true;
+                }
             }
 
             // If setting says not to optimize logged in user and user is logged in...
