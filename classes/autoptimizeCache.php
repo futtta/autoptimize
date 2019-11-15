@@ -683,7 +683,13 @@ class autoptimizeCache
             sg_cachepress_purge_cache();
         } elseif ( array_key_exists( 'KINSTA_CACHE_ZONE', $_SERVER ) ) {
             $_kinsta_clear_cache_url = 'https://localhost/kinsta-clear-cache-all';
-            $_kinsta_response        = wp_remote_get( $_kinsta_clear_cache_url );
+            $_kinsta_response        = wp_remote_get(
+                $_kinsta_clear_cache_url,
+                array( 
+                    'sslverify' => false,
+                    'timeout' => 5,
+                    )
+            );
         } elseif ( file_exists( WP_CONTENT_DIR . '/wp-cache-config.php' ) && function_exists( 'prune_super_cache' ) ) {
             // fallback for WP-Super-Cache
             global $cache_path;
