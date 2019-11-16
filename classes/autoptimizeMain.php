@@ -231,6 +231,7 @@ class autoptimizeMain
                 'wpfc_delete_cache', // Emre confirmed this will be added this.
                 'swift_performance_after_clear_all_cache', // swift perf. yeah!
                 'wpo_cache_flush', // wp-optimize.
+                'rt_nginx_helper_after_fastcgi_purge_all', // nginx helper.
             );
             $page_cache_purge_actions = apply_filters( 'autoptimize_filter_main_pagecachepurgeactions', $page_cache_purge_actions );
             foreach ( $page_cache_purge_actions as $purge_action ) {

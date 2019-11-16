@@ -690,6 +690,8 @@ class autoptimizeCache
                     'timeout' => 5,
                     )
             );
+        } elseif ( defined('NGINX_HELPER_BASENAME') ) {
+            do_action( 'rt_nginx_helper_purge_all' );
         } elseif ( file_exists( WP_CONTENT_DIR . '/wp-cache-config.php' ) && function_exists( 'prune_super_cache' ) ) {
             // fallback for WP-Super-Cache
             global $cache_path;
