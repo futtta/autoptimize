@@ -61,6 +61,7 @@ class autoptimizeMain
         add_action( 'autoptimize_setup_done', array( $this, 'check_cache_and_run' ) );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_extra' ) );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ) );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss_tab' ) );
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
         add_action( 'admin_init', array( 'PAnD', 'init' ) );
@@ -212,6 +213,14 @@ class autoptimizeMain
         // Loads partners tab code if in admin (and not in admin-ajax.php)!
         if ( autoptimizeConfig::is_admin_and_not_ajax() ) {
             new autoptimizePartners();
+        }
+    }
+
+    public function maybe_run_criticalcss_tab()
+    {
+        // Loads criticalcss tab code if in admin (and not in admin-ajax.php)!
+        if ( autoptimizeConfig::is_admin_and_not_ajax() && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
+            new autoptimizeCriticalCSSSettings();
         }
     }
 
