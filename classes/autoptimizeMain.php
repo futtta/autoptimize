@@ -388,6 +388,7 @@ class autoptimizeMain
         $has_no_html_tag    = ( false === stripos( $content, '<html' ) );
         $has_xsl_stylesheet = ( false !== stripos( $content, '<xsl:stylesheet' ) || false !== stripos( $content, '<?xml-stylesheet' ) );
         $has_html5_doctype  = ( preg_match( '/^<!DOCTYPE.+html>/i', ltrim( $content ) ) > 0 );
+        $has_noptimize_page = ( false !== stripos( $content, '<!-- noptimize-page -->' ) );
 
         if ( $has_no_html_tag ) {
             // Can't be valid amp markup without an html tag preceding it.
@@ -397,7 +398,7 @@ class autoptimizeMain
         }
 
         // If it's not html, or if it's amp or contains xsl stylesheets we don't touch it.
-        if ( $has_no_html_tag && ! $has_html5_doctype || $is_amp_markup || $has_xsl_stylesheet ) {
+        if ( $has_no_html_tag && ! $has_html5_doctype || $is_amp_markup || $has_xsl_stylesheet || $has_noptimize_page ) {
             $valid = false;
         }
 
