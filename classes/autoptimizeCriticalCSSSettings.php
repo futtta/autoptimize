@@ -1,11 +1,23 @@
 <?php
+/**
+ * Temporary options page for AO26, will integrate CCSS functionality in next release.
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 class autoptimizeCriticalCSSSettings {
+    /**
+     * Options.
+     *
+     * @var bool
+     */
+    private $settings_screen_do_remote_http = true;
+
     public function __construct()
     {
+        $this->settings_screen_do_remote_http = apply_filters( 'autoptimize_settingsscreen_remotehttp', $this->settings_screen_do_remote_http );
         $this->run();
     }
 
@@ -13,7 +25,7 @@ class autoptimizeCriticalCSSSettings {
     {
         return apply_filters( 'autoptimize_filter_show_criticalcsss_tabs', true );
     }
-    
+
     public function run()
     {
         if ( $this->enabled() ) {
@@ -29,10 +41,7 @@ class autoptimizeCriticalCSSSettings {
 
     public function add_critcss_tabs( $in )
     {
-        $in = array_merge( $in, array(
-            'ao_critcss' => '⚡' . __( 'Critical CSS', 'autoptimize' ),
-            )
-        );
+        $in = array_merge( $in, array( 'ao_critcss' => '⚡' . __( 'Critical CSS', 'autoptimize' ) ) );
 
         return $in;
     }
@@ -56,8 +65,21 @@ class autoptimizeCriticalCSSSettings {
         <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
         <div class="ao_settings_div">
-            <?php echo '<h2>' . __( "Improve your first paint times!", 'autoptimize' ) . '</h2>'; ?>
-            <?php echo '<div>' . __( 'Improving first paint times is an important part of performance optimization. ', 'autoptimize' ) . '</div>'; ?>
+            <?php
+            if ( $this->settings_screen_do_remote_http ) {
+                $ccss_explanation = get_transient( 'ccss_explain_ao26' );
+                if ( empty( $ccss_explanation ) ) {
+                    $ccss_expl_resp = wp_remote_get( 'https://misc.optimizingmatters.com/autoptimize_ccss_explain_ao26.html?ao_ver=' . AUTOPTIMIZE_PLUGIN_VERSION );
+                    if ( ! is_wp_error( $ccss_expl_resp ) ) {
+                        if ( '200' == wp_remote_retrieve_response_code( $ccss_expl_resp ) ) {
+                            $ccss_explanation = wp_kses_post( wp_remote_retrieve_body( $ccss_expl_resp ) );
+                            set_transient( 'ccss_explain_ao26', $ccss_explanation, WEEK_IN_SECONDS );
+                        }
+                    }
+                }
+                echo $ccss_explanation . '<br />';
+            }
+            ?>
         </div>
     </div>
     <?php
