@@ -309,7 +309,7 @@ class autoptimizeImages
         // get CDN domain once.
         static $cdn_domain = null;
         if ( is_null( $cdn_domain ) ) {
-            $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' ) );
+            $cdn_url = $this->get_cdn_url();
             if ( ! empty( $cdn_url ) ) {
                 $cdn_domain = parse_url( $cdn_url, PHP_URL_HOST );
             } else {
@@ -775,16 +775,16 @@ class autoptimizeImages
             $noptimize_flag = ' data-noptimize="1"';
         }
 
-        $lazySizesJS = plugins_url( 'external/js/lazysizes.min.js', __FILE__ );
-        $cdn_url     = apply_filters( 'autoptimize_filter_base_cdnurl', autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' ) );
+        $lazysizes_js = plugins_url( 'external/js/lazysizes.min.js', __FILE__ );
+        $cdn_url      = $this->get_cdn_url();
         if ( ! empty( $cdn_url ) ) {
-            $lazySizesJS = str_replace( AUTOPTIMIZE_WP_SITE_URL, $cdn_url, $lazySizesJS );
+            $lazysizes_js = str_replace( AUTOPTIMIZE_WP_SITE_URL, $cdn_url, $lazysizes_js );
         }
 
         // Adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
-        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $noptimize_flag . ' src=\'' . $lazySizesJS . '\'></script>' );
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
 
         // And add webp detection and loading JS.
         if ( $this->should_webp() ) {
@@ -792,6 +792,19 @@ class autoptimizeImages
             $_webp_load   = "document.addEventListener('lazybeforeunveil',function({target:c}){supportsWebP&&['data-src','data-srcset'].forEach(function(a){attr=c.getAttribute(a),null!==attr&&c.setAttribute(a,attr.replace(/\/client\//,'/client/to_webp,'))})});";
             echo apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script' . $noptimize_flag . '>' . $_webp_detect . $_webp_load . '</script>' );
         }
+    }
+
+    public function get_cdn_url() {
+        // getting CDN url here to avoid having to make bigger changes to autoptimizeBase.
+        static $cdn_url = null;
+
+        if ( null === $cdn_url ) {
+            $cdn_url = autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' );
+            $cdn_url = autoptimizeUtils::tweak_cdn_url_if_needed( $cdn_url );
+            $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', $cdn_url );
+        }
+
+        return $cdn_url;
     }
 
     public function get_lazyload_exclusions() {
