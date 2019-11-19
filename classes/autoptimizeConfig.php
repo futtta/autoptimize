@@ -456,7 +456,7 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
             if ( ! is_wp_error( $banner_resp ) ) {
                 if ( '200' == wp_remote_retrieve_response_code( $banner_resp ) ) {
                     $ao_banner = wp_kses_post( wp_remote_retrieve_body( $banner_resp ) );
-                    set_transient( 'autoptimize_banner', $ao_banner, DAY_IN_SECONDS );
+                    set_transient( 'autoptimize_banner', $ao_banner, WEEK_IN_SECONDS );
                 }
             }
         }
