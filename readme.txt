@@ -286,6 +286,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * Images: updated to lazysizes 5.1.2 (5.2 is in beta now, might be integrated in AO26 if released in time).
 * CSS/ JS: no longer add type attributes to Autoptimized resources.
 * Improvement: cache clearing now also integrates with Kinsta, WP-Optimize & Nginx helper.
+* Added "Critical CSS" tab to highlight the criticalcss.com integration, which will be fully included in Autoptimize 2.7.
 * Batch of misc. smaller improvements & fixes, more info in the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 2.5.1 =
