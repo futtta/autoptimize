@@ -279,12 +279,14 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.6.0 beta =
-* New: Autoptimize can be configured at network level or at individual site-level when on multisite
-* Extra: new option to specify what resources need to be preloaded
-* Extra: add `display=swap` to Autoptimized (CSS-based) Google Fonts
-* Images: support for lazyloading of background-images when set in the inline style attribute of a div
-* CSS/ JS: no longer add type attributes to Autoptimized resources
-* Batch of misc. smaller improvements & fixes, more info in the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
+* New: Autoptimize can be configured at network level or at individual site-level when on multisite.
+* Extra: new option to specify what resources need to be preloaded.
+* Extra: add `display=swap` to Autoptimized (CSS-based) Google Fonts.
+* Images: support for lazyloading of background-images when set in the inline style attribute of a div.
+* Images: updated to lazysizes 5.1.2 (5.2 is in beta now, might be integrated in AO26 if released in time).
+* CSS/ JS: no longer add type attributes to Autoptimized resources.
+* Improvement: cache clearing now also integrates with Kinsta, WP-Optimize & Nginx helper.
+* Batch of misc. smaller improvements & fixes, more info in the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 2.5.1 =
 * Images: Also optimize & lazyload &lt;picture>&lt;source>
