@@ -66,6 +66,9 @@ class autoptimizeCriticalCSSSettings {
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
         <div class="ao_settings_div">
             <?php
+            $ccss_explanation = '';
+
+            // get the HTML with the explanation of what critical CSS is.
             if ( $this->settings_screen_do_remote_http ) {
                 $ccss_explanation = get_transient( 'ccss_explain_ao26' );
                 if ( empty( $ccss_explanation ) ) {
@@ -77,8 +80,15 @@ class autoptimizeCriticalCSSSettings {
                         }
                     }
                 }
-                echo $ccss_explanation . '<br />';
             }
+
+            // placeholder text in case HTML is empty.
+            if ( empty( $ccss_explanation ) ) {
+                $ccss_explanation = '<h2>Fix render-blocking CSS!</h2><p>Significantly improve your first-paint times by making CSS non-render-blocking.</p><br /><a href="./plugin-install.php?s=autoptimize+criticalcss&tab=search&type=term" class="button">Install the "Autoptimize Critical CSS Power-Up"!</a>';
+            }
+
+            // and echo it.
+            echo $ccss_explanation . '<p>&nbsp;</p>';
             ?>
         </div>
     </div>
