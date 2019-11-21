@@ -29,7 +29,7 @@ class autoptimizeCriticalCSSSettings {
     public function run()
     {
         if ( $this->enabled() ) {
-            add_filter( 'autoptimize_filter_settingsscreen_tabs', array( $this, 'add_critcss_tabs' ), 8, 1 );
+            add_filter( 'autoptimize_filter_settingsscreen_tabs', array( $this, 'add_critcss_tabs' ), 10, 1 );
         }
 
         if ( is_multisite() && is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() ) {
