@@ -267,7 +267,10 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <tr valign="top" class="js_sub">
 <th scope="row"><?php _e( 'Exclude scripts from Autoptimize:', 'autoptimize' ); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude', 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js' ); ?>"/><br />
-<?php _e( 'A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated by Autoptimize.', 'autoptimize' ); ?></label></td>
+<?php 
+echo __( 'A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated by Autoptimize.', 'autoptimize' ) . ' ' . __( 'Important: excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
+?>
+</label></td>
 </tr>
 <tr valign="top" class="js_sub js_aggregate">
 <th scope="row"><?php _e( 'Add try-catch wrapping?', 'autoptimize' ); ?></th>
@@ -337,7 +340,9 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
 <tr valign="top" class="css_sub">
 <th scope="row"><?php _e( 'Exclude CSS from Autoptimize:', 'autoptimize' ); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_css_exclude', 'wp-content/cache/, wp-content/uploads/, admin-bar.min.css, dashicons.min.css' ); ?>"/><br />
-<?php _e( 'A comma-separated list of CSS you want to exclude from being optimized.', 'autoptimize' ); ?></label></td>
+<?php
+echo __( 'A comma-separated list of CSS you want to exclude from being optimized.', 'autoptimize' ) .' ' . __( 'Important: excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
+?></label></td>
 </tr>
 </table>
 </li>
