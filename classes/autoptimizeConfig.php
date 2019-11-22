@@ -267,7 +267,7 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <tr valign="top" class="js_sub">
 <th scope="row"><?php _e( 'Exclude scripts from Autoptimize:', 'autoptimize' ); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude', 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js' ); ?>"/><br />
-<?php 
+<?php
 echo __( 'A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated by Autoptimize.', 'autoptimize' ) . ' ' . __( 'Important: excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
 ?>
 </label></td>
@@ -341,8 +341,9 @@ if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-c
 <th scope="row"><?php _e( 'Exclude CSS from Autoptimize:', 'autoptimize' ); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_css_exclude', 'wp-content/cache/, wp-content/uploads/, admin-bar.min.css, dashicons.min.css' ); ?>"/><br />
 <?php
-echo __( 'A comma-separated list of CSS you want to exclude from being optimized.', 'autoptimize' ) .' ' . __( 'Important: excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
-?></label></td>
+echo __( 'A comma-separated list of CSS you want to exclude from being optimized.', 'autoptimize' ) . ' ' . __( 'Important: excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
+?>
+</label></td>
 </tr>
 </table>
 </li>
@@ -424,9 +425,9 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         <?php _e( 'When aggregating JS or CSS, excluded files that are not minified (based on filename) are by default minified by Autoptimize despite being excluded. Uncheck this option if anything breaks despite excluding.', 'autoptimize' ); ?></label></td>
     </tr>
     <tr valign="top">
-    <th scope="row"><?php _e('Also optimize for logged in editors/ administrators?','autoptimize'); ?></th>
-    <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo get_option('autoptimize_optimize_logged','1')?'checked="checked" ':''; ?>/>
-    <?php _e('By default Autoptimize is also active for logged on editors/ administrators, uncheck this option if you don\'t want Autoptimize to optimize when logged in e.g. to use a pagebuilder.','autoptimize'); ?></label></td>
+    <th scope="row"><?php _e( 'Also optimize for logged in editors/ administrators?', 'autoptimize' ); ?></th>
+    <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo get_option( 'autoptimize_optimize_logged', '1' ) ? 'checked="checked" ' : ''; ?>/>
+    <?php _e( 'By default Autoptimize is also active for logged on editors/ administrators, uncheck this option if you don\'t want Autoptimize to optimize when logged in e.g. to use a pagebuilder.', 'autoptimize' ); ?></label></td>
     </tr>
     <?php
     if ( function_exists( 'is_checkout' ) || function_exists( 'is_cart' ) || function_exists( 'edd_is_checkout' ) || function_exists( 'wpsc_is_cart' ) || function_exists( 'wpsc_is_checkout' ) ) {
@@ -857,6 +858,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
                     <?php foreach ( $rss_items as $item ) : ?>
                         <li>
                             <a href="<?php echo esc_url( $item->get_permalink() ); ?>"
+                                <?php // translators: the variable contains a date. ?>
                                 title="<?php printf( __( 'Posted %s', 'autoptimize' ), $item->get_date( 'j F Y | g:i a' ) ); ?>">
                                 <?php echo esc_html( $item->get_title() ); ?>
                             </a>
