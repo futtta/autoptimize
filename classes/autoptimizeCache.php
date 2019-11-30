@@ -109,6 +109,16 @@ class autoptimizeCache
         } else {
             // Write code to cache without doing anything else.
             file_put_contents( $this->cachedir . $this->filename, $data );
+
+            // save fallback .js or .css file if filter true (to be false by default) but not if snippet or single.
+            if ( self::do_fallback() && strpos( $this->filename, '_snippet_' ) === false && strpos( $this->filename, '_single_' ) === false ) {
+                $_extension     = pathinfo( $this->filename, PATHINFO_EXTENSION );
+                $_fallback_file = AUTOPTIMIZE_CACHEFILE_PREFIX . 'fallback.' . $_extension;
+                if ( ! file_exists( $this->cachedir . $_extension . '/' . $_fallback_file ) ) {
+                    file_put_contents( $this->cachedir . $_extension . '/' . $_fallback_file, $data );
+                }
+            }
+
             if ( apply_filters( 'autoptimize_filter_cache_create_static_gzip', false ) ) {
                 // Create an additional cached gzip file.
                 file_put_contents( $this->cachedir . $this->filename . '.gz', gzencode( $data, 9, FORCE_GZIP ) );
@@ -571,11 +581,48 @@ class autoptimizeCache
     </Files>
 </IfModule>';
             }
+
+            if ( self::do_fallback() ) {
+                $content .= "\nErrorDocument 404 " . trailingslashit( parse_url( content_url(), PHP_URL_PATH ) ) . 'autoptimize_404_handler.php';
+            }
             @file_put_contents( $htaccess, $content ); // @codingStandardsIgnoreLine
+        }
+
+        if ( self::do_fallback() ) {
+            self::check_fallback_php();
         }
 
         // All OK!
         return true;
+    }
+
+    /**
+     * Checks if fallback-php file exists and create it if not.
+     *
+     * Return bool
+     */
+    public static function check_fallback_php() {
+        $_fallback_filename = 'autoptimize_404_handler.php';
+        $_fallback_php      = trailingslashit( WP_CONTENT_DIR ) . $_fallback_filename;
+        $_fallback_status   = true;
+
+        if ( ! file_exists( $_fallback_php ) ) {
+            $_fallback_php_contents = file_get_contents( AUTOPTIMIZE_PLUGIN_DIR . 'config/' . $_fallback_filename );
+            $_fallback_php_contents = str_replace( '<?php exit;', '<?php', $_fallback_php_contents );
+            $_fallback_status       = file_put_contents( $_fallback_php, $_fallback_php_contents );
+        }
+
+        return $_fallback_status;
+    }
+
+    /**
+     * Tells if AO should try to avoid 404's by creating fallback filesize
+     * and create a php 404 handler and tell .htaccess to redirect to said handler.
+     *
+     * Return bool
+     */
+    public static function do_fallback() {
+        return apply_filters( 'autoptimize_filter_cache_do_fallback', false );
     }
 
     /**
