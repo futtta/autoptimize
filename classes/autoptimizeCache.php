@@ -616,6 +616,7 @@ class autoptimizeCache
         if ( ! file_exists( $_fallback_php ) ) {
             $_fallback_php_contents = file_get_contents( AUTOPTIMIZE_PLUGIN_DIR . 'config/' . $_fallback_filename );
             $_fallback_php_contents = str_replace( '<?php exit;', '<?php', $_fallback_php_contents );
+            $_fallback_php_contents = str_replace( '<!--ao-cache-dir-->', AUTOPTIMIZE_CACHE_DIR, $_fallback_php_contents );
             if ( apply_filters( 'autoptimize_filter_cache_fallback_log_errors', false ) ) {
                 $_fallback_php_contents = str_replace( '// error_log', 'error_log', $_fallback_php_contents );
             }
