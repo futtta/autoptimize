@@ -379,6 +379,12 @@ class autoptimizeCache
             self::clear_cache_classic();
         }
 
+        // Remove 404 handler if required.
+        if ( self::do_fallback() ) {
+            $_fallback_php = trailingslashit( WP_CONTENT_DIR ) . 'autoptimize_404_handler.php';
+            @unlink( $_fallback_php ); // @codingStandardsIgnoreLine
+        }
+
         // Remove the transient so it gets regenerated...
         delete_transient( 'autoptimize_stats' );
 
@@ -397,6 +403,7 @@ class autoptimizeCache
         if ( apply_filters( 'autoptimize_filter_speedupper', true ) && false == get_transient( 'autoptimize_cache_warmer_protector' ) ) {
             set_transient( 'autoptimize_cache_warmer_protector', 'I shall not warm cache for another 10 minutes.', 60 * 10 );
             $url   = site_url() . '/?ao_speedup_cachebuster=' . rand( 1, 100000 );
+            $url   = apply_filters( 'autoptimize_filter_cache_warmer_url', $url );
             $cache = @wp_remote_get( $url ); // @codingStandardsIgnoreLine
             unset( $cache );
         }
