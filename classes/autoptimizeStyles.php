@@ -1059,6 +1059,7 @@ class autoptimizeStyles extends autoptimizeBase
         // Check cache.
         $hash  = 'single_' . md5( $contents );
         $cache = new autoptimizeCache( $hash, 'css' );
+        do_action( 'autoptimize_action_css_hash', $hash );
 
         // If not in cache already, minify...
         if ( ! $cache->check() || $cache_miss ) {
