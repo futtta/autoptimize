@@ -327,21 +327,26 @@ class autoptimizeMain
                         break;
                     }
                 }
+            }
 
-                // also honor PageSpeed=off parameter as used by mod_pagespeed, in use by some pagebuilders,
-                // see https://www.modpagespeed.com/doc/experiment#ModPagespeed for info on that.
-                if ( false === $ao_noptimize && array_key_exists( 'PageSpeed', $_GET ) && 'off' === $_GET['PageSpeed'] ) {
-                    $ao_noptimize = true;
-                }
+            // also honor PageSpeed=off parameter as used by mod_pagespeed, in use by some pagebuilders,
+            // see https://www.modpagespeed.com/doc/experiment#ModPagespeed for info on that.
+            if ( false === $ao_noptimize && array_key_exists( 'PageSpeed', $_GET ) && 'off' === $_GET['PageSpeed'] ) {
+                $ao_noptimize = true;
+            }
+
+            // and make sure Thrive editor doesn't get optimized HTML.
+            if ( false === $ao_noptimize && array_key_exists( 'tve', $_GET ) && 'true' === $_GET['tve'] ) {
+                $ao_noptimize = true;
             }
 
             // If setting says not to optimize logged in user and user is logged in...
-            if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_logged', 'on' ) && is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
+            if ( false === $ao_noptimize && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_logged', 'on' ) && is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
                 $ao_noptimize = true;
             }
 
             // If setting says not to optimize cart/checkout.
-            if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_checkout', 'on' ) ) {
+            if ( false === $ao_noptimize && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_checkout', 'on' ) ) {
                 // Checking for woocommerce, easy digital downloads and wp ecommerce...
                 foreach ( array( 'is_checkout', 'is_cart', 'edd_is_checkout', 'wpsc_is_cart', 'wpsc_is_checkout' ) as $func ) {
                     if ( function_exists( $func ) && $func() ) {
