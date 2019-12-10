@@ -342,10 +342,11 @@ class autoptimizeExtra
 
         // Walk array, extract domain and add to new array with crossorigin attribute.
         foreach ( $preconns as $preconn ) {
+            $domain = '';
             $parsed = parse_url( $preconn );
-            if ( is_array( $parsed ) && empty( $parsed['scheme'] ) ) {
+            if ( is_array( $parsed ) && ! empty( $parsed['host'] ) && empty( $parsed['scheme'] ) ) {
                 $domain = '//' . $parsed['host'];
-            } elseif ( is_array( $parsed ) ) {
+            } elseif ( is_array( $parsed ) && ! empty( $parsed['host'] ) ) {
                 $domain = $parsed['scheme'] . '://' . $parsed['host'];
             }
 
