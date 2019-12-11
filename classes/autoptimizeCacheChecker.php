@@ -107,7 +107,7 @@ class autoptimizeCacheChecker
             $_imgopt_notice_dismissible = apply_filters( 'autoptimize_filter_imgopt_notice_dismissable', $_dismissible . $_hide_notice );
 
             if ( $_imgopt_notice && PAnD::is_admin_notice_active( $_imgopt_notice_dismissible ) ) {
-                echo '<div class="notice notice-warning is-dismissible" data-dismissible="' . $_imgopt_notice_dismissible . '"><p>' . $_imgopt_notice['notice'] . '</p></div>';
+                echo '<div class="notice notice-warning is-dismissible" data-dismissible="' . $_imgopt_notice_dismissible . '"><p><strong>' . __( 'Autoptimize', 'autoptimize' ) . '</strong>: ' . $_imgopt_notice['notice'] . '</p></div>';
             }
         }
     }
