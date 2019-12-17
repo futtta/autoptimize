@@ -180,15 +180,6 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 
 <div class="wrap">
 
-<?php if ( version_compare( PHP_VERSION, '5.3.0' ) < 0 ) { ?>
-<div class="notice-error notice">
-<?php
-    // translators: link to info about old PHP versions.
-    echo '<p>' . sprintf( __( '<strong>You are using a very old version of PHP</strong> (5.2.x or older) which has <a href=%s>serious security and performance issues</a>. Support for PHP 5.5 and below will be removed in one of the next AO released, please ask your hoster to provide you with an upgrade path to 7.x.', 'autoptimize' ), '"http://blog.futtta.be/2016/03/15/why-would-you-still-be-on-php-5-2/" target="_blank"' ) . '</p>';
-?>
-</div>
-<?php } ?>
-
 <?php if ( defined( 'AUTOPTIMIZE_LEGACY_MINIFIERS' ) ) { ?>
     <div class="notice-error notice"><p>
         <?php _e( "You are using the (no longer supported) AUTOPTIMIZE_LEGACY_MINIFIERS constant. Ensure your site is working properly and remove the constant, it doesn't do anything any more.", 'autoptimize' ); ?>
