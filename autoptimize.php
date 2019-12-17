@@ -1,15 +1,15 @@
 <?php
-/*
-Plugin Name: Autoptimize
-Plugin URI: https://autoptimize.com/
-Description: Makes your site faster by optimizing CSS, JS, Images, Google fonts and more.
-Version: 2.6.0-beta-5
-Author: Frank Goossens (futtta)
-Author URI: https://autoptimize.com/
-Text Domain: autoptimize
-Released under the GNU General Public License (GPL)
-http://www.gnu.org/licenses/gpl.txt
-*/
+/**
+ * Plugin Name: Autoptimize
+ * Plugin URI: https://autoptimize.com/
+ * Description: Makes your site faster by optimizing CSS, JS, Images, Google fonts and more.
+ * Version: 2.6.0-beta-5
+ * Author: Frank Goossens (futtta)
+ * Author URI: https://autoptimize.com/
+ * Text Domain: autoptimize
+ * Released under the GNU General Public License (GPL)
+ * http://www.gnu.org/licenses/gpl.txt
+ */
 
 /**
  * Autoptimize main plugin file.
