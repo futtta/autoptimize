@@ -91,6 +91,10 @@ class autoptimizeOptionWrapper {
                 // Return old value, to stop update_option logic.
                 return $old_value;
             }
+            if ( apply_filters( 'autoptimize_filter_optionwrapper_wp_cache_delete', false ) ) {
+                // in some (rare) cases options seem to get stuck in WP's Object cache, this should clear it there.
+                wp_cache_delete( $option );
+            }
         }
         return $value;
     }
