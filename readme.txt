@@ -283,7 +283,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * Extra: new option to specify what resources need to be preloaded.
 * Extra: add `display=swap` to Autoptimized (CSS-based) Google Fonts.
 * Images: support for lazyloading of background-images when set in the inline style attribute of a div.
-* Images: updated to lazysizes 5.1.2 (5.2 is in beta now, might be integrated in AO26 if released in time).
+* Images: updated to lazysizes 5.2.
 * CSS/ JS: no longer add type attributes to Autoptimized resources.
 * Improvement: cache clearing now also integrates with Kinsta, WP-Optimize & Nginx helper.
 * Added "Critical CSS" tab to highlight the criticalcss.com integration, which will be fully included in Autoptimize 2.7.
