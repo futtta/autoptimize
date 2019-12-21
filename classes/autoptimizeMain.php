@@ -346,7 +346,7 @@ class autoptimizeMain
             }
 
             // If setting says not to optimize cart/checkout.
-            if ( false === $ao_noptimize && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_checkout', 'on' ) ) {
+            if ( false === $ao_noptimize && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_checkout', 'off' ) ) {
                 // Checking for woocommerce, easy digital downloads and wp ecommerce...
                 foreach ( array( 'is_checkout', 'is_cart', 'edd_is_checkout', 'wpsc_is_cart', 'wpsc_is_checkout' ) as $func ) {
                     if ( function_exists( $func ) && $func() ) {

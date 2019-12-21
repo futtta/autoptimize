@@ -425,7 +425,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
     ?>
     <tr valign="top" >
         <th scope="row"><?php _e( 'Also optimize shop cart/ checkout?', 'autoptimize' ); ?></th>
-        <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_checkout" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_checkout', '1' ) ? 'checked="checked" ' : ''; ?>/>
+        <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_checkout" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_checkout', '0' ) ? 'checked="checked" ' : ''; ?>/>
             <?php _e( 'By default Autoptimize is also active on your shop\'s cart/ checkout, uncheck not to optimize those.', 'autoptimize' ); ?></label>
         </td>
     </tr>
@@ -741,7 +741,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
             'autoptimize_cdn_url'            => '',
             'autoptimize_cache_nogzip'       => 1,
             'autoptimize_optimize_logged'    => 1,
-            'autoptimize_optimize_checkout'  => 1,
+            'autoptimize_optimize_checkout'  => 0,
             'autoptimize_minify_excluded'    => 1,
         );
 
