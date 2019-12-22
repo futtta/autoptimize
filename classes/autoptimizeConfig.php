@@ -310,7 +310,7 @@ echo ' <i>' . __( '(deprecated)', 'autoptimize' ) . '</i>';
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_defer" id="autoptimize_css_defer" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer' ) ? 'checked="checked" ' : ''; ?>/>
 <?php
 _e( 'Inline "above the fold CSS" while loading the main autoptimized CSS only after page load. <a href="http://wordpress.org/plugins/autoptimize/faq/" target="_blank">Check the FAQ</a> for more info.', 'autoptimize' );
-if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
+if ( ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/autoptimizeCriticalCssMain.php' ) ) {
     echo ' ';
     $critcss_install_url = network_admin_url() . 'plugin-install.php?s=autoptimize+criticalcss&tab=search&type=term';
     // translators: links to plugin install screen with "autoptimize critical CSS" search.
