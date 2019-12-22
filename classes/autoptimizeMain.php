@@ -219,7 +219,7 @@ class autoptimizeMain
     public function maybe_run_criticalcss_tab()
     {
         // Loads criticalcss tab code if in admin (and not in admin-ajax.php)!
-        if ( autoptimizeConfig::is_admin_and_not_ajax() && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/autoptimizeCriticalCssMain.php' ) ) {
+        if ( autoptimizeConfig::is_admin_and_not_ajax() && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
             new autoptimizeCriticalCSSSettings();
         }
     }
