@@ -175,7 +175,7 @@ class autoptimizeImages
 
         $do_cdn      = true;
         $_userstatus = $this->get_imgopt_provider_userstatus();
-        if ( -2 == $_userstatus['Status'] ) {
+        if (isset($_userstatus['Status']) && -2 == $_userstatus['Status'] ) {
             $do_cdn = false;
         }
 
