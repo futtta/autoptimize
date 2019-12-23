@@ -181,7 +181,7 @@ class autoptimizeImages
 
         $do_cdn      = true;
         $_userstatus = $this->get_imgopt_provider_userstatus();
-        if ( isset($_userstatus['Status']) && (-2 == $_userstatus['Status'] || -3 == $_userstatus['Status']) ) {
+        if ( isset( $_userstatus['Status'] ) && ( -2 == $_userstatus['Status'] || -3 == $_userstatus['Status'] ) ) {
             // don't even attempt to put images on CDN if heavily exceeded threshold or if site not reachable.
             $do_cdn = false;
         }
