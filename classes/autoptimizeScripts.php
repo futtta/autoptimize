@@ -43,7 +43,7 @@ class autoptimizeScripts extends autoptimizeBase
     private $minify_excluded = true;
 
     // Reads the page and collects script tags.
-    public function read($options)
+    public function read( $options )
     {
         $noptimizeJS = apply_filters( 'autoptimize_filter_js_noptimize', false, $this->content );
         if ( $noptimizeJS ) {
@@ -58,7 +58,7 @@ class autoptimizeScripts extends autoptimizeBase
 
         // is there JS we should simply remove?
         $removableJS = apply_filters( 'autoptimize_filter_js_removables', '', $this->content );
-        if (!empty($removableJS)) {
+        if ( !empty( $removableJS ) ) {
             $this->jsremovables = array_filter( array_map( 'trim', explode( ',', $removableJS ) ) );
         }
 
@@ -87,14 +87,15 @@ class autoptimizeScripts extends autoptimizeBase
         $this->inject_min_late = apply_filters( 'autoptimize_filter_js_inject_min_late', true );
 
         // filters to override hardcoded do(nt)move(last) array contents (array in, array out!).
-        $this->dontmove = apply_filters( 'autoptimize_filter_js_dontmove', $this->dontmove );
+        $this->dontmove   = apply_filters( 'autoptimize_filter_js_dontmove', $this->dontmove );
         $this->domovelast = apply_filters( 'autoptimize_filter_js_movelast', $this->domovelast );
-        $this->domove = apply_filters( 'autoptimize_filter_js_domove', $this->domove );
+        $this->domove     = apply_filters( 'autoptimize_filter_js_domove', $this->domove );
 
         // Determine whether excluded files should be minified if not yet so.
         if ( ! $options['minify_excluded'] && $options['aggregate'] ) {
             $this->minify_excluded = false;
         }
+        $this->minify_excluded = apply_filters( 'autoptimize_filter_js_minify_excluded', $this->minify_excluded );
 
         // get extra exclusions settings or filter.
         $excludeJS = $options['js_exclude'];
@@ -181,7 +182,7 @@ class autoptimizeScripts extends autoptimizeBase
                         // Should we minify the non-aggregated script?
                         // -> if aggregate is on and exclude minify is on
                         // -> if aggregate is off and the file is not in dontmove.
-                        if ( $path && ( $this->minify_excluded || apply_filters( 'autoptimize_filter_js_minify_excluded', false, $url ) ) ) {
+                        if ( $path && $this->minify_excluded ) {
                             $consider_minified_array = apply_filters( 'autoptimize_filter_js_consider_minified', false );
                             if ( ( false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path ) || ( true === $this->aggregate && ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) ) ) {
                                 $minified_url = $this->minify_single( $path );
@@ -396,9 +397,13 @@ class autoptimizeScripts extends autoptimizeBase
             $defer = 'defer ';
         }
 
-        $defer = apply_filters( 'autoptimize_filter_js_defer', $defer );
+        $defer   = apply_filters( 'autoptimize_filter_js_defer', $defer );
+        $type_js = '';
+        if ( apply_filters( 'autoptimize_filter_cssjs_addtype', false ) ) {
+            $type_js = 'type="text/javascript" ';
+        }
 
-        $bodyreplacementpayload = '<script type="text/javascript" ' . $defer . 'src="' . $this->url . '"></script>';
+        $bodyreplacementpayload = '<script ' . $type_js . $defer . 'src="' . $this->url . '"></script>';
         $bodyreplacementpayload = apply_filters( 'autoptimize_filter_js_bodyreplacementpayload', $bodyreplacementpayload );
 
         $bodyreplacement = implode( '', $this->move['first'] );

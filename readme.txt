@@ -3,16 +3,15 @@ Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, pagespeed, images, lazy-load, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
-Tested up to: 5.2
-Requires PHP: 5.3
-Stable tag: 2.5.1
+Tested up to: 5.3
+Requires PHP: 5.6
+Stable tag: 2.6.0
 
 Autoptimize speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
 == Description ==
 
 Autoptimize makes optimizing your site really easy. It can aggregate, minify and cache scripts and styles, injects CSS in the page head by default but can also inline critical CSS and defer the aggregated full CSS, moves and defers scripts to the footer and minifies HTML. You can optimize and lazy-load images, optimize Google Fonts, async non-aggregated JavaScript, remove WordPress core emoji cruft and more. As such it can improve your site's performance even when already on HTTP/2! There is extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
-
 If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [WP Super Cache](http://wordpress.org/plugins/wp-super-cache/), [HyperCache](http://wordpress.org/plugins/hyper-cache/), [Comet Cache](https://wordpress.org/plugins/comet-cache/) or [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler).
 
 > <strong>Premium Support</strong><br>
@@ -235,7 +234,11 @@ JavaScript files that are not autoptimized (because they were excluded or becaus
 
 = How does image optimization work? =
 
-When image optimization is on, Autoptimize will look for png, gif, jpeg (.jpg) files in image tags and in your CSS files that are loaded from your own domain and change the src (source) to the ShortPixel CDN for those.
+When image optimization is on, Autoptimize will look for png, gif, jpeg (.jpg) files in image tags and in your CSS files that are loaded from your own domain and change the src (source) to the ShortPixel CDN for those. Important: this can only work for publicly available images, otherwise the image optimization proxy will not be able to get the image to optimize it, so firewalls or proxies or password protection or even hotlinking-prevention might break image optimization.
+
+= Can I use image optimization for my intranet/ protected site? =
+
+No; Image optimization depends on the ability of the external image optimization service to fetch the original image from your site, optimize it and save it on the CDN. If you images cannot be downloaded by anonymous visitors (due to firewall/ proxy/ password protection/ hotlinking-protection), image optimization will not work.
 
 = Where can I get more info on image optimization? =
 
@@ -274,6 +277,17 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.6.0 =
+* New: Autoptimize can be configured at network level or at individual site-level when on multisite.
+* Extra: new option to specify what resources need to be preloaded.
+* Extra: add `display=swap` to Autoptimized (CSS-based) Google Fonts.
+* Images: support for lazyloading of background-images when set in the inline style attribute of a div.
+* Images: updated to lazysizes 5.2.
+* CSS/ JS: no longer add type attributes to Autoptimized resources.
+* Improvement: cache clearing now also integrates with Kinsta, WP-Optimize & Nginx helper.
+* Added "Critical CSS" tab to highlight the criticalcss.com integration, which will be fully included in Autoptimize 2.7.
+* Batch of misc. smaller improvements & fixes, more info in the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 2.5.1 =
 * Images: Also optimize & lazyload &lt;picture>&lt;source>

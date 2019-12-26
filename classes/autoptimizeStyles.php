@@ -129,6 +129,7 @@ class autoptimizeStyles extends autoptimizeBase
         if ( ! $options['minify_excluded'] && $options['aggregate'] ) {
             $this->minify_excluded = false;
         }
+        $this->minify_excluded = apply_filters( 'autoptimize_filter_css_minify_excluded', $this->minify_excluded );
 
         // noptimize me.
         $this->content = $this->hide_noptimize( $this->content );
@@ -218,7 +219,7 @@ class autoptimizeStyles extends autoptimizeBase
                         // Excluded CSS, minify that file:
                         // -> if aggregate is on and exclude minify is on
                         // -> if aggregate is off and the file is not in dontmove.
-                        if ( $path && ( $this->minify_excluded || apply_filters( 'autoptimize_filter_css_minify_excluded', false, $url ) ) ) {
+                        if ( $path && $this->minify_excluded ) {
                             $consider_minified_array = apply_filters( 'autoptimize_filter_css_consider_minified', false );
                             if ( ( false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path ) || ( true === $this->aggregate && ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) ) ) {
                                 $minified_url = $this->minify_single( $path );
@@ -266,7 +267,7 @@ class autoptimizeStyles extends autoptimizeBase
                 $url
             );
             // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
-            $new_tag = '<noscript>' . $tag . '</noscript>' . str_replace(
+            $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
                 array(
                     "rel='stylesheet'",
                     'rel="stylesheet"',
@@ -821,18 +822,25 @@ class autoptimizeStyles extends autoptimizeBase
             $this->restofcontent = '';
         }
 
+        // type is not added by default.
+        $type_css = '';
+        if ( apply_filters( 'autoptimize_filter_cssjs_addtype', false ) ) {
+            $type_css = 'type="text/css" ';
+        }
+
         // Inject the new stylesheets.
         $replaceTag = array( '<title', 'before' );
         $replaceTag = apply_filters( 'autoptimize_filter_css_replacetag', $replaceTag, $this->content );
 
         if ( $this->inline ) {
             foreach ( $this->csscode as $media => $code ) {
-                $this->inject_in_html( '<style type="text/css" media="' . $media . '">' . $code . '</style>', $replaceTag );
+                $this->inject_in_html( '<style ' . $type_css . 'media="' . $media . '">' . $code . '</style>', $replaceTag );
             }
         } else {
             if ( $this->defer ) {
-                $preloadCssBlock = '';
-                $noScriptCssBlock = "<noscript id=\"aonoscrcss\">";
+                $preloadCssBlock    = '';
+                $inlined_ccss_block = '';
+                $noScriptCssBlock   = "<noscript id=\"aonoscrcss\">";
 
                 $defer_inline_code = $this->defer_inline;
                 if ( ! empty( $defer_inline_code ) ) {
@@ -855,7 +863,7 @@ class autoptimizeStyles extends autoptimizeBase
                     }
                     // inlined critical css set here, but injected when full CSS is injected
                     // to avoid CSS containing SVG with <title tag receiving the full CSS link.
-                    $inlined_ccss_block = '<style type="text/css" id="aoatfcss" media="all">' . $defer_inline_code . '</style>';
+                    $inlined_ccss_block = '<style ' . $type_css . 'id="aoatfcss" media="all">' . $defer_inline_code . '</style>';
                 }
             }
 
@@ -867,13 +875,12 @@ class autoptimizeStyles extends autoptimizeBase
                     $preloadOnLoad = autoptimizeConfig::get_ao_css_preload_onload();
 
                     $preloadCssBlock .= '<link rel="preload" as="style" media="' . $media . '" href="' . $url . '" onload="' . $preloadOnLoad . '" />';
-                    $noScriptCssBlock .= '<link type="text/css" media="' . $media . '" href="' . $url . '" rel="stylesheet" />';
+                    $noScriptCssBlock .= '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />';
                 } else {
-                    // $this->inject_in_html('<link type="text/css" media="' . $media . '" href="' . $url . '" rel="stylesheet" />', $replaceTag);
                     if ( strlen( $this->csscode[$media] ) > $this->cssinlinesize ) {
-                        $this->inject_in_html( '<link type="text/css" media="' . $media . '" href="' . $url . '" rel="stylesheet" />', $replaceTag );
+                        $this->inject_in_html( '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />', $replaceTag );
                     } elseif ( strlen( $this->csscode[$media] ) > 0 ) {
-                        $this->inject_in_html( '<style type="text/css" media="' . $media . '">' . $this->csscode[$media] . '</style>', $replaceTag );
+                        $this->inject_in_html( '<style ' . $type_css . 'media="' . $media . '">' . $this->csscode[$media] . '</style>', $replaceTag );
                     }
                 }
             }
@@ -945,7 +952,7 @@ class autoptimizeStyles extends autoptimizeBase
                 }
 
                 $url = $noQurl;
-                if ( '/' === $url{0} || preg_match( '#^(https?://|ftp://|data:)#i', $url ) ) {
+                if ( '/' === $url[0] || preg_match( '#^(https?://|ftp://|data:)#i', $url ) ) {
                     // URL is protocol-relative, host-relative or something we don't touch.
                     continue;
                 } else {
@@ -1052,13 +1059,16 @@ class autoptimizeStyles extends autoptimizeBase
         // Check cache.
         $hash  = 'single_' . md5( $contents );
         $cache = new autoptimizeCache( $hash, 'css' );
+        do_action( 'autoptimize_action_css_hash', $hash );
 
         // If not in cache already, minify...
         if ( ! $cache->check() || $cache_miss ) {
             // Fixurls...
             $contents = self::fixurls( $filepath, $contents );
             // CDN-replace any referenced assets if needed...
+            $contents = $this->hide_fontface_and_maybe_cdn( $contents );
             $contents = $this->replace_urls( $contents );
+            $contents = $this->restore_fontface( $contents );
             // Now minify...
             $cssmin   = new autoptimizeCSSmin();
             $contents = trim( $cssmin->run( $contents ) );
