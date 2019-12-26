@@ -70,7 +70,7 @@ class AOTest extends WP_UnitTestcase
 
         static $cdn_url = null;
         if ( null === $cdn_url ) {
-            $cdn_url = get_option( 'autoptimize_cdn_url' );
+            $cdn_url = autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url' );
         }
 
         static $imgopt_host = null;
@@ -262,7 +262,7 @@ MARKUP;
         }
 
         $urls      = $this->get_urls();
-        $siteurl   = $urls['siteurl'];
+            $siteurl   = $urls['siteurl'];
         $cdnurl    = $urls['cdnurl'];
         $subfolder = $urls['subfolder'];
 
@@ -274,7 +274,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<link type="text/css" media="all" href="${cdnurl}/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<link media="all" href="${cdnurl}/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -306,7 +306,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}f452d67a906f6ee73da68e553e43da58.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}b3bc6ff617884cff344e049b95b2d3a0.js"></script></body>
 </html>
 MARKUP;
 
@@ -341,7 +341,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<link type="text/css" media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -373,7 +373,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}f452d67a906f6ee73da68e553e43da58.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}b3bc6ff617884cff344e049b95b2d3a0.js"></script></body>
 </html>
 MARKUP;
 
@@ -408,7 +408,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style type="text/css" id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="$cdnurl/${subfolder}${csspart}{$csshash}.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link type="text/css" media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="$cdnurl/${subfolder}${csspart}{$csshash}.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -440,7 +440,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}f452d67a906f6ee73da68e553e43da58.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}b3bc6ff617884cff344e049b95b2d3a0.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
 </html>
 MARKUP;
 
@@ -475,7 +475,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style type="text/css" id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link type="text/css" media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -507,7 +507,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script type="text/javascript" defer src="$cdnurl/${subfolder}${jspart}f452d67a906f6ee73da68e553e43da58.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}b3bc6ff617884cff344e049b95b2d3a0.js"></script><script data-cfasync='false'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script></body>
 </html>
 MARKUP;
 
@@ -732,6 +732,13 @@ CSS;
                 '<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+                false,
+            ),
+            array(
+                // adding doctype & html tags to make sure that this is falsed by the extended has_xsl_stylesheet test.
+                '<?xml version="2.0" encoding="UTF-8"?>
+<!doctype html><html>
+<?xml-stylesheet type="text/xsl" ',
                 false,
             ),
             array(
@@ -1692,7 +1699,7 @@ CSS;
 </style>
 HTML;
 
-        $expected = '<style type="text/css" media="all">@import url(' . $cdnurl . '/' . $sub . 'foo.css?a&#038;b);@import url(' . $cdnurl . '/' . $sub . 'bar.css);</style><!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag `title` missing --><!--/noptimize-->';
+        $expected = '<style media="all">@import url(' . $cdnurl . '/' . $sub . 'foo.css?a&#038;b);@import url(' . $cdnurl . '/' . $sub . 'bar.css);</style><!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag `title` missing --><!--/noptimize-->';
 
         $options = [
             'autoptimizeStyles' => $this->getAoStylesDefaultOptions(),
@@ -1731,7 +1738,7 @@ HTML;
 </style>
 HTML;
 
-        $expected = '<style type="text/css" media="all">@import url(' . $cdnurl . '/' . $sub . 'foo.css);@import url(' . $cdnurl . '/' . $sub . 'bar.css) (orientation:landscape);</style><!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag `title` missing --><!--/noptimize-->';
+        $expected = '<style media="all">@import url(' . $cdnurl . '/' . $sub . 'foo.css);@import url(' . $cdnurl . '/' . $sub . 'bar.css) (orientation:landscape);</style><!--noptimize--><!-- Autoptimize found a problem with the HTML in your Theme, tag `title` missing --><!--/noptimize-->';
 
         $options = [
             'autoptimizeStyles' => $this->getAoStylesDefaultOptions(),
@@ -2227,7 +2234,11 @@ MARKUP;
 
     public function test_delete_advanced_cache_clear_artifacts()
     {
+        add_filter( 'autoptimize_filter_cache_clear_advanced', '__return_true' );
+
         $this->assertTrue( autoptimizeCache::delete_advanced_cache_clear_artifacts() );
+
+        remove_all_filters( 'autoptimize_filter_cache_clear_advanced' );
     }
 
     public function provider_canonicalization()
@@ -2477,6 +2488,33 @@ MARKUP;
     }
 
     /**
+     * Test lazyload in autoptimizeImages.php.
+     *
+     * case: picture tag
+     */
+    public function test_bgimg_lazyload()
+    {
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '1';
+
+        $markup = <<<MARKUP
+<div id="just-an-id" style="height:250px;background-image: url(/wp-content/uploads/2018/05/DSC_1615-300x201.jpg);" class="hero background-image"></div>
+MARKUP;
+
+        $expected = <<<MARKUP
+<div id="just-an-id" data-bg="/wp-content/uploads/2018/05/DSC_1615-300x201.jpg" style="height:250px;background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20300%22%3E%3C/svg%3E);" class="lazyload hero background-image"></div>
+MARKUP;
+
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_lazyload_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
      * Test image optimization in autoptimizeImages.php.
      *
      * Exception case: image served by .php, should not be proxied.
@@ -2654,7 +2692,7 @@ MARKUP;
         $actual   = $instance->run_minifier_on( $css );
         $this->assertEquals( $css, $actual );
 
-        // When not quoted, 'Black' used to become '#000', but not anymore... :)
+        // When not quoted, 'Black' used to become '#000', but not anymore :) ...
         $css_unquoted = 'h2{font-family:Archivo Black;}';
         $expected     = 'h2{font-family:Archivo Black}';
         $instance     = new autoptimizeStyles( $css_unquoted );
@@ -2669,7 +2707,7 @@ MARKUP;
 
     public function test_is_plugin_active_utils_wrapper()
     {
-        // Our plugin is loaded via "muplugins_loaded" filter in tests/bootstrap.php
+        // Our plugin is loaded via "muplugins_loaded" filter in tests/bootstrap.php.
         $this->assertFalse( autoptimizeUtils::is_plugin_active( 'autoptimize/autoptimize.php' ) );
         $this->assertFalse( autoptimizeUtils::is_plugin_active( 'async-javascript/async-javascript.php' ) );
     }
@@ -2687,5 +2725,65 @@ break`+`he  llo`;foo`hel( \'\');lo`;`he\nl\`lo`;(`he${one + two}`)';
 
         $actual = JSMin::minify( $js );
         $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test preloading of resources (e.g. fonts).
+     */
+    public function test_preload()
+    {
+        $opts                                   = autoptimizeExtra::fetch_options();
+        $opts['autoptimize_extra_text_field_7'] = 'https://whatever.com/fonts/openfuttta.woff2, https://whatever.com/css/openfuttta.css';
+
+        $markup = <<<MARKUP
+<html><link rel="stylesheet" href="xyz.css">
+MARKUP;
+
+        $expected = <<<MARKUP
+<html><link rel="preload" href="https://whatever.com/fonts/openfuttta.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="https://whatever.com/css/openfuttta.css" as="style"><link rel="stylesheet" href="xyz.css">
+MARKUP;
+
+        $instance = autoptimizeExtra::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_preload( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test network vs site settings: network only.
+     */
+    public function test_network_no_site_settings()
+    {
+        if ( is_multisite() ) {
+            define( 'TEST_MULTISITE_FORCE_AO_ON_NETWORK', true );
+            // set options through WordPress core methods.
+            update_option( 'autoptimize_js_exclude', 'site' );
+            update_network_option( get_main_network_id(), 'autoptimize_js_exclude', 'network' );
+            update_network_option( get_main_network_id(), 'autoptimize_enable_site_config', '' );
+
+            // and then try fetching them through optionwrapper.
+            $expected = 'network';
+            $actual   = autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude' );
+            $this->assertEquals( $expected, $actual );
+        }
+    }
+
+    /**
+     * Test network vs site settings; per site.
+     */
+    public function test_network_per_site_settings()
+    {
+        if ( is_multisite() ) {
+            // define of TEST_MULTISITE_FORCE_AO_ON_NETWORK not needed, done in previous test.
+            // set options through WordPress core methods.
+            update_option( 'autoptimize_js_exclude', 'site' );
+            update_network_option( get_main_network_id(), 'autoptimize_js_exclude', 'network' );
+            update_network_option( get_main_network_id(), 'autoptimize_enable_site_config', 'on' );
+
+            // and then try fetching them through optionwrapper.
+            $expected = 'site';
+            $actual   = autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude' );
+            $this->assertEquals( $expected, $actual );
+        }
     }
 }
