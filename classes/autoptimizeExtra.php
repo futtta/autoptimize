@@ -447,8 +447,8 @@ class autoptimizeExtra
                 'autoptimize_extra',
                 array( $this, 'options_page' )
             );
-            register_setting( 'autoptimize_extra_settings', 'autoptimize_extra_settings' );
         }
+        register_setting( 'autoptimize_extra_settings', 'autoptimize_extra_settings' );
     }
 
     public function add_extra_tab( $in )

@@ -949,8 +949,8 @@ class autoptimizeImages
                 'autoptimize_imgopt',
                 array( $this, 'imgopt_options_page' )
             );
-            register_setting( 'autoptimize_imgopt_settings', 'autoptimize_imgopt_settings' );
         }
+        register_setting( 'autoptimize_imgopt_settings', 'autoptimize_imgopt_settings' );
     }
 
     public function add_imgopt_tab( $in )
