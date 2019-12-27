@@ -129,7 +129,7 @@ class autoptimizeStyles extends autoptimizeBase
         if ( ! $options['minify_excluded'] && $options['aggregate'] ) {
             $this->minify_excluded = false;
         }
-        $this->minify_excluded = apply_filters( 'autoptimize_filter_css_minify_excluded', $this->minify_excluded );
+        $this->minify_excluded = apply_filters( 'autoptimize_filter_css_minify_excluded', $this->minify_excluded, '' );
 
         // noptimize me.
         $this->content = $this->hide_noptimize( $this->content );
