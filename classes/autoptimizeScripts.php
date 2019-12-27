@@ -95,7 +95,7 @@ class autoptimizeScripts extends autoptimizeBase
         if ( ! $options['minify_excluded'] && $options['aggregate'] ) {
             $this->minify_excluded = false;
         }
-        $this->minify_excluded = apply_filters( 'autoptimize_filter_js_minify_excluded', $this->minify_excluded );
+        $this->minify_excluded = apply_filters( 'autoptimize_filter_js_minify_excluded', $this->minify_excluded, '' );
 
         // get extra exclusions settings or filter.
         $excludeJS = $options['js_exclude'];
