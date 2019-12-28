@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.0
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 2.5.1
+Stable tag: 2.6.1
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -278,7 +278,12 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
-= 2.6.0 beta =
+= 2.6.1 =
+* bugfixes for multiple lazyload bugs causing images not to load or load incorrectly
+* bugfixes for multiple multisite bugs causing settings-screen to be unavailable
+* bugfix re-added 3rd parameter to `autoptimize_filter_js_minify_excluded`-filter to ensure backwards-compatibility and thus avoid breaking Smart Cookie Kit which expected that 3rd parameter.
+
+= 2.6.0 =
 * New: Autoptimize can be configured at network level or at individual site-level when on multisite.
 * Extra: new option to specify what resources need to be preloaded.
 * Extra: add `display=swap` to Autoptimized (CSS-based) Google Fonts.
