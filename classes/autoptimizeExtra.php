@@ -406,19 +406,20 @@ class autoptimizeExtra
             $crossorigin = '';
             $preload_as  = '';
             $mime_type   = '';
+            $_preload    = strtok( $preload, '?' );
 
-            if ( autoptimizeUtils::str_ends_in( $preload, '.css' ) ) {
+            if ( autoptimizeUtils::str_ends_in( $_preload, '.css' ) ) {
                 $preload_as = 'style';
-            } elseif ( autoptimizeUtils::str_ends_in( $preload, '.js' ) ) {
+            } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.js' ) ) {
                 $preload_as = 'script';
-            } elseif ( autoptimizeUtils::str_ends_in( $preload, '.woff' ) || autoptimizeUtils::str_ends_in( $preload, '.woff2' ) || autoptimizeUtils::str_ends_in( $preload, '.ttf' ) || autoptimizeUtils::str_ends_in( $preload, '.eot' ) ) {
+            } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.woff' ) || autoptimizeUtils::str_ends_in( $_preload, '.woff2' ) || autoptimizeUtils::str_ends_in( $_preload, '.ttf' ) || autoptimizeUtils::str_ends_in( $_preload, '.eot' ) ) {
                 $preload_as  = 'font';
                 $crossorigin = ' crossorigin';
-                $mime_type   = ' type="font/' . pathinfo( $preload, PATHINFO_EXTENSION ) . '"';
+                $mime_type   = ' type="font/' . pathinfo( $_preload, PATHINFO_EXTENSION ) . '"';
                 if ( ' type="font/eot"' === $mime_type ) {
                     $mime_type = 'application/vnd.ms-fontobject';
                 }
-            } elseif ( autoptimizeUtils::str_ends_in( $preload, '.jpeg' ) || autoptimizeUtils::str_ends_in( $preload, '.jpg' ) || autoptimizeUtils::str_ends_in( $preload, '.webp' ) || autoptimizeUtils::str_ends_in( $preload, '.png' ) || autoptimizeUtils::str_ends_in( $preload, '.gif' ) ) {
+            } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.jpeg' ) || autoptimizeUtils::str_ends_in( $_preload, '.jpg' ) || autoptimizeUtils::str_ends_in( $_preload, '.webp' ) || autoptimizeUtils::str_ends_in( $_preload, '.png' ) || autoptimizeUtils::str_ends_in( $_preload, '.gif' ) ) {
                 $preload_as = 'image';
             } else {
                 $preload_as = 'other';

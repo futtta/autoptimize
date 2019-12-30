@@ -2750,6 +2750,29 @@ MARKUP;
     }
 
     /**
+     * Test preloading of resources (e.g. fonts).
+     */
+    public function test_preload_withqs()
+    {
+        $opts                                   = autoptimizeExtra::fetch_options();
+        $opts['autoptimize_extra_text_field_7'] = 'https://whatever.com/fonts/openfuttta.woff2?123#abc, https://whatever.com/css/openfuttta.css?v=124';
+
+        $markup = <<<MARKUP
+<html><link rel="stylesheet" href="xyz.css">
+MARKUP;
+
+        $expected = <<<MARKUP
+<html><link rel="preload" href="https://whatever.com/fonts/openfuttta.woff2?123#abc" as="font" type="font/woff2" crossorigin><link rel="preload" href="https://whatever.com/css/openfuttta.css?v=124" as="style"><link rel="stylesheet" href="xyz.css">
+MARKUP;
+
+        $instance = autoptimizeExtra::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_preload( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
+
+    /**
      * Test network vs site settings: network only.
      */
     public function test_network_no_site_settings()
