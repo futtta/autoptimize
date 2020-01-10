@@ -1,6 +1,6 @@
 <?php
 /**
- * Main configurtion logic.
+ * Main configuration logic.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -88,7 +88,7 @@ class autoptimizeConfig
         <div class="wrap">
             <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
             <?php echo $this->ao_admin_tabs(); ?>
-            <p style="font-size:120%;"><?php _e( 'Autoptimize is enabled and configured on a WordPress network level. Please contact your network administrator if you need Autoptimize settings changed.', 'autoptimize' ); ?></p>
+            <p style="font-size:120%;"><?php echo apply_filters( 'autoptimize_filter_settingsscreen_multisite_network_message', __( 'Autoptimize is enabled and configured on a WordPress network level. Please contact your network administrator if you need Autoptimize settings changed.', 'autoptimize' ) ); ?></p>
         </div>
         <?php
     }
