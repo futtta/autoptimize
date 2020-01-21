@@ -815,7 +815,7 @@ class autoptimizeImages
             $options = $this->options;
 
             // set default exclusions.
-            $exclude_lazyload_array = array( 'skip-lazy', 'data-no-lazy', 'notlazy', 'data-src', 'data-srcset', 'data:image/', 'data-lazyload', 'rev-slidebg' );
+            $exclude_lazyload_array = array( 'skip-lazy', 'data-no-lazy', 'notlazy', 'data-src', 'data-srcset', 'data:image/', 'data-lazyload', 'rev-slidebg', 'loading="eager"' );
 
             // add from setting.
             if ( array_key_exists( 'autoptimize_imgopt_text_field_5', $options ) ) {
