@@ -1,0 +1,41 @@
+{
+    "name": "futtta/autoptimize",
+    "description": "Optimizes your WordPress website, concatenating the CSS and JavaScript code, and compressing it.",
+    "type": "wordpress-plugin",
+    "homepage": "https://autoptimize.com/",
+    "keywords": [
+        "async",
+        "minify",
+        "optimize",
+        "pagespeed",
+        "performance"
+    ],
+    "license": "GPL",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "support": {
+        "issues": "https://wordpress.org/support/plugin/autoptimize"
+    },
+    "require": {
+        "php": ">=5.3"
+    },
+    "require-dev": {
+        "php": ">=5.6",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.2",
+        "squizlabs/php_codesniffer": "^3.1",
+        "phpunit/phpunit": "^5.7.27",
+        "wimg/php-compatibility": "*",
+        "wp-coding-standards/wpcs": "*"
+    },
+    "scripts": {
+        "test": [
+            "@phpunit"
+        ],
+        "coverage": [
+            "@phpunit-coverage"
+        ],
+        "phpunit": "phpunit --no-coverage",
+        "phpunit-coverage": "phpunit --coverage-html=./coverage/ --coverage-clover=./coverage/clover.xml",
+        "phpcs": "phpcs"
+    }
+}
