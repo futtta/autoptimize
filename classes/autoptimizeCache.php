@@ -142,9 +142,8 @@ class autoptimizeCache
         // The original idea here was to provide 3rd party code a hook so that
         // it can "listen" to all the complete autoptimized-urls that the page
         // will emit... Or something to that effect I think?
-        apply_filters( 'autoptimize_filter_cache_getname', AUTOPTIMIZE_CACHE_URL . $this->filename );
-
-        return $this->filename;
+        
+        return apply_filters( 'autoptimize_filter_cache_getname', $this->filename );
     }
 
     /**
