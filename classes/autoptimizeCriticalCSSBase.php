@@ -77,7 +77,8 @@ class autoptimizeCriticalCSSBase {
             require_once( 'critcss-inc/core_ajax.php' );
         } else {
             // enqueuing only done when not wp-admin.
-            require_once( 'critcss-inc/core_enqueue.php' );
+            // require_once( 'critcss-inc/core_enqueue.php' );
+            $ccssEnqueue = new autoptimizeCriticalCSSEnqueue();
         }
     }
 

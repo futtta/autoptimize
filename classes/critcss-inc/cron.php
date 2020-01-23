@@ -10,11 +10,8 @@ function ao_ccss_queue_control() {
   global $ao_ccss_key;
   if ( ! isset ( $ao_ccss_key ) || empty( $ao_ccss_key ) ) {
       // no key set, not processing the queue!
-      error_log('ao_ccss_key not set, bailing crong');
       autoptimizeCriticalCSSCore::ao_ccss_log('No key set, so not processing queue.', 3);
       return;
-  } else {
-      error_log('ao_ccss_key set, continuing cron');
   }
 
   /**

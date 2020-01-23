@@ -1,6 +1,7 @@
 <?php
 /**
- * Critical CSS Core logic.
+ * Critical CSS Core logic: 
+ * gets called by AO core, checks the rules and if a matching rule is found returns the associated CCSS.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,13 +28,12 @@ class autoptimizeCriticalCSSCore {
 
         // add all filters to do CCSS if key present.
         if ( $ao_css_defer && isset( $ao_ccss_key ) && ! empty( $ao_ccss_key ) ) {
-          error_log('ao_ccss_key set, continuing hooking stuff: '.$ao_ccss_key);
           // Set AO behavior: disable minification to avoid double minifying and caching
           add_filter('autoptimize_filter_css_critcss_minify', '__return_false');
           add_filter('autoptimize_filter_css_defer_inline', array( $this, 'ao_ccss_frontend' ), 10, 1);
 
           // Add the action to enqueue jobs for CriticalCSS cron
-          add_action('autoptimize_action_css_hash', 'ao_ccss_enqueue', 10, 1);
+          add_action('autoptimize_action_css_hash', array('autoptimizeCriticalCSSEnqueue','ao_ccss_enqueue'), 10, 1);
 
           // conditionally add the filter to defer jquery and others.
           if ( $ao_ccss_deferjquery ) {
@@ -53,8 +53,6 @@ class autoptimizeCriticalCSSCore {
 
           // Extend conditional tags on pugin initalization
           add_action( 'init', array( $this, 'ao_ccss_extend_types' ) );
-        } else {
-            error_log('ao_ccss_key not set, not hooking stuff');
         }
     }
 
