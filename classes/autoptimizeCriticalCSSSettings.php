@@ -37,6 +37,8 @@ class autoptimizeCriticalCSSSettings {
             } else {
                 add_action( 'admin_menu', array( $this, 'add_critcss_admin_menu' ) );
             }
+            
+            $autoptimizeCriticalCSSAjax = new autoptimizeCriticalCSSAjax();
         }
     }
 
