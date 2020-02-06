@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class autoptimizeCriticalCSSAjax {
+class autoptimizeCriticalCSSSettingsAjax {
     public function __construct()
     {
         // fetch all options at once and populate them individually explicitely as globals.
