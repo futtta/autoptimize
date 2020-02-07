@@ -18,40 +18,40 @@ class autoptimizeCriticalCSSSettingsAjax {
         }
         $this->run();
     }
-    
+
     public function run() {
         // add filters.
-        add_action('wp_ajax_fetch_critcss', array($this,'critcss_fetch_callback'));
-        add_action('wp_ajax_save_critcss', array($this,'critcss_save_callback'));
-        add_action('wp_ajax_rm_critcss', array($this,'critcss_rm_callback'));
-        add_action('wp_ajax_ao_ccss_export', array($this,'ao_ccss_export_callback'));
-        add_action('wp_ajax_ao_ccss_import', array($this,'ao_ccss_import_callback'));        
+        add_action( 'wp_ajax_fetch_critcss', array( $this, 'critcss_fetch_callback' ) );
+        add_action( 'wp_ajax_save_critcss', array( $this, 'critcss_save_callback' ) );
+        add_action( 'wp_ajax_rm_critcss', array( $this, 'critcss_rm_callback' ) );
+        add_action( 'wp_ajax_ao_ccss_export', array( $this, 'ao_ccss_export_callback' ) );
+        add_action( 'wp_ajax_ao_ccss_import', array( $this, 'ao_ccss_import_callback' ) );
     }
 
     public function critcss_fetch_callback() {
-        // Ajax handler to obtain a critical CSS file from the filesystem
-        // Check referer
-        check_ajax_referer('fetch_critcss_nonce', 'critcss_fetch_nonce');
+        // Ajax handler to obtain a critical CSS file from the filesystem.
+        // Check referer.
+        check_ajax_referer( 'fetch_critcss_nonce', 'critcss_fetch_nonce' );
 
-        // Initialize error flag
-        $error = TRUE;
+        // Initialize error flag.
+        $error = true;
 
-        // Allow no content for MANUAL rules (as they may not exist just yet)
-        if (current_user_can('manage_options') && empty($_POST['critcssfile'])) {
+        // Allow no content for MANUAL rules (as they may not exist just yet).
+        if ( current_user_can( 'manage_options' ) && empty( $_POST['critcssfile'] ) ) {
             $content = '';
-            $error   = FALSE;
-        } elseif (current_user_can('manage_options') && $this->critcss_check_filename($_POST['critcssfile'])) {
-            // Or check user permissios and filename
-            // Set file path and obtain its content
-            $critcssfile = AO_CCSS_DIR . strip_tags($_POST['critcssfile']);
-            if (file_exists($critcssfile)) {
-                $content = file_get_contents($critcssfile);
-                $error   = FALSE;
+            $error   = false;
+        } elseif ( current_user_can( 'manage_options' ) && $this->critcss_check_filename( $_POST['critcssfile'] ) ) {
+            // Or check user permissios and filename.
+            // Set file path and obtain its content.
+            $critcssfile = AO_CCSS_DIR . strip_tags( $_POST['critcssfile'] );
+            if ( file_exists( $critcssfile ) ) {
+                $content = file_get_contents( $critcssfile );
+                $error   = false;
             }
         }
 
-        // Prepare response
-        if ($error) {
+        // Prepare response.
+        if ( $error ) {
             $response['code']   = '500';
             $response['string'] = 'Error reading file ' . $critcssfile . '.';
         } else {
@@ -59,10 +59,10 @@ class autoptimizeCriticalCSSSettingsAjax {
             $response['string'] = $content;
         }
 
-        // Dispatch respose
-        echo json_encode($response);
+        // Dispatch respose.
+        echo json_encode( $response );
 
-        // Close ajax request
+        // Close ajax request.
         wp_die();
     }
 
@@ -70,240 +70,241 @@ class autoptimizeCriticalCSSSettingsAjax {
         $error    = false;
         $status   = false;
         $response = array();
-        
+
         // Ajax handler to write a critical CSS to the filesystem
-        // Check referer
-        check_ajax_referer('save_critcss_nonce', 'critcss_save_nonce');
+        // Check referer.
+        check_ajax_referer( 'save_critcss_nonce', 'critcss_save_nonce' );
 
-        // Allow empty contents for MANUAL rules (as they are fetched later)
-        if (current_user_can('manage_options') && empty($_POST['critcssfile'])) {
-            $critcssfile = FALSE;
-            $status      = TRUE;
-        } elseif (current_user_can('manage_options') && $this->critcss_check_filename($_POST['critcssfile'])) {
+        // Allow empty contents for MANUAL rules (as they are fetched later).
+        if ( current_user_can( 'manage_options' ) && empty( $_POST['critcssfile'] ) ) {
+            $critcssfile = false;
+            $status      = true;
+        } elseif ( current_user_can( 'manage_options' ) && $this->critcss_check_filename( $_POST['critcssfile'] ) ) {
             // Or check user permissios and filename
-            // Set critical CSS content
-            $critcsscontents = stripslashes($_POST['critcsscontents']);
+            // Set critical CSS content.
+            $critcsscontents = stripslashes( $_POST['critcsscontents'] );
 
-            // If there is content and it's valid, write the file
-            if ($critcsscontents && autoptimizeCriticalCSSCore::ao_ccss_check_contents($critcsscontents)) {
-                // Set file path and status
-                $critcssfile = AO_CCSS_DIR . strip_tags($_POST['critcssfile']);
-                $status      = file_put_contents($critcssfile, $critcsscontents, LOCK_EX);
-                // Or set as error
+            // If there is content and it's valid, write the file.
+            if ( $critcsscontents && autoptimizeCriticalCSSCore::ao_ccss_check_contents( $critcsscontents ) ) {
+                // Set file path and status.
+                $critcssfile = AO_CCSS_DIR . strip_tags( $_POST['critcssfile'] );
+                $status      = file_put_contents( $critcssfile, $critcsscontents, LOCK_EX );
+                // Or set as error.
             } else {
-                $error = TRUE;
+                $error = true;
             }
-        // Or just set an error
+            // Or just set an error.
         } else {
-            $error = TRUE;
+            $error = true;
         }
 
-        // Prepare response
-        if (!$status || $error) {
-            $response['code']   ='500';
+        // Prepare response.
+        if ( ! $status || $error ) {
+            $response['code']   = '500';
             $response['string'] = 'Error saving file ' . $critcssfile . '.';
         } else {
-            $response['code']   = '200';
-            if ($critcssfile) {
+            $response['code'] = '200';
+            if ( $critcssfile ) {
                 $response['string'] = 'File ' . $critcssfile . ' saved.';
             } else {
                 $response['string'] = 'Empty content do not need to be saved.';
             }
         }
 
-        // Dispatch respose
-        echo json_encode($response);
+        // Dispatch respose.
+        echo json_encode( $response );
 
-        // Close ajax request
+        // Close ajax request.
         wp_die();
     }
 
 
     public function critcss_rm_callback() {
         // Ajax handler to delete a critical CSS from the filesystem
-        // Check referer
-        check_ajax_referer('rm_critcss_nonce', 'critcss_rm_nonce');
+        // Check referer.
+        check_ajax_referer( 'rm_critcss_nonce', 'critcss_rm_nonce' );
 
-        // Initialize error and status flags
-        $error  = TRUE;
-        $status = FALSE;
+        // Initialize error and status flags.
+        $error  = true;
+        $status = false;
 
-        // Allow no file for MANUAL rules (as they may not exist just yet)
-        if (current_user_can('manage_options') && empty($_POST['critcssfile'])) {
-            $error   = FALSE;
-        } elseif (current_user_can('manage_options') && $this->critcss_check_filename($_POST['critcssfile'])) {
+        // Allow no file for MANUAL rules (as they may not exist just yet).
+        if ( current_user_can( 'manage_options' ) && empty( $_POST['critcssfile'] ) ) {
+            $error = false;
+        } elseif ( current_user_can( 'manage_options' ) && $this->critcss_check_filename( $_POST['critcssfile'] ) ) {
             // Or check user permissios and filename
-            // Set file path and delete it
-            $critcssfile = AO_CCSS_DIR . strip_tags($_POST['critcssfile']);
-            if (file_exists($critcssfile)) {
-                $status = unlink($critcssfile);
-                $error  = FALSE;
+            // Set file path and delete it.
+            $critcssfile = AO_CCSS_DIR . strip_tags( $_POST['critcssfile'] );
+            if ( file_exists( $critcssfile ) ) {
+                $status = unlink( $critcssfile );
+                $error  = false;
             }
         }
 
-        // Prepare response
-        if ($error) {
+        // Prepare response.
+        if ( $error ) {
             $response['code']   = '500';
             $response['string'] = 'Error removing file ' . $critcssfile . '.';
         } else {
-            $response['code']   = '200';
-            if ($status) {
+            $response['code'] = '200';
+            if ( $status ) {
                 $response['string'] = 'File ' . $critcssfile . ' removed.';
             } else {
                 $response['string'] = 'No file to be removed.';
             }
         }
 
-        // Dispatch respose
-        echo json_encode($response);
+        // Dispatch respose.
+        echo json_encode( $response );
 
-        // Close ajax request
+        // Close ajax request.
         wp_die();
     }
 
     public function ao_ccss_export_callback() {
         // Ajax handler export settings
-        // Check referer
-        check_ajax_referer('ao_ccss_export_nonce', 'ao_ccss_export_nonce');
+        // Check referer.
+        check_ajax_referer( 'ao_ccss_export_nonce', 'ao_ccss_export_nonce' );
 
-        if (!class_exists('ZipArchive')) {
+        if ( ! class_exists( 'ZipArchive' ) ) {
             $response['code'] = '500';
-            $response['msg'] = 'PHP ZipArchive not present, cannot create zipfile';
-            echo json_encode($response);
+            $response['msg']  = 'PHP ZipArchive not present, cannot create zipfile';
+            echo json_encode( $response );
             wp_die();
         }
 
-        // Init array, get options and prepare the raw object
+        // Init array, get options and prepare the raw object.
         $settings               = array();
-        $settings['rules']      = get_option('autoptimize_ccss_rules');
-        $settings['additional'] = get_option('autoptimize_ccss_additional');
-        $settings['viewport']   = get_option('autoptimize_ccss_viewport');
-        $settings['finclude']   = get_option('autoptimize_ccss_finclude');
-        $settings['rlimit']     = get_option('autoptimize_ccss_rlimit');
-        $settings['noptimize']  = get_option('autoptimize_ccss_noptimize');
-        $settings['debug']      = get_option('autoptimize_ccss_debug');
-        $settings['key']        = get_option('autoptimize_ccss_key');
+        $settings['rules']      = get_option( 'autoptimize_ccss_rules' );
+        $settings['additional'] = get_option( 'autoptimize_ccss_additional' );
+        $settings['viewport']   = get_option( 'autoptimize_ccss_viewport' );
+        $settings['finclude']   = get_option( 'autoptimize_ccss_finclude' );
+        $settings['rlimit']     = get_option( 'autoptimize_ccss_rlimit' );
+        $settings['noptimize']  = get_option( 'autoptimize_ccss_noptimize' );
+        $settings['debug']      = get_option( 'autoptimize_ccss_debug' );
+        $settings['key']        = get_option( 'autoptimize_ccss_key' );
 
-        // Initialize error flag
-        $error = TRUE;
+        // Initialize error flag.
+        $error = true;
 
-        // Check user permissios
-        if (current_user_can('manage_options')) {
-            // Prepare settings file path and content
+        // Check user permissions.
+        if ( current_user_can( 'manage_options' ) ) {
+            // Prepare settings file path and content.
             $exportfile = AO_CCSS_DIR . 'settings.json';
-            $contents   = json_encode($settings);
-            $status     = file_put_contents($exportfile, $contents, LOCK_EX);
-            $error      = FALSE;
+            $contents   = json_encode( $settings );
+            $status     = file_put_contents( $exportfile, $contents, LOCK_EX );
+            $error      = false;
         }
 
-        // Prepare archive
-        $zipfile = AO_CCSS_DIR . date('Ymd-H\hi') . '_ao_ccss_settings.zip';
-        $file    = pathinfo($zipfile, PATHINFO_BASENAME);
+        // Prepare archive.
+        $zipfile = AO_CCSS_DIR . date( 'Ymd-H\hi' ) . '_ao_ccss_settings.zip';
+        $file    = pathinfo( $zipfile, PATHINFO_BASENAME );
         $zip     = new ZipArchive();
-        $ret     = $zip->open($zipfile, ZipArchive::CREATE);
-        if ($ret !== TRUE) {
-            $error = TRUE;
+        $ret     = $zip->open( $zipfile, ZipArchive::CREATE );
+        if ( true !== $ret ) {
+            $error = true;
         } else {
-            $zip->addFile(AO_CCSS_DIR . 'settings.json', 'settings.json');
-            if (file_exists(AO_CCSS_DIR . 'queue.json')) {
-                $zip->addFile(AO_CCSS_DIR . 'queue.json', 'queue.json');
+            $zip->addFile( AO_CCSS_DIR . 'settings.json', 'settings.json' );
+            if ( file_exists( AO_CCSS_DIR . 'queue.json' ) ) {
+                $zip->addFile( AO_CCSS_DIR . 'queue.json', 'queue.json' );
             }
-            $options = array('add_path' => './', 'remove_all_path' => TRUE);
-            $zip->addGlob(AO_CCSS_DIR . '*.css', 0, $options);
+            $options = array(
+                'add_path'        => './',
+                'remove_all_path' => true,
+            );
+            $zip->addGlob( AO_CCSS_DIR . '*.css', 0, $options );
             $zip->close();
         }
 
-        // Prepare response
-        if (!$status || $error) {
-            $response['code'] ='500';
+        // Prepare response.
+        if ( ! $status || $error ) {
+            $response['code'] = '500';
             $response['msg']  = 'Error saving file ' . $file . ', code: ' . $ret;
         } else {
             $response['code'] = '200';
             $response['msg']  = 'File ' . $file . ' saved.';
-            $response['file']  = $file;
+            $response['file'] = $file;
         }
 
-        // Dispatch respose
-        echo json_encode($response);
+        // Dispatch respose.
+        echo json_encode( $response );
 
-        // Close ajax request
+        // Close ajax request.
         wp_die();
     }
 
     public function ao_ccss_import_callback() {
         // Ajax handler import settings
-        // NOTE: out of scope import settings
+        // Check referer.
+        check_ajax_referer( 'ao_ccss_import_nonce', 'ao_ccss_import_nonce' );
 
-        // Check referer
-        check_ajax_referer('ao_ccss_import_nonce', 'ao_ccss_import_nonce');
+        // Initialize error flag.
+        $error = false;
 
-        // Initialize error flag
-        $error  = FALSE;
-
-        // Process an uploaded file with no errors
-        if (!$_FILES['file']['error']) {
-            // Save file to the cache directory
+        // Process an uploaded file with no errors.
+        if ( ! $_FILES['file']['error'] ) {
+            // Save file to the cache directory.
             $zipfile = AO_CCSS_DIR . $_FILES['file']['name'];
-            move_uploaded_file($_FILES['file']['tmp_name'], $zipfile);
+            move_uploaded_file( $_FILES['file']['tmp_name'], $zipfile );
 
-            // Extract archive
+            // Extract archive.
             $zip = new ZipArchive;
-            if ($zip->open($zipfile) === TRUE) {
-                $zip->extractTo(AO_CCSS_DIR);
+            if ( $zip->open( $zipfile ) === true ) {
+                $zip->extractTo( AO_CCSS_DIR );
                 $zip->close();
             } else {
                 $error = 'extracting';
             }
 
-            if (!$error) {
+            if ( ! $error ) {
                 // Archive extraction ok, continue settings importing
-                // Settings file
+                // Settings file.
                 $importfile = AO_CCSS_DIR . 'settings.json';
 
-                if (file_exists($importfile)) {
-                    // Get settings and turn them into an object
-                    $settings = json_decode(file_get_contents($importfile), TRUE);
+                if ( file_exists( $importfile ) ) {
+                    // Get settings and turn them into an object.
+                    $settings = json_decode( file_get_contents( $importfile ), true );
 
-                    // Update options
-                    update_option('autoptimize_ccss_rules',      $settings['rules']);
-                    update_option('autoptimize_ccss_additional', $settings['additional']);
-                    update_option('autoptimize_ccss_viewport',   $settings['viewport']);
-                    update_option('autoptimize_ccss_finclude',   $settings['finclude']);
-                    update_option('autoptimize_ccss_rlimit',     $settings['rlimit']);
-                    update_option('autoptimize_ccss_noptimize',  $settings['noptimize']);
-                    update_option('autoptimize_ccss_debug',      $settings['debug']);
-                    update_option('autoptimize_ccss_key',        $settings['key']);
+                    // Update options.
+                    update_option( 'autoptimize_ccss_rules', $settings['rules'] );
+                    update_option( 'autoptimize_ccss_additional', $settings['additional'] );
+                    update_option( 'autoptimize_ccss_viewport', $settings['viewport'] );
+                    update_option( 'autoptimize_ccss_finclude', $settings['finclude'] );
+                    update_option( 'autoptimize_ccss_rlimit', $settings['rlimit'] );
+                    update_option( 'autoptimize_ccss_noptimize', $settings['noptimize'] );
+                    update_option( 'autoptimize_ccss_debug', $settings['debug'] );
+                    update_option( 'autoptimize_ccss_key', $settings['key'] );
                 } else {
-                    // Settings file doesn't exist, update error flag
+                    // Settings file doesn't exist, update error flag.
                     $error = 'settings file does not exist';
                 }
             }
         }
 
-        // Prepare response
-        if ($error) {
-            $response['code'] ='500';
+        // Prepare response.
+        if ( $error ) {
+            $response['code'] = '500';
             $response['msg']  = 'Error importing settings: ' . $error;
         } else {
             $response['code'] = '200';
             $response['msg']  = 'Settings imported successfully';
         }
 
-        // Dispatch respose
-        echo json_encode($response);
+        // Dispatch respose.
+        echo json_encode( $response );
 
-        // Close ajax request
+        // Close ajax request.
         wp_die();
     }
 
-    public function critcss_check_filename($filename) {
-      // Try to avoid directory traversal when reading/writing/deleting critical CSS files
-      if (strpos($filename, "ccss_") !== 0) {
+    public function critcss_check_filename( $filename ) {
+        // Try to avoid directory traversal when reading/writing/deleting critical CSS files.
+        if ( strpos( $filename, 'ccss_' ) !== 0 ) {
             return false;
-        } else if (substr($filename,-4,4)!==".css") {
+        } elseif ( substr( $filename, -4, 4 ) !== '.css' ) {
             return false;
-        } else if (sanitize_file_name($filename) !== $filename) {
-            // Use WordPress core's sanitize_file_name to see if anything fishy is going on
+        } elseif ( sanitize_file_name( $filename ) !== $filename ) {
+            // Use WordPress core's sanitize_file_name to see if anything fishy is going on.
             return false;
         } else {
             return true;
