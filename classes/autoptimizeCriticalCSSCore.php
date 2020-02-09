@@ -335,6 +335,7 @@ class autoptimizeCriticalCSSCore {
         // Get key and key status.
         global $ao_ccss_key;
         global $ao_ccss_keyst;
+        $self       = new self();
         $key        = $ao_ccss_key;
         $key_status = $ao_ccss_keyst;
 
@@ -359,7 +360,7 @@ class autoptimizeCriticalCSSCore {
         } elseif ( $key && ! $key_status ) {
             // Key exists but it has no valid status yet
             // Perform key validation.
-            $key_check = $this->ao_ccss_key_validation( $key );
+            $key_check = $self->ao_ccss_key_validation( $key );
 
             // Key is valid, set valid status.
             if ( $key_check ) {
