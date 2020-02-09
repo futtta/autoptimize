@@ -593,8 +593,20 @@ class autoptimizeMain
             switch_to_blog( $original_blog_id );
         }
 
-        if ( wp_get_schedule( 'ao_cachechecker' ) ) {
-            wp_clear_scheduled_hook( 'ao_cachechecker' );
+        // Remove scheduled events.
+        // fixme: shouldn't this be done per subsite if multisite?
+        foreach ( array( 'ao_cachechecker', 'ao_ccss_queue', 'ao_ccss_maintenance', 'ao_ccss_servicestatus' ) as $_event ) {
+            if ( wp_get_schedule( $_event ) ) {
+                wp_clear_scheduled_hook( $_event );
+            }
+        }
+
+        // Remove AO CCSS cached files and directory.
+        $ao_ccss_dir = WP_CONTENT_DIR . '/uploads/ao_ccss/';
+        if ( file_exists( $ao_ccss_dir ) && is_dir( $ao_ccss_dir ) ) {
+            // fixme: should check for subdirs when in multisite and remove contents of those as well.
+            array_map( 'unlink', glob( AO_CCSS_DIR . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
+            rmdir( AO_CCSS_DIR );
         }
     }
 

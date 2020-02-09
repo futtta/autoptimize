@@ -147,40 +147,6 @@ class autoptimizeCriticalCSSBase {
         }
     }
 
-    function ao_ccss_deactivation() {
-        /*
-         * TODO: move deactivatoin to AO deactivation function.
-         */
-
-        /*
-         * delete_option( 'autoptimize_ccss_rules' );
-         * delete_option( 'autoptimize_ccss_additional' );
-         * delete_option( 'autoptimize_ccss_queue' );
-         * delete_option( 'autoptimize_ccss_viewport' );
-         * delete_option( 'autoptimize_ccss_finclude' );
-         * delete_option( 'autoptimize_ccss_rlimit' );
-         * delete_option( 'autoptimize_ccss_noptimize' );
-         * delete_option( 'autoptimize_ccss_debug' );
-         * delete_option( 'autoptimize_ccss_key' );
-         * delete_option( 'autoptimize_ccss_keyst' );
-         * delete_option( 'autoptimize_ccss_version' );
-         * delete_option( 'autoptimize_ccss_loggedin' );
-         * delete_option( 'autoptimize_ccss_forcepath' );
-         * delete_option( 'autoptimize_ccss_servicestatus' );
-         * delete_option( 'autoptimize_ccss_deferjquery' );
-         * delete_option( 'autoptimize_ccss_domain' );
-         */
-
-        // Remove scheduled events.
-        wp_clear_scheduled_hook( 'ao_ccss_queue' );
-        wp_clear_scheduled_hook( 'ao_ccss_maintenance' );
-        wp_clear_scheduled_hook( 'ao_ccss_servicestatus' );
-
-        // Remove cached files and directory.
-        array_map( 'unlink', glob( AO_CCSS_DIR . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
-        rmdir( AO_CCSS_DIR );
-    }
-
     public function check_upgrade() {
         $db_version = get_option( 'autoptimize_ccss_version', '' );
         if ( AO_CCSS_VER !== $db_version ) {
