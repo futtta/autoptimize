@@ -474,7 +474,7 @@ class autoptimizeCriticalCSSCron {
         $body['aocssv'] = AO_CCSS_VER;
 
         // Prepare and add viewport size to the body if available.
-        $viewport = ao_ccss_viewport();
+        $viewport = autoptimizeCriticalCSSCore::ao_ccss_viewport();
         if ( ! empty( $viewport['w'] ) && ! empty( $viewport['h'] ) ) {
             $body['width']  = $viewport['w'];
             $body['height'] = $viewport['h'];
