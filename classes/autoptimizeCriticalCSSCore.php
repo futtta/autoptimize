@@ -359,7 +359,7 @@ class autoptimizeCriticalCSSCore {
         } elseif ( $key && ! $key_status ) {
             // Key exists but it has no valid status yet
             // Perform key validation.
-            $key_check = ao_ccss_key_validation( $key );
+            $key_check = $this->ao_ccss_key_validation( $key );
 
             // Key is valid, set valid status.
             if ( $key_check ) {
