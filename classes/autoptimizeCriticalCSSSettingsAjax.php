@@ -24,6 +24,7 @@ class autoptimizeCriticalCSSSettingsAjax {
         add_action( 'wp_ajax_fetch_critcss', array( $this, 'critcss_fetch_callback' ) );
         add_action( 'wp_ajax_save_critcss', array( $this, 'critcss_save_callback' ) );
         add_action( 'wp_ajax_rm_critcss', array( $this, 'critcss_rm_callback' ) );
+        add_action( 'wp_ajax_rm_critcss_all', array( $this, 'critcss_rm_all_callback' ) );
         add_action( 'wp_ajax_ao_ccss_export', array( $this, 'ao_ccss_export_callback' ) );
         add_action( 'wp_ajax_ao_ccss_import', array( $this, 'ao_ccss_import_callback' ) );
     }
@@ -151,6 +152,44 @@ class autoptimizeCriticalCSSSettingsAjax {
                 $response['string'] = 'File ' . $critcssfile . ' removed.';
             } else {
                 $response['string'] = 'No file to be removed.';
+            }
+        }
+
+        // Dispatch respose.
+        echo json_encode( $response );
+
+        // Close ajax request.
+        wp_die();
+    }
+
+    public function critcss_rm_all_callback() {
+        // Ajax handler to delete a critical CSS from the filesystem
+        // Check referer.
+        check_ajax_referer( 'rm_critcss_all_nonce', 'critcss_rm_all_nonce' );
+
+        // Initialize error and status flags.
+        $error  = true;
+        $status = false;
+
+        // Remove all ccss files on filesystem.
+        if ( current_user_can( 'manage_options' ) ) {
+            if ( file_exists( AO_CCSS_DIR ) && is_dir( AO_CCSS_DIR ) ) {
+                array_map( 'unlink', glob( AO_CCSS_DIR . 'ccss_*.css', GLOB_BRACE ) );
+                $error  = false;
+                $status = true;
+            }
+        }
+
+        // Prepare response.
+        if ( $error ) {
+            $response['code']   = '500';
+            $response['string'] = 'Error removing all critical CSS files.';
+        } else {
+            $response['code'] = '200';
+            if ( $status ) {
+                $response['string'] = 'Critical CSS Files removed.';
+            } else {
+                $response['string'] = 'No file removed.';
             }
         }
 

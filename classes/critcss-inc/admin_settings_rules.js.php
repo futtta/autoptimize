@@ -21,6 +21,7 @@ if (rulesOriginEl) {
     jQuery("#addCritCssButton").click(function(){addEditRow();});
     jQuery("#editDefaultButton").click(function(){editDefaultCritCss();});
     jQuery("#editAdditionalButton").click(function(){editAdditionalCritCss();});
+    jQuery("#removeAllRulesAndJobs").click(function(){removeAllRulesAndJobs();});
   });
 }
 
@@ -86,6 +87,29 @@ function confirmRemove(idToRemove) {
   });
 }
 
+function removeAllRulesAndJobs() {
+  jQuery( "#confirm-rm-all" ).dialog({
+    resizable: false,
+    height:235,
+    modal: true,
+    buttons: {
+      "<?php _e("Delete All", "autoptimize") ?>": function() {
+        critCssArray={'paths':[],'types':[]};
+        aoCssQueue=[];
+        drawTable(critCssArray);
+        updateQueue(aoCssQueue);
+        updateAfterChange();
+        removeAllCcssFilesOnServer();
+        document.getElementById('ao_title_and_button').scrollIntoView();
+        jQuery( this ).dialog( "close" );
+      },
+      "<?php _e("Cancel", "autoptimize") ?>": function() {
+        jQuery( this ).dialog( "close" );
+      }
+    }
+  });
+}
+
 function removeRow(idToRemove) {
   splits=idToRemove.split(/_/);
   crit_type=splits[0];
@@ -99,6 +123,26 @@ function removeRow(idToRemove) {
     'critcss_rm_nonce': '<?php echo wp_create_nonce( "rm_critcss_nonce" );?>',
     'cachebustingtimestamp': new Date().getTime(),
     'critcssfile': crit_file
+  };
+
+  jQuery.ajaxSetup({
+    async: false
+  });
+
+  jQuery.post(ajaxurl, data, function(response) {
+    response_array=JSON.parse(response);
+    if (response_array["code"]!=200) {
+      // not displaying notice, as the end result is OK; the file isn't there
+      // displayNotice(response_array["string"]);
+    }
+  });
+}
+
+function removeAllCcssFilesOnServer() {
+  var data = {
+    'action': 'rm_critcss_all',
+    'critcss_rm_all_nonce': '<?php echo wp_create_nonce( "rm_critcss_all_nonce" );?>',
+    'cachebustingtimestamp': new Date().getTime()
   };
 
   jQuery.ajaxSetup({
