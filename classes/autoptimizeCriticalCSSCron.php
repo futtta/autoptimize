@@ -30,9 +30,9 @@ class autoptimizeCriticalCSSCron {
         // The queue execution backend.
         global $ao_ccss_key;
         if ( ! isset( $ao_ccss_key ) || empty( $ao_ccss_key ) ) {
-                // no key set, not processing the queue!
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'No key set, so not processing queue.', 3 );
-                return;
+            // no key set, not processing the queue!
+            autoptimizeCriticalCSSCore::ao_ccss_log( 'No key set, so not processing queue.', 3 );
+            return;
         }
 
         /**
@@ -343,7 +343,7 @@ class autoptimizeCriticalCSSCron {
                 // Break the loop if request limit is set and was reached.
                 if ( $ao_ccss_rlimit && $ao_ccss_rlimit == $jr ) {
                     autoptimizeCriticalCSSCore::ao_ccss_log( 'The limit of ' . $ao_ccss_rlimit . ' request(s) to criticalcss.com was reached, queue control must finish now', 3 );
-                    reak;
+                    break;
                 }
 
                 // Increment job counter.
