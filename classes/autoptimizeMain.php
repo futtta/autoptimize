@@ -558,6 +558,22 @@ class autoptimizeMain
             'autoptimize_imgopt_launched',
             'autoptimize_imgopt_settings',
             'autoptimize_minify_excluded',
+            'autoptimize_ccss_rules',
+            'autoptimize_ccss_additional',
+            'autoptimize_ccss_queue',
+            'autoptimize_ccss_viewport',
+            'autoptimize_ccss_finclude',
+            'autoptimize_ccss_rlimit',
+            'autoptimize_ccss_noptimize',
+            'autoptimize_ccss_debug',
+            'autoptimize_ccss_key',
+            'autoptimize_ccss_keyst',
+            'autoptimize_ccss_version',
+            'autoptimize_ccss_loggedin',
+            'autoptimize_ccss_forcepath',
+            'autoptimize_ccss_servicestatus',
+            'autoptimize_ccss_deferjquery',
+            'autoptimize_ccss_domain',
         );
 
         if ( ! is_multisite() ) {
