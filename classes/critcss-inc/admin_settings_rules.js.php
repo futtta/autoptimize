@@ -87,7 +87,7 @@ function confirmRemove(idToRemove) {
   });
 }
 
-function removeAllRulesAndJobs() {
+function removeAllRules() {
   jQuery( "#confirm-rm-all" ).dialog({
     resizable: false,
     height:235,
@@ -95,9 +95,7 @@ function removeAllRulesAndJobs() {
     buttons: {
       "<?php _e("Delete All", "autoptimize") ?>": function() {
         critCssArray={'paths':[],'types':[]};
-        aoCssQueue=[];
         drawTable(critCssArray);
-        updateQueue(aoCssQueue);
         updateAfterChange();
         removeAllCcssFilesOnServer();
         document.getElementById('ao_title_and_button').scrollIntoView();

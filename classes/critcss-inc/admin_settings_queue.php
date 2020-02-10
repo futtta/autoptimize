@@ -33,6 +33,11 @@ function ao_ccss_render_queue() {
         <div id="queue-confirm-rm" title="<?php _e('Delete Job', 'autoptimize') ?>" class="hidden">
           <p><?php _e('Are you sure you want to delete this job?', 'autoptimize'); ?></p>
         </div>
+
+        <!-- Remove all dialog -->
+        <div id="queue-confirm-rm-all" title="<?php _e('Delete all jobs', 'autoptimize') ?>" class="hidden">
+          <p><?php _e('This will delete all jobs, are you sure?', 'autoptimize'); ?></p>
+        </div>
         <!-- END Queue dialogs -->
 
         <!-- BEGIN Queue UI -->
@@ -65,8 +70,13 @@ function ao_ccss_render_queue() {
           <tbody id="queue"></tbody>
         </table>
         <input class="hidden" type="text" id="ao-ccss-queue" name="autoptimize_ccss_queue" value='<?php echo ($ao_ccss_queue); ?>'>
-        <!-- END Queue UI -->
     </div>
+    <div class="submit rules-btn">
+        <div class="alignright">
+            <span id="removeAllJobs" class="button-secondary" style="color:red;"><?php _e('Remove all jobs', 'autoptimize'); ?></span>
+        </div>
+    </div>
+    <!-- END Queue UI -->
     </li>
   </ul>
   <?php

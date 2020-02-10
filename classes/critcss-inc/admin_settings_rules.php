@@ -130,7 +130,7 @@ function ao_ccss_render_rules() {
 
       <!-- Remove All dialog -->
       <div id="confirm-rm-all" title="<?php _e('Delete all Rules and Jobs', 'autoptimize') ?>" class="hidden">
-        <p><?php _e('All Critical CSS rule and jobs will be deleted immediately and cannot be recovered.<br /><br /><strong>Are you sure?</strong>', 'autoptimize'); ?></p>
+        <p><?php _e('All Critical CSS rules will be deleted immediately and cannot be recovered.<br /><br /><strong>Are you sure?</strong>', 'autoptimize'); ?></p>
       </div>
 
       <!-- Add/edit default critical CSS dialog -->
@@ -181,7 +181,7 @@ function ao_ccss_render_rules() {
             <span id="editAdditionalButton" class="button-secondary"><?php _e('Add CSS To All Rules', 'autoptimize'); ?></span>
         </div>
         <div class="alignright">
-            <span id="removeAllRulesAndJobs" class="button-secondary" style="color:red;"><?php _e('Remove all rules and jobs', 'autoptimize'); ?></span>
+            <span id="removeAllRules" class="button-secondary" style="color:red;"><?php _e('Remove all rules', 'autoptimize'); ?></span>
         </div>
       </div>
       <!-- END Rules UI -->

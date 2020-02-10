@@ -16,6 +16,9 @@ if (queueOriginEl) {
                           aoCssQueue;
     <?php if ($ao_ccss_debug) echo "console.log('Queue Object:', aoCssQueueLog);\n" ?>
 
+    // hook up "remove all jobs" button to the JS action.
+    jQuery("#removeAllJobs").click(function(){removeAllJobs();});
+
     // Render queue table
     drawQueueTable(aoCssQueue);
 
@@ -135,6 +138,25 @@ function delJob(queue, jid, jpath) {
       },
       <?php _e("Cancel", "autoptimize") ?>: function() {
         jQuery(this).dialog('close');
+      }
+    }
+  });
+}
+
+function removeAllJobs() {
+  jQuery( "#queue-confirm-rm-all" ).dialog({
+    resizable: false,
+    height:235,
+    modal: true,
+    buttons: {
+      "<?php _e("Delete all jobs?", "autoptimize") ?>": function() {
+        aoCssQueue=[];
+        updateQueue(aoCssQueue);
+        document.getElementById('ao_title_and_button').scrollIntoView();
+        jQuery( this ).dialog( "close" );
+      },
+      "<?php _e("Cancel", "autoptimize") ?>": function() {
+        jQuery( this ).dialog( "close" );
       }
     }
   });
