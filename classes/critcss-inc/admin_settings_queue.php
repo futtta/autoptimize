@@ -70,10 +70,10 @@ function ao_ccss_render_queue() {
           <tbody id="queue"></tbody>
         </table>
         <input class="hidden" type="text" id="ao-ccss-queue" name="autoptimize_ccss_queue" value='<?php echo ($ao_ccss_queue); ?>'>
-    </div>
-    <div class="submit rules-btn">
-        <div class="alignright">
-            <span id="removeAllJobs" class="button-secondary" style="color:red;"><?php _e('Remove all jobs', 'autoptimize'); ?></span>
+        <div class="submit jobs-btn">
+            <div class="alignright">
+                <span id="removeAllJobs" class="button-secondary" style="color:red;"><?php _e('Remove all jobs', 'autoptimize'); ?></span>
+            </div>
         </div>
     </div>
     <!-- END Queue UI -->
