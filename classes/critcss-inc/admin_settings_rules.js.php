@@ -21,7 +21,7 @@ if (rulesOriginEl) {
     jQuery("#addCritCssButton").click(function(){addEditRow();});
     jQuery("#editDefaultButton").click(function(){editDefaultCritCss();});
     jQuery("#editAdditionalButton").click(function(){editAdditionalCritCss();});
-    jQuery("#removeAllRulesAndJobs").click(function(){removeAllRulesAndJobs();});
+    jQuery("#removeAllRules").click(function(){removeAllRules();});
   });
 }
 
