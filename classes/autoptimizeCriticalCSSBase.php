@@ -19,9 +19,9 @@ class autoptimizeCriticalCSSBase {
     public function __construct()
     {
         // define constant, but only once.
-        if ( ! defined( 'AO_CCSS_VER' ) ) {
+        if ( ! defined( 'AO_CCSS_DIR' ) ) {
             // Define plugin version.
-            define( 'AO_CCSS_VER', '1.18.1-in-AO' );
+            define( 'AO_CCSS_VER', 'AO_' . AUTOPTIMIZE_PLUGIN_VERSION );
 
             // Define a constant with the directory to store critical CSS in.
             if ( is_multisite() ) {
