@@ -32,7 +32,7 @@ class autoptimizeCriticalCSSSettings {
             add_filter( 'autoptimize_filter_settingsscreen_tabs', array( $this, 'add_critcss_tabs' ), 10, 1 );
             add_action( 'admin_enqueue_scripts', array( $this, 'admin_assets' ) );
 
-            if ( is_multisite() && is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() ) {
+            if ( $this->is_multisite_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() ) {
                 add_action( 'network_admin_menu', array( $this, 'add_critcss_admin_menu' ) );
             } else {
                 add_action( 'admin_menu', array( $this, 'add_critcss_admin_menu' ) );
@@ -236,43 +236,56 @@ class autoptimizeCriticalCSSSettings {
                     // Get API key status.
                     $key = autoptimizeCriticalCSSCore::ao_ccss_key_status( true );
 
-                    if ( 'valid' == $key['status'] ) {
-                        // If key status is valid, render other panels.
-                        // Render rules section.
-                        ao_ccss_render_rules();
-                        // Render queue section.
-                        ao_ccss_render_queue();
-                        // Render advanced panel.
-                        ao_ccss_render_adv();
+                    if ( $this->is_multisite_network_admin() ) {
+                        ?>
+                        <ul id="key-panel">
+                            <li class="itemDetail">
+                            <?php
+                                // translators: the placesholder is for a line of code in wp-config.php.
+                                echo sprintf( __( '<p>Critical CSS settings cannot be set at network level as critical CSS is specific to each sub-site.</p><p>You can however provide the critical CSS API key for use by all sites by adding this your wp-config.php as %s</p>', 'autoptimize' ), '<br/><code>define(\'AUTOPTIMIZE_CRITICALCSS_API_KEY\', \'eyJhbGmorestringsherexHa7MkOQFtDFkZgLmBLe-LpcHx4\');</code>' );
+                            ?>
+                            </li>
+                        </ul>
+                        <?php
                     } else {
-                        // But if key is other than valid, add hidden fields to persist settings when submitting form
-                        // Show explanation of why and how to get a API key.
-                        ao_ccss_render_explain();
+                        if ( 'valid' == $key['status'] ) {
+                            // If key status is valid, render other panels.
+                            // Render rules section.
+                            ao_ccss_render_rules();
+                            // Render queue section.
+                            ao_ccss_render_queue();
+                            // Render advanced panel.
+                            ao_ccss_render_adv();
+                        } else {
+                            // But if key is other than valid, add hidden fields to persist settings when submitting form
+                            // Show explanation of why and how to get a API key.
+                            ao_ccss_render_explain();
 
-                        // Get viewport size.
-                        $viewport = autoptimizeCriticalCSSCore::ao_ccss_viewport();
+                            // Get viewport size.
+                            $viewport = autoptimizeCriticalCSSCore::ao_ccss_viewport();
 
-                        // Add hidden fields.
-                        echo "<input class='hidden' name='autoptimize_ccss_rules' value='" . $ao_ccss_rules_raw . "'>";
-                        echo "<input class='hidden' name='autoptimize_ccss_queue' value='" . $ao_ccss_queue_raw . "'>";
-                        echo '<input class="hidden" name="autoptimize_ccss_viewport[w]" value="' . $viewport['w'] . '">';
-                        echo '<input class="hidden" name="autoptimize_ccss_viewport[h]" value="' . $viewport['h'] . '">';
-                        echo '<input class="hidden" name="autoptimize_ccss_finclude" value="' . $ao_ccss_finclude . '">';
-                        echo '<input class="hidden" name="autoptimize_ccss_rlimit" value="' . $ao_ccss_rlimit . '">';
-                        echo '<input class="hidden" name="autoptimize_ccss_debug" value="' . $ao_ccss_debug . '">';
-                        echo '<input class="hidden" name="autoptimize_ccss_noptimize" value="' . $ao_ccss_noptimize . '">';
-                        echo '<input class="hidden" name="autoptimize_css_defer_inline" value="' . esc_attr( $ao_css_defer_inline ) . '">';
-                        echo '<input class="hidden" name="autoptimize_ccss_loggedin" value="' . $ao_ccss_loggedin . '">';
-                        echo '<input class="hidden" name="autoptimize_ccss_forcepath" value="' . $ao_ccss_forcepath . '">';
+                            // Add hidden fields.
+                            echo "<input class='hidden' name='autoptimize_ccss_rules' value='" . $ao_ccss_rules_raw . "'>";
+                            echo "<input class='hidden' name='autoptimize_ccss_queue' value='" . $ao_ccss_queue_raw . "'>";
+                            echo '<input class="hidden" name="autoptimize_ccss_viewport[w]" value="' . $viewport['w'] . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_viewport[h]" value="' . $viewport['h'] . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_finclude" value="' . $ao_ccss_finclude . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_rlimit" value="' . $ao_ccss_rlimit . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_debug" value="' . $ao_ccss_debug . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_noptimize" value="' . $ao_ccss_noptimize . '">';
+                            echo '<input class="hidden" name="autoptimize_css_defer_inline" value="' . esc_attr( $ao_css_defer_inline ) . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_loggedin" value="' . $ao_ccss_loggedin . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_forcepath" value="' . $ao_ccss_forcepath . '">';
+                        }
+                        // Render key panel unconditionally.
+                        ao_ccss_render_key( $ao_ccss_key, $key['status'], $key['stmsg'], $key['msg'], $key['color'] );
+                        ?>
+                        <p class="submit left">
+                            <input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'autoptimize' ); ?>" />
+                        </p>
+                        <?php
                     }
-
-                    // Render key panel unconditionally.
-                    ao_ccss_render_key( $ao_ccss_key, $key['status'], $key['stmsg'], $key['msg'], $key['color'] );
                     ?>
-
-                    <p class="submit left">
-                        <input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'autoptimize' ); ?>" />
-                    </p>
                 </form>
                 <script>
                 jQuery("form#settings").submit(function(){
@@ -286,7 +299,7 @@ class autoptimizeCriticalCSSSettings {
                     });
                 }
                 </script>
-                <form id="importSettingsForm">
+                <form id="importSettingsForm"<?php if ( $this->is_multisite_network_admin() ) { echo ' class="hidden"'; } ?>>
                     <span id="exportSettings" class="button-secondary"><?php _e( 'Export Settings', 'autoptimize' ); ?></span>
                     <input class="button-secondary" id="importSettings" type="button" value="<?php _e( 'Import Settings', 'autoptimize' ); ?>" onclick="upload();return false;" />
                     <input class="button-secondary" id="settingsfile" name="settingsfile" type="file" />
@@ -295,22 +308,24 @@ class autoptimizeCriticalCSSSettings {
             </div><!-- /#autoptimize_main -->
         </div><!-- /#wrap -->
         <?php
-        // Include debug panel if debug mode is enable.
-        if ( $ao_ccss_debug ) {
-        ?>
-            <div id="debug">
-                <?php
-                // Include debug panel.
-                include( 'critcss-inc/admin_settings_debug.php' );
-                ?>
-            </div><!-- /#debug -->
-        <?php
+        if ( ! $this->is_multisite_network_admin() ) {
+            // Include debug panel if debug mode is enable.
+            if ( $ao_ccss_debug ) {
+            ?>
+                <div id="debug">
+                    <?php
+                    // Include debug panel.
+                    include( 'critcss-inc/admin_settings_debug.php' );
+                    ?>
+                </div><!-- /#debug -->
+            <?php
+            }
+            echo '<script>';
+            include( 'critcss-inc/admin_settings_rules.js.php' );
+            include( 'critcss-inc/admin_settings_queue.js.php' );
+            include( 'critcss-inc/admin_settings_impexp.js.php' );
+            echo '</script>';
         }
-        echo '<script>';
-        include( 'critcss-inc/admin_settings_rules.js.php' );
-        include( 'critcss-inc/admin_settings_queue.js.php' );
-        include( 'critcss-inc/admin_settings_impexp.js.php' );
-        echo '</script>';
     }
 
     public static function ao_ccss_has_autorules() {
@@ -336,5 +351,19 @@ class autoptimizeCriticalCSSSettings {
         }
 
         return $_has_auto_rules;
+    }
+
+    public function is_multisite_network_admin() {
+        static $_multisite_network_admin = null;
+
+        if ( null === $_multisite_network_admin ) {
+            if ( is_multisite() && is_network_admin() ) {
+                $_multisite_network_admin = true;
+            } else {
+                $_multisite_network_admin = false;
+            }
+        }
+
+        return $_multisite_network_admin;
     }
 }

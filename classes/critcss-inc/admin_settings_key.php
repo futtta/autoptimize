@@ -3,7 +3,11 @@
 // NOTE: implements section 4, id 4.1 of the specs
 
 // Render key panel
-function ao_ccss_render_key($key, $status, $status_msg, $message, $color) { ?>
+function ao_ccss_render_key($key, $status, $status_msg, $message, $color) { 
+  if ( is_multisite() && defined( 'AUTOPTIMIZE_CRITICALCSS_API_KEY' ) ) {
+      $key = __( 'API key provided by your WordPress network administrator, no need to enter anything here. In case of problems with the API key, contact your WordPress network administrator.', 'autoptimize' );
+  }
+  ?>
   <ul id="key-panel">
     <li class="itemDetail">
       <h2 class="itemTitle fleft"><?php _e('API Key', 'autoptimize'); ?>: <span style="color:<?php echo $color; ?>;"><?php echo $status_msg; ?></span></h2>
