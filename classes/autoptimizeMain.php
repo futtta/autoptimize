@@ -59,9 +59,9 @@ class autoptimizeMain
 
         add_action( 'autoptimize_setup_done', array( $this, 'version_upgrades_check' ) );
         add_action( 'autoptimize_setup_done', array( $this, 'check_cache_and_run' ) );
-        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_extra' ) );
-        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ) );
-        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss' ) );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_extra' ), 15 );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ), 20 );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss' ), 11 );
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
         add_action( 'admin_init', array( 'PAnD', 'init' ) );
