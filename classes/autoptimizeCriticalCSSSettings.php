@@ -132,7 +132,7 @@ class autoptimizeCriticalCSSSettings {
                 }
 
                 // Check for Autoptimize.
-                if ( ! $ao_css_defer ) {
+                if ( ! empty( $ao_ccss_key ) && ! $ao_css_defer ) {
                     ?>
                     <div class="notice-error notice"><p>
                     <?php
@@ -144,7 +144,7 @@ class autoptimizeCriticalCSSSettings {
                 }
 
                 // check if WordPress cron is disabled and warn if so.
-                if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON && PAnD::is_admin_notice_active( 'i-know-about-disable-cron-forever' ) ) {
+                if ( ! empty( $ao_ccss_key ) && defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON && PAnD::is_admin_notice_active( 'i-know-about-disable-cron-forever' ) ) {
                     ?>
                     <div data-dismissible="i-know-about-disable-cron-forever" class="notice-warning notice is-dismissible"><p>
                     <?php
@@ -157,7 +157,7 @@ class autoptimizeCriticalCSSSettings {
                 // warn if it looks as though the queue processing job looks isn't running
                 // but store result in transient as to not to have to go through 2 arrays each and every time.
                 $_warn_cron = get_transient( 'ao_ccss_cronwarning' );
-                if ( false === $_warn_cron ) {
+                if ( ! empty( $ao_ccss_key ) && false === $_warn_cron ) {
                     $_jobs_all_new         = true;
                     $_oldest_job_timestamp = microtime( true ); // now.
                     $_no_auto_rules        = true;
@@ -198,7 +198,7 @@ class autoptimizeCriticalCSSSettings {
                     set_transient( 'ao_ccss_cronwarning', $_warn_cron, $_transient_multiplier * HOUR_IN_SECONDS );
                 }
 
-                if ( 'on' == $_warn_cron && PAnD::is_admin_notice_active( 'i-know-about-cron-1' ) ) {
+                if ( ! empty( $ao_ccss_key ) && 'on' == $_warn_cron && PAnD::is_admin_notice_active( 'i-know-about-cron-1' ) ) {
                     ?>
                     <div data-dismissible="i-know-about-cron-1" class="notice-warning notice is-dismissible"><p>
                     <?php
@@ -206,7 +206,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     </p></div>
                     <?php
-                } elseif ( '2' == $ao_ccss_keyst && 'on' != $_warn_cron && ! $this->ao_ccss_has_autorules() ) {
+                } elseif ( ! empty( $ao_ccss_key ) && '2' == $ao_ccss_keyst && 'on' != $_warn_cron && ! $this->ao_ccss_has_autorules() ) {
                     ?>
                     <div class="notice-success notice"><p>
                     <?php
@@ -217,7 +217,7 @@ class autoptimizeCriticalCSSSettings {
                 }
 
                 // warn if service is down.
-                if ( ! empty( $ao_ccss_servicestatus ) && is_array( $ao_ccss_servicestatus ) && 'down' === $ao_ccss_servicestatus['critcss']['status'] ) {
+                if ( ! empty( $ao_ccss_key ) && ! empty( $ao_ccss_servicestatus ) && is_array( $ao_ccss_servicestatus ) && 'down' === $ao_ccss_servicestatus['critcss']['status'] ) {
                     ?>
                     <div class="notice-warning notice"><p>
                     <?php
