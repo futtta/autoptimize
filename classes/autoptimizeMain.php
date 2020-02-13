@@ -59,9 +59,9 @@ class autoptimizeMain
 
         add_action( 'autoptimize_setup_done', array( $this, 'version_upgrades_check' ) );
         add_action( 'autoptimize_setup_done', array( $this, 'check_cache_and_run' ) );
-        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_extra' ) );
-        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ) );
-        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss_tab' ) );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_extra' ), 15 );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ), 20 );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss' ), 11 );
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
         add_action( 'admin_init', array( 'PAnD', 'init' ) );
@@ -216,11 +216,11 @@ class autoptimizeMain
         }
     }
 
-    public function maybe_run_criticalcss_tab()
+    public function maybe_run_criticalcss()
     {
-        // Loads criticalcss tab code if in admin (and not in admin-ajax.php)!
-        if ( autoptimizeConfig::is_admin_and_not_ajax() && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
-            new autoptimizeCriticalCSSSettings();
+        // Loads criticalcss if the power-up is not active and if the filter returns true.
+        if ( apply_filters( 'autoptimize_filter_criticalcss_active', true ) && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
+            new autoptimizeCriticalCSSBase();
         }
     }
 
@@ -558,6 +558,22 @@ class autoptimizeMain
             'autoptimize_imgopt_launched',
             'autoptimize_imgopt_settings',
             'autoptimize_minify_excluded',
+            'autoptimize_ccss_rules',
+            'autoptimize_ccss_additional',
+            'autoptimize_ccss_queue',
+            'autoptimize_ccss_viewport',
+            'autoptimize_ccss_finclude',
+            'autoptimize_ccss_rlimit',
+            'autoptimize_ccss_noptimize',
+            'autoptimize_ccss_debug',
+            'autoptimize_ccss_key',
+            'autoptimize_ccss_keyst',
+            'autoptimize_ccss_version',
+            'autoptimize_ccss_loggedin',
+            'autoptimize_ccss_forcepath',
+            'autoptimize_ccss_servicestatus',
+            'autoptimize_ccss_deferjquery',
+            'autoptimize_ccss_domain',
         );
 
         if ( ! is_multisite() ) {
@@ -577,8 +593,20 @@ class autoptimizeMain
             switch_to_blog( $original_blog_id );
         }
 
-        if ( wp_get_schedule( 'ao_cachechecker' ) ) {
-            wp_clear_scheduled_hook( 'ao_cachechecker' );
+        // Remove scheduled events.
+        // fixme: shouldn't this be done per subsite if multisite?
+        foreach ( array( 'ao_cachechecker', 'ao_ccss_queue', 'ao_ccss_maintenance', 'ao_ccss_servicestatus' ) as $_event ) {
+            if ( wp_get_schedule( $_event ) ) {
+                wp_clear_scheduled_hook( $_event );
+            }
+        }
+
+        // Remove AO CCSS cached files and directory.
+        $ao_ccss_dir = WP_CONTENT_DIR . '/uploads/ao_ccss/';
+        if ( file_exists( $ao_ccss_dir ) && is_dir( $ao_ccss_dir ) ) {
+            // fixme: should check for subdirs when in multisite and remove contents of those as well.
+            array_map( 'unlink', glob( AO_CCSS_DIR . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
+            rmdir( AO_CCSS_DIR );
         }
     }
 
