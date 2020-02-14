@@ -16,7 +16,7 @@ function ao_ccss_render_rules() {
       <!-- BEGIN Rule dialogs -->
       <!-- Unsaved dialog -->
       <div id="unSavedWarning" class="hidden updated settings-error notice notice-warning is-dismissible">
-        <p><?php _e("<strong>RULES OR QUEUE CHANGED!</strong> Don't forget to save your changes!", 'autoptimize'); ?></p>
+        <p><?php _e("<strong>Rules or Queue changed!</strong> Don't forget to save your changes!", 'autoptimize'); ?></p>
       </div>
 
       <!-- Create/edit rule dialog -->

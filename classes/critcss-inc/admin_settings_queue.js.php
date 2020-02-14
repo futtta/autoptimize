@@ -150,9 +150,8 @@ function removeAllJobs() {
     modal: true,
     buttons: {
       "<?php _e("Delete all jobs?", "autoptimize") ?>": function() {
-        aoCssQueue=[];
-        updateQueue(aoCssQueue);
-        document.getElementById('ao_title_and_button').scrollIntoView();
+        queue=[];
+        updateQueue(queue);
         jQuery( this ).dialog( "close" );
       },
       "<?php _e("Cancel", "autoptimize") ?>": function() {
@@ -193,6 +192,7 @@ function updateQueue(queue) {
   document.getElementById('ao-ccss-queue').value=JSON.stringify(queue);
   drawQueueTable(queue);
   jQuery('#unSavedWarning').show();
+  document.getElementById('ao_title_and_button').scrollIntoView();  
   <?php if ($ao_ccss_debug) echo "console.log('Updated Queue Object:', queue);\n" ?>
 }
 

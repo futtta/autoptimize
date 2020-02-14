@@ -98,7 +98,6 @@ function removeAllRules() {
         drawTable(critCssArray);
         updateAfterChange();
         removeAllCcssFilesOnServer();
-        document.getElementById('ao_title_and_button').scrollIntoView();
         jQuery( this ).dialog( "close" );
       },
       "<?php _e("Cancel", "autoptimize") ?>": function() {
@@ -342,6 +341,7 @@ function updateAfterChange() {
   document.getElementById("critCssOrigin").value=JSON.stringify(critCssArray);
   drawTable(critCssArray);
   jQuery("#unSavedWarning").show();
+  document.getElementById('ao_title_and_button').scrollIntoView();
 }
 
 function displayNotice(textIn) {
