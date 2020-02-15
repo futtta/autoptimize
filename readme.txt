@@ -2,7 +2,7 @@
 Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, pagespeed, images, lazy-load, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
-Requires at least: 4.0
+Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.6
 Stable tag: 2.6.1
