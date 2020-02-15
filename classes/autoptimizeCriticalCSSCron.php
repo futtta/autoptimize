@@ -492,10 +492,10 @@ class autoptimizeCriticalCSSCron {
         autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: POST generate request body is ' . $body, 3 );
 
         // Prepare the request.
-        $url  = esc_url_raw( AO_CCSS_API . 'generate' );
+        $url  = esc_url_raw( AO_CCSS_API . 'generate?aover=' . AO_CCSS_VER );
         $args = array(
             'headers' => array(
-                'User-Agent'    => 'Autoptimize CriticalCSS Power-Up v' . AO_CCSS_VER,
+                'User-Agent'    => 'Autoptimize v' . AO_CCSS_VER,
                 'Content-type'  => 'application/json; charset=utf-8',
                 'Authorization' => 'JWT ' . $key,
                 'Connection'    => 'close',
