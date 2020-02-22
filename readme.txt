@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 2.6.1
+Stable tag: 2.6.2
 
 Autoptimize speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -277,6 +277,12 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.6.2 =
+* auto-exclude images from lazyload when they have `loading="eager"` attribute.
+* bugfix: don't take querystring into account when deciding as-value for preloaded resources.
+* bugfix; ensure lqip images (used when both image optimization and lazyload are active) always work by normalizing the URL before sending it to shortpixel.
+* minimum WordPress version bumped to 4.4.
 
 = 2.6.1 =
 * bugfixes for multiple lazyload bugs causing images not to load or load incorrectly
