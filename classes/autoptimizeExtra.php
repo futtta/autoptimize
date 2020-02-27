@@ -64,7 +64,7 @@ class autoptimizeExtra
             }
             add_filter( 'autoptimize_filter_settingsscreen_tabs', array( $this, 'add_extra_tab' ) );
         } else {
-            $this->run_on_frontend();
+            add_action( 'wp', array( $this, 'run_on_frontend' ) );
         }
     }
 
@@ -142,8 +142,16 @@ class autoptimizeExtra
         return $merged;
     }
 
-    protected function run_on_frontend()
+    public function run_on_frontend()
     {
+        // only run the Extra optimizations on frontend if general conditions
+        // for optimizations are met, this to ensure e.g. removing querystrings
+        // is not done when optimizing for logged in users is off, breaking
+        // some pagebuilders (Divi & Elementor).
+        if ( false === autoptimizeMain::should_buffer() ) {
+            return;
+        }
+
         $options = $this->options;
 
         // Disable emojis if specified.
