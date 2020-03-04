@@ -59,7 +59,7 @@ class autoptimizeUtils
      * @param string      $string   String.
      * @param string|null $encoding Encoding.
      *
-     * @return int Number of charcters or bytes in given $string
+     * @return int Number of characters or bytes in given $string
      *             (characters if/when supported, bytes otherwise).
      */
     public static function strlen( $string, $encoding = null )
@@ -204,7 +204,7 @@ class autoptimizeUtils
     }
 
     /**
-     * When siteurl contans a path other than '/' and the CDN URL does not have
+     * When siteurl contains a path other than '/' and the CDN URL does not have
      * a path or it's path is '/', this will modify the CDN URL's path component
      * to match that of the siteurl.
      * This is to support "magic" CDN urls that worked that way before v2.4...

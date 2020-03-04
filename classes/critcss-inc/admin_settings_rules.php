@@ -38,7 +38,7 @@ function ao_ccss_render_rules() {
               <?php _e('String in Path', 'autoptimize'); ?>
             </th>
             <td>
-              <input type="text" id="critcss_addedit_path" placeholder="<?php _e("Enter a part of the URL that identifies the page(s) you're targetting.", 'autoptimize'); ?>" style="width:100%;" value="">
+              <input type="text" id="critcss_addedit_path" placeholder="<?php _e("Enter a part of the URL that identifies the page(s) you're targeting.", 'autoptimize'); ?>" style="width:100%;" value="">
             </td>
           </tr>
           <tr id="critcss_addedit_pagetype_wrapper">
