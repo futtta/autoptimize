@@ -416,7 +416,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
     </tr>
     <tr valign="top">
     <th scope="row"><?php _e( 'Also optimize for logged in editors/ administrators?', 'autoptimize' ); ?></th>
-    <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo get_option( 'autoptimize_optimize_logged', '1' ) ? 'checked="checked" ' : ''; ?>/>
+    <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_logged', '1' ) ? 'checked="checked" ' : ''; ?>/>
     <?php _e( 'By default Autoptimize is also active for logged on editors/ administrators, uncheck this option if you don\'t want Autoptimize to optimize when logged in e.g. to use a pagebuilder.', 'autoptimize' ); ?></label></td>
     </tr>
     <?php
