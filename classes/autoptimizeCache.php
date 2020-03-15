@@ -637,6 +637,36 @@ class autoptimizeCache
     }
 
     /**
+     * Hooks into template_redirect, will act on 404-ing requests for
+     * Autoptimized files and redirects to the fallback CSS/ JS if available
+     * and 410'ing ("Gone") if fallback not available.
+     */
+    public function wordpress_notfound_fallback() {
+        $original_request = strtok( $_SERVER['REQUEST_URI'], '?' );
+        if ( strpos( $original_request, wp_basename( WP_CONTENT_DIR ) . AUTOPTIMIZE_CACHE_CHILD_DIR ) !== false && is_404() ) {
+            // make sure this is not considered a 404.
+            global $wp_query;
+            $wp_query->is_404 = false;
+
+            // set fallback path.
+            $js_or_css     = pathinfo( $original_request, PATHINFO_EXTENSION );
+            $fallback_path = AUTOPTIMIZE_CACHE_DIR . $js_or_css . '/autoptimize_fallback.' . $js_or_css;
+
+            // set fallback URL.
+            $fallback_target = preg_replace( '/(.*)_(?:[a-z0-9]{32})\.(js|css)$/', '${1}_fallback.${2}', $original_request );
+
+            // redirect to fallback if possible.
+            if ( $original_request !== $fallback_target && file_exists( $fallback_path ) ) {
+                // redirect to fallback.
+                wp_redirect( $fallback_target, 302 );
+            } else {
+                // return HTTP 410 (gone) reponse.
+                status_header( 410 );
+            }
+        }
+    }
+
+    /**
      * Checks if cache dirs exist and create if not.
      * Returns false if not succesful.
      *
