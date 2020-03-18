@@ -47,6 +47,7 @@ class autoptimizeStyles extends autoptimizeBase
     private $dontmove        = array();
     private $options         = array();
     private $minify_excluded = true;
+    private $media_force_all = false;
 
     // public $cdn_url; // Used all over the place implicitly, so will have to be either public or protected :/ .
 
@@ -131,6 +132,9 @@ class autoptimizeStyles extends autoptimizeBase
         }
         $this->minify_excluded = apply_filters( 'autoptimize_filter_css_minify_excluded', $this->minify_excluded, '' );
 
+        // should we force all media-attributes to all?
+        $this->media_force_all = apply_filters( 'autoptimize_filter_css_tagmedia_forceall', false );
+
         // noptimize me.
         $this->content = $this->hide_noptimize( $this->content );
 
@@ -170,6 +174,11 @@ class autoptimizeStyles extends autoptimizeBase
                         }
                     } else {
                         // No media specified - applies to all.
+                        $media = array( 'all' );
+                    }
+
+                    // forcing media attribute to all to merge all in one file.
+                    if ( $this->media_force_all ) {
                         $media = array( 'all' );
                     }
 
