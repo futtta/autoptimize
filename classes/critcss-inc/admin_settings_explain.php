@@ -1,4 +1,11 @@
 <?php
+/**
+ * Explain what CCSS is (visible if no API key is stored).
+ */
+
+/**
+ * Actual function that explains.
+ */
 function ao_ccss_render_explain() {
     ?>
     <style>
