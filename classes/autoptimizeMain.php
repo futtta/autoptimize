@@ -62,6 +62,7 @@ class autoptimizeMain
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_extra' ), 15 );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ), 20 );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss' ), 11 );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_notfound_fallback' ), 10 );
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
         add_action( 'admin_init', array( 'PAnD', 'init' ) );
@@ -221,6 +222,13 @@ class autoptimizeMain
         // Loads criticalcss if the power-up is not active and if the filter returns true.
         if ( apply_filters( 'autoptimize_filter_criticalcss_active', true ) && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
             new autoptimizeCriticalCSSBase();
+        }
+    }
+
+    public function maybe_run_notfound_fallback()
+    {
+        if ( autoptimizeCache::do_fallback() ) {
+            add_action( 'template_redirect', array( 'autoptimizeCache', 'wordpress_notfound_fallback' ) );
         }
     }
 
