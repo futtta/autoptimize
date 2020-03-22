@@ -1,10 +1,10 @@
 Autoptimize
 ===========
 
-The [official Autoptimize repo on Github can be found here](https://github.com/futtta/autoptimize/).
+The [official Autoptimize repo on GitHub can be found here](https://github.com/futtta/autoptimize/).
 
 ## Autoptimize NextGen
-This version of Autoptimize is based on zytzagoo's fork, incoorporating many changes making the codebase more modern, readable and testable. Kudo's to Tomas for a job well done!
+This version of Autoptimize is based on zytzagoo's fork, incorporating many changes making the codebase more modern, readable and testable. Kudo's to Tomas for a job well done!
 
 ## Installing/running the tests
 * Install wp test suite by running `bin/install-wp-tests.sh`
