@@ -1,5 +1,5 @@
 === Autoptimize Beta ===
-Contributors: futtta, optimizingmatters, zytzagoo, turl, passoniate
+Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, pagespeed, images, lazy-load, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.4
