@@ -738,11 +738,11 @@ class autoptimizeImages
                 $_get_size = $this->get_size_from_tag( $tag );
                 $width     = $_get_size['width'];
                 $height    = $_get_size['height'];
-                if ( false === $width ) {
-                    $widht = 210; // default width for SVG placeholder.
+                if ( false === $width || empty( $width ) ) {
+                    $width = 210; // default width for SVG placeholder.
                 }
-                if ( false === $height ) {
-                    $heigth = $width / 3 * 2; // if no height, base it on width using the 3/2 aspect ratio.
+                if ( false === $height || empty( $height ) ) {
+                    $height = $width / 3 * 2; // if no height, base it on width using the 3/2 aspect ratio.
                 }
 
                 // insert the actual lazyload stuff.

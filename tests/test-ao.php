@@ -2478,7 +2478,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<picture><source data-srcset="$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img src="$siteurl/wp-content/image.jpg"/></noscript><img class="lazyload" src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20%20%22%3E%3C/svg%3E' data-src="$siteurl/wp-content/image.jpg"/></picture>
+<picture><source data-srcset="$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img src="$siteurl/wp-content/image.jpg"/></noscript><img class="lazyload" src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20210%20140%22%3E%3C/svg%3E' data-src="$siteurl/wp-content/image.jpg"/></picture>
 MARKUP;
 
         $instance = autoptimizeImages::instance();
