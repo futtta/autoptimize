@@ -72,12 +72,9 @@ class autoptimizeMain
             add_action( 'init', 'autoptimizeOptionWrapper::check_multisite_on_saving_options' );
         }
 
-        register_activation_hook( $this->filepath, array( $this, 'on_activate' ) );
-    }
-
-    public function on_activate()
-    {
+        // register uninstall & deactivation hooks.
         register_uninstall_hook( $this->filepath, 'autoptimizeMain::on_uninstall' );
+        register_deactivation_hook( $this->filepath, 'autoptimizeMain::on_deactivation' );
     }
 
     public function load_textdomain()
@@ -588,6 +585,7 @@ class autoptimizeMain
             foreach ( $delete_options as $del_opt ) {
                 delete_option( $del_opt );
             }
+            autoptimizeMain::remove_cronjobs();
         } else {
             global $wpdb;
             $blog_ids         = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
@@ -597,16 +595,9 @@ class autoptimizeMain
                 foreach ( $delete_options as $del_opt ) {
                     delete_option( $del_opt );
                 }
+                autoptimizeMain::remove_cronjobs();
             }
             switch_to_blog( $original_blog_id );
-        }
-
-        // Remove scheduled events.
-        // fixme: shouldn't this be done per subsite if multisite?
-        foreach ( array( 'ao_cachechecker', 'ao_ccss_queue', 'ao_ccss_maintenance', 'ao_ccss_servicestatus' ) as $_event ) {
-            if ( wp_get_schedule( $_event ) ) {
-                wp_clear_scheduled_hook( $_event );
-            }
         }
 
         // Remove AO CCSS cached files and directory.
@@ -615,6 +606,32 @@ class autoptimizeMain
             // fixme: should check for subdirs when in multisite and remove contents of those as well.
             array_map( 'unlink', glob( AO_CCSS_DIR . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
             rmdir( AO_CCSS_DIR );
+        }
+    }
+
+    public static function on_deactivation()
+    {
+        if ( is_multisite() && is_network_admin() ) {
+            global $wpdb;
+            $blog_ids         = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+            $original_blog_id = get_current_blog_id();
+            foreach ( $blog_ids as $blog_id ) {
+                switch_to_blog( $blog_id );
+                autoptimizeMain::remove_cronjobs();
+            }
+            switch_to_blog( $original_blog_id );
+        } else {
+            autoptimizeMain::remove_cronjobs();
+        }
+        autoptimizeCache::clearall();
+    }
+
+    public static function remove_cronjobs() {
+        // Remove scheduled events.
+        foreach ( array( 'ao_cachechecker', 'ao_ccss_queue', 'ao_ccss_maintenance', 'ao_ccss_servicestatus' ) as $_event ) {
+            if ( wp_get_schedule( $_event ) ) {
+                wp_clear_scheduled_hook( $_event );
+            }
         }
     }
 
