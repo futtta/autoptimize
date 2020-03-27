@@ -328,10 +328,11 @@ class autoptimizeStyles extends autoptimizeBase
                     $this->content = str_replace( $tag, '', $this->content );
                 } else {
                     if ( preg_match( '#<link.*href=("|\')(.*)("|\')#Usmi', $tag, $source ) ) {
-                        $exploded_url = explode( '?', $source[2], 2 );
-                        $url          = $exploded_url[0];
-                        $path         = $this->getpath( $url );
-                        $new_tag      = $tag;
+                        $exploded_url   = explode( '?', $source[2], 2 );
+                        $url            = $exploded_url[0];
+                        $path           = $this->getpath( $url );
+                        $new_tag        = $tag;
+                        $empty_minified = false;
 
                         // Excluded CSS, minify that file:
                         // -> if aggregate is on and exclude minify is on
@@ -343,6 +344,10 @@ class autoptimizeStyles extends autoptimizeBase
                                 if ( ! empty( $minified_url ) ) {
                                     // Replace orig URL with cached minified URL.
                                     $new_tag = str_replace( $url, $minified_url, $tag );
+                                } elseif ( $minified_url === '' ) {
+                                    // Minified code is empty.
+	                                $empty_minified = true;
+                                	$new_tag = '';
                                 }
                             }
                         }
@@ -351,7 +356,7 @@ class autoptimizeStyles extends autoptimizeBase
                         $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
 
                         // And replace!
-                        if ( '' !== $new_tag && $new_tag !== $tag ) {
+                        if ( $empty_minified || ( $new_tag !== '' && $new_tag !== $tag ) ) {
                             $this->content = str_replace( $tag, $new_tag, $this->content );
                         }
                     }
@@ -933,6 +938,8 @@ class autoptimizeStyles extends autoptimizeBase
     {
         // CSS cache.
         foreach ( $this->csscode as $media => $code ) {
+            if ( empty( $code ) ) continue; // Skip empty minified code. //
+            
             $md5   = $this->hashmap[ md5( $code ) ];
             $cache = new autoptimizeCache( $md5, 'css' );
             if ( ! $cache->check() ) {
@@ -1210,6 +1217,14 @@ class autoptimizeStyles extends autoptimizeBase
             // Now minify...
             $cssmin   = new autoptimizeCSSmin();
             $contents = trim( $cssmin->run( $contents ) );
+            
+            // Check if minified cache content is empty. //
+	        if ( empty( $contents ) ) {
+                // Do not store empty cache and remove url from cache list. //
+		        $url = '';
+		        return $url;
+	        }
+            
             // Store in cache.
             $cache->cache( $contents, 'text/css' );
         }
