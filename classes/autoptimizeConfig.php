@@ -415,6 +415,11 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         <?php _e( 'When aggregating JS or CSS, excluded files that are not minified (based on filename) are by default minified by Autoptimize despite being excluded. Uncheck this option if anything breaks despite excluding.', 'autoptimize' ); ?></label></td>
     </tr>
     <tr valign="top">
+        <th scope="row"><?php _e( 'Experimental: enable 404 fallbacks.', 'autoptimize' ); ?></th>
+        <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_fallback" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_cache_fallback', '' ) ? 'checked="checked" ' : ''; ?>/>
+        <?php _e( 'Sometimes Autoptimized JS/ CSS is referenced in cached HTML but is already removed, resulting in broken sites. This experimental feature tries to redirect those not-found files to "fallback"-versions, keeping the page/ site somewhat intact. In some cases this will require extra web-server level configuration to ensure <code>wp-content/autoptimize_404_handler.php</code> is set to handle 404\'s in <code>wp-content/cache/autoptimize</code>.', 'autoptimize' ); ?></label></td>
+    </tr>
+    <tr valign="top">
     <th scope="row"><?php _e( 'Also optimize for logged in editors/ administrators?', 'autoptimize' ); ?></th>
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_logged', '1' ) ? 'checked="checked" ' : ''; ?>/>
     <?php _e( 'By default Autoptimize is also active for logged on editors/ administrators, uncheck this option if you don\'t want Autoptimize to optimize when logged in e.g. to use a pagebuilder.', 'autoptimize' ); ?></label></td>
@@ -686,6 +691,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         register_setting( 'autoptimize', 'autoptimize_optimize_logged' );
         register_setting( 'autoptimize', 'autoptimize_optimize_checkout' );
         register_setting( 'autoptimize', 'autoptimize_minify_excluded' );
+        register_setting( 'autoptimize', 'autoptimize_cache_fallback' );
     }
 
     public function setmeta( $links, $file = null )
@@ -745,6 +751,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
             'autoptimize_optimize_logged'    => 1,
             'autoptimize_optimize_checkout'  => 0,
             'autoptimize_minify_excluded'    => 1,
+            'autoptimize_cache_fallback'     => '',
         );
 
         return $config;

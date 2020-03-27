@@ -563,6 +563,7 @@ class autoptimizeMain
             'autoptimize_imgopt_launched',
             'autoptimize_imgopt_settings',
             'autoptimize_minify_excluded',
+            'autoptimize_cache_fallback',
             'autoptimize_ccss_rules',
             'autoptimize_ccss_additional',
             'autoptimize_ccss_queue',

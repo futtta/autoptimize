@@ -589,7 +589,7 @@ class autoptimizeCache
 </IfModule>';
             }
 
-            if ( self::do_fallback() ) {
+            if ( self::do_fallback() === true ) {
                 $content .= "\nErrorDocument 404 " . trailingslashit( parse_url( content_url(), PHP_URL_PATH ) ) . 'autoptimize_404_handler.php';
             }
             @file_put_contents( $htaccess, $content ); // @codingStandardsIgnoreLine
@@ -628,12 +628,20 @@ class autoptimizeCache
 
     /**
      * Tells if AO should try to avoid 404's by creating fallback filesize
-     * and create a php 404 handler and tell .htaccess to redirect to said handler.
+     * and create a php 404 handler and tell .htaccess to redirect to said handler
+     * and hook into WordPress to redirect 404 to said handler as well. NGINX users
+     * are smart enough to get this working, no? ;-)
      *
      * Return bool
      */
     public static function do_fallback() {
-        return apply_filters( 'autoptimize_filter_cache_do_fallback', false );
+        static $_do_fallback = null;
+
+        if ( null === $_do_fallback ) {
+            $_do_fallback = (bool) apply_filters( 'autoptimize_filter_cache_do_fallback', autoptimizeOptionWrapper::get_option( 'autoptimize_cache_fallback', '' ) );
+        }
+
+        return $_do_fallback;
     }
 
     /**
@@ -641,7 +649,7 @@ class autoptimizeCache
      * Autoptimized files and redirects to the fallback CSS/ JS if available
      * and 410'ing ("Gone") if fallback not available.
      */
-    public function wordpress_notfound_fallback() {
+    public static function wordpress_notfound_fallback() {
         $original_request = strtok( $_SERVER['REQUEST_URI'], '?' );
         if ( strpos( $original_request, wp_basename( WP_CONTENT_DIR ) . AUTOPTIMIZE_CACHE_CHILD_DIR ) !== false && is_404() ) {
             // make sure this is not considered a 404.
