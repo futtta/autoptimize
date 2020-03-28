@@ -43,12 +43,12 @@ class autoptimizeCache
         $this->cachedir = AUTOPTIMIZE_CACHE_DIR;
         $this->nogzip   = AUTOPTIMIZE_CACHE_NOGZIP;
         if ( ! $this->nogzip ) {
-            $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.min.php';
+            $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.php';
         } else {
             if ( in_array( $ext, array( 'js', 'css' ) ) ) {
-                $this->filename = $ext . '/' . AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.min.' . $ext;
+                $this->filename = $ext . '/' . AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.' . $ext;
             } else {
-                $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.min.' . $ext;
+                $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.' . $ext;
             }
         }
     }
@@ -128,10 +128,6 @@ class autoptimizeCache
                 }
             }
         }
-        
-	    // Provide 3rd party action hook for every cache file that is created.
-	    // This hook can for example be used to inject a copy of the created cache file to a other domain.
-	    do_action( 'autoptimize_action_cache_file_created', $this->cachedir . $this->filename );
     }
 
     /**
