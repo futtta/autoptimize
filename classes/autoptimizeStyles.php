@@ -343,6 +343,9 @@ class autoptimizeStyles extends autoptimizeBase
                                 if ( ! empty( $minified_url ) ) {
                                     // Replace orig URL with cached minified URL.
                                     $new_tag = str_replace( $url, $minified_url, $tag );
+                                } else {
+                                    // Remove the original style tag, because cache content is empty.
+                                    $new_tag = '';
                                 }
                             }
                         }
@@ -351,7 +354,7 @@ class autoptimizeStyles extends autoptimizeBase
                         $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
 
                         // And replace!
-                        if ( '' !== $new_tag && $new_tag !== $tag ) {
+                        if ( '' !== $tag && $new_tag !== $tag ) {
                             $this->content = str_replace( $tag, $new_tag, $this->content );
                         }
                     }
@@ -933,6 +936,8 @@ class autoptimizeStyles extends autoptimizeBase
     {
         // CSS cache.
         foreach ( $this->csscode as $media => $code ) {
+            if ( empty( $code ) ) continue;
+            
             $md5   = $this->hashmap[ md5( $code ) ];
             $cache = new autoptimizeCache( $md5, 'css' );
             if ( ! $cache->check() ) {
@@ -1210,6 +1215,12 @@ class autoptimizeStyles extends autoptimizeBase
             // Now minify...
             $cssmin   = new autoptimizeCSSmin();
             $contents = trim( $cssmin->run( $contents ) );
+            
+            // Check if minified cache content is empty.
+            if ( empty( $contents ) ) {
+                return false;
+            }
+            
             // Store in cache.
             $cache->cache( $contents, 'text/css' );
         }
