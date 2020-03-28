@@ -128,6 +128,10 @@ class autoptimizeCache
                 }
             }
         }
+
+        // Provide 3rd party action hook for every cache file that is created.
+        // This hook can for example be used to inject a copy of the created cache file to a other domain.
+        do_action( 'autoptimize_action_cache_file_created', $this->cachedir . $this->filename );
     }
 
     /**
