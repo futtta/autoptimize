@@ -40,15 +40,20 @@ class autoptimizeCache
      */
     public function __construct( $md5, $ext = 'php' )
     {
+        $_min_ext = '';
+        if ( apply_filters( 'autoptimize_filter_cache_url_add_min_ext', false ) ) {
+            $_min_ext = '.min';
+        }
+
         $this->cachedir = AUTOPTIMIZE_CACHE_DIR;
         $this->nogzip   = AUTOPTIMIZE_CACHE_NOGZIP;
         if ( ! $this->nogzip ) {
-            $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.min.php';
+            $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . $_min_ext . '.php';
         } else {
             if ( in_array( $ext, array( 'js', 'css' ) ) ) {
-                $this->filename = $ext . '/' . AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.min.' . $ext;
+                $this->filename = $ext . '/' . AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . $_min_ext . '.' . $ext;
             } else {
-                $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.min.' . $ext;
+                $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . $_min_ext . '.' . $ext;
             }
         }
     }
