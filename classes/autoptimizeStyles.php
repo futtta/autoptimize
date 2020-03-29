@@ -388,6 +388,7 @@ class autoptimizeStyles extends autoptimizeBase
                 "this.onload=null;this.rel='stylesheet'",
                 $url
             );
+            
             // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
             $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
                 array(
@@ -397,11 +398,12 @@ class autoptimizeStyles extends autoptimizeBase
                 "rel='preload' as='style' onload=\"" . $_preload_onload . '"',
                 $tag
             );
-        } else {
-            $new_tag = $tag;
+            
+            return $new_tag;
         }
-
-        return $new_tag;
+        
+        // Return unchanged $tag.
+        return $tag;
     }
 
     /**
