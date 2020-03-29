@@ -354,7 +354,7 @@ class autoptimizeStyles extends autoptimizeBase
                         $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
 
                         // And replace!
-                        if ( '' !== $tag && $new_tag !== $tag ) {
+                        if ( $new_tag !== $tag ) {
                             $this->content = str_replace( $tag, $new_tag, $this->content );
                         }
                     }
