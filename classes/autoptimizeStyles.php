@@ -343,15 +343,20 @@ class autoptimizeStyles extends autoptimizeBase
                                 if ( ! empty( $minified_url ) ) {
                                     // Replace orig URL with cached minified URL.
                                     $new_tag = str_replace( $url, $minified_url, $tag );
+                                } else {
+                                    // Remove the original style tag, because cache content is empty.
+                                    $new_tag = '';
                                 }
                             }
                         }
 
-                        // Optionally defer (preload) non-aggregated CSS.
-                        $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
+                        if ( '' !== $new_tag) {
+                            // Optionally defer (preload) non-aggregated CSS.
+                            $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
+                        }
 
                         // And replace!
-                        if ( '' !== $new_tag && $new_tag !== $tag ) {
+                        if ( ( '' !== $new_tag && $new_tag !== $tag ) || ( '' === $new_tag && apply_filters( 'autoptimize_filter_css_remove_empty_files', false ) ) ) {
                             $this->content = str_replace( $tag, $new_tag, $this->content );
                         }
                     }
@@ -376,13 +381,14 @@ class autoptimizeStyles extends autoptimizeBase
     private function optionally_defer_excluded( $tag, $url = '' )
     {
         // Defer single CSS if "inline & defer" is ON and there is inline CSS.
-        if ( $this->defer && ! empty( $this->defer_inline ) ) {
+        if ( ! empty( $tag ) && $this->defer && ! empty( $this->defer_inline ) ) {
             // Get/ set (via filter) the JS to be triggers onload of the preloaded CSS.
             $_preload_onload = apply_filters(
                 'autoptimize_filter_css_preload_onload',
                 "this.onload=null;this.rel='stylesheet'",
                 $url
             );
+            
             // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
             $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
                 array(
@@ -392,11 +398,12 @@ class autoptimizeStyles extends autoptimizeBase
                 "rel='preload' as='style' onload=\"" . $_preload_onload . '"',
                 $tag
             );
-        } else {
-            $new_tag = $tag;
+            
+            return $new_tag;
         }
-
-        return $new_tag;
+        
+        // Return unchanged $tag.
+        return $tag;
     }
 
     /**
@@ -933,6 +940,8 @@ class autoptimizeStyles extends autoptimizeBase
     {
         // CSS cache.
         foreach ( $this->csscode as $media => $code ) {
+            if ( empty( $code ) ) continue;
+            
             $md5   = $this->hashmap[ md5( $code ) ];
             $cache = new autoptimizeCache( $md5, 'css' );
             if ( ! $cache->check() ) {
@@ -1210,6 +1219,12 @@ class autoptimizeStyles extends autoptimizeBase
             // Now minify...
             $cssmin   = new autoptimizeCSSmin();
             $contents = trim( $cssmin->run( $contents ) );
+            
+            // Check if minified cache content is empty.
+            if ( empty( $contents ) ) {
+                return false;
+            }
+            
             // Store in cache.
             $cache->cache( $contents, 'text/css' );
         }
