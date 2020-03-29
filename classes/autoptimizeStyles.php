@@ -356,7 +356,7 @@ class autoptimizeStyles extends autoptimizeBase
                         }
 
                         // And replace!
-                        if ( $new_tag !== $tag ) {
+                        if ( ( '' !== $new_tag && $new_tag !== $tag ) || ( '' === $new_tag && apply_filters( 'autoptimize_filter_css_remove_empty_files', false ) ) ) {
                             $this->content = str_replace( $tag, $new_tag, $this->content );
                         }
                     }
