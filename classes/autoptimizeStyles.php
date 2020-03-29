@@ -350,8 +350,10 @@ class autoptimizeStyles extends autoptimizeBase
                             }
                         }
 
-                        // Optionally defer (preload) non-aggregated CSS.
-                        $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
+                        if ( '' !== $new_tag) {
+                            // Optionally defer (preload) non-aggregated CSS.
+                            $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
+                        }
 
                         // And replace!
                         if ( $new_tag !== $tag ) {
