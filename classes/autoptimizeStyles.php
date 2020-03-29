@@ -350,7 +350,7 @@ class autoptimizeStyles extends autoptimizeBase
                             }
                         }
 
-                        if ( '' !== $new_tag) {
+                        if ( '' !== $new_tag ) {
                             // Optionally defer (preload) non-aggregated CSS.
                             $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
                         }
@@ -388,7 +388,7 @@ class autoptimizeStyles extends autoptimizeBase
                 "this.onload=null;this.rel='stylesheet'",
                 $url
             );
-            
+
             // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
             $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
                 array(
@@ -398,10 +398,10 @@ class autoptimizeStyles extends autoptimizeBase
                 "rel='preload' as='style' onload=\"" . $_preload_onload . '"',
                 $tag
             );
-            
+
             return $new_tag;
         }
-        
+
         // Return unchanged $tag.
         return $tag;
     }
@@ -940,8 +940,10 @@ class autoptimizeStyles extends autoptimizeBase
     {
         // CSS cache.
         foreach ( $this->csscode as $media => $code ) {
-            if ( empty( $code ) ) continue;
-            
+            if ( empty( $code ) ) {
+                continue;
+            }
+
             $md5   = $this->hashmap[ md5( $code ) ];
             $cache = new autoptimizeCache( $md5, 'css' );
             if ( ! $cache->check() ) {
@@ -1219,12 +1221,12 @@ class autoptimizeStyles extends autoptimizeBase
             // Now minify...
             $cssmin   = new autoptimizeCSSmin();
             $contents = trim( $cssmin->run( $contents ) );
-            
+
             // Check if minified cache content is empty.
             if ( empty( $contents ) ) {
                 return false;
             }
-            
+
             // Store in cache.
             $cache->cache( $contents, 'text/css' );
         }
