@@ -342,9 +342,12 @@ class autoptimizeScripts extends autoptimizeBase
                             $consider_minified_array = apply_filters( 'autoptimize_filter_js_consider_minified', false );
                             if ( ( false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path ) || ( true === $this->aggregate && ( false === $consider_minified_array || str_replace( $consider_minified_array, '', $path ) === $path ) ) ) {
                                 $minified_url = $this->minify_single( $path );
-                                // replace orig URL with minified URL from cache if so.
                                 if ( ! empty( $minified_url ) ) {
+                                    // Replace original URL with minified URL from cache.
                                     $new_tag = str_replace( $url, $minified_url, $new_tag );
+                                } else {
+                                    // Remove the original script tag, because cache content is empty.
+                                    $new_tag = '';
                                 }
                             }
                         }
@@ -358,7 +361,7 @@ class autoptimizeScripts extends autoptimizeBase
                             }
                         } else {
                             // cannot be moved, so if flag was added re-inject altered tag immediately.
-                            if ( $orig_tag !== $new_tag ) {
+                            if ( ( '' !== $new_tag && $orig_tag !== $new_tag ) || ( '' === $new_tag && apply_filters( 'autoptimize_filter_js_remove_empty_files', false ) ) ) {
                                 $this->content = str_replace( $orig_tag, $new_tag, $this->content );
                                 $orig_tag      = '';
                             }
@@ -426,6 +429,10 @@ class autoptimizeScripts extends autoptimizeBase
      */
     public function should_aggregate( $tag )
     {
+        if ( empty( $tag ) ) {
+            return false;
+        }
+
         // We're only interested in the type attribute of the <script> tag itself, not any possible
         // inline code that might just contain the 'type=' string...
         $tag_parts = array();
@@ -456,6 +463,10 @@ class autoptimizeScripts extends autoptimizeBase
     public function minify()
     {
         foreach ( $this->scripts as $script ) {
+            if ( empty( $script ) ) {
+                continue;
+            }
+
             // TODO/FIXME: some duplicate code here, can be reduced/simplified.
             if ( preg_match( '#^INLINE;#', $script ) ) {
                 // Inline script.
@@ -596,7 +607,7 @@ class autoptimizeScripts extends autoptimizeBase
      */
     private function ismergeable( $tag )
     {
-        if ( ! $this->aggregate ) {
+        if ( empty( $tag ) || ! $this->aggregate ) {
             return false;
         }
 
@@ -639,7 +650,7 @@ class autoptimizeScripts extends autoptimizeBase
      */
     private function ismovable( $tag )
     {
-        if ( true !== $this->include_inline || apply_filters( 'autoptimize_filter_js_unmovable', true ) ) {
+        if ( empty( $tag ) || true !== $this->include_inline || apply_filters( 'autoptimize_filter_js_unmovable', true ) ) {
             return false;
         }
 
@@ -667,6 +678,10 @@ class autoptimizeScripts extends autoptimizeBase
 
     private function movetolast( $tag )
     {
+        if ( empty( $tag ) ) {
+            return false;
+        }
+
         foreach ( $this->domovelast as $match ) {
             if ( false !== strpos( $tag, $match ) ) {
                 // Matched, return true.
@@ -735,6 +750,12 @@ class autoptimizeScripts extends autoptimizeBase
         // If not in cache already, minify...
         if ( ! $cache->check() || $cache_miss ) {
             $contents = trim( JSMin::minify( $contents ) );
+
+            // Check if minified cache content is empty.
+            if ( empty( $contents ) ) {
+                return false;
+            }
+
             // Store in cache.
             $cache->cache( $contents, 'text/javascript' );
         }
