@@ -278,6 +278,11 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.7.0 =
+* intergration of critical CSS power-up.
+* option to ensure missing autoptimized files are served with fallback JS/ CSS.
+* Batch of misc. smaller improvements & fixes, more info in the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
+
 = 2.6.2 =
 * auto-exclude images from lazyload when they have `loading="eager"` attribute.
 * bugfix: don't take querystring into account when deciding as-value for preloaded resources.
