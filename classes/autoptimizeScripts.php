@@ -346,10 +346,8 @@ class autoptimizeScripts extends autoptimizeBase
                                     // Replace original URL with minified URL from cache.
                                     $new_tag = str_replace( $url, $minified_url, $new_tag );
                                 } else {
-                                    if ( apply_filters( 'autoptimize_filter_js_remove_empty_files', false ) ) {
-                                        // Remove the original script tag, because cache content is empty.
-                                        $new_tag = '';
-                                    }
+                                    // Remove the original script tag, because cache content is empty.
+                                    $new_tag = '';
                                 }
                             }
                         }
@@ -363,7 +361,7 @@ class autoptimizeScripts extends autoptimizeBase
                             }
                         } else {
                             // cannot be moved, so if flag was added re-inject altered tag immediately.
-                            if ( $orig_tag !== $new_tag ) {
+                            if ( ( '' !== $new_tag && $orig_tag !== $new_tag ) || ( '' === $new_tag && apply_filters( 'autoptimize_filter_js_remove_empty_files', false ) ) ) {
                                 $this->content = str_replace( $orig_tag, $new_tag, $this->content );
                                 $orig_tag      = '';
                             }
