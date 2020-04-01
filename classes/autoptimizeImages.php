@@ -112,6 +112,10 @@ class autoptimizeImages
         if ( ! $this->should_run() ) {
             if ( $this->should_lazyload() ) {
                 add_filter(
+                    'wp_lazy_loading_enabled',
+                    '__return_false'
+                );
+                add_filter(
                     'autoptimize_html_after_minify',
                     array( $this, 'filter_lazyload_images' ),
                     10,
@@ -159,6 +163,10 @@ class autoptimizeImages
         }
 
         if ( $this->should_lazyload() ) {
+            add_filter(
+                'wp_lazy_loading_enabled',
+                '__return_false'
+            );
             add_action(
                 'wp_footer',
                 array( $this, 'add_lazyload_js_footer' ),
