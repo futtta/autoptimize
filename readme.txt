@@ -2,7 +2,7 @@
 Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, pagespeed, images, lazy-load, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
-Requires at least: 4.4
+Requires at least: 4.9
 Tested up to: 5.4
 Requires PHP: 5.6
 Stable tag: 2.6.2
@@ -12,7 +12,7 @@ Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. l
 == Description ==
 
 Autoptimize makes optimizing your site really easy. It can aggregate, minify and cache scripts and styles, injects CSS in the page head by default but can also inline critical CSS and defer the aggregated full CSS, moves and defers scripts to the footer and minifies HTML. You can optimize and lazy-load images, optimize Google Fonts, async non-aggregated JavaScript, remove WordPress core emoji cruft and more. As such it can improve your site's performance even when already on HTTP/2! There is extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
-If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [WP Super Cache](http://wordpress.org/plugins/wp-super-cache/), [HyperCache](http://wordpress.org/plugins/hyper-cache/), [Comet Cache](https://wordpress.org/plugins/comet-cache/) or [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler).
+If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler) or [WP Super Cache](http://wordpress.org/plugins/wp-super-cache/).
 
 > <strong>Premium Support</strong><br>
 > We provide great [Autoptimize Pro Support and Web Performance Optimization services](https://autoptimize.com/), check out our offering on [https://autoptimize.com/](https://autoptimize.com/)!
@@ -251,16 +251,16 @@ As from AO 2.4 AO "listens" to page cache purges to clear its own cache. You can
 `
 add_filter('autoptimize_filter_main_hookpagecachepurge','__return_false');`
 
-= Why can't I upgrade from 2.3.4 to 2.4.0 (or higher)? =
-
-Main reason (apart from occasional hickups that seem to be inherent to plugin upgrades) is that AO 2.4 requires you to be running PHP 5.3 or higher. And let's face it; you should actually be running PHP 7.x if you value performance (and security and support), no?
-
 = Some of the non-ASCII characters get lost after optimization =
 
 By default AO uses non multibyte-safe string methods, but if your PHP has the mbstring extension you can enable multibyte-safe string functions with this filter;
 
 `
 add_filter('autoptimize_filter_main_use_mbstring', '__return_true');`
+
+= I can't get Critical CSS working =
+
+Check [the FAQ on the (legacy) "power-up" here]()https://wordpress.org/plugins/autoptimize-criticalcss/#faq, this info will be integrated in this FAQ at a later date.
 
 = Where can I get help? =
 
@@ -279,8 +279,8 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.7.0 =
-* intergration of critical CSS power-up.
-* option to ensure missing autoptimized files are served with fallback JS/ CSS.
+* Integration of critical CSS power-up.
+* New option to ensure missing autoptimized files are served with fallback JS/ CSS.
 * Batch of misc. smaller improvements & fixes, more info in the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 2.6.2 =
