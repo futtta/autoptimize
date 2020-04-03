@@ -553,7 +553,7 @@ class autoptimizeImages
                 }
 
                 // do lazyload stuff.
-                if ( $this->should_lazyload( $in ) ) {
+                if ( $this->should_lazyload( $in ) && ! empty( $url ) ) {
                     // first do lpiq placeholder logic.
                     if ( strpos( $url, $this->get_imgopt_host() ) === 0 ) {
                         // if all img src have been replaced during srcset, we have to extract the
