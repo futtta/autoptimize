@@ -325,7 +325,7 @@ echo sprintf( __( 'This can be fully automated for different types of pages on t
 <tr valign="top" class="css_sub css_aggregate">
 <th scope="row"><?php _e( 'Inline all CSS?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" id="autoptimize_css_inline" name="autoptimize_css_inline" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_css_inline' ) ? 'checked="checked" ' : ''; ?>/>
-<?php _e( 'Inlining all CSS can improve performance for sites with a low pageviews/ visitor-rate, but may slow down performance otherwise.', 'autoptimize' ); ?></label></td>
+<?php _e( 'Inlining all CSS is an easy way to stop the CSS from being render-blocking, but is generally not recommended because the size of the HTML increases significantly. Additionally it might push meta-tags down to a position where e.g. Facebook and Whatsapp will not find them any more, breaking thumbnails when sharing.', 'autoptimize' ); ?></label></td>
 </tr>
 <tr valign="top" class="css_sub">
 <th scope="row"><?php _e( 'Exclude CSS from Autoptimize:', 'autoptimize' ); ?></th>
