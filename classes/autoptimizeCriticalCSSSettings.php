@@ -174,8 +174,8 @@ class autoptimizeCriticalCSSSettings {
                                 $_oldest_job_timestamp = $job['jctime'];
                             }
 
-                            if ( 'NEW' !== $job['jqstat'] ) {
-                                // we have a non-"NEW" job, break the loop.
+                            if ( 'NEW' !== $job['jqstat'] && 'firstrun' !== $job['ljid'] ) {
+                                // we have a non-"NEW" job which is not our pending firstrun job either, break the loop.
                                 $_jobs_all_new = false;
                                 break;
                             }
