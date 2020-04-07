@@ -160,7 +160,6 @@ class autoptimizeCriticalCSSSettings {
                 if ( ! empty( $ao_ccss_key ) && false === $_warn_cron ) {
                     $_jobs_all_new         = true;
                     $_oldest_job_timestamp = microtime( true ); // now.
-                    $_no_auto_rules        = true;
                     $_jobs_too_old         = true;
 
                     // go over queue array.
@@ -182,7 +181,7 @@ class autoptimizeCriticalCSSSettings {
                         }
                     }
 
-                    // is the oldest job too old?
+                    // is the oldest job too old (4h)?
                     if ( $_oldest_job_timestamp > microtime( true ) - 60 * 60 * 4 ) {
                         $_jobs_too_old = false;
                     }
