@@ -577,7 +577,6 @@ class autoptimizeMain
             'autoptimize_ccss_version',
             'autoptimize_ccss_loggedin',
             'autoptimize_ccss_forcepath',
-            'autoptimize_ccss_servicestatus',
             'autoptimize_ccss_deferjquery',
             'autoptimize_ccss_domain',
         );
@@ -629,7 +628,7 @@ class autoptimizeMain
 
     public static function remove_cronjobs() {
         // Remove scheduled events.
-        foreach ( array( 'ao_cachechecker', 'ao_ccss_queue', 'ao_ccss_maintenance', 'ao_ccss_servicestatus' ) as $_event ) {
+        foreach ( array( 'ao_cachechecker', 'ao_ccss_queue', 'ao_ccss_maintenance' ) as $_event ) {
             if ( wp_get_schedule( $_event ) ) {
                 wp_clear_scheduled_hook( $_event );
             }

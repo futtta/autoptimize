@@ -22,8 +22,6 @@ class autoptimizeCriticalCSSCron {
         add_action( 'ao_ccss_queue', array( $this, 'ao_ccss_queue_control' ) );
         // Add cleaning job to a registered event.
         add_action( 'ao_ccss_maintenance', array( $this, 'ao_ccss_cleaning' ) );
-        // action triggered as scheduled event.
-        add_action( 'ao_ccss_servicestatus', array( $this, 'ao_ccss_getservicestatus' ) );
     }
 
     public function ao_ccss_queue_control() {
@@ -826,31 +824,6 @@ class autoptimizeCriticalCSSCron {
         global $ao_ccss_keyst;
         if ( 1 == $ao_ccss_keyst ) {
             $this->ao_ccss_api_generate( '', '', '' );
-        }
-    }
-
-    public function ao_ccss_getservicestatus() {
-        // get autoptimize service status file if there is a valid key.
-        global $ao_ccss_keyst;
-        global $ao_ccss_rules;
-
-        $nbrt = 0;
-        $nbrp = 0;
-        if ( array_key_exists( 'paths', $ao_ccss_rules ) ) {
-            $nbrp = count( $ao_ccss_rules['paths'] );
-        }
-        if ( array_key_exists( 'types', $ao_ccss_rules ) ) {
-            $nbrt = count( $ao_ccss_rules['types'] );
-        }
-
-        $ver = str_replace( '.', '', AO_CCSS_VER ) . '_ks' . $ao_ccss_keyst . '_pr' . $nbrp . '_tr' . $nbrt;
-
-        $service_availability_resp = wp_remote_get( 'https://misc.optimizingmatters.com/api/autoptimize_service_availablity.json?from=aoccss&ver=' . $ver );
-        if ( ! is_wp_error( $service_availability_resp ) ) {
-            if ( '200' == wp_remote_retrieve_response_code( $service_availability_resp ) ) {
-                $availabilities = json_decode( wp_remote_retrieve_body( $service_availability_resp ), true );
-                update_option( 'autoptimize_ccss_servicestatus', $availabilities );
-            }
         }
     }
 }

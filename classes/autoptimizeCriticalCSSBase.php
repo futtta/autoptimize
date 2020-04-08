@@ -96,7 +96,7 @@ class autoptimizeCriticalCSSBase {
         $autoptimize_ccss_options['ao_ccss_keyst']         = get_option( 'autoptimize_ccss_keyst' );
         $autoptimize_ccss_options['ao_ccss_loggedin']      = get_option( 'autoptimize_ccss_loggedin', '1' );
         $autoptimize_ccss_options['ao_ccss_forcepath']     = get_option( 'autoptimize_ccss_forcepath', '1' );
-        $autoptimize_ccss_options['ao_ccss_servicestatus'] = get_option( 'autoptimize_ccss_servicestatus' );
+        $autoptimize_ccss_options['ao_ccss_servicestatus'] = get_option( 'autoptimize_service_availablity' );
         $autoptimize_ccss_options['ao_ccss_deferjquery']   = get_option( 'autoptimize_ccss_deferjquery', false );
         $autoptimize_ccss_options['ao_ccss_domain']        = get_option( 'autoptimize_ccss_domain' );
 
@@ -144,11 +144,6 @@ class autoptimizeCriticalCSSBase {
         // Create a scheduled event for log maintenance.
         if ( ! wp_next_scheduled( 'ao_ccss_maintenance' ) ) {
             wp_schedule_event( time(), 'twicedaily', 'ao_ccss_maintenance' );
-        }
-
-        // Scheduled event to fetch service status.
-        if ( ! wp_next_scheduled( 'ao_ccss_servicestatus' ) ) {
-            wp_schedule_event( time(), 'daily', 'ao_ccss_servicestatus' );
         }
     }
 
