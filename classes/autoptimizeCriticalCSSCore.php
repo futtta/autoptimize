@@ -313,21 +313,26 @@ class autoptimizeCriticalCSSCore {
     }
 
     public function get_ao_ccss_core_types() {
-        return array(
-            'is_404',
-            'is_archive',
-            'is_author',
-            'is_category',
-            'is_front_page',
-            'is_home',
-            'is_page',
-            'is_post',
-            'is_search',
-            'is_attachment',
-            'is_single',
-            'is_sticky',
-            'is_paged',
-        );
+        global $ao_ccss_types;
+        if ( empty( $ao_ccss_types ) || ! is_array( $ao_ccss_types ) ) {
+            return array(
+                'is_404',
+                'is_archive',
+                'is_author',
+                'is_category',
+                'is_front_page',
+                'is_home',
+                'is_page',
+                'is_post',
+                'is_search',
+                'is_attachment',
+                'is_single',
+                'is_sticky',
+                'is_paged',
+            );
+        } else {
+            return $ao_ccss_types;
+        }
     }
 
     public static function ao_ccss_key_status( $render ) {
