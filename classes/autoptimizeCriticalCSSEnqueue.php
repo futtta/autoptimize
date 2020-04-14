@@ -91,7 +91,7 @@ class autoptimizeCriticalCSSEnqueue {
                 }
             }
 
-            if ( false == $job_qualify && $rule_properties['hash'] && false != $rule_properties['file'] ) {
+            if ( $job_qualify && false == $rule_properties['hash'] && false != $rule_properties['file'] ) {
                 // If job qualifies but rule hash is false and file isn't false  (MANUAL rule), job does not qualify despite what previous evaluations says.
                 $job_qualify = false;
                 autoptimizeCriticalCSSCore::ao_ccss_log( 'Job submission DISQUALIFIED by MANUAL rule <' . $target_rule . '> with hash <' . $rule_properties['hash'] . '> and file <' . $rule_properties['file'] . '>', 3 );
