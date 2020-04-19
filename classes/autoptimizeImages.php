@@ -791,16 +791,21 @@ class autoptimizeImages
             $lazysizes_js = str_replace( AUTOPTIMIZE_WP_SITE_URL, $cdn_url, $lazysizes_js );
         }
 
+        $type_js = '';
+        if ( apply_filters( 'autoptimize_filter_cssjs_addtype', false ) ) {
+            $type_js = ' type="text/javascript"';
+        }
+
         // Adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
-        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
-        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $type_js . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $type_js . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
 
         // And add webp detection and loading JS.
         if ( $this->should_webp() ) {
             $_webp_detect = "function c_webp(A){var n=new Image;n.onload=function(){var e=0<n.width&&0<n.height;A(e)},n.onerror=function(){A(!1)},n.src='data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA=='}function s_webp(e){window.supportsWebP=e}c_webp(s_webp);";
             $_webp_load   = "document.addEventListener('lazybeforeunveil',function({target:c}){supportsWebP&&['data-src','data-srcset'].forEach(function(a){attr=c.getAttribute(a),null!==attr&&c.setAttribute(a,attr.replace(/\/client\//,'/client/to_webp,'))})});";
-            echo apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script' . $noptimize_flag . '>' . $_webp_detect . $_webp_load . '</script>' );
+            echo apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script' . $type_js . $noptimize_flag . '>' . $_webp_detect . $_webp_load . '</script>' );
         }
     }
 
