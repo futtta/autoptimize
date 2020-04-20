@@ -235,15 +235,15 @@ class autoptimizeExtra
             if ( ! preg_match( '/rel=["\']dns-prefetch["\']/', $matches[0][ $i ] ) ) {
                 // Get fonts name.
                 $font = str_replace( array( '%7C', '%7c' ), '|', $font );
+                if ( strpos( $font, 'fonts.googleapis.com/css2' ) !== false ) {
+                    // (Somewhat) change Google Fonts APIv2 syntax back to v1.
+                    $font = str_replace( array( 'wght@', 'wght%40', ';', '%3B' ), array( '', '', ',', ',' ), $font );
+                }
                 $font = explode( 'family=', $font );
                 $font = ( isset( $font[1] ) ) ? explode( '&', $font[1] ) : array();
                 // Add font to $fonts[$i] but make sure not to pollute with an empty family!
                 $_thisfont = array_values( array_filter( explode( '|', reset( $font ) ) ) );
                 if ( ! empty( $_thisfont ) ) {
-                    if ( strpos( $matches[0][ $i ], 'fonts.googleapis.com/css2' ) !== false ) {
-                        // (Somewhat) change Google Fonts APIv2 syntax back to v1.
-                        $_thisfont = str_replace( array( 'wght@', ';' ), array( '', ',' ), $_thisfont );
-                    }
                     $fonts_collection[ $i ]['fonts'] = $_thisfont;
                     // And add subset if any!
                     $subset = ( is_array( $font ) ) ? end( $font ) : '';
