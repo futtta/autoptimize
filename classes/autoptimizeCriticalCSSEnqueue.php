@@ -18,7 +18,7 @@ class autoptimizeCriticalCSSEnqueue {
         }
     }
 
-    public function ao_ccss_enqueue( $hash ) {
+    public static function ao_ccss_enqueue( $hash ) {
         $self = new self();
         // Get key status.
         $key = autoptimizeCriticalCSSCore::ao_ccss_key_status( false );
