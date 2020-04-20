@@ -74,7 +74,7 @@ class autoptimizeCriticalCSSSettings {
 
     public function admin_assets( $hook ) {
         // Return if plugin is not hooked.
-        if ( 'settings_page_ao_critcss' != $hook ) {
+        if ( 'settings_page_ao_critcss' != $hook && 'admin_page_ao_critcss' != $hook ) {
             return;
         }
 
