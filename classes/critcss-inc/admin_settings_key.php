@@ -13,8 +13,8 @@
  * @param string $color        Color to highlight message in.
  */
 function ao_ccss_render_key( $key, $status, $status_msg, $message, $color ) {
-    if ( is_multisite() && defined( 'AUTOPTIMIZE_CRITICALCSS_API_KEY' ) ) {
-        $key = __( 'API key provided by your WordPress network administrator, no need to enter anything here. In case of problems with the API key, contact your WordPress network administrator.', 'autoptimize' );
+    if ( defined( 'AUTOPTIMIZE_CRITICALCSS_API_KEY' ) ) {
+        $key = __( 'API key provided by your host/ WordPress administrator, no need to enter anything here. In case of problems with the API key, contact your host/ WordPress administrator.', 'autoptimize' );
     }
     ?>
     <ul id="key-panel">

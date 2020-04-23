@@ -122,8 +122,8 @@ class autoptimizeCriticalCSSBase {
             $autoptimize_ccss_options['ao_ccss_queue'] = json_decode( $autoptimize_ccss_options['ao_ccss_queue_raw'], true );
         }
 
-        // Override API key if multisite and if constant is defined.
-        if ( is_multisite() && defined( 'AUTOPTIMIZE_CRITICALCSS_API_KEY' ) ) {
+        // Override API key if constant is defined.
+        if ( defined( 'AUTOPTIMIZE_CRITICALCSS_API_KEY' ) ) {
             $autoptimize_ccss_options['ao_ccss_key'] = AUTOPTIMIZE_CRITICALCSS_API_KEY;
         }
 
