@@ -61,6 +61,11 @@ class autoptimizeCriticalCSSBase {
 
         // check if we need to upgrade.
         $this->check_upgrade();
+
+        // make sure ao_ccss_queue is scheduled OK if an API key is set.
+        if ( isset( $ao_ccss_key ) && ! empty( $ao_ccss_key ) && ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
+            wp_schedule_event( time(), apply_filters( 'ao_ccss_queue_schedule', 'ao_ccss' ), 'ao_ccss_queue' );
+        }
     }
 
     public function load_requires() {
