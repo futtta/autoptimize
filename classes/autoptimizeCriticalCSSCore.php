@@ -52,7 +52,7 @@ class autoptimizeCriticalCSSCore {
             $ao_ccss_types = $this->get_ao_ccss_core_types();
 
             // Extend conditional tags on plugin initalization.
-            add_action( 'init', array( $this, 'ao_ccss_extend_types' ) );
+            add_action( apply_filters( 'autoptimize_filter_ccss_extend_types_hook', 'init' ), array( $this, 'ao_ccss_extend_types' ) );
         }
     }
 
