@@ -260,7 +260,24 @@ add_filter('autoptimize_filter_main_use_mbstring', '__return_true');`
 
 = I can't get Critical CSS working =
 
-Check [the FAQ on the (legacy) "power-up" here]()https://wordpress.org/plugins/autoptimize-criticalcss/#faq, this info will be integrated in this FAQ at a later date.
+Check [the FAQ on the (legacy) "power-up" here](https://wordpress.org/plugins/autoptimize-criticalcss/#faq), this info will be integrated in this FAQ at a later date.
+
+= Do I still need the Critical CSS power-up when I have Autoptimize 2.7? =
+
+When both Autoptimize 2.7 and the separate Critical CSS power-up are installed and active, the power-up will handle the critical CSS part. When you disable the power-up, the integrated critical CSS code in Autoptimize 2.7 will take over.
+
+= What does "enable 404 fallbacks" do? Why would I need this? =
+
+Autoptimize caches aggregated & optimized CSS/ JS and links to those cached files are stored in the HTML, which will be stored in a page cache (which can be a plugin, can be at host level, can be at 3rd party, in the Google cache, in a browser). If there is HTML in a page cache that links to Autoptimized CSS/ JS that has been removed in the mean time (when the cache was cleared) then the page from cache will not look/ work as expected as the CSS or JS were not found (a 404 error).
+
+This (new, experimental) setting aims to prevent things from breaking by serving "fallback" CSS or JS. The fallback-files are copies of the first Autoptimized CSS & JS files created after the cache was emptied and as such will based on the homepage. This means that the CSS/ JS migth not apply 100% on other pages, but at least the impact of missing CSS/ JS will be lessened (often significantly).
+
+When the option is enabled, Autoptimize adds an `ErrorDocument 404` to the .htaccess (as used by Apache) and will also hook into WordPress core `template_redirect` to capture 404's handled by Wordpress. When using NGINX something like below should work (I'm not an NGINX specialist, but it does work for me);
+
+`
+location ~* /wp-content/cache/autoptimize/.*\.(js|css)$ {
+    try_files $uri $uri/ /wp-content/autoptimize_404_handler.php;
+}`
 
 = Where can I get help? =
 
