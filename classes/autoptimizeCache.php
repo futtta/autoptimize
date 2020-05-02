@@ -40,15 +40,20 @@ class autoptimizeCache
      */
     public function __construct( $md5, $ext = 'php' )
     {
+        $_min_ext = '';
+        if ( apply_filters( 'autoptimize_filter_cache_url_add_min_ext', false ) ) {
+            $_min_ext = '.min';
+        }
+
         $this->cachedir = AUTOPTIMIZE_CACHE_DIR;
         $this->nogzip   = AUTOPTIMIZE_CACHE_NOGZIP;
         if ( ! $this->nogzip ) {
-            $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.php';
+            $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . $_min_ext . '.php';
         } else {
             if ( in_array( $ext, array( 'js', 'css' ) ) ) {
-                $this->filename = $ext . '/' . AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.' . $ext;
+                $this->filename = $ext . '/' . AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . $_min_ext . '.' . $ext;
             } else {
-                $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . '.' . $ext;
+                $this->filename = AUTOPTIMIZE_CACHEFILE_PREFIX . $md5 . $_min_ext . '.' . $ext;
             }
         }
     }
@@ -128,6 +133,10 @@ class autoptimizeCache
                 }
             }
         }
+
+        // Provide 3rd party action hook for every cache file that is created.
+        // This hook can for example be used to inject a copy of the created cache file to a other domain.
+        do_action( 'autoptimize_action_cache_file_created', $this->cachedir . $this->filename );
     }
 
     /**
@@ -589,7 +598,7 @@ class autoptimizeCache
 </IfModule>';
             }
 
-            if ( self::do_fallback() ) {
+            if ( self::do_fallback() === true ) {
                 $content .= "\nErrorDocument 404 " . trailingslashit( parse_url( content_url(), PHP_URL_PATH ) ) . 'autoptimize_404_handler.php';
             }
             @file_put_contents( $htaccess, $content ); // @codingStandardsIgnoreLine
@@ -628,12 +637,50 @@ class autoptimizeCache
 
     /**
      * Tells if AO should try to avoid 404's by creating fallback filesize
-     * and create a php 404 handler and tell .htaccess to redirect to said handler.
+     * and create a php 404 handler and tell .htaccess to redirect to said handler
+     * and hook into WordPress to redirect 404 to said handler as well. NGINX users
+     * are smart enough to get this working, no? ;-)
      *
      * Return bool
      */
     public static function do_fallback() {
-        return apply_filters( 'autoptimize_filter_cache_do_fallback', false );
+        static $_do_fallback = null;
+
+        if ( null === $_do_fallback ) {
+            $_do_fallback = (bool) apply_filters( 'autoptimize_filter_cache_do_fallback', autoptimizeOptionWrapper::get_option( 'autoptimize_cache_fallback', '' ) );
+        }
+
+        return $_do_fallback;
+    }
+
+    /**
+     * Hooks into template_redirect, will act on 404-ing requests for
+     * Autoptimized files and redirects to the fallback CSS/ JS if available
+     * and 410'ing ("Gone") if fallback not available.
+     */
+    public static function wordpress_notfound_fallback() {
+        $original_request = strtok( $_SERVER['REQUEST_URI'], '?' );
+        if ( strpos( $original_request, wp_basename( WP_CONTENT_DIR ) . AUTOPTIMIZE_CACHE_CHILD_DIR ) !== false && is_404() ) {
+            // make sure this is not considered a 404.
+            global $wp_query;
+            $wp_query->is_404 = false;
+
+            // set fallback path.
+            $js_or_css     = pathinfo( $original_request, PATHINFO_EXTENSION );
+            $fallback_path = AUTOPTIMIZE_CACHE_DIR . $js_or_css . '/autoptimize_fallback.' . $js_or_css;
+
+            // set fallback URL.
+            $fallback_target = preg_replace( '/(.*)_(?:[a-z0-9]{32})\.(js|css)$/', '${1}_fallback.${2}', $original_request );
+
+            // redirect to fallback if possible.
+            if ( $original_request !== $fallback_target && file_exists( $fallback_path ) ) {
+                // redirect to fallback.
+                wp_redirect( $fallback_target, 302 );
+            } else {
+                // return HTTP 410 (gone) reponse.
+                status_header( 410 );
+            }
+        }
     }
 
     /**

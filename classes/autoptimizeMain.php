@@ -59,9 +59,10 @@ class autoptimizeMain
 
         add_action( 'autoptimize_setup_done', array( $this, 'version_upgrades_check' ) );
         add_action( 'autoptimize_setup_done', array( $this, 'check_cache_and_run' ) );
-        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_extra' ) );
-        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ) );
-        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss_tab' ) );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_extra' ), 15 );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ), 20 );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss' ), 11 );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_notfound_fallback' ), 10 );
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
         add_action( 'admin_init', array( 'PAnD', 'init' ) );
@@ -71,12 +72,9 @@ class autoptimizeMain
             add_action( 'init', 'autoptimizeOptionWrapper::check_multisite_on_saving_options' );
         }
 
-        register_activation_hook( $this->filepath, array( $this, 'on_activate' ) );
-    }
-
-    public function on_activate()
-    {
+        // register uninstall & deactivation hooks.
         register_uninstall_hook( $this->filepath, 'autoptimizeMain::on_uninstall' );
+        register_deactivation_hook( $this->filepath, 'autoptimizeMain::on_deactivation' );
     }
 
     public function load_textdomain()
@@ -216,11 +214,18 @@ class autoptimizeMain
         }
     }
 
-    public function maybe_run_criticalcss_tab()
+    public function maybe_run_criticalcss()
     {
-        // Loads criticalcss tab code if in admin (and not in admin-ajax.php)!
-        if ( autoptimizeConfig::is_admin_and_not_ajax() && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
-            new autoptimizeCriticalCSSSettings();
+        // Loads criticalcss if the power-up is not active and if the filter returns true.
+        if ( apply_filters( 'autoptimize_filter_criticalcss_active', true ) && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
+            new autoptimizeCriticalCSSBase();
+        }
+    }
+
+    public function maybe_run_notfound_fallback()
+    {
+        if ( autoptimizeCache::do_fallback() ) {
+            add_action( 'template_redirect', array( 'autoptimizeCache', 'wordpress_notfound_fallback' ) );
         }
     }
 
@@ -348,7 +353,7 @@ class autoptimizeMain
             // If setting says not to optimize cart/checkout.
             if ( false === $ao_noptimize && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_checkout', 'off' ) ) {
                 // Checking for woocommerce, easy digital downloads and wp ecommerce...
-                foreach ( array( 'is_checkout', 'is_cart', 'edd_is_checkout', 'wpsc_is_cart', 'wpsc_is_checkout' ) as $func ) {
+                foreach ( array( 'is_checkout', 'is_cart', 'is_account_page', 'edd_is_checkout', 'wpsc_is_cart', 'wpsc_is_checkout' ) as $func ) {
                     if ( function_exists( $func ) && $func() ) {
                         $ao_noptimize = true;
                         break;
@@ -558,12 +563,29 @@ class autoptimizeMain
             'autoptimize_imgopt_launched',
             'autoptimize_imgopt_settings',
             'autoptimize_minify_excluded',
+            'autoptimize_cache_fallback',
+            'autoptimize_ccss_rules',
+            'autoptimize_ccss_additional',
+            'autoptimize_ccss_queue',
+            'autoptimize_ccss_viewport',
+            'autoptimize_ccss_finclude',
+            'autoptimize_ccss_rlimit',
+            'autoptimize_ccss_noptimize',
+            'autoptimize_ccss_debug',
+            'autoptimize_ccss_key',
+            'autoptimize_ccss_keyst',
+            'autoptimize_ccss_version',
+            'autoptimize_ccss_loggedin',
+            'autoptimize_ccss_forcepath',
+            'autoptimize_ccss_deferjquery',
+            'autoptimize_ccss_domain',
         );
 
         if ( ! is_multisite() ) {
             foreach ( $delete_options as $del_opt ) {
                 delete_option( $del_opt );
             }
+            autoptimizeMain::remove_cronjobs();
         } else {
             global $wpdb;
             $blog_ids         = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
@@ -573,12 +595,43 @@ class autoptimizeMain
                 foreach ( $delete_options as $del_opt ) {
                     delete_option( $del_opt );
                 }
+                autoptimizeMain::remove_cronjobs();
             }
             switch_to_blog( $original_blog_id );
         }
 
-        if ( wp_get_schedule( 'ao_cachechecker' ) ) {
-            wp_clear_scheduled_hook( 'ao_cachechecker' );
+        // Remove AO CCSS cached files and directory.
+        $ao_ccss_dir = WP_CONTENT_DIR . '/uploads/ao_ccss/';
+        if ( file_exists( $ao_ccss_dir ) && is_dir( $ao_ccss_dir ) ) {
+            // fixme: should check for subdirs when in multisite and remove contents of those as well.
+            array_map( 'unlink', glob( AO_CCSS_DIR . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
+            rmdir( AO_CCSS_DIR );
+        }
+    }
+
+    public static function on_deactivation()
+    {
+        if ( is_multisite() && is_network_admin() ) {
+            global $wpdb;
+            $blog_ids         = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+            $original_blog_id = get_current_blog_id();
+            foreach ( $blog_ids as $blog_id ) {
+                switch_to_blog( $blog_id );
+                autoptimizeMain::remove_cronjobs();
+            }
+            switch_to_blog( $original_blog_id );
+        } else {
+            autoptimizeMain::remove_cronjobs();
+        }
+        autoptimizeCache::clearall();
+    }
+
+    public static function remove_cronjobs() {
+        // Remove scheduled events.
+        foreach ( array( 'ao_cachechecker', 'ao_ccss_queue', 'ao_ccss_maintenance' ) as $_event ) {
+            if ( wp_get_schedule( $_event ) ) {
+                wp_clear_scheduled_hook( $_event );
+            }
         }
     }
 

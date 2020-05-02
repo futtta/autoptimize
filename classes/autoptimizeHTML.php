@@ -16,7 +16,11 @@ class autoptimizeHTML extends autoptimizeBase
      */
     private $keepcomments = false;
 
-    /** @var bool */
+    /**
+     * Whether to force xhtml compatibility.
+     *
+     * @var bool
+     */
     private $forcexhtml = false;
 
     /**
