@@ -267,7 +267,7 @@ class autoptimizeScripts extends autoptimizeBase
                 }
                 $excl_js_arr = array_keys( $exclude_js );
             } else {
-                $excl_js_arr = array_filter( array_map( 'trim', explode( ', ', $exclude_js ) ) );
+                $excl_js_arr = array_filter( array_map( 'trim', explode( ',', $exclude_js ) ) );
             }
             $this->dontmove = array_merge( $excl_js_arr, $this->dontmove );
         }
