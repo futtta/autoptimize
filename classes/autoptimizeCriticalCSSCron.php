@@ -773,7 +773,7 @@ class autoptimizeCriticalCSSCron {
         }
     }
 
-    public static function ao_ccss_cleaning() {
+    public function ao_ccss_cleaning() {
         // Perform plugin maintenance
         // Truncate log file >= 1MB .
         if ( file_exists( AO_CCSS_LOG ) ) {
