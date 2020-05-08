@@ -136,18 +136,20 @@ class autoptimizeCriticalCSSBase {
     }
 
     public function on_upgrade() {
+        global $ao_ccss_key;
+
         // Create the cache directory if it doesn't exist already.
         if ( ! file_exists( AO_CCSS_DIR ) ) {
             mkdir( AO_CCSS_DIR, 0755, true );
         }
 
         // Create a scheduled event for the queue.
-        if ( ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
+        if ( isset( $ao_ccss_key ) && ! empty( $ao_ccss_key ) && ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
             wp_schedule_event( time(), apply_filters( 'ao_ccss_queue_schedule', 'ao_ccss' ), 'ao_ccss_queue' );
         }
 
         // Create a scheduled event for log maintenance.
-        if ( ! wp_next_scheduled( 'ao_ccss_maintenance' ) ) {
+        if ( isset( $ao_ccss_key ) && ! empty( $ao_ccss_key ) && ! wp_next_scheduled( 'ao_ccss_maintenance' ) ) {
             wp_schedule_event( time(), 'twicedaily', 'ao_ccss_maintenance' );
         }
     }

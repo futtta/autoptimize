@@ -208,13 +208,13 @@ class autoptimizeScripts extends autoptimizeBase
         // only optimize known good JS?
         $whitelist_js = apply_filters( 'autoptimize_filter_js_whitelist', '', $this->content );
         if ( ! empty( $whitelist_js ) ) {
-            $this->whitelist = array_filter( array_map( 'trim', explode( ', ', $whitelist_js ) ) );
+            $this->whitelist = array_filter( array_map( 'trim', explode( ',', $whitelist_js ) ) );
         }
 
         // is there JS we should simply remove?
         $removable_js = apply_filters( 'autoptimize_filter_js_removables', '', $this->content );
         if ( ! empty( $removable_js ) ) {
-            $this->jsremovables = array_filter( array_map( 'trim', explode( ', ', $removable_js ) ) );
+            $this->jsremovables = array_filter( array_map( 'trim', explode( ',', $removable_js ) ) );
         }
 
         // only header?
@@ -267,7 +267,7 @@ class autoptimizeScripts extends autoptimizeBase
                 }
                 $excl_js_arr = array_keys( $exclude_js );
             } else {
-                $excl_js_arr = array_filter( array_map( 'trim', explode( ', ', $exclude_js ) ) );
+                $excl_js_arr = array_filter( array_map( 'trim', explode( ',', $exclude_js ) ) );
             }
             $this->dontmove = array_merge( $excl_js_arr, $this->dontmove );
         }
