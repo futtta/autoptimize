@@ -134,12 +134,12 @@ function delJob(queue, jid, jpath) {
         height: 180,
         modal: true,
         buttons: {
-            <?php _e( 'Delete', 'autoptimize' ); ?>: function() {
+            "<?php _e( 'Delete', 'autoptimize' ); ?>": function() {
                 delete queue[jpath];
                 updateQueue(queue);
                 jQuery(this).dialog('close' );
             },
-            <?php _e( 'Cancel', 'autoptimize' ); ?>: function() {
+            "<?php _e( 'Cancel', 'autoptimize' ); ?>": function() {
                 jQuery(this).dialog('close' );
             }
         }
@@ -172,7 +172,7 @@ function retryJob(queue, jid, jpath) {
         height: 180,
         modal: true,
         buttons: {
-            <?php _e( 'Retry', 'autoptimize' ); ?>: function() {
+            "<?php _e( 'Retry', 'autoptimize' ); ?>": function() {
                 <?php
                 if ( $ao_ccss_debug ) {
                     echo "console.log( 'SHOULD retry job:', jid[0], jpath );\n";
@@ -187,7 +187,7 @@ function retryJob(queue, jid, jpath) {
                 updateQueue(queue);
                 jQuery(this).dialog('close' );
             },
-            <?php _e( 'Cancel', 'autoptimize' ); ?>: function() {
+            "<?php _e( 'Cancel', 'autoptimize' ); ?>": function() {
                 jQuery(this).dialog('close' );
             }
         }
