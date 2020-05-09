@@ -72,7 +72,12 @@ function drawTable(critCssArray) {
                     rmark = '';
                 }
             }
-            jQuery("#rules-list").append("<tr class='rule "+k+"Rule'><td class='type'><span class='badge " + typeClass + "'>" + type + "</span>" + rmark + "</td><td class='target'>" + i.replace(/(woo_|template_|custom_post_|edd_|bp_|bbp_)/,'') + "</td><td class='file'>" + file + "</td><td class='btn edit'><span class=\"button-secondary\" id=\"" + nodeId + "_edit\"><?php _e( 'Edit', 'autoptimize' ); ?></span></td><td class='btn delete'><span class=\"button-secondary\" id=\"" + nodeId + "_remove\"><?php _e( 'Remove', 'autoptimize' ); ?></span></td></tr>");
+            if ( k == "paths" ) {
+                target = '<a href="<?php echo AUTOPTIMIZE_WP_SITE_URL; ?>' + i + '" target="_blank">' + i + '</a>';
+            } else {
+                target = i.replace(/(woo_|template_|custom_post_|edd_|bp_|bbp_)/,'');
+            }
+            jQuery("#rules-list").append("<tr class='rule "+k+"Rule'><td class='type'><span class='badge " + typeClass + "'>" + type + "</span>" + rmark + "</td><td class='target'>" + target + "</td><td class='file'>" + file + "</td><td class='btn edit'><span class=\"button-secondary\" id=\"" + nodeId + "_edit\"><?php _e( 'Edit', 'autoptimize' ); ?></span></td><td class='btn delete'><span class=\"button-secondary\" id=\"" + nodeId + "_remove\"><?php _e( 'Remove', 'autoptimize' ); ?></span></td></tr>");
             jQuery("#" + nodeId + "_edit").click(function(){addEditRow(this.id);});
             jQuery("#" + nodeId + "_remove").click(function(){confirmRemove(this.id);});
         })
