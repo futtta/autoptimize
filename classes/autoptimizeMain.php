@@ -344,6 +344,11 @@ class autoptimizeMain
             if ( false === $ao_noptimize && array_key_exists( 'tve', $_GET ) && 'true' === $_GET['tve'] ) {
                 $ao_noptimize = true;
             }
+            
+            // and make sure Elementor & beaver builder previews aren't optimized.
+            if ( false === $ao_noptimize && ( array_key_exists( 'elementor-preview', $_GET ) || array_key_exists( 'fl_builder', $_GET ) ) ) {
+                $ao_noptimize = true;
+            }
 
             // If setting says not to optimize logged in user and user is logged in...
             if ( false === $ao_noptimize && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_optimize_logged', 'on' ) && is_user_logged_in() && current_user_can( 'edit_posts' ) ) {
