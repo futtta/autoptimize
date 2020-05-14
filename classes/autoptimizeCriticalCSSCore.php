@@ -70,11 +70,11 @@ class autoptimizeCriticalCSSCore {
         // Only if keystatus is OK and option to add CCSS for logged on users is on or user is not logged in.
         if ( ( $ao_ccss_keyst && 2 == $ao_ccss_keyst ) && ( $ao_ccss_loggedin || ! is_user_logged_in() ) ) {
             // Check for a valid CriticalCSS based on path to return its contents.
-            $req_path = strtok( urldecode( $_SERVER['REQUEST_URI'] ), '?' );
+            $req_path = strtok( $_SERVER['REQUEST_URI'], '?' );
             if ( ! empty( $ao_ccss_rules['paths'] ) ) {
                 foreach ( $ao_ccss_rules['paths'] as $path => $rule ) {
                     // explicit match OR partial match if MANUAL rule.
-                    if ( $req_path == $path || ( false == $rule['hash'] && false != $rule['file'] && strpos( $req_path, str_replace( site_url(), '', $path ) ) !== false ) ) {
+                    if ( $req_path == $path || urldecode( $req_path ) == $path || ( false == $rule['hash'] && false != $rule['file'] && strpos( $req_path, str_replace( site_url(), '', $path ) ) !== false ) ) {
                         if ( file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
                             $_ccss_contents = file_get_contents( AO_CCSS_DIR . $rule['file'] );
                             if ( 'none' != $_ccss_contents ) {
