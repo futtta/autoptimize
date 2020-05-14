@@ -932,7 +932,7 @@ class autoptimizeImages
             // replace background-image URL with SVG placeholder.
             $out = str_replace( $matches[2], $placeholder, $matches[0] );
             // add data-bg attribute with real background-image URL for lazyload to pick up.
-            $out = str_replace( $matches[1], $matches[1] . ' data-bg="' . trim( str_replace( "\r\n", '', $matches[2] ) ) . '"', $out );
+            $out = str_replace( $matches[1], $matches[1] . ' data-bg="' . trim( str_replace( array( "\r\n", '&quot;' ), '', $matches[2] ) ) . '"', $out );
             // add lazyload class to tag.
             $out = $this->inject_classes_in_tag( $out, "$lazyload_class " );
             return $out;
