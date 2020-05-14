@@ -195,7 +195,10 @@ class autoptimizeCriticalCSSEnqueue {
 
         // Iterates over the array to match a type.
         foreach ( $ao_ccss_types as $type ) {
-            if ( strpos( $type, 'custom_post_' ) !== false ) {
+            if ( is_404() ) {
+                $page_type = 'is_404';
+                break;
+            } elseif ( strpos( $type, 'custom_post_' ) !== false ) {
                 // Match custom post types.
                 if ( get_post_type( get_the_ID() ) === substr( $type, 12 ) ) {
                     $page_type = $type;
