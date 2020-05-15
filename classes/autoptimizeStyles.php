@@ -381,7 +381,7 @@ class autoptimizeStyles extends autoptimizeBase
     private function optionally_defer_excluded( $tag, $url = '' )
     {
         // Defer single CSS if "inline & defer" is ON and there is inline CSS.
-        if ( ! empty( $tag ) && $this->defer && ! empty( $this->defer_inline ) && apply_filters( 'autoptimize_filter_css_defer_excluded', true, $tag ) ) {
+        if ( ! empty( $tag ) && false === strpos( $tag, ' onload=' ) && $this->defer && ! empty( $this->defer_inline ) && apply_filters( 'autoptimize_filter_css_defer_excluded', true, $tag ) ) {
             // Get/ set (via filter) the JS to be triggers onload of the preloaded CSS.
             $_preload_onload = apply_filters(
                 'autoptimize_filter_css_preload_onload',
