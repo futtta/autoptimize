@@ -407,26 +407,38 @@ class autoptimizeCriticalCSSCore {
     }
 
     public function ao_ccss_key_validation( $key ) {
+        global $ao_ccss_noptimize;
+
         // POST a dummy job to criticalcss.com to check for key validation
         // Prepare home URL for the request.
         $src_url = get_home_url();
+
+        // Avoid AO optimizations if required by config or avoid lazyload if lazyload is active in AO.
+        if ( ! empty( $ao_ccss_noptimize ) ) {
+            $src_url .= '?ao_noptirocket=1';
+        } elseif ( class_exists( 'autoptimizeImages', false ) && autoptimizeImages::should_lazyload_wrapper() ) {
+            $src_url .= '?ao_nolazy=1';
+        }
+
         $src_url = apply_filters( 'autoptimize_filter_ccss_cron_srcurl', $src_url );
 
         // Prepare the request.
         $url  = esc_url_raw( AO_CCSS_API . 'generate' );
         $args = array(
             'headers' => array(
-                'User-Agent'    => 'Autoptimize CriticalCSS Power-Up v' . AO_CCSS_VER,
+                'User-Agent'    => 'Autoptimize v' . AO_CCSS_VER,
                 'Content-type'  => 'application/json; charset=utf-8',
                 'Authorization' => 'JWT ' . $key,
                 'Connection'    => 'close',
             ),
             // Body must be JSON.
             'body'    => json_encode(
-                array(
-                    'url'    => $src_url,
-                    'aff'    => 1,
-                    'aocssv' => AO_CCSS_VER,
+                apply_filters( 'autoptimize_ccss_cron_api_generate_body',
+                    array(
+                        'url'    => $src_url,
+                        'aff'    => 1,
+                        'aocssv' => AO_CCSS_VER,
+                    )
                 )
             ),
         );
