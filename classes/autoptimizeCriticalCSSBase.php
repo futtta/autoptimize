@@ -87,8 +87,8 @@ class autoptimizeCriticalCSSBase {
 
     public static function fetch_options() {
         // Get options.
-        $autoptimize_ccss_options['ao_css_defer']          = get_option( 'autoptimize_css_defer' );
-        $autoptimize_ccss_options['ao_css_defer_inline']   = get_option( 'autoptimize_css_defer_inline' );
+        $autoptimize_ccss_options['ao_css_defer']          = autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer' );
+        $autoptimize_ccss_options['ao_css_defer_inline']   = autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer_inline' );
         $autoptimize_ccss_options['ao_ccss_rules_raw']     = get_option( 'autoptimize_ccss_rules', false );
         $autoptimize_ccss_options['ao_ccss_additional']    = get_option( 'autoptimize_ccss_additional' );
         $autoptimize_ccss_options['ao_ccss_queue_raw']     = get_option( 'autoptimize_ccss_queue', false );

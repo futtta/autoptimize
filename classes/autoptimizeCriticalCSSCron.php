@@ -485,6 +485,9 @@ class autoptimizeCriticalCSSCron {
             $body['forceInclude'] = $finclude;
         }
 
+        // Add filter to allow the body array to be altered (e.g. to add customPageHeaders).
+        $body = apply_filters( 'autoptimize_ccss_cron_api_generate_body', $body );
+
         // Body must be json and log it.
         $body = json_encode( $body );
         autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: POST generate request body is ' . $body, 3 );

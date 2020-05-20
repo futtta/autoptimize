@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 2.7.1
+Stable tag: 2.7.2
 
 Autoptimize speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -294,6 +294,15 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.7.2 =
+* Critical CSS: fix settings page issues with certain translation strings
+* Critical CSS: fix "inline & defer" not being "seen" on multisite network settings
+* Critical CSS: add links on path-based rules
+* Critical CSS: fix for non-asci URL's not matching rules
+* Improvement: auto-disable autoptimize on misc. page builder URL's
+* Improvement: don't change non-aggregated CSS if it already has an onload attribute
+* Image lazyload improvement: remove `&quot;` from around background images
 
 = 2.7.1 =
 * A couple of small bugfixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).

@@ -70,11 +70,11 @@ class autoptimizeCriticalCSSCore {
         // Only if keystatus is OK and option to add CCSS for logged on users is on or user is not logged in.
         if ( ( $ao_ccss_keyst && 2 == $ao_ccss_keyst ) && ( $ao_ccss_loggedin || ! is_user_logged_in() ) ) {
             // Check for a valid CriticalCSS based on path to return its contents.
-            $req_path = strtok( urldecode( $_SERVER['REQUEST_URI'] ), '?' );
+            $req_path = strtok( $_SERVER['REQUEST_URI'], '?' );
             if ( ! empty( $ao_ccss_rules['paths'] ) ) {
                 foreach ( $ao_ccss_rules['paths'] as $path => $rule ) {
                     // explicit match OR partial match if MANUAL rule.
-                    if ( $req_path == $path || ( false == $rule['hash'] && false != $rule['file'] && strpos( $req_path, str_replace( site_url(), '', $path ) ) !== false ) ) {
+                    if ( $req_path == $path || urldecode( $req_path ) == $path || ( false == $rule['hash'] && false != $rule['file'] && strpos( $req_path, str_replace( site_url(), '', $path ) ) !== false ) ) {
                         if ( file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
                             $_ccss_contents = file_get_contents( AO_CCSS_DIR . $rule['file'] );
                             if ( 'none' != $_ccss_contents ) {
@@ -407,26 +407,38 @@ class autoptimizeCriticalCSSCore {
     }
 
     public function ao_ccss_key_validation( $key ) {
+        global $ao_ccss_noptimize;
+
         // POST a dummy job to criticalcss.com to check for key validation
         // Prepare home URL for the request.
         $src_url = get_home_url();
+
+        // Avoid AO optimizations if required by config or avoid lazyload if lazyload is active in AO.
+        if ( ! empty( $ao_ccss_noptimize ) ) {
+            $src_url .= '?ao_noptirocket=1';
+        } elseif ( class_exists( 'autoptimizeImages', false ) && autoptimizeImages::should_lazyload_wrapper() ) {
+            $src_url .= '?ao_nolazy=1';
+        }
+
         $src_url = apply_filters( 'autoptimize_filter_ccss_cron_srcurl', $src_url );
 
         // Prepare the request.
         $url  = esc_url_raw( AO_CCSS_API . 'generate' );
         $args = array(
             'headers' => array(
-                'User-Agent'    => 'Autoptimize CriticalCSS Power-Up v' . AO_CCSS_VER,
+                'User-Agent'    => 'Autoptimize v' . AO_CCSS_VER,
                 'Content-type'  => 'application/json; charset=utf-8',
                 'Authorization' => 'JWT ' . $key,
                 'Connection'    => 'close',
             ),
             // Body must be JSON.
             'body'    => json_encode(
-                array(
-                    'url'    => $src_url,
-                    'aff'    => 1,
-                    'aocssv' => AO_CCSS_VER,
+                apply_filters( 'autoptimize_ccss_cron_api_generate_body',
+                    array(
+                        'url'    => $src_url,
+                        'aff'    => 1,
+                        'aocssv' => AO_CCSS_VER,
+                    )
                 )
             ),
         );
