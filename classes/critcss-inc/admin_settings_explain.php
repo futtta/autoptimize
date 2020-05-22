@@ -38,6 +38,7 @@ function ao_ccss_render_explain() {
             }
 
             // and echo it.
+            echo get_locale();
             echo $ccss_explanation;
             ?>
         </div>
