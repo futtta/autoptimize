@@ -22,7 +22,7 @@ function ao_ccss_render_explain() {
             if ( apply_filters( 'autoptimize_settingsscreen_remotehttp', true ) ) {
                 $ccss_explanation = get_transient( 'ao_ccss_explain' );
                 if ( empty( $ccss_explanation ) ) {
-                    $ccss_expl_resp = wp_remote_get( 'https://misc.optimizingmatters.com/autoptimize_ccss_explain.html?ao_ver=' . AUTOPTIMIZE_PLUGIN_VERSION );
+                    $ccss_expl_resp = wp_remote_get( 'https://misc.optimizingmatters.com/autoptimize_ccss_explain_i18n.html?ao_ver=' . AUTOPTIMIZE_PLUGIN_VERSION );
                     if ( ! is_wp_error( $ccss_expl_resp ) ) {
                         if ( '200' == wp_remote_retrieve_response_code( $ccss_expl_resp ) ) {
                             $ccss_explanation = wp_kses_post( wp_remote_retrieve_body( $ccss_expl_resp ) );
@@ -39,6 +39,9 @@ function ao_ccss_render_explain() {
 
             // and echo it.
             echo $ccss_explanation;
+
+            // and echo the JS to switch between languages.
+            echo "<script>jQuery('.ao_i18n').hide();d=document;lang=d.getElementsByTagName('html')[0].getAttribute('lang').substring(0,2);if(d.getElementById(lang)!= null){jQuery('#'+lang).show();}else{jQuery('#default').show();}</script>";
             ?>
         </div>
         </ul>
