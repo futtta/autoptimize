@@ -387,7 +387,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
             $details = ', ~' . $ao_cache_size . ' total';
         }
         // translators: Kilobytes + timestamp shown.
-        printf( __( '%1$s files, totalling %2$s Kbytes (calculated at %3$s)', 'autoptimize' ), $ao_stat_arr[0], $ao_cache_size, date( 'H:i e', $ao_stat_arr[2] ) );
+        printf( __( '%1$s files, totalling %2$s (calculated at %3$s)', 'autoptimize' ), $ao_stat_arr[0], $ao_cache_size, date( 'H:i e', $ao_stat_arr[2] ) );
     }
     ?>
 </td>
