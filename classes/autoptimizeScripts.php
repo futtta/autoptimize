@@ -345,8 +345,9 @@ class autoptimizeScripts extends autoptimizeBase
                                 if ( ! empty( $minified_url ) ) {
                                     // Replace original URL with minified URL from cache.
                                     $new_tag = str_replace( $url, $minified_url, $new_tag );
-                                } else {
-                                    // Remove the original script tag, because cache content is empty.
+                                } elseif ( apply_filters( 'autoptimize_filter_ccsjs_remove_empty_minified_url', false ) ) {
+                                    // Remove the original script tag, because cache content is empty but only if filter
+                                    // is trued because $minified_url is also false if original JS is minified already.
                                     $new_tag = '';
                                 }
                             }

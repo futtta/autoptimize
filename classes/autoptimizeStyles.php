@@ -343,8 +343,9 @@ class autoptimizeStyles extends autoptimizeBase
                                 if ( ! empty( $minified_url ) ) {
                                     // Replace orig URL with cached minified URL.
                                     $new_tag = str_replace( $url, $minified_url, $tag );
-                                } else {
-                                    // Remove the original style tag, because cache content is empty.
+                                } elseif ( apply_filters( 'autoptimize_filter_ccsjs_remove_empty_minified_url', false ) ) {
+                                    // Remove the original style tag, because cache content is empty but only if
+                                    // filter is true-ed because $minified_url is also false if file is minified already.
                                     $new_tag = '';
                                 }
                             }
