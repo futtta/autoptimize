@@ -23,7 +23,7 @@ function my_ao_override_dataursize($urisizeIn) {
 @return: comma-seperated list of images to exclude */
 // add_filter('autoptimize_filter_css_datauri_exclude','my_ao_exclude_image',10,1);
 function my_ao_exclude_image($imageexcl) {
-	return "adfreebutton.jpg, otherimage.png";
+	return $imageexcl . ", adfreebutton.jpg, otherimage.png";
 	}
 
 /* autoptimize_filter_js_defer: change flag added to javascript
@@ -38,12 +38,12 @@ function my_ao_override_defer($defer) {
 /* autoptimize_filter_noptimize: stop autoptimize from optimizing, e.g. based on URL as in example
 
 @return: boolean, true or false */
-// add_filter('autoptimize_filter_noptimize','my_ao_noptimize',10,0);
-function my_ao_noptimize() {
+// add_filter('autoptimize_filter_noptimize','my_ao_noptimize',10,1);
+function my_ao_noptimize( $flag_in ) {
 	if (strpos($_SERVER['REQUEST_URI'],'no-autoptimize-now')!==false) {
 		return true;
 	} else {
-		return false;
+		return $flag_in;
 	}
 }
 
