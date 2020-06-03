@@ -295,6 +295,13 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.7.3 =
+* Critical CSS: cache settings in the PHP process instead of re-fetching them
+* inline & defer CSS: fix for some excluded files not being preloaded
+* 404 fallback: only create fallback files for CSS/ JS, not for (background-)images
+* copy changes as suggested by Cyrille (@css31), un grand merci!
+* misc. other minor fixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
+
 = 2.7.2 =
 * Critical CSS: fix settings page issues with certain translation strings
 * Critical CSS: fix "inline & defer" not being "seen" on multisite network settings
