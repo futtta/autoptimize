@@ -119,7 +119,7 @@ class autoptimizeCache
             if ( self::do_fallback() && strpos( $this->filename, '_snippet_' ) === false && strpos( $this->filename, '_single_' ) === false ) {
                 $_extension     = pathinfo( $this->filename, PATHINFO_EXTENSION );
                 $_fallback_file = AUTOPTIMIZE_CACHEFILE_PREFIX . 'fallback.' . $_extension;
-                if ( ! file_exists( $this->cachedir . $_extension . '/' . $_fallback_file ) ) {
+                if ( ( 'css' === $_extension || 'js' === $_extension ) && ! file_exists( $this->cachedir . $_extension . '/' . $_fallback_file ) ) {
                     file_put_contents( $this->cachedir . $_extension . '/' . $_fallback_file, $data );
                 }
             }

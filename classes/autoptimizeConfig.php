@@ -302,7 +302,7 @@ echo ' <i>' . __( '(deprecated)', 'autoptimize' ) . '</i>';
 <th scope="row"><?php _e( 'Inline and Defer CSS?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_defer" id="autoptimize_css_defer" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer' ) ? 'checked="checked" ' : ''; ?>/>
 <?php
-_e( 'Inline "above the fold CSS" while loading the main autoptimized CSS only after page load. <a href="http://wordpress.org/plugins/autoptimize/faq/" target="_blank">Check the FAQ</a> for more info.', 'autoptimize' );
+_e( 'Inline "above the fold CSS" while loading the main autoptimized CSS only after page load. <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank">Check the FAQ</a> for more info.', 'autoptimize' );
 echo ' ';
 $critcss_settings_url = get_admin_url( null, 'options-general.php?page=ao_critcss' );
 // translators: links "autoptimize critical CSS" tab.
@@ -379,7 +379,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
             $details = ', ~' . $ao_cache_size . ' total';
         }
         // translators: Kilobytes + timestamp shown.
-        printf( __( '%1$s files, totalling %2$s Kbytes (calculated at %3$s)', 'autoptimize' ), $ao_stat_arr[0], $ao_cache_size, date( 'H:i e', $ao_stat_arr[2] ) );
+        printf( __( '%1$s files, totalling %2$s (calculated at %3$s)', 'autoptimize' ), $ao_stat_arr[0], $ao_cache_size, date( 'H:i e', $ao_stat_arr[2] ) );
     }
     ?>
 </td>
@@ -481,7 +481,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
             </div>
         </div>
     </div>
-    <div style="float:right;margin:50px 15px;"><a href="http://blog.futtta.be/2013/10/21/do-not-donate-to-me/" target="_blank"><img width="100px" height="85px" src="<?php echo plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) . '/external/do_not_donate_smallest.png'; ?>" title="<?php _e( 'Do not donate for this plugin!', 'autoptimize' ); ?>"></a></div>
+    <div style="float:right;margin:50px 15px;"><a href="https://blog.futtta.be/2013/10/21/do-not-donate-to-me/" target="_blank"><img width="100px" height="85px" src="<?php echo plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) . '/external/do_not_donate_smallest.png'; ?>" title="<?php _e( 'Do not donate for this plugin!', 'autoptimize' ); ?>"></a></div>
 </div>
 
 <script type="text/javascript">

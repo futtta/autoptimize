@@ -40,6 +40,7 @@ class autoptimizeCriticalCSSBase {
             // fixme: AO_CCSS_URL should be read from the autoptimize availability json stored as option.
             define( 'AO_CCSS_URL', 'https://criticalcss.com' );
             define( 'AO_CCSS_API', AO_CCSS_URL . '/api/premium/' );
+            define( 'AO_CCSS_SLEEP', 10 );
         }
 
         $this->filepath = __FILE__;
@@ -86,50 +87,54 @@ class autoptimizeCriticalCSSBase {
     }
 
     public static function fetch_options() {
-        // Get options.
-        $autoptimize_ccss_options['ao_css_defer']          = autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer' );
-        $autoptimize_ccss_options['ao_css_defer_inline']   = autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer_inline' );
-        $autoptimize_ccss_options['ao_ccss_rules_raw']     = get_option( 'autoptimize_ccss_rules', false );
-        $autoptimize_ccss_options['ao_ccss_additional']    = get_option( 'autoptimize_ccss_additional' );
-        $autoptimize_ccss_options['ao_ccss_queue_raw']     = get_option( 'autoptimize_ccss_queue', false );
-        $autoptimize_ccss_options['ao_ccss_viewport']      = get_option( 'autoptimize_ccss_viewport', false );
-        $autoptimize_ccss_options['ao_ccss_finclude']      = get_option( 'autoptimize_ccss_finclude', false );
-        $autoptimize_ccss_options['ao_ccss_rlimit']        = get_option( 'autoptimize_ccss_rlimit', '5' );
-        $autoptimize_ccss_options['ao_ccss_noptimize']     = get_option( 'autoptimize_ccss_noptimize', false );
-        $autoptimize_ccss_options['ao_ccss_debug']         = get_option( 'autoptimize_ccss_debug', false );
-        $autoptimize_ccss_options['ao_ccss_key']           = get_option( 'autoptimize_ccss_key' );
-        $autoptimize_ccss_options['ao_ccss_keyst']         = get_option( 'autoptimize_ccss_keyst' );
-        $autoptimize_ccss_options['ao_ccss_loggedin']      = get_option( 'autoptimize_ccss_loggedin', '1' );
-        $autoptimize_ccss_options['ao_ccss_forcepath']     = get_option( 'autoptimize_ccss_forcepath', '1' );
-        $autoptimize_ccss_options['ao_ccss_servicestatus'] = get_option( 'autoptimize_service_availablity' );
-        $autoptimize_ccss_options['ao_ccss_deferjquery']   = get_option( 'autoptimize_ccss_deferjquery', false );
-        $autoptimize_ccss_options['ao_ccss_domain']        = get_option( 'autoptimize_ccss_domain' );
+        static $autoptimize_ccss_options = null;
 
-        if ( strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'http' ) === false && strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'uggc' ) === 0 ) {
-            $autoptimize_ccss_options['ao_ccss_domain'] = str_rot13( $autoptimize_ccss_options['ao_ccss_domain'] );
-        } elseif ( strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'http' ) !== false ) {
-            // not rot13'ed yet, do so now (goal; avoid migration plugins change the bound domain).
-            update_option( 'autoptimize_ccss_domain', str_rot13( $autoptimize_ccss_options['ao_ccss_domain'] ) );
-        }
+        if ( null === $autoptimize_ccss_options ) {
+            // not cached yet, fetching from WordPress options.
+            $autoptimize_ccss_options['ao_css_defer']          = autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer' );
+            $autoptimize_ccss_options['ao_css_defer_inline']   = autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer_inline' );
+            $autoptimize_ccss_options['ao_ccss_rules_raw']     = get_option( 'autoptimize_ccss_rules', false );
+            $autoptimize_ccss_options['ao_ccss_additional']    = get_option( 'autoptimize_ccss_additional' );
+            $autoptimize_ccss_options['ao_ccss_queue_raw']     = get_option( 'autoptimize_ccss_queue', false );
+            $autoptimize_ccss_options['ao_ccss_viewport']      = get_option( 'autoptimize_ccss_viewport', false );
+            $autoptimize_ccss_options['ao_ccss_finclude']      = get_option( 'autoptimize_ccss_finclude', false );
+            $autoptimize_ccss_options['ao_ccss_rlimit']        = get_option( 'autoptimize_ccss_rlimit', '5' );
+            $autoptimize_ccss_options['ao_ccss_noptimize']     = get_option( 'autoptimize_ccss_noptimize', false );
+            $autoptimize_ccss_options['ao_ccss_debug']         = get_option( 'autoptimize_ccss_debug', false );
+            $autoptimize_ccss_options['ao_ccss_key']           = get_option( 'autoptimize_ccss_key' );
+            $autoptimize_ccss_options['ao_ccss_keyst']         = get_option( 'autoptimize_ccss_keyst' );
+            $autoptimize_ccss_options['ao_ccss_loggedin']      = get_option( 'autoptimize_ccss_loggedin', '1' );
+            $autoptimize_ccss_options['ao_ccss_forcepath']     = get_option( 'autoptimize_ccss_forcepath', '1' );
+            $autoptimize_ccss_options['ao_ccss_servicestatus'] = get_option( 'autoptimize_service_availablity' );
+            $autoptimize_ccss_options['ao_ccss_deferjquery']   = get_option( 'autoptimize_ccss_deferjquery', false );
+            $autoptimize_ccss_options['ao_ccss_domain']        = get_option( 'autoptimize_ccss_domain' );
 
-        // Setup the rules array.
-        if ( empty( $autoptimize_ccss_options['ao_ccss_rules_raw'] ) ) {
-            $autoptimize_ccss_options['ao_ccss_rules']['paths'] = array();
-            $autoptimize_ccss_options['ao_ccss_rules']['types'] = array();
-        } else {
-            $autoptimize_ccss_options['ao_ccss_rules'] = json_decode( $autoptimize_ccss_options['ao_ccss_rules_raw'], true );
-        }
+            if ( strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'http' ) === false && strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'uggc' ) === 0 ) {
+                $autoptimize_ccss_options['ao_ccss_domain'] = str_rot13( $autoptimize_ccss_options['ao_ccss_domain'] );
+            } elseif ( strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'http' ) !== false ) {
+                // not rot13'ed yet, do so now (goal; avoid migration plugins change the bound domain).
+                update_option( 'autoptimize_ccss_domain', str_rot13( $autoptimize_ccss_options['ao_ccss_domain'] ) );
+            }
 
-        // Setup the queue array.
-        if ( empty( $autoptimize_ccss_options['ao_ccss_queue_raw'] ) ) {
-            $autoptimize_ccss_options['ao_ccss_queue'] = array();
-        } else {
-            $autoptimize_ccss_options['ao_ccss_queue'] = json_decode( $autoptimize_ccss_options['ao_ccss_queue_raw'], true );
-        }
+            // Setup the rules array.
+            if ( empty( $autoptimize_ccss_options['ao_ccss_rules_raw'] ) ) {
+                $autoptimize_ccss_options['ao_ccss_rules']['paths'] = array();
+                $autoptimize_ccss_options['ao_ccss_rules']['types'] = array();
+            } else {
+                $autoptimize_ccss_options['ao_ccss_rules'] = json_decode( $autoptimize_ccss_options['ao_ccss_rules_raw'], true );
+            }
 
-        // Override API key if constant is defined.
-        if ( defined( 'AUTOPTIMIZE_CRITICALCSS_API_KEY' ) ) {
-            $autoptimize_ccss_options['ao_ccss_key'] = AUTOPTIMIZE_CRITICALCSS_API_KEY;
+            // Setup the queue array.
+            if ( empty( $autoptimize_ccss_options['ao_ccss_queue_raw'] ) ) {
+                $autoptimize_ccss_options['ao_ccss_queue'] = array();
+            } else {
+                $autoptimize_ccss_options['ao_ccss_queue'] = json_decode( $autoptimize_ccss_options['ao_ccss_queue_raw'], true );
+            }
+
+            // Override API key if constant is defined.
+            if ( defined( 'AUTOPTIMIZE_CRITICALCSS_API_KEY' ) ) {
+                $autoptimize_ccss_options['ao_ccss_key'] = AUTOPTIMIZE_CRITICALCSS_API_KEY;
+            }
         }
 
         return $autoptimize_ccss_options;

@@ -184,7 +184,7 @@ class autoptimizeExtra
         }
 
         // Preload!
-        if ( ! empty( $options['autoptimize_extra_text_field_7'] ) ) {
+        if ( ! empty( $options['autoptimize_extra_text_field_7'] ) || has_filter( 'autoptimize_filter_extra_tobepreloaded' ) ) {
             add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_preload' ), 10, 2 );
         }
     }

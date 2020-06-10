@@ -119,10 +119,10 @@ class autoptimizeCriticalCSSCron {
                         // Set job hash.
                         $jprops['hash'] = $hash;
 
-                        // If this is not the first job, wait 15 seconds before process next job due criticalcss.com API limits.
+                        // If this is not the first job, wait 10 seconds before process next job due criticalcss.com API limits.
                         if ( $jr > 1 ) {
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Waiting 15 seconds due to criticalcss.com API limits', 3 );
-                            sleep( 15 );
+                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Waiting ' . AO_CCSS_SLEEP . ' seconds due to criticalcss.com API limits', 3 );
+                            sleep( AO_CCSS_SLEEP );
                         }
 
                         // Dispatch the job generate request and increment request count.
@@ -187,10 +187,10 @@ class autoptimizeCriticalCSSCron {
                     // Log the pending job.
                     autoptimizeCriticalCSSCore::ao_ccss_log( 'Found PENDING job with local ID <' . $jprops['ljid'] . '>, continuing its queue processing', 3 );
 
-                    // If this is not the first job, wait 15 seconds before process next job due criticalcss.com API limits.
+                    // If this is not the first job, wait before process next job due criticalcss.com API limits.
                     if ( $jr > 1 ) {
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Waiting 15 seconds due to criticalcss.com API limits', 3 );
-                        sleep( 15 );
+                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Waiting ' . AO_CCSS_SLEEP . ' seconds due to criticalcss.com API limits', 3 );
+                        sleep( AO_CCSS_SLEEP );
                     }
 
                     // Dispatch the job result request and increment request count.
