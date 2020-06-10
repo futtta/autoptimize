@@ -31,16 +31,22 @@ class autoptimizeCriticalCSSBase {
                 define( 'AO_CCSS_DIR', WP_CONTENT_DIR . '/uploads/ao_ccss/' );
             }
 
-            // Define support files locations.
-            define( 'AO_CCSS_LOCK', AO_CCSS_DIR . 'queue.lock' );
-            define( 'AO_CCSS_LOG', AO_CCSS_DIR . 'queuelog.html' );
-            define( 'AO_CCSS_DEBUG', AO_CCSS_DIR . 'queue.json' );
-
             // Define constants for criticalcss.com base path and API endpoints.
             // fixme: AO_CCSS_URL should be read from the autoptimize availability json stored as option.
             define( 'AO_CCSS_URL', 'https://criticalcss.com' );
             define( 'AO_CCSS_API', AO_CCSS_URL . '/api/premium/' );
             define( 'AO_CCSS_SLEEP', 10 );
+        }
+
+        // Define support files locations, in case they are not already defined
+        if ( ! defined( 'AO_CCSS_LOCK' ) ) {
+            define( 'AO_CCSS_LOCK', AO_CCSS_DIR . 'queue.lock' );
+        }
+        if ( ! defined( 'AO_CCSS_LOG' ) ) {
+            define( 'AO_CCSS_LOG', AO_CCSS_DIR . 'queuelog.html' );
+        }
+        if ( ! defined( 'AO_CCSS_DEBUG' ) ) {
+            define( 'AO_CCSS_DEBUG', AO_CCSS_DIR . 'queue.json' );
         }
 
         $this->filepath = __FILE__;
