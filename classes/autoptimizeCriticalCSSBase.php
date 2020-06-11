@@ -36,8 +36,6 @@ class autoptimizeCriticalCSSBase {
             // fixme: AO_CCSS_URL should be read from the autoptimize availability json stored as option.
             define( 'AO_CCSS_URL', 'https://criticalcss.com' );
             define( 'AO_CCSS_API', AO_CCSS_URL . '/api/premium/' );
-        }
-        if ( ! defined( 'AO_CCSS_SLEEP' ) ) {
             define( 'AO_CCSS_SLEEP', 10 );
         }
 
