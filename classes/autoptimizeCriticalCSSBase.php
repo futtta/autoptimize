@@ -20,9 +20,6 @@ class autoptimizeCriticalCSSBase {
     {
         // define constant, but only once.
         if ( ! defined( 'AO_CCSS_DIR' ) ) {
-            // Define plugin version.
-            define( 'AO_CCSS_VER', 'AO_' . AUTOPTIMIZE_PLUGIN_VERSION );
-
             // Define a constant with the directory to store critical CSS in.
             if ( is_multisite() ) {
                 $blog_id = get_current_blog_id();
@@ -30,6 +27,11 @@ class autoptimizeCriticalCSSBase {
             } else {
                 define( 'AO_CCSS_DIR', WP_CONTENT_DIR . '/uploads/ao_ccss/' );
             }
+        }
+
+        if ( ! defined( 'AO_CCSS_VER' ) ) {
+            // Define plugin version.
+            define( 'AO_CCSS_VER', 'AO_' . AUTOPTIMIZE_PLUGIN_VERSION );
 
             // Define constants for criticalcss.com base path and API endpoints.
             // fixme: AO_CCSS_URL should be read from the autoptimize availability json stored as option.
