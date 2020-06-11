@@ -53,6 +53,9 @@ class autoptimizeCriticalCSSCore {
 
             // Extend conditional tags on plugin initalization.
             add_action( apply_filters( 'autoptimize_filter_ccss_extend_types_hook', 'init' ), array( $this, 'ao_ccss_extend_types' ) );
+
+            // When autoptimize cache is cleared, also clear transient cache for page templates
+            add_action( 'autoptimize_action_cachepurged', array( 'autoptimizeCriticalCSSCore', 'ao_ccss_clear_page_tpl_cache' ), 10, 0 );
         }
     }
 
@@ -203,7 +206,12 @@ class autoptimizeCriticalCSSCore {
         }
 
         // Templates.
-        $templates = wp_get_theme()->get_page_templates();
+        // Transient cache to avoid frequent disk reads
+        $templates = get_transient( 'autoptimize_ccss_page_templates' );
+        if(!$templates) {
+            $templates = wp_get_theme()->get_page_templates();
+            set_transient( 'autoptimize_ccss_page_templates', $templates, HOUR_IN_SECONDS );
+        }
         foreach ( $templates as $tplfile => $tplname ) {
             array_unshift( $ao_ccss_types, 'template_' . $tplfile );
         }
@@ -589,4 +597,10 @@ class autoptimizeCriticalCSSCore {
             error_log( $message, 3, AO_CCSS_LOG );
         }
     }
+
+    // Clears transient cache for page templates
+    public static function ao_ccss_clear_page_tpl_cache() {
+        delete_transient( 'autoptimize_ccss_page_templates' );
+    }
+
 }
