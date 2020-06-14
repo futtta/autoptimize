@@ -279,6 +279,21 @@ location ~* /wp-content/cache/autoptimize/.*\.(js|css)$ {
     try_files $uri $uri/ /wp-content/autoptimize_404_handler.php;
 }`
 
+= What open source software/ projects are used in Autoptimize? =
+
+The following great open source projects are used in Autoptimize in some form or another:
+
+* [Mr Clay's Minify](https://github.com/mrclay/minify/) for JS & HTML minification
+* [YUI CSS compressor PHP Port](https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port) for CSS minification
+* [Lazysizes](https://github.com/aFarkas/lazysizes) for lazyload
+* [Persist Admin Notices Dismissal](https://github.com/w3guy/persist-admin-notices-dismissal) for notices in the administration screens
+* [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker/) for automated updates from Github for the beta version
+* [LoadCSS](https://github.com/filamentgroup/loadCSS) for loading full CSS for browsers that don't support preload
+* [jQuery cookie](https://github.com/carhartl/jquery-cookie) to store the "futtta about" category selection in a cookie
+* [jQuery tablesorter](https://github.com/christianbach/tablesorter) for the critical CSS rules/ jobs display
+* [jQuery unslider](https://github.com/idiot/unslider/) for the mini-slider in the top right corner on the main settings page (repo gone)
+* [JavaScript-md5](https://github.com/blueimp/JavaScript-MD5) for critical CSS rules editing
+
 = Where can I get help? =
 
 You can get help on the [wordpress.org support forum](http://wordpress.org/support/plugin/autoptimize). If you are 100% sure this your problem cannot be solved using Autoptimize configuration and that you in fact discovered a bug in the code, you can [create an issue on GitHub](https://github.com/futtta/autoptimize/issues). If you're looking for premium support, check out our [Autoptimize Pro Support and Web Performance Optimization services](http://autoptimize.com/).

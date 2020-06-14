@@ -7,8 +7,9 @@
  * Author: Frank Goossens (futtta)
  * Author URI: https://autoptimize.com/
  * Text Domain: autoptimize
+ * License: GPLv2
  * Released under the GNU General Public License (GPL)
- * http://www.gnu.org/licenses/gpl.txt
+ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  */
 
 /**
