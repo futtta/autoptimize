@@ -91,8 +91,8 @@ class autoptimizeCriticalCSSEnqueue {
                 }
             }
 
-            if ( $job_qualify && false == $rule_properties['hash'] && false != $rule_properties['file'] ) {
-                // If job qualifies but rule hash is false and file isn't false  (MANUAL rule), job does not qualify despite what previous evaluations says.
+            if ( $job_qualify && ( ( false == $rule_properties['hash'] && false != $rule_properties['file'] ) || strpos( $req_type, 'template_' ) !== false ) ) {
+                // If job qualifies but rule hash is false and file isn't false (MANUAL rule) or if template, job does not qualify despite what previous evaluations says.
                 $job_qualify = false;
                 autoptimizeCriticalCSSCore::ao_ccss_log( 'Job submission DISQUALIFIED by MANUAL rule <' . $target_rule . '> with hash <' . $rule_properties['hash'] . '> and file <' . $rule_properties['file'] . '>', 3 );
             } elseif ( ! $job_qualify && empty( $rule_properties ) ) {
@@ -205,7 +205,11 @@ class autoptimizeCriticalCSSEnqueue {
                     break;
                 }
             } elseif ( strpos( $type, 'template_' ) !== false ) {
-                // If templates; don't break, templates become manual-only rules.
+                // Match templates.
+                if ( is_page_template( substr( $type, 9 ) ) ) {
+                    $page_type = $type;
+                    break;
+                }
             } else {
                 // Match all other existing types
                 // but remove prefix to be able to check if the function exists & returns true.
