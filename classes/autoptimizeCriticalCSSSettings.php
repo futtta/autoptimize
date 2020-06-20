@@ -106,6 +106,7 @@ class autoptimizeCriticalCSSSettings {
             ${$_option} = $_value;
         }
         ?>
+        <script>document.title = "Autoptimize: <?php _e( 'Critical CSS', 'autoptimize' ); ?> " + document.title;</script>
         <div class="wrap">
             <div id="autoptimize_main">
                 <div id="ao_title_and_button">
