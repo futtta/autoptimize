@@ -804,7 +804,7 @@ class autoptimizeImages
         // And add webp detection and loading JS.
         if ( $this->should_webp() ) {
             $_webp_detect = "function c_webp(A){var n=new Image;n.onload=function(){var e=0<n.width&&0<n.height;A(e)},n.onerror=function(){A(!1)},n.src='data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA=='}function s_webp(e){window.supportsWebP=e}c_webp(s_webp);";
-            $_webp_load   = "document.addEventListener('lazybeforeunveil',function({target:b}){supportsWebP&&['data-src','data-srcset'].forEach(function(c){attr=b.getAttribute(c),null!==attr&&-1==attr.indexOf('/client/to_webp')&&b.setAttribute(c,attr.replace(/\/client\//,'/client/to_webp,'))})});";
+            $_webp_load   = "document.addEventListener('lazybeforeunveil',function({target:b}){window.supportsWebP&&['data-src','data-srcset'].forEach(function(c){attr=b.getAttribute(c),null!==attr&&-1==attr.indexOf('/client/to_webp')&&b.setAttribute(c,attr.replace(/\/client\//,'/client/to_webp,'))})});";
             echo apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script' . $type_js . $noptimize_flag . '>' . $_webp_detect . $_webp_load . '</script>' );
         }
     }
