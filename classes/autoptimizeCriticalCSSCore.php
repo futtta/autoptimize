@@ -25,6 +25,7 @@ class autoptimizeCriticalCSSCore {
         global $ao_css_defer;
         global $ao_ccss_deferjquery;
         global $ao_ccss_key;
+        global $ao_ccss_unloadccss;
 
         // add all filters to do CCSS if key present.
         if ( $ao_css_defer && isset( $ao_ccss_key ) && ! empty( $ao_ccss_key ) ) {
@@ -38,6 +39,11 @@ class autoptimizeCriticalCSSCore {
             // conditionally add the filter to defer jquery and others.
             if ( $ao_ccss_deferjquery ) {
                 add_filter( 'autoptimize_html_after_minify', array( $this, 'ao_ccss_defer_jquery' ), 11, 1 );
+            }
+            
+            // conditionally add filter to unload the CCSS.
+            if ( $ao_ccss_unloadccss ) {
+                add_filter( 'autoptimize_html_after_minify', array( $this, 'ao_ccss_unloadccss'), 12, 1 );
             }
 
             // Order paths by length, as longest ones have greater priority in the rules.
@@ -179,6 +185,13 @@ class autoptimizeCriticalCSSCore {
             }
         }
         return $in;
+    }
+
+    public function ao_ccss_unloadccss( $html_in ) {
+        // set media attrib of inline CCSS to none at onLoad to avoid it impacting full CSS (rarely needed).
+        $_unloadccss_js = apply_filters( 'autoptimize_filter_ccss_core_unloadccss_js', '<script>window.addEventListener("load", function(event) {document.getElementById("aoatfcss").media="none";})</script>' );
+
+        return str_replace( '</body>', $_unloadccss_js . '</body>', $html_in );
     }
 
     public function ao_ccss_extend_types() {
