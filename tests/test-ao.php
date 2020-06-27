@@ -475,7 +475,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/${subfolder}${csspart}${csshash}.css" onload="this.onload=null;this.media='all'" /><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/${subfolder}${csspart}${csshash}.css" onload="this.onload=null;this.media='all';" /><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
