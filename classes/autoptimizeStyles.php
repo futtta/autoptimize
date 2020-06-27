@@ -399,6 +399,11 @@ class autoptimizeStyles extends autoptimizeBase
                 $tag
             );
 
+            // Optionally (but default false) preload the (excluded) CSS-file.
+            if ( apply_filters( 'autoptimize_fitler_css_preload_and_print', false ) && $url !== 'none' ) {
+                $new_tag = '<link rel="preload" as="stylesheet" href="' . $url . '"/>' . $new_tag;
+            }
+
             return $new_tag;
         }
 
@@ -1018,6 +1023,9 @@ class autoptimizeStyles extends autoptimizeBase
                     $preload_onload = autoptimizeConfig::get_ao_css_preload_onload();
 
                     $preload_css_block  .= '<link rel="stylesheet" media="print" href="' . $url . '" onload="' . $preload_onload . '" />';
+                    if ( apply_filters( 'autoptimize_fitler_css_preload_and_print', false ) ) {
+                        $preload_css_block = '<link rel="preload" as="stylesheet" href="' . $url . '"/>' . $preload_css_block;
+                    }
                     $noscript_css_block .= '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />';
                 } else {
                     if ( strlen( $this->csscode[ $media ] ) > $this->cssinlinesize ) {
