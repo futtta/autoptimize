@@ -383,20 +383,19 @@ class autoptimizeStyles extends autoptimizeBase
     {
         // Defer single CSS if "inline & defer" is ON and there is inline CSS.
         if ( ! empty( $tag ) && false === strpos( $tag, ' onload=' ) && $this->defer && ! empty( $this->defer_inline ) && apply_filters( 'autoptimize_filter_css_defer_excluded', true, $tag ) ) {
-            // Get/ set (via filter) the JS to be triggers onload of the preloaded CSS.
-            $_preload_onload = apply_filters(
-                'autoptimize_filter_css_preload_onload',
-                "this.onload=null;this.rel='stylesheet'",
-                $url
-            );
+            // get media attribute and based on that create onload JS attribute value.
+            if ( false !== strpos( $tag, 'media=' ) ) {
+                preg_match( '#media=(?:"|\')([^>]*)(?:"|\')#Ui', $tag, $_medias );
+                $_media = $_medias[1];
+            } else {
+                $_media = 'all';
+            }
+            $_preload_onload = autoptimizeConfig::get_ao_css_preload_onload( $_media );
 
             // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
             $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
-                array(
-                    "rel='stylesheet'",
-                    'rel="stylesheet"',
-                ),
-                "rel='preload' as='style' onload=\"" . $_preload_onload . '"',
+                $_medias[0],
+                "media='print' onload=\"" . $_preload_onload. '"',
                 $tag
             );
 
@@ -1018,7 +1017,7 @@ class autoptimizeStyles extends autoptimizeBase
                 if ( $this->defer ) {
                     $preload_onload = autoptimizeConfig::get_ao_css_preload_onload();
 
-                    $preload_css_block  .= '<link rel="preload" as="style" media="' . $media . '" href="' . $url . '" onload="' . $preload_onload . '" />';
+                    $preload_css_block  .= '<link rel="stylesheet" media="print" href="' . $url . '" onload="' . $preload_onload . '" />';
                     $noscript_css_block .= '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />';
                 } else {
                     if ( strlen( $this->csscode[ $media ] ) > $this->cssinlinesize ) {
@@ -1030,16 +1029,9 @@ class autoptimizeStyles extends autoptimizeBase
             }
 
             if ( $this->defer ) {
-                $preload_polyfill    = autoptimizeConfig::get_ao_css_preload_polyfill();
                 $noscript_css_block .= '</noscript>';
                 // Inject inline critical CSS, the preloaded full CSS and the noscript-CSS.
                 $this->inject_in_html( $inlined_ccss_block . $preload_css_block . $noscript_css_block, $replace_tag );
-
-                // Adds preload polyfill at end of body tag.
-                $this->inject_in_html(
-                    apply_filters( 'autoptimize_css_preload_polyfill', $preload_polyfill ),
-                    apply_filters( 'autoptimize_css_preload_polyfill_injectat', array( '</body>', 'before' ) )
-                );
             }
         }
 
