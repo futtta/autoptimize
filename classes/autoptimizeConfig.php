@@ -796,8 +796,8 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
     /**
      * Returns preload JS onload handler.
      *
-     * @var $media string
-     * 
+     * @param string $media media attribute value the JS to use.
+     *
      * @return string
      */
     public static function get_ao_css_preload_onload( $media = 'all' )

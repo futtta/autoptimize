@@ -39,7 +39,7 @@ class autoptimizeCriticalCSSBase {
             define( 'AO_CCSS_SLEEP', 10 );
         }
 
-        // Define support files locations, in case they are not already defined
+        // Define support files locations, in case they are not already defined.
         if ( ! defined( 'AO_CCSS_LOCK' ) ) {
             define( 'AO_CCSS_LOCK', AO_CCSS_DIR . 'queue.lock' );
         }

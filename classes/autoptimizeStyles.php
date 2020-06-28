@@ -395,12 +395,12 @@ class autoptimizeStyles extends autoptimizeBase
             // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
             $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
                 $_medias[0],
-                "media='print' onload=\"" . $_preload_onload. '"',
+                "media='print' onload=\"" . $_preload_onload . '"',
                 $tag
             );
 
             // Optionally (but default false) preload the (excluded) CSS-file.
-            if ( apply_filters( 'autoptimize_fitler_css_preload_and_print', false ) && $url !== 'none' ) {
+            if ( apply_filters( 'autoptimize_fitler_css_preload_and_print', false ) && 'none' !== $url ) {
                 $new_tag = '<link rel="preload" as="stylesheet" href="' . $url . '"/>' . $new_tag;
             }
 
@@ -1022,7 +1022,7 @@ class autoptimizeStyles extends autoptimizeBase
                 if ( $this->defer ) {
                     $preload_onload = autoptimizeConfig::get_ao_css_preload_onload();
 
-                    $preload_css_block  .= '<link rel="stylesheet" media="print" href="' . $url . '" onload="' . $preload_onload . '" />';
+                    $preload_css_block .= '<link rel="stylesheet" media="print" href="' . $url . '" onload="' . $preload_onload . '" />';
                     if ( apply_filters( 'autoptimize_fitler_css_preload_and_print', false ) ) {
                         $preload_css_block = '<link rel="preload" as="stylesheet" href="' . $url . '"/>' . $preload_css_block;
                     }
