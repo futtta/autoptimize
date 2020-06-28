@@ -489,6 +489,19 @@ class autoptimizeImages
         }
     }
 
+    public function replace_icon_callback( $matches )
+    {
+        if ( array_key_exists( '2', $matches ) ) {
+            $sizes  = explode( 'x', $matches[2] );
+            $width  = $sizes[0];
+            $height = $sizes[1];
+        } else {
+            $width  = 180;
+            $height = 180;
+        }
+        return $this->replace_img_callback( $matches, $width, $height );
+    }
+
     public function filter_optimize_images( $in )
     {
         /*
@@ -605,6 +618,15 @@ class autoptimizeImages
             $out = preg_replace_callback(
                 '/style=(?:"|\')[^<>]*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)/',
                 array( $this, 'replace_img_callback' ),
+                $out
+            );
+        }
+
+        // act on icon links.
+        if ( ( strpos( $out, '<link rel="icon"' ) !== false || ( strpos( $out, "<link rel='icon'" ) !== false ) ) && apply_filters( 'autoptimize_filter_imgopt_linkicon', true ) ) {
+            $out = preg_replace_callback(
+                '/<link\srel=(?:"|\')(?:apple-touch-)?icon(?:"|\').*\shref=(?:"|\')(.*)(?:"|\')(?:\ssizes=(?:"|\')(\d*x\d*)(?:"|\'))?\s\/>/Um',
+                array( $this, 'replace_icon_callback' ),
                 $out
             );
         }
