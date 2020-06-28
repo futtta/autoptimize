@@ -177,11 +177,11 @@ class autoptimizeCriticalCSSCore {
                 if ( strpos( $match[0], 'data-noptimize="1"' ) !== false ) {
                     // do not touch JS with data-noptimize flag.
                     continue;
-                } else if ( '' !== $match[1] && ( ! preg_match( '/<script.* type\s?=.*>/', $match[0] ) || preg_match( '/type\s*=\s*[\'"]?(?:text|application)\/(?:javascript|ecmascript)[\'"]?/i', $match[0] ) ) ) {
+                } elseif ( '' !== $match[1] && ( ! preg_match( '/<script.* type\s?=.*>/', $match[0] ) || preg_match( '/type\s*=\s*[\'"]?(?:text|application)\/(?:javascript|ecmascript)[\'"]?/i', $match[0] ) ) ) {
                     // base64-encode deferred inline JS.
                     $base64_js = '<script defer src="data:text/javascript;base64,' . base64_encode( $match[1] ) . '"></script>';
                     $in        = str_replace( $match[0], $base64_js, $in );
-                } else if ( str_replace( array( 'defer', 'async' ), '', $match[0] ) === $match[0] ) {
+                } elseif ( str_replace( array( 'defer', 'async' ), '', $match[0] ) === $match[0] ) {
                     // and defer linked JS unless already deferred or asynced.
                     $new_match = str_replace( '<script ', '<script defer ', $match[0] );
                     $in        = str_replace( $match[0], $new_match, $in );
