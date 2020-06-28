@@ -170,15 +170,19 @@ class autoptimizeCriticalCSSCore {
     }
 
     public function ao_ccss_defer_jquery( $in ) {
-        // try to defer all JS (main goal being jquery.js as AO by default does not aggregate that).
+        global $ao_ccss_loggedin;
+        // defer all linked and inline JS.
         if ( ( ! is_user_logged_in() || $ao_ccss_loggedin ) && preg_match_all( '#<script.*>(.*)</script>#Usmi', $in, $matches, PREG_SET_ORDER ) ) {
             foreach ( $matches as $match ) {
-                if ( ( ! preg_match( '/<script.* type\s?=.*>/', $match[0] ) || preg_match( '/type\s*=\s*[\'"]?(?:text|application)\/(?:javascript|ecmascript)[\'"]?/i', $match[0] ) ) && '' !== $match[1] && ( false !== strpos( $match[1], 'jQuery' ) || false !== strpos( $match[1], '$' ) ) ) {
-                    // inline js that requires jquery, wrap deferring JS around it to defer it.
-                    $new_match = 'var aoDeferInlineJQuery=function(){' . $match[1] . '}; if (document.readyState === "loading") {document.addEventListener("DOMContentLoaded", aoDeferInlineJQuery);} else {aoDeferInlineJQuery();}';
-                    $in        = str_replace( $match[1], $new_match, $in );
-                } elseif ( '' === $match[1] && false !== strpos( $match[0], 'src=' ) && false === strpos( $match[0], 'defer' ) ) {
-                    // linked non-aggregated JS, defer it.
+                if ( strpos( $match[0], 'data-noptimize="1"' ) !== false ) {
+                    // do not touch JS with data-noptimize flag.
+                    continue;
+                } else if ( '' !== $match[1] && ( ! preg_match( '/<script.* type\s?=.*>/', $match[0] ) || preg_match( '/type\s*=\s*[\'"]?(?:text|application)\/(?:javascript|ecmascript)[\'"]?/i', $match[0] ) ) ) {
+                    // base64-encode deferred inline JS.
+                    $base64_js = '<script defer src="data:text/javascript;base64,' . base64_encode( $match[1] ) . '"></script>';
+                    $in        = str_replace( $match[0], $base64_js, $in );
+                } else if ( str_replace( array( 'defer', 'async' ), '', $match[0] ) === $match[0] ) {
+                    // and defer linked JS unless already deferred or asynced.
                     $new_match = str_replace( '<script ', '<script defer ', $match[0] );
                     $in        = str_replace( $match[0], $new_match, $in );
                 }
