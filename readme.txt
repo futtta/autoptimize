@@ -310,6 +310,18 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.7.4 =
+* Image optimization: also optimize icon links
+* Image optimization: fix webp-detection for Safari (contributed by @pinkasey)
+* Image lazyload: remove CSS that hides the placeholder image/ sets transistion between placeholder and final image
+* Critical CSS: new advanced option to onload CCSS on onLoad
+* Critical CSS improvement: cache templates in a transient to avoid overhead of having to search filesystem time and time again (contributed by @pratham2003)
+* Critical CSS improvement: better but still experimental jQuery deferring logic
+* Critical CSS fix: prevent MANUAL template-based rules being overwritten
+* CSS Inline & defer: move away from old loadCSS-based approach to [Filamentgroup's new, simpler method](https://www.filamentgroup.com/lab/load-css-simpler/)
+* 404 fallback enabled by default for new installations
+* updated readme to explicitly confirm this is GPL + praise open source projects used in Autoptimize as praise was long overdue!
+
 = 2.7.3 =
 * Critical CSS: cache settings in the PHP process instead of re-fetching them
 * Critical CSS: shorter intervals between calls to criticalcss.com (shortening the asynchronous job queue processing time)
