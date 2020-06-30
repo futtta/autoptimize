@@ -174,11 +174,11 @@ class autoptimizeCriticalCSSCore {
         // defer all linked and inline JS.
         if ( ( ! is_user_logged_in() || $ao_ccss_loggedin ) && preg_match_all( '#<script.*>(.*)</script>#Usmi', $in, $matches, PREG_SET_ORDER ) ) {
             foreach ( $matches as $match ) {
-                if ( strpos( $match[0], 'data-noptimize="1"' ) !== false ) {
-                    // do not touch JS with data-noptimize flag.
+                if ( str_replace( array( 'data-noptimize="1"', 'data-cfasync="false"', 'data-pagespeed-no-defer' ), '', $match[0] ) !== $match[0] ) {
+                    // do not touch JS with noptimize/ cfasync/ pagespeed-no-defer flags.
                     continue;
                 } elseif ( '' !== $match[1] && ( ! preg_match( '/<script.* type\s?=.*>/', $match[0] ) || preg_match( '/type\s*=\s*[\'"]?(?:text|application)\/(?:javascript|ecmascript)[\'"]?/i', $match[0] ) ) ) {
-                    // base64-encode deferred inline JS.
+                    // base64-encode and defer all inline JS.
                     $base64_js = '<script defer src="data:text/javascript;base64,' . base64_encode( $match[1] ) . '"></script>';
                     $in        = str_replace( $match[0], $base64_js, $in );
                 } elseif ( str_replace( array( 'defer', 'async' ), '', $match[0] ) === $match[0] ) {
