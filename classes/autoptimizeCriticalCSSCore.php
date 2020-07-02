@@ -181,7 +181,7 @@ class autoptimizeCriticalCSSCore {
                     // base64-encode and defer all inline JS.
                     $base64_js = '<script defer src="data:text/javascript;base64,' . base64_encode( $match[1] ) . '"></script>';
                     $in        = str_replace( $match[0], $base64_js, $in );
-                } elseif ( str_replace( array( 'defer', 'async' ), '', $match[0] ) === $match[0] ) {
+                } elseif ( str_replace( array( ' defer', ' async' ), '', $match[0] ) === $match[0] ) {
                     // and defer linked JS unless already deferred or asynced.
                     $new_match = str_replace( '<script ', '<script defer ', $match[0] );
                     $in        = str_replace( $match[0], $new_match, $in );
