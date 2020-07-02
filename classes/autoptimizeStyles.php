@@ -982,7 +982,7 @@ class autoptimizeStyles extends autoptimizeBase
 
         if ( $this->inline ) {
             foreach ( $this->csscode as $media => $code ) {
-                $this->inject_in_html( '<style ' . $type_css . 'media="' . $media . '">' . $code . '</style>', $replace_tag );
+                $this->inject_in_html( apply_filters( 'autoptimize_filter_css_bodyreplacementpayload', '<style ' . $type_css . 'media="' . $media . '">' . $code . '</style>' ), $replace_tag );
             }
         } else {
             if ( $this->defer ) {
@@ -1029,9 +1029,9 @@ class autoptimizeStyles extends autoptimizeBase
                     $noscript_css_block .= '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />';
                 } else {
                     if ( strlen( $this->csscode[ $media ] ) > $this->cssinlinesize ) {
-                        $this->inject_in_html( '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />', $replace_tag );
+                        $this->inject_in_html( apply_filters( 'autoptimize_filter_css_bodyreplacementpayload', '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />' ), $replace_tag );
                     } elseif ( strlen( $this->csscode[ $media ] ) > 0 ) {
-                        $this->inject_in_html( '<style ' . $type_css . 'media="' . $media . '">' . $this->csscode[ $media ] . '</style>', $replace_tag );
+                        $this->inject_in_html( apply_filters( 'autoptimize_filter_css_bodyreplacementpayload', '<style ' . $type_css . 'media="' . $media . '">' . $this->csscode[ $media ] . '</style>' ), $replace_tag );
                     }
                 }
             }
@@ -1039,7 +1039,7 @@ class autoptimizeStyles extends autoptimizeBase
             if ( $this->defer ) {
                 $noscript_css_block .= '</noscript>';
                 // Inject inline critical CSS, the preloaded full CSS and the noscript-CSS.
-                $this->inject_in_html( $inlined_ccss_block . $preload_css_block . $noscript_css_block, $replace_tag );
+                $this->inject_in_html( apply_filters( 'autoptimize_filter_css_bodyreplacementpayload', $inlined_ccss_block . $preload_css_block . $noscript_css_block ), $replace_tag );
             }
         }
 
