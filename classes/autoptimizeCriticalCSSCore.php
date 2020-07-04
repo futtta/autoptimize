@@ -554,17 +554,17 @@ class autoptimizeCriticalCSSCore {
         // Perform basic exploit avoidance and CSS validation.
         if ( ! empty( $ccss ) ) {
             // Try to avoid code injection.
-            $blacklist = array( '#!/', 'function(', '<script', '<?php' );
-            foreach ( $blacklist as $blacklisted ) {
-                if ( strpos( $ccss, $blacklisted ) !== false ) {
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'Critical CSS received contained blacklisted content.', 2 );
+            $blocklist = array( '#!/', 'function(', '<script', '<?php' );
+            foreach ( $blocklist as $blocklisted ) {
+                if ( strpos( $ccss, $blocklisted ) !== false ) {
+                    autoptimizeCriticalCSSCore::ao_ccss_log( 'Critical CSS received contained blocklisted content.', 2 );
                     return false;
                 }
             }
 
             // Check for most basics CSS structures.
-            $pinklist = array( '{', '}', ':' );
-            foreach ( $pinklist as $needed ) {
+            $needlist = array( '{', '}', ':' );
+            foreach ( $needlist as $needed ) {
                 if ( false === strpos( $ccss, $needed ) && 'none' !== $ccss ) {
                     autoptimizeCriticalCSSCore::ao_ccss_log( 'Critical CSS received did not seem to contain real CSS.', 2 );
                     return false;

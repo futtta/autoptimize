@@ -94,11 +94,11 @@ class autoptimizeStyles extends autoptimizeBase
     private $defer_inline = '';
 
     /**
-     * Setting for whitelist of what should be aggregated.
+     * Setting for allowlist of what should be aggregated.
      *
      * @var string
      */
-    private $whitelist = '';
+    private $allowlist = '';
 
     /**
      * Setting (only filter) for size under which CSS should be inlined instead of linked.
@@ -168,9 +168,9 @@ class autoptimizeStyles extends autoptimizeBase
             return false;
         }
 
-        $whitelist_css = apply_filters( 'autoptimize_filter_css_whitelist', '', $this->content );
-        if ( ! empty( $whitelist_css ) ) {
-            $this->whitelist = array_filter( array_map( 'trim', explode( ',', $whitelist_css ) ) );
+        $allowlist_css = apply_filters( 'autoptimize_filter_css_allowlist', '', $this->content );
+        if ( ! empty( $allowlist_css ) ) {
+            $this->allowlist = array_filter( array_map( 'trim', explode( ',', $allowlist_css ) ) );
         }
 
         $removable_css = apply_filters( 'autoptimize_filter_css_removables', '' );
@@ -1142,13 +1142,13 @@ class autoptimizeStyles extends autoptimizeBase
             return false;
         }
 
-        if ( ! empty( $this->whitelist ) ) {
-            foreach ( $this->whitelist as $match ) {
+        if ( ! empty( $this->allowlist ) ) {
+            foreach ( $this->allowlist as $match ) {
                 if ( false !== strpos( $tag, $match ) ) {
                     return true;
                 }
             }
-            // no match with whitelist.
+            // no match with allowlist.
             return false;
         } else {
             if ( is_array( $this->dontmove ) && ! empty( $this->dontmove ) ) {
