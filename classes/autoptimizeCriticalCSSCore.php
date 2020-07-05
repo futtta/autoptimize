@@ -174,7 +174,7 @@ class autoptimizeCriticalCSSCore {
         // defer all linked and inline JS.
         if ( ( ! is_user_logged_in() || $ao_ccss_loggedin ) && preg_match_all( '#<script.*>(.*)</script>#Usmi', $in, $matches, PREG_SET_ORDER ) ) {
             foreach ( $matches as $match ) {
-                if ( str_replace( array( 'data-noptimize="1"', 'data-cfasync="false"', 'data-pagespeed-no-defer' ), '', $match[0] ) !== $match[0] ) {
+                if ( str_replace( apply_filters( 'autoptimize_filter_ccss_core_defer_exclude', array( 'data-noptimize="1"', 'data-cfasync="false"', 'data-pagespeed-no-defer' ) ), '', $match[0] ) !== $match[0] ) {
                     // do not touch JS with noptimize/ cfasync/ pagespeed-no-defer flags.
                     continue;
                 } elseif ( '' !== $match[1] && ( ! preg_match( '/<script.* type\s?=.*>/', $match[0] ) || preg_match( '/type\s*=\s*[\'"]?(?:text|application)\/(?:javascript|ecmascript)[\'"]?/i', $match[0] ) ) ) {
