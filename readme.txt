@@ -320,6 +320,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * Critical CSS fix: prevent MANUAL template-based rules being overwritten
 * CSS Inline & defer: move away from old loadCSS-based approach to [Filamentgroup's new, simpler method](https://www.filamentgroup.com/lab/load-css-simpler/)
 * 404 fallback enabled by default for new installations
+* changed all occurences of blacklist/ whitelist to blocklist/ allowlist. The filters `autoptimize_filter_js_whitelist` and `autoptimize_filter_css_whitelist` still work in 2.7.4 but usage is deprecated and should be replaced with `autoptimize_filter_js_allowlist` and `autoptimize_filter_css_allowlist`.
 * updated readme to explicitly confirm this is GPL + praise open source projects used in Autoptimize as praise was long overdue!
 
 = 2.7.3 =
