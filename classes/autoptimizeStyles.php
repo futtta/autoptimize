@@ -1229,6 +1229,9 @@ class autoptimizeStyles extends autoptimizeBase
                 return false;
             }
 
+            // Filter contents of excluded minified CSS.
+            $contents = apply_filters( 'autoptimize_filter_css_single_after_minify', $contents );
+
             // Store in cache.
             $cache->cache( $contents, 'text/css' );
         }

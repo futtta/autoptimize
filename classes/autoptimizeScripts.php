@@ -758,6 +758,9 @@ class autoptimizeScripts extends autoptimizeBase
                 return false;
             }
 
+            // Filter contents of excluded minified CSS.
+            $contents = apply_filters( 'autoptimize_filter_js_single_after_minify', $contents );
+
             // Store in cache.
             $cache->cache( $contents, 'text/javascript' );
         }
