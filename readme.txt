@@ -270,7 +270,7 @@ When both Autoptimize 2.7 and the separate Critical CSS power-up are installed a
 
 Autoptimize caches aggregated & optimized CSS/ JS and links to those cached files are stored in the HTML, which will be stored in a page cache (which can be a plugin, can be at host level, can be at 3rd party, in the Google cache, in a browser). If there is HTML in a page cache that links to Autoptimized CSS/ JS that has been removed in the mean time (when the cache was cleared) then the page from cache will not look/ work as expected as the CSS or JS were not found (a 404 error).
 
-This (new, experimental) setting aims to prevent things from breaking by serving "fallback" CSS or JS. The fallback-files are copies of the first Autoptimized CSS & JS files created after the cache was emptied and as such will based on the homepage. This means that the CSS/ JS might not apply 100% on other pages, but at least the impact of missing CSS/ JS will be lessened (often significantly).
+This setting aims to prevent things from breaking by serving "fallback" CSS or JS. The fallback-files are copies of the first Autoptimized CSS & JS files created after the cache was emptied and as such will based on the homepage. This means that the CSS/ JS migth not apply 100% on other pages, but at least the impact of missing CSS/ JS will be lessened (often significantly).
 
 When the option is enabled, Autoptimize adds an `ErrorDocument 404` to the .htaccess (as used by Apache) and will also hook into WordPress core `template_redirect` to capture 404's handled by Wordpress. When using NGINX something like below should work (I'm not an NGINX specialist, but it does work for me);
 
@@ -314,7 +314,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * Image optimization: also optimize icon links
 * Image optimization: fix webp-detection for Safari (contributed by @pinkasey)
 * Image lazyload: remove CSS that hides the placeholder image/ sets transistion between placeholder and final image
-* Critical CSS: new advanced option to onload CCSS on onLoad
+* Critical CSS: new advanced option to unload CCSS on onLoad
 * Critical CSS improvement: cache templates in a transient to avoid overhead of having to search filesystem time and time again (contributed by @pratham2003)
 * Critical CSS improvement: better but still experimental jQuery deferring logic
 * Critical CSS fix: prevent MANUAL template-based rules being overwritten
