@@ -3,7 +3,7 @@ Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, pagespeed, images, lazy-load, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
-Tested up to: 5.4
+Tested up to: 5.5
 Requires PHP: 5.6
 Stable tag: 2.7.3
 
@@ -288,11 +288,12 @@ The following great open source projects are used in Autoptimize in some form or
 * [Lazysizes](https://github.com/aFarkas/lazysizes) for lazyload
 * [Persist Admin Notices Dismissal](https://github.com/w3guy/persist-admin-notices-dismissal) for notices in the administration screens
 * [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker/) for automated updates from Github for the beta version
-* [LoadCSS](https://github.com/filamentgroup/loadCSS) for loading full CSS for browsers that don't support preload
+* [LoadCSS](https://github.com/filamentgroup/loadCSS) for deferring full CSS
 * [jQuery cookie](https://github.com/carhartl/jquery-cookie) to store the "futtta about" category selection in a cookie
 * [jQuery tablesorter](https://github.com/christianbach/tablesorter) for the critical CSS rules/ jobs display
 * [jQuery unslider](https://github.com/idiot/unslider/) for the mini-slider in the top right corner on the main settings page (repo gone)
 * [JavaScript-md5](https://github.com/blueimp/JavaScript-MD5) for critical CSS rules editing
+* [Speed Booster Pack](https://wordpress.org/plugins/speed-booster-pack/) for advanced JS deferring
 
 = Where can I get help? =
 
@@ -322,6 +323,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * 404 fallback enabled by default for new installations
 * changed all occurences of blacklist/ whitelist to blocklist/ allowlist. The filters `autoptimize_filter_js_whitelist` and `autoptimize_filter_css_whitelist` still work in 2.7.4 but usage is deprecated and should be replaced with `autoptimize_filter_js_allowlist` and `autoptimize_filter_css_allowlist`.
 * updated readme to explicitly confirm this is GPL + praise open source projects used in Autoptimize as praise was long overdue!
+* tested and confirmed working on WordPress 5.5 beta 2
 
 = 2.7.3 =
 * Critical CSS: cache settings in the PHP process instead of re-fetching them
