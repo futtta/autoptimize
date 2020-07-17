@@ -810,6 +810,7 @@ class autoptimizeImages
         $lazysizes_js = plugins_url( 'external/js/lazysizes.min.js?ao_version=' . AUTOPTIMIZE_PLUGIN_VERSION, __FILE__ );
         $cdn_url      = $this->get_cdn_url();
         if ( ! empty( $cdn_url ) ) {
+            $cdn_url      = rtrim( $cdn_url, '/' );
             $lazysizes_js = str_replace( AUTOPTIMIZE_WP_SITE_URL, $cdn_url, $lazysizes_js );
         }
 
