@@ -289,7 +289,7 @@ class autoptimizeExtra
 
             if ( ! empty( $fonts_string ) ) {
                 if ( '5' === $options['autoptimize_extra_radio_field_4'] ) {
-                    $rel_string = 'rel="preload" as="style" onload="' . autoptimizeConfig::get_ao_css_preload_onload() . '"';
+                    $rel_string = 'rel="stylesheet" media="print" onload="' . autoptimizeConfig::get_ao_css_preload_onload() . '"';
                 } else {
                     $rel_string = 'rel="stylesheet"';
                 }
@@ -333,11 +333,6 @@ class autoptimizeExtra
         $out          = substr_replace( $in, $fonts_markup . $inject_point, strpos( $in, $inject_point ), strlen( $inject_point ) );
         unset( $fonts_collection );
 
-        // and insert preload polyfill if "link preload" and if the polyfill isn't there yet (courtesy of inline&defer).
-        $preload_polyfill = autoptimizeConfig::get_ao_css_preload_polyfill();
-        if ( '5' === $options['autoptimize_extra_radio_field_4'] && strpos( $out, $preload_polyfill ) === false ) {
-            $out = str_replace( '</body>', $preload_polyfill . '</body>', $out );
-        }
         return $out;
     }
 
