@@ -394,6 +394,7 @@ class autoptimizeStyles extends autoptimizeBase
             $_preload_onload = autoptimizeConfig::get_ao_css_preload_onload( $_media );
 
             // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
+            // fixme!!
             $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
                 $_medias[0],
                 "media='print' onload=\"" . $_preload_onload . '"',
@@ -1020,8 +1021,8 @@ class autoptimizeStyles extends autoptimizeBase
                 $url = $this->url_replace_cdn( $url );
 
                 // Add the stylesheet either deferred (import at bottom) or normal links in head.
-                if ( $this->defer ) {
-                    $preload_onload = autoptimizeConfig::get_ao_css_preload_onload();
+                if ( $this->defer && 'print' !== $media ) {
+                    $preload_onload = autoptimizeConfig::get_ao_css_preload_onload( $media );
 
                     $preload_css_block .= '<link rel="stylesheet" media="print" href="' . $url . '" onload="' . $preload_onload . '" />';
                     if ( apply_filters( 'autoptimize_fitler_css_preload_and_print', false ) ) {
