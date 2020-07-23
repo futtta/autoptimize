@@ -505,8 +505,8 @@ class autoptimizeExtra
                     <?php // translators: "display:swap" should remain untranslated, will be shown in code tags. ?>
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="3" <?php checked( 3, $gfonts, true ); ?> ><?php echo __( 'Combine and link in head (fonts load fast but are render-blocking)', 'autoptimize' ) . ', ' . sprintf( __( 'includes %1$sdisplay:swap%2$s.', 'autoptimize' ), '<code>', '</code>' ); ?><br/>
                     <?php // translators: "display:swap" should remain untranslated, will be shown in code tags. ?>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php echo __( 'Combine and preload in head (fonts load late, but are not render-blocking)', 'autoptimize' ) . ', ' . sprintf( __( 'includes %1$sdisplay:swap%2$s.', 'autoptimize' ), '<code>', '</code>' ); ?><br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked( 4, $gfonts, true ); ?> ><?php _e( 'Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php echo __( 'Combine and link deferred in head (fonts load late, but are not render-blocking)', 'autoptimize' ) . ', ' . sprintf( __( 'includes %1$sdisplay:swap%2$s.', 'autoptimize' ), '<code>', '</code>' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked( 4, $gfonts, true ); ?> ><?php echo __( 'Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>', 'autoptimize' ) . ' ' . __( '(deprecated)', 'autoptimize' ) ?><br/>
                 </td>
             </tr>
             <tr>
