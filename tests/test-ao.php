@@ -216,6 +216,8 @@ class AOTest extends WP_UnitTestcase
     <!--[if (gte IE 6)&(lte IE 8)]>
         <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'>
+<link rel='stylesheet' media='print' href='https://justsome.url/print.css'>
 </head>
 
 <body class="single single-post">
@@ -283,6 +285,8 @@ MARKUP;
     <!--[if (gte IE 6)&(lte IE 8)]>
         <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'>
+<link rel='stylesheet' media='print' href='https://justsome.url/print.css'>
 </head>
 
 <body class="single single-post">
@@ -350,6 +354,8 @@ MARKUP;
     <!--[if (gte IE 6)&(lte IE 8)]>
         <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'>
+<link rel='stylesheet' media='print' href='https://justsome.url/print.css'>
 </head>
 
 <body class="single single-post">
@@ -417,6 +423,8 @@ MARKUP;
     <!--[if (gte IE 6)&(lte IE 8)]>
         <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
+<noscript><link media='all' rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'></noscript><link media='print' onload="this.onload=null;this.media='all';" rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'>
+<link rel='stylesheet' media='print' href='https://justsome.url/print.css'>
 </head>
 
 <body class="single single-post">
@@ -484,6 +492,8 @@ MARKUP;
     <!--[if (gte IE 6)&(lte IE 8)]>
         <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
+<noscript><link media='all' rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'></noscript><link media='print' onload="this.onload=null;this.media='all';" rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'>
+<link rel='stylesheet' media='print' href='https://justsome.url/print.css'>
 </head>
 
 <body class="single single-post">
