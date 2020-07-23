@@ -388,7 +388,7 @@ class autoptimizeStyles extends autoptimizeBase
             if ( false === strpos( $tag, 'media=' ) ) {
                 $tag = str_replace( '<link', "<link media='all'", $tag );
             }
-            
+
             preg_match( '#media=(?:"|\')([^>]*)(?:"|\')#Ui', $tag, $_medias );
             $_media          = $_medias[1];
             $_preload_onload = autoptimizeConfig::get_ao_css_preload_onload( $_media );
@@ -400,7 +400,7 @@ class autoptimizeStyles extends autoptimizeBase
                     "media='print' onload=\"" . $_preload_onload . '"',
                     $tag
                 );
-                
+
                 // Optionally (but default false) preload the (excluded) CSS-file.
                 if ( apply_filters( 'autoptimize_fitler_css_preload_and_print', false ) && 'none' !== $url ) {
                     $new_tag = '<link rel="preload" as="stylesheet" href="' . $url . '"/>' . $new_tag;

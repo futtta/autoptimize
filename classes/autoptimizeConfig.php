@@ -96,7 +96,7 @@ class autoptimizeConfig
     public function show_config()
     {
         $conf = self::instance();
-?>
+        ?>
 <style>
 /* title and button */
 #ao_title_and_button:after {content:''; display:block; clear:both;}
