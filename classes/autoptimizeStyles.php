@@ -385,16 +385,15 @@ class autoptimizeStyles extends autoptimizeBase
         // Defer single CSS if "inline & defer" is ON and there is inline CSS.
         if ( ! empty( $tag ) && false === strpos( $tag, ' onload=' ) && $this->defer && ! empty( $this->defer_inline ) && apply_filters( 'autoptimize_filter_css_defer_excluded', true, $tag ) ) {
             // get media attribute and based on that create onload JS attribute value.
-            if ( false !== strpos( $tag, 'media=' ) ) {
-                preg_match( '#media=(?:"|\')([^>]*)(?:"|\')#Ui', $tag, $_medias );
-                $_media = $_medias[1];
-            } else {
-                $_media = 'all';
+            if ( false === strpos( $tag, 'media=' ) ) {
+                $tag = str_replace( '<link', "<link media='all'", $tag );
             }
+            
+            preg_match( '#media=(?:"|\')([^>]*)(?:"|\')#Ui', $tag, $_medias );
+            $_media          = $_medias[1];
             $_preload_onload = autoptimizeConfig::get_ao_css_preload_onload( $_media );
 
             // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
-            // fixme!!
             $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
                 $_medias[0],
                 "media='print' onload=\"" . $_preload_onload . '"',
