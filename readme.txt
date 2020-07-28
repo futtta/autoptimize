@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 2.7.3
+Stable tag: 2.7.6
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -310,6 +310,14 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.7.6 =
+* fix for top frontend admin-bar being invisible when "inline & defer" is active.
+* fix for 3rd party CSS-files not being deferred when "inline & defer" is active.
+* small copy changes on Extra settings screen.
+
+= 2.7.5 =
+* urgent fix for Google Fonts aggregate & preload that broke badly in 2.7.4.
 
 = 2.7.4 =
 * Image optimization: also optimize icon links
