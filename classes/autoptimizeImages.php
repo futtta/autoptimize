@@ -393,7 +393,7 @@ class autoptimizeImages
         return $imgopt_base_url;
     }
 
-    private function can_optimize_image( $url )
+    private function can_optimize_image( $url, $tag = '' )
     {
         static $cdn_url      = null;
         static $nopti_images = null;
@@ -425,7 +425,7 @@ class autoptimizeImages
         } elseif ( ! empty( $nopti_images ) ) {
             $nopti_images_array = array_filter( array_map( 'trim', explode( ',', $nopti_images ) ) );
             foreach ( $nopti_images_array as $nopti_image ) {
-                if ( strpos( $url, $nopti_image ) !== false ) {
+                if ( strpos( $url, $nopti_image ) !== false || ( ( '' !== $tag && strpos( $tag, $nopti_image ) !== false ) ) ) {
                     return false;
                 }
             }
@@ -482,7 +482,7 @@ class autoptimizeImages
     public function replace_img_callback( $matches, $width = 0, $height = 0 )
     {
         $_normalized_img_url = $this->normalize_img_url( $matches[1] );
-        if ( $this->can_optimize_image( $matches[1] ) ) {
+        if ( $this->can_optimize_image( $matches[1], $matches[0] ) ) {
             return str_replace( $matches[1], $this->build_imgopt_url( $_normalized_img_url, $width, $height ), $matches[0] );
         } else {
             return $matches[0];
@@ -538,7 +538,7 @@ class autoptimizeImages
                             if ( isset( $indiv_srcset_parts[1] ) && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
                                 $imgopt_w = rtrim( $indiv_srcset_parts[1], 'w' );
                             }
-                            if ( $this->can_optimize_image( $indiv_srcset_parts[0] ) ) {
+                            if ( $this->can_optimize_image( $indiv_srcset_parts[0], $tag ) ) {
                                 $imgopt_url = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
                                 $tag        = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
                             }
@@ -557,7 +557,7 @@ class autoptimizeImages
                     foreach ( $urls as $url ) {
                         $full_src_orig = $url[0];
                         $url           = $url[1];
-                        if ( $this->can_optimize_image( $url ) ) {
+                        if ( $this->can_optimize_image( $url, $full_src_orig ) ) {
                             $imgopt_url      = $this->build_imgopt_url( $url, $imgopt_w, $imgopt_h );
                             $full_imgopt_src = str_replace( $url, $imgopt_url, $full_src_orig );
                             $tag             = str_replace( $full_src_orig, $full_imgopt_src, $tag );
@@ -579,7 +579,7 @@ class autoptimizeImages
                     $_url = $this->normalize_img_url( $_url );
 
                     $placeholder = '';
-                    if ( $this->can_optimize_image( $_url ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
+                    if ( $this->can_optimize_image( $_url, $tag ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
                         $lqip_w = '';
                         $lqip_h = '';
                         if ( isset( $imgopt_w ) && ! empty( $imgopt_w ) ) {
@@ -917,7 +917,7 @@ class autoptimizeImages
                     $_picture_replacement = $_source[0];
 
                     // should we optimize the image?
-                    if ( $imgopt && $this->can_optimize_image( $_source[1] ) ) {
+                    if ( $imgopt && $this->can_optimize_image( $_source[1], $_picture[0] ) ) {
                         $_picture_replacement = str_replace( $_source[1], $this->build_imgopt_url( $_source[1] ), $_picture_replacement );
                     }
                     // should we lazy-load?
