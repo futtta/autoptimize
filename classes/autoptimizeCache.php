@@ -756,6 +756,8 @@ class autoptimizeCache
             w3tc_pgcache_flush();
         } elseif ( function_exists( 'wp_fast_cache_bulk_delete_all' ) ) {
             wp_fast_cache_bulk_delete_all();
+        } elseif ( class_exists( 'Swift_Performance_Cache' ) ) {
+            Swift_Performance_Cache::clear_all_cache();
         } elseif ( class_exists( 'WpFastestCache' ) ) {
             $wpfc = new WpFastestCache();
             $wpfc->deleteCache();
