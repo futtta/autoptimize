@@ -527,7 +527,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         });
 
         jQuery( "#autoptimize_js_aggregate" ).change(function() {
-            if (this.checked && jQuery("#autoptimize_js").attr('checked')) {
+            if (this.checked && jQuery("#autoptimize_js").prop('checked')) {
                 jQuery(".js_aggregate:visible").fadeTo("fast",1);
                 jQuery( "#min_excl_row" ).show();
             } else {
@@ -547,7 +547,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         });
 
         jQuery( "#autoptimize_css_aggregate" ).change(function() {
-            if (this.checked && jQuery("#autoptimize_css").attr('checked')) {
+            if (this.checked && jQuery("#autoptimize_css").prop('checked')) {
                 jQuery(".css_aggregate:visible").fadeTo("fast",1);
                 jQuery( "#min_excl_row" ).show();
             } else {
@@ -601,25 +601,25 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
     }
 
     function check_ini_state() {
-        if (!jQuery("#autoptimize_css_defer").attr('checked')) {
+        if (!jQuery("#autoptimize_css_defer").prop('checked')) {
             jQuery("#autoptimize_css_defer_inline").hide();
         }
-        if (!jQuery("#autoptimize_html").attr('checked')) {
+        if (!jQuery("#autoptimize_html").prop('checked')) {
             jQuery(".html_sub:visible").fadeTo('fast',.33);
         }
-        if (!jQuery("#autoptimize_css").attr('checked')) {
+        if (!jQuery("#autoptimize_css").prop('checked')) {
             jQuery(".css_sub:visible").fadeTo('fast',.33);
         }
-        if (!jQuery("#autoptimize_css_aggregate").attr('checked')) {
+        if (!jQuery("#autoptimize_css_aggregate").prop('checked')) {
             jQuery(".css_aggregate:visible").fadeTo('fast',.33);
         }
-        if (!jQuery("#autoptimize_js").attr('checked')) {
+        if (!jQuery("#autoptimize_js").prop('checked')) {
             jQuery(".js_sub:visible").fadeTo('fast',.33);
         }
-        if (!jQuery("#autoptimize_js_aggregate").attr('checked')) {
+        if (!jQuery("#autoptimize_js_aggregate").prop('checked')) {
             jQuery(".js_aggregate:visible").fadeTo('fast',.33);
         }
-        if (jQuery("#autoptimize_enable_site_config").attr('checked')) {
+        if (jQuery("#autoptimize_enable_site_config").prop('checked')) {
             jQuery("li.itemDetail:not(.multiSite)").fadeTo('fast',.33);
         }
     }
