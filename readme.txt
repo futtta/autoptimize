@@ -311,6 +311,14 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.7.7 =
+* critical CSS: make sure pages get a path-based rule even if a CPT or template matches (when "path based rules for pages" option is on)
+* critical CSS: make sure the "unload CCSS javascript" is only added once
+* settings screens: switch jQuery .attr() to .prop() as suggested by jQuery Migrate to prepare for [the great oncoming big jQuery updates](https://wptavern.com/major-jquery-changes-on-the-way-for-wordpress-5-5-and-beyond)
+* HTML minify: reverse placeholder array to make sure last replaced placeholder is changed back first to fix rare issues
+* security fix: kudos to [Erin Germ](https://eringerm.com/) for finding & reporting an authenticated XSS vulnerability
+* security fix: props to an anonymous pentester for finding & reporting an authenticated malicous file upload vulnerability
+
 = 2.7.6 =
 * fix for top frontend admin-bar being invisible when "inline & defer" is active.
 * fix for 3rd party CSS-files not being deferred when "inline & defer" is active.
