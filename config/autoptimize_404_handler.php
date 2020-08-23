@@ -21,6 +21,11 @@
  */
 
 $original_request = strtok( $_SERVER['REQUEST_URI'], '?' );
+
+if ( strpos( $original_request, 'uucss/uucss-' ) !== false ) {
+    $original_request = preg_replace( '/uucss\/uucss-[a-z0-9]{32}-/', 'css/', $original_request  );
+}
+
 $fallback_target  = preg_replace( '/(.*)_(?:[a-z0-9]{32})\.(js|css)$/', '${1}_fallback.${2}', $original_request );
 $ao_cache_dir     = '<!--ao-cache-dir-->';
 $js_or_css        = pathinfo( $original_request, PATHINFO_EXTENSION );
