@@ -489,6 +489,19 @@ class autoptimizeImages
         }
     }
 
+    public function replace_icon_callback( $matches )
+    {
+        if ( array_key_exists( '2', $matches ) ) {
+            $sizes  = explode( 'x', $matches[2] );
+            $width  = $sizes[0];
+            $height = $sizes[1];
+        } else {
+            $width  = 180;
+            $height = 180;
+        }
+        return $this->replace_img_callback( $matches, $width, $height );
+    }
+
     public function filter_optimize_images( $in )
     {
         /*
@@ -605,6 +618,15 @@ class autoptimizeImages
             $out = preg_replace_callback(
                 '/style=(?:"|\')[^<>]*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)/',
                 array( $this, 'replace_img_callback' ),
+                $out
+            );
+        }
+
+        // act on icon links.
+        if ( ( strpos( $out, '<link rel="icon"' ) !== false || ( strpos( $out, "<link rel='icon'" ) !== false ) ) && apply_filters( 'autoptimize_filter_imgopt_linkicon', true ) ) {
+            $out = preg_replace_callback(
+                '/<link\srel=(?:"|\')(?:apple-touch-)?icon(?:"|\').*\shref=(?:"|\')(.*)(?:"|\')(?:\ssizes=(?:"|\')(\d*x\d*)(?:"|\'))?\s\/>/Um',
+                array( $this, 'replace_icon_callback' ),
                 $out
             );
         }
@@ -788,6 +810,7 @@ class autoptimizeImages
         $lazysizes_js = plugins_url( 'external/js/lazysizes.min.js?ao_version=' . AUTOPTIMIZE_PLUGIN_VERSION, __FILE__ );
         $cdn_url      = $this->get_cdn_url();
         if ( ! empty( $cdn_url ) ) {
+            $cdn_url      = rtrim( $cdn_url, '/' );
             $lazysizes_js = str_replace( AUTOPTIMIZE_WP_SITE_URL, $cdn_url, $lazysizes_js );
         }
 
@@ -797,14 +820,14 @@ class autoptimizeImages
         }
 
         // Adds lazyload CSS & JS to footer, using echo because wp_enqueue_script seems not to support pushing attributes (async).
-        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<style>.lazyload,.lazyloading{opacity:0;}.lazyloaded{opacity:1;transition:opacity 300ms;}</style><noscript><style>.lazyload{display:none;}</style></noscript>' );
+        echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<noscript><style>.lazyload{display:none;}</style></noscript>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $type_js . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $type_js . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
 
         // And add webp detection and loading JS.
         if ( $this->should_webp() ) {
             $_webp_detect = "function c_webp(A){var n=new Image;n.onload=function(){var e=0<n.width&&0<n.height;A(e)},n.onerror=function(){A(!1)},n.src='data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA=='}function s_webp(e){window.supportsWebP=e}c_webp(s_webp);";
-            $_webp_load   = "document.addEventListener('lazybeforeunveil',function({target:c}){supportsWebP&&['data-src','data-srcset'].forEach(function(a){attr=c.getAttribute(a),null!==attr&&c.setAttribute(a,attr.replace(/\/client\//,'/client/to_webp,'))})});";
+            $_webp_load   = "document.addEventListener('lazybeforeunveil',function({target:b}){window.supportsWebP&&['data-src','data-srcset'].forEach(function(c){attr=b.getAttribute(c),null!==attr&&-1==attr.indexOf('/client/to_webp')&&b.setAttribute(c,attr.replace(/\/client\//,'/client/to_webp,'))})});";
             echo apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script' . $type_js . $noptimize_flag . '>' . $_webp_detect . $_webp_load . '</script>' );
         }
     }

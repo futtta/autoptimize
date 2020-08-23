@@ -16,6 +16,7 @@ function ao_ccss_render_adv() {
     global $ao_ccss_forcepath;
     global $ao_ccss_deferjquery;
     global $ao_ccss_domain;
+    global $ao_ccss_unloadccss;
 
     // In case domain is not set yet (done in cron.php).
     if ( empty( $ao_ccss_domain ) ) {
@@ -108,6 +109,17 @@ function ao_ccss_render_adv() {
                             <input type="checkbox" id="autoptimize_ccss_deferjquery" name="autoptimize_ccss_deferjquery" value="1" <?php checked( 1 == $ao_ccss_deferjquery ); ?>>
                             <p class="notes">
                                 <?php _e( 'Defer all non-aggregated JS, including jQuery and inline JS to fix remaining render-blocking issues. Make sure to test your site thoroughly when activating this option!', 'autoptimize' ); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <?php _e( 'Unload critical CSS after page load?', 'autoptimize' ); ?>
+                        </th>
+                        <td>
+                            <input type="checkbox" id="autoptimize_ccss_unloadccss" name="autoptimize_ccss_unloadccss" value="1" <?php checked( 1 == $ao_ccss_unloadccss ); ?>>
+                            <p class="notes">
+                                <?php _e( 'In rare cases the critical CSS needs to be removed once the full CSS loads, this option makes it so!', 'autoptimize' ); ?>
                             </p>
                         </td>
                     </tr>

@@ -3,12 +3,13 @@
  * Plugin Name: Autoptimize
  * Plugin URI: https://autoptimize.com/
  * Description: Makes your site faster by optimizing CSS, JS, Images, Google fonts and more.
- * Version: 2.7.3
+ * Version: 2.7.6
  * Author: Frank Goossens (futtta)
  * Author URI: https://autoptimize.com/
  * Text Domain: autoptimize
+ * License: GPLv2
  * Released under the GNU General Public License (GPL)
- * http://www.gnu.org/licenses/gpl.txt
+ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  */
 
 /**
@@ -20,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AUTOPTIMIZE_PLUGIN_VERSION', '2.7.3' );
+define( 'AUTOPTIMIZE_PLUGIN_VERSION', '2.7.6' );
 
 // plugin_dir_path() returns the trailing slash!
 define( 'AUTOPTIMIZE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );

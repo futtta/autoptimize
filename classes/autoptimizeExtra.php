@@ -289,7 +289,7 @@ class autoptimizeExtra
 
             if ( ! empty( $fonts_string ) ) {
                 if ( '5' === $options['autoptimize_extra_radio_field_4'] ) {
-                    $rel_string = 'rel="preload" as="style" onload="' . autoptimizeConfig::get_ao_css_preload_onload() . '"';
+                    $rel_string = 'rel="stylesheet" media="print" onload="' . autoptimizeConfig::get_ao_css_preload_onload() . '"';
                 } else {
                     $rel_string = 'rel="stylesheet"';
                 }
@@ -333,11 +333,6 @@ class autoptimizeExtra
         $out          = substr_replace( $in, $fonts_markup . $inject_point, strpos( $in, $inject_point ), strlen( $inject_point ) );
         unset( $fonts_collection );
 
-        // and insert preload polyfill if "link preload" and if the polyfill isn't there yet (courtesy of inline&defer).
-        $preload_polyfill = autoptimizeConfig::get_ao_css_preload_polyfill();
-        if ( '5' === $options['autoptimize_extra_radio_field_4'] && strpos( $out, $preload_polyfill ) === false ) {
-            $out = str_replace( '</body>', $preload_polyfill . '</body>', $out );
-        }
         return $out;
     }
 
@@ -510,8 +505,8 @@ class autoptimizeExtra
                     <?php // translators: "display:swap" should remain untranslated, will be shown in code tags. ?>
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="3" <?php checked( 3, $gfonts, true ); ?> ><?php echo __( 'Combine and link in head (fonts load fast but are render-blocking)', 'autoptimize' ) . ', ' . sprintf( __( 'includes %1$sdisplay:swap%2$s.', 'autoptimize' ), '<code>', '</code>' ); ?><br/>
                     <?php // translators: "display:swap" should remain untranslated, will be shown in code tags. ?>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php echo __( 'Combine and preload in head (fonts load late, but are not render-blocking)', 'autoptimize' ) . ', ' . sprintf( __( 'includes %1$sdisplay:swap%2$s.', 'autoptimize' ), '<code>', '</code>' ); ?><br/>
-                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked( 4, $gfonts, true ); ?> ><?php _e( 'Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>', 'autoptimize' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php echo __( 'Combine and link deferred in head (fonts load late, but are not render-blocking)', 'autoptimize' ) . ', ' . sprintf( __( 'includes %1$sdisplay:swap%2$s.', 'autoptimize' ), '<code>', '</code>' ); ?><br/>
+                    <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked( 4, $gfonts, true ); ?> ><?php echo __( 'Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>', 'autoptimize' ) . ' ' . __( '(deprecated)', 'autoptimize' ); ?><br/>
                 </td>
             </tr>
             <tr>
@@ -546,7 +541,7 @@ class autoptimizeExtra
                         // translators: link points Async Javascript settings page.
                         printf( __( 'You have "Async JavaScript" installed, %1$sconfiguration of async javascript is best done there%2$s.', 'autoptimize' ), '<a href="' . 'options-general.php?page=async-javascript' . '">', '</a>' );
                     } else {
-                    ?>
+                        ?>
                         <input type='text' style='width:80%' name='autoptimize_extra_settings[autoptimize_extra_text_field_3]' value='<?php if ( array_key_exists( 'autoptimize_extra_text_field_3', $options ) ) { echo esc_attr( $options['autoptimize_extra_text_field_3'] ); } ?>'>
                         <br />
                         <?php

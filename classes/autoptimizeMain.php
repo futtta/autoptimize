@@ -585,6 +585,7 @@ class autoptimizeMain
             'autoptimize_ccss_forcepath',
             'autoptimize_ccss_deferjquery',
             'autoptimize_ccss_domain',
+            'autoptimize_ccss_unloadccss',
         );
 
         if ( ! is_multisite() ) {

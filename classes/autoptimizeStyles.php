@@ -94,11 +94,11 @@ class autoptimizeStyles extends autoptimizeBase
     private $defer_inline = '';
 
     /**
-     * Setting for whitelist of what should be aggregated.
+     * Setting for allowlist of what should be aggregated.
      *
      * @var string
      */
-    private $whitelist = '';
+    private $allowlist = '';
 
     /**
      * Setting (only filter) for size under which CSS should be inlined instead of linked.
@@ -168,9 +168,10 @@ class autoptimizeStyles extends autoptimizeBase
             return false;
         }
 
-        $whitelist_css = apply_filters( 'autoptimize_filter_css_whitelist', '', $this->content );
-        if ( ! empty( $whitelist_css ) ) {
-            $this->whitelist = array_filter( array_map( 'trim', explode( ',', $whitelist_css ) ) );
+        $allowlist_css = apply_filters( 'autoptimize_filter_css_allowlist', '', $this->content );
+        $allowlist_css = apply_filters( 'autoptimize_filter_css_whitelist', $allowlist_css, $this->content ); // fixme: to be removed in next version.
+        if ( ! empty( $allowlist_css ) ) {
+            $this->allowlist = array_filter( array_map( 'trim', explode( ',', $allowlist_css ) ) );
         }
 
         $removable_css = apply_filters( 'autoptimize_filter_css_removables', '' );
@@ -383,22 +384,30 @@ class autoptimizeStyles extends autoptimizeBase
     {
         // Defer single CSS if "inline & defer" is ON and there is inline CSS.
         if ( ! empty( $tag ) && false === strpos( $tag, ' onload=' ) && $this->defer && ! empty( $this->defer_inline ) && apply_filters( 'autoptimize_filter_css_defer_excluded', true, $tag ) ) {
-            // Get/ set (via filter) the JS to be triggers onload of the preloaded CSS.
-            $_preload_onload = apply_filters(
-                'autoptimize_filter_css_preload_onload',
-                "this.onload=null;this.rel='stylesheet'",
-                $url
-            );
+            // get media attribute and based on that create onload JS attribute value.
+            if ( false === strpos( $tag, 'media=' ) ) {
+                $tag = str_replace( '<link', "<link media='all'", $tag );
+            }
 
-            // Adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
-            $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
-                array(
-                    "rel='stylesheet'",
-                    'rel="stylesheet"',
-                ),
-                "rel='preload' as='style' onload=\"" . $_preload_onload . '"',
-                $tag
-            );
+            preg_match( '#media=(?:"|\')([^>]*)(?:"|\')#Ui', $tag, $_medias );
+            $_media          = $_medias[1];
+            $_preload_onload = autoptimizeConfig::get_ao_css_preload_onload( $_media );
+
+            if ( 'print' !== $_media ) {
+                // If not media=print, adapt original <link> element for CSS to be preloaded and add <noscript>-version for fallback.
+                $new_tag = '<noscript>' . autoptimizeUtils::remove_id_from_node( $tag ) . '</noscript>' . str_replace(
+                    $_medias[0],
+                    "media='print' onload=\"" . $_preload_onload . '"',
+                    $tag
+                );
+
+                // Optionally (but default false) preload the (excluded) CSS-file.
+                if ( apply_filters( 'autoptimize_fitler_css_preload_and_print', false ) && 'none' !== $url ) {
+                    $new_tag = '<link rel="preload" as="stylesheet" href="' . $url . '"/>' . $new_tag;
+                }
+            } else {
+                $new_tag = $tag;
+            }
 
             return $new_tag;
         }
@@ -978,7 +987,7 @@ class autoptimizeStyles extends autoptimizeBase
 
         if ( $this->inline ) {
             foreach ( $this->csscode as $media => $code ) {
-                $this->inject_in_html( '<style ' . $type_css . 'media="' . $media . '">' . $code . '</style>', $replace_tag );
+                $this->inject_in_html( apply_filters( 'autoptimize_filter_css_bodyreplacementpayload', '<style ' . $type_css . 'media="' . $media . '">' . $code . '</style>' ), $replace_tag );
             }
         } else {
             if ( $this->defer ) {
@@ -1015,31 +1024,27 @@ class autoptimizeStyles extends autoptimizeBase
                 $url = $this->url_replace_cdn( $url );
 
                 // Add the stylesheet either deferred (import at bottom) or normal links in head.
-                if ( $this->defer ) {
-                    $preload_onload = autoptimizeConfig::get_ao_css_preload_onload();
+                if ( $this->defer && 'print' !== $media ) {
+                    $preload_onload = autoptimizeConfig::get_ao_css_preload_onload( $media );
 
-                    $preload_css_block  .= '<link rel="preload" as="style" media="' . $media . '" href="' . $url . '" onload="' . $preload_onload . '" />';
+                    $preload_css_block .= '<link rel="stylesheet" media="print" href="' . $url . '" onload="' . $preload_onload . '" />';
+                    if ( apply_filters( 'autoptimize_fitler_css_preload_and_print', false ) ) {
+                        $preload_css_block = '<link rel="preload" as="stylesheet" href="' . $url . '"/>' . $preload_css_block;
+                    }
                     $noscript_css_block .= '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />';
                 } else {
                     if ( strlen( $this->csscode[ $media ] ) > $this->cssinlinesize ) {
-                        $this->inject_in_html( '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />', $replace_tag );
+                        $this->inject_in_html( apply_filters( 'autoptimize_filter_css_bodyreplacementpayload', '<link ' . $type_css . 'media="' . $media . '" href="' . $url . '" rel="stylesheet" />' ), $replace_tag );
                     } elseif ( strlen( $this->csscode[ $media ] ) > 0 ) {
-                        $this->inject_in_html( '<style ' . $type_css . 'media="' . $media . '">' . $this->csscode[ $media ] . '</style>', $replace_tag );
+                        $this->inject_in_html( apply_filters( 'autoptimize_filter_css_bodyreplacementpayload', '<style ' . $type_css . 'media="' . $media . '">' . $this->csscode[ $media ] . '</style>' ), $replace_tag );
                     }
                 }
             }
 
             if ( $this->defer ) {
-                $preload_polyfill    = autoptimizeConfig::get_ao_css_preload_polyfill();
                 $noscript_css_block .= '</noscript>';
                 // Inject inline critical CSS, the preloaded full CSS and the noscript-CSS.
-                $this->inject_in_html( $inlined_ccss_block . $preload_css_block . $noscript_css_block, $replace_tag );
-
-                // Adds preload polyfill at end of body tag.
-                $this->inject_in_html(
-                    apply_filters( 'autoptimize_css_preload_polyfill', $preload_polyfill ),
-                    apply_filters( 'autoptimize_css_preload_polyfill_injectat', array( '</body>', 'before' ) )
-                );
+                $this->inject_in_html( apply_filters( 'autoptimize_filter_css_bodyreplacementpayload', $inlined_ccss_block . $preload_css_block . $noscript_css_block ), $replace_tag );
             }
         }
 
@@ -1142,13 +1147,13 @@ class autoptimizeStyles extends autoptimizeBase
             return false;
         }
 
-        if ( ! empty( $this->whitelist ) ) {
-            foreach ( $this->whitelist as $match ) {
+        if ( ! empty( $this->allowlist ) ) {
+            foreach ( $this->allowlist as $match ) {
                 if ( false !== strpos( $tag, $match ) ) {
                     return true;
                 }
             }
-            // no match with whitelist.
+            // no match with allowlist.
             return false;
         } else {
             if ( is_array( $this->dontmove ) && ! empty( $this->dontmove ) ) {
@@ -1227,6 +1232,9 @@ class autoptimizeStyles extends autoptimizeBase
             if ( empty( $contents ) ) {
                 return false;
             }
+
+            // Filter contents of excluded minified CSS.
+            $contents = apply_filters( 'autoptimize_filter_css_single_after_minify', $contents );
 
             // Store in cache.
             $cache->cache( $contents, 'text/css' );

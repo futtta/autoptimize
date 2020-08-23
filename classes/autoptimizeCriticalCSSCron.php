@@ -141,7 +141,11 @@ class autoptimizeCriticalCSSCron {
                             // Update job properties.
                             $jprops['jid']    = $apireq['job']['id'];
                             $jprops['jqstat'] = $apireq['job']['status'];
-                            $jprops['jrstat'] = $apireq['error'];
+                            if ( $apireq['job']['error'] ) {
+                                $jprops['jrstat'] = $apireq['job']['error'];
+                            } else {
+                                $jprops['jrstat'] = 'Baby did a bad bad thing';
+                            }
                             $jprops['jvstat'] = 'NONE';
                             $jprops['jftime'] = microtime( true );
                             autoptimizeCriticalCSSCore::ao_ccss_log( 'Concurrent requests when processing job id <' . $jprops['ljid'] . '>, job status is now <' . $jprops['jqstat'] . '>', 3 );
@@ -269,9 +273,10 @@ class autoptimizeCriticalCSSCron {
                         // ERROR: failed job
                         // Update job properties.
                         $jprops['jqstat'] = $apireq['job']['status'];
-                        if ( $apireq['error'] ) {
+                        if ( $apireq['job']['error'] ) {
                             $jprops['jrstat'] = $apireq['job']['error'];
                         } else {
+                            $jprops['jrstat'] = 'Baby did a bad bad thing';
                         }
                         $jprops['jvstat'] = 'NONE';
                         $jprops['jftime'] = microtime( true );

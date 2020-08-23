@@ -20,9 +20,6 @@ class autoptimizeCriticalCSSBase {
     {
         // define constant, but only once.
         if ( ! defined( 'AO_CCSS_DIR' ) ) {
-            // Define plugin version.
-            define( 'AO_CCSS_VER', 'AO_' . AUTOPTIMIZE_PLUGIN_VERSION );
-
             // Define a constant with the directory to store critical CSS in.
             if ( is_multisite() ) {
                 $blog_id = get_current_blog_id();
@@ -30,17 +27,27 @@ class autoptimizeCriticalCSSBase {
             } else {
                 define( 'AO_CCSS_DIR', WP_CONTENT_DIR . '/uploads/ao_ccss/' );
             }
-
-            // Define support files locations.
-            define( 'AO_CCSS_LOCK', AO_CCSS_DIR . 'queue.lock' );
-            define( 'AO_CCSS_LOG', AO_CCSS_DIR . 'queuelog.html' );
-            define( 'AO_CCSS_DEBUG', AO_CCSS_DIR . 'queue.json' );
+        }
+        if ( ! defined( 'AO_CCSS_VER' ) ) {
+            // Define plugin version.
+            define( 'AO_CCSS_VER', 'AO_' . AUTOPTIMIZE_PLUGIN_VERSION );
 
             // Define constants for criticalcss.com base path and API endpoints.
             // fixme: AO_CCSS_URL should be read from the autoptimize availability json stored as option.
             define( 'AO_CCSS_URL', 'https://criticalcss.com' );
             define( 'AO_CCSS_API', AO_CCSS_URL . '/api/premium/' );
             define( 'AO_CCSS_SLEEP', 10 );
+        }
+
+        // Define support files locations, in case they are not already defined.
+        if ( ! defined( 'AO_CCSS_LOCK' ) ) {
+            define( 'AO_CCSS_LOCK', AO_CCSS_DIR . 'queue.lock' );
+        }
+        if ( ! defined( 'AO_CCSS_LOG' ) ) {
+            define( 'AO_CCSS_LOG', AO_CCSS_DIR . 'queuelog.html' );
+        }
+        if ( ! defined( 'AO_CCSS_DEBUG' ) ) {
+            define( 'AO_CCSS_DEBUG', AO_CCSS_DIR . 'queue.json' );
         }
 
         $this->filepath = __FILE__;
@@ -108,6 +115,7 @@ class autoptimizeCriticalCSSBase {
             $autoptimize_ccss_options['ao_ccss_servicestatus'] = get_option( 'autoptimize_service_availablity' );
             $autoptimize_ccss_options['ao_ccss_deferjquery']   = get_option( 'autoptimize_ccss_deferjquery', false );
             $autoptimize_ccss_options['ao_ccss_domain']        = get_option( 'autoptimize_ccss_domain' );
+            $autoptimize_ccss_options['ao_ccss_unloadccss']    = get_option( 'autoptimize_ccss_unloadccss', false );
 
             if ( strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'http' ) === false && strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'uggc' ) === 0 ) {
                 $autoptimize_ccss_options['ao_ccss_domain'] = str_rot13( $autoptimize_ccss_options['ao_ccss_domain'] );

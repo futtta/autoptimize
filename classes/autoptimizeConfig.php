@@ -407,9 +407,9 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         <?php _e( 'When aggregating JS or CSS, excluded files that are not minified (based on filename) are by default minified by Autoptimize despite being excluded. Uncheck this option if anything breaks despite excluding.', 'autoptimize' ); ?></label></td>
     </tr>
     <tr valign="top">
-        <th scope="row"><?php _e( 'Experimental: enable 404 fallbacks.', 'autoptimize' ); ?></th>
-        <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_fallback" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_cache_fallback', '' ) ? 'checked="checked" ' : ''; ?>/>
-        <?php _e( 'Sometimes Autoptimized JS/ CSS is referenced in cached HTML but is already removed, resulting in broken sites. This experimental feature tries to redirect those not-found files to "fallback"-versions, keeping the page/ site somewhat intact. In some cases this will require extra web-server level configuration to ensure <code>wp-content/autoptimize_404_handler.php</code> is set to handle 404\'s in <code>wp-content/cache/autoptimize</code>.', 'autoptimize' ); ?></label></td>
+        <th scope="row"><?php _e( 'Enable 404 fallbacks?', 'autoptimize' ); ?></th>
+        <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_fallback" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_cache_fallback', '1' ) ? 'checked="checked" ' : ''; ?>/>
+        <?php _e( 'Sometimes Autoptimized JS/ CSS is referenced in cached HTML but is already removed, resulting in broken sites. With this option on, Autoptimize will try to redirect those not-found files to "fallback"-versions, keeping the page/ site somewhat intact. In some cases this will require extra web-server level configuration to ensure <code>wp-content/autoptimize_404_handler.php</code> is set to handle 404\'s in <code>wp-content/cache/autoptimize</code>.', 'autoptimize' ); ?></label></td>
     </tr>
     <tr valign="top">
     <th scope="row"><?php _e( 'Also optimize for logged in editors/ administrators?', 'autoptimize' ); ?></th>
@@ -743,7 +743,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
             'autoptimize_optimize_logged'    => 1,
             'autoptimize_optimize_checkout'  => 0,
             'autoptimize_minify_excluded'    => 1,
-            'autoptimize_cache_fallback'     => '',
+            'autoptimize_cache_fallback'     => 1,
         );
 
         return $config;
@@ -786,24 +786,15 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
     }
 
     /**
-     * Returns preload polyfill JS.
-     *
-     * @return string
-     */
-    public static function get_ao_css_preload_polyfill()
-    {
-        $preload_poly = apply_filters( 'autoptimize_css_preload_polyfill', '<script data-cfasync=\'false\'>!function(t){"use strict";t.loadCSS||(t.loadCSS=function(){});var e=loadCSS.relpreload={};if(e.support=function(){var e;try{e=t.document.createElement("link").relList.supports("preload")}catch(t){e=!1}return function(){return e}}(),e.bindMediaToggle=function(t){function e(){t.media=a}var a=t.media||"all";t.addEventListener?t.addEventListener("load",e):t.attachEvent&&t.attachEvent("onload",e),setTimeout(function(){t.rel="stylesheet",t.media="only x"}),setTimeout(e,3e3)},e.poly=function(){if(!e.support())for(var a=t.document.getElementsByTagName("link"),n=0;n<a.length;n++){var o=a[n];"preload"!==o.rel||"style"!==o.getAttribute("as")||o.getAttribute("data-loadcss")||(o.setAttribute("data-loadcss",!0),e.bindMediaToggle(o))}},!e.support()){e.poly();var a=t.setInterval(e.poly,500);t.addEventListener?t.addEventListener("load",function(){e.poly(),t.clearInterval(a)}):t.attachEvent&&t.attachEvent("onload",function(){e.poly(),t.clearInterval(a)})}"undefined"!=typeof exports?exports.loadCSS=loadCSS:t.loadCSS=loadCSS}("undefined"!=typeof global?global:this);</script>' );
-        return $preload_poly;
-    }
-
-    /**
      * Returns preload JS onload handler.
      *
+     * @param string $media media attribute value the JS to use.
+     *
      * @return string
      */
-    public static function get_ao_css_preload_onload()
+    public static function get_ao_css_preload_onload( $media = 'all' )
     {
-        $preload_onload = apply_filters( 'autoptimize_filter_css_preload_onload', "this.onload=null;this.rel='stylesheet'" );
+        $preload_onload = apply_filters( 'autoptimize_filter_css_preload_onload', "this.onload=null;this.media='" . $media . "';" );
         return $preload_onload;
     }
 

@@ -3,16 +3,16 @@ Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, pagespeed, images, lazy-load, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
-Tested up to: 5.4
+Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 2.7.3
+Stable tag: 2.7.6
 
 Autoptimize speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
 == Description ==
 
 Autoptimize makes optimizing your site really easy. It can aggregate, minify and cache scripts and styles, injects CSS in the page head by default but can also inline critical CSS and defer the aggregated full CSS, moves and defers scripts to the footer and minifies HTML. You can optimize and lazy-load images, optimize Google Fonts, async non-aggregated JavaScript, remove WordPress core emoji cruft and more. As such it can improve your site's performance even when already on HTTP/2! There is extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
-If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler) or [WP Super Cache](http://wordpress.org/plugins/wp-super-cache/).
+If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [Speed Booster Pack](https://wordpress.org/plugins/speed-booster-pack/), [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler) or [WP Super Cache](http://wordpress.org/plugins/wp-super-cache/).
 
 > <strong>Premium Support</strong><br>
 > We provide great [Autoptimize Pro Support and Web Performance Optimization services](https://autoptimize.com/), check out our offering on [https://autoptimize.com/](https://autoptimize.com/)!
@@ -270,7 +270,7 @@ When both Autoptimize 2.7 and the separate Critical CSS power-up are installed a
 
 Autoptimize caches aggregated & optimized CSS/ JS and links to those cached files are stored in the HTML, which will be stored in a page cache (which can be a plugin, can be at host level, can be at 3rd party, in the Google cache, in a browser). If there is HTML in a page cache that links to Autoptimized CSS/ JS that has been removed in the mean time (when the cache was cleared) then the page from cache will not look/ work as expected as the CSS or JS were not found (a 404 error).
 
-This (new, experimental) setting aims to prevent things from breaking by serving "fallback" CSS or JS. The fallback-files are copies of the first Autoptimized CSS & JS files created after the cache was emptied and as such will based on the homepage. This means that the CSS/ JS migth not apply 100% on other pages, but at least the impact of missing CSS/ JS will be lessened (often significantly).
+This setting aims to prevent things from breaking by serving "fallback" CSS or JS. The fallback-files are copies of the first Autoptimized CSS & JS files created after the cache was emptied and as such will based on the homepage. This means that the CSS/ JS migth not apply 100% on other pages, but at least the impact of missing CSS/ JS will be lessened (often significantly).
 
 When the option is enabled, Autoptimize adds an `ErrorDocument 404` to the .htaccess (as used by Apache) and will also hook into WordPress core `template_redirect` to capture 404's handled by Wordpress. When using NGINX something like below should work (I'm not an NGINX specialist, but it does work for me);
 
@@ -278,6 +278,22 @@ When the option is enabled, Autoptimize adds an `ErrorDocument 404` to the .htac
 location ~* /wp-content/cache/autoptimize/.*\.(js|css)$ {
     try_files $uri $uri/ /wp-content/autoptimize_404_handler.php;
 }`
+
+= What open source software/ projects are used in Autoptimize? =
+
+The following great open source projects are used in Autoptimize in some form or another:
+
+* [Mr Clay's Minify](https://github.com/mrclay/minify/) for JS & HTML minification
+* [YUI CSS compressor PHP Port](https://github.com/tubalmartin/YUI-CSS-compressor-PHP-port) for CSS minification
+* [Lazysizes](https://github.com/aFarkas/lazysizes) for lazyload
+* [Persist Admin Notices Dismissal](https://github.com/w3guy/persist-admin-notices-dismissal) for notices in the administration screens
+* [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker/) for automated updates from Github for the beta version
+* [LoadCSS](https://github.com/filamentgroup/loadCSS) for deferring full CSS
+* [jQuery cookie](https://github.com/carhartl/jquery-cookie) to store the "futtta about" category selection in a cookie
+* [jQuery tablesorter](https://github.com/christianbach/tablesorter) for the critical CSS rules/ jobs display
+* [jQuery unslider](https://github.com/idiot/unslider/) for the mini-slider in the top right corner on the main settings page (repo gone)
+* [JavaScript-md5](https://github.com/blueimp/JavaScript-MD5) for critical CSS rules editing
+* [Speed Booster Pack](https://wordpress.org/plugins/speed-booster-pack/) for advanced JS deferring
 
 = Where can I get help? =
 
@@ -294,6 +310,28 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.7.6 =
+* fix for top frontend admin-bar being invisible when "inline & defer" is active.
+* fix for 3rd party CSS-files not being deferred when "inline & defer" is active.
+* small copy changes on Extra settings screen.
+
+= 2.7.5 =
+* urgent fix for Google Fonts aggregate & preload that broke badly in 2.7.4.
+
+= 2.7.4 =
+* Image optimization: also optimize icon links
+* Image optimization: fix webp-detection for Safari (contributed by @pinkasey)
+* Image lazyload: remove CSS that hides the placeholder image/ sets transistion between placeholder and final image
+* Critical CSS: new advanced option to unload CCSS on onLoad
+* Critical CSS improvement: cache templates in a transient to avoid overhead of having to search filesystem time and time again (contributed by @pratham2003)
+* Critical CSS improvement: better but still experimental jQuery deferring logic
+* Critical CSS fix: prevent MANUAL template-based rules being overwritten
+* CSS Inline & defer: move away from old loadCSS-based approach to [Filamentgroup's new, simpler method](https://www.filamentgroup.com/lab/load-css-simpler/)
+* 404 fallback enabled by default for new installations
+* changed all occurences of blacklist/ whitelist to blocklist/ allowlist. The filters `autoptimize_filter_js_whitelist` and `autoptimize_filter_css_whitelist` still work in 2.7.4 but usage is deprecated and should be replaced with `autoptimize_filter_js_allowlist` and `autoptimize_filter_css_allowlist`.
+* updated readme to explicitly confirm this is GPL + praise open source projects used in Autoptimize as praise was long overdue!
+* tested and confirmed working on WordPress 5.5 beta 2
 
 = 2.7.3 =
 * Critical CSS: cache settings in the PHP process instead of re-fetching them
