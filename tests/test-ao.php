@@ -216,6 +216,8 @@ class AOTest extends WP_UnitTestcase
     <!--[if (gte IE 6)&(lte IE 8)]>
         <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'>
+<link rel='stylesheet' media='print' href='https://justsome.url/print.css'>
 </head>
 
 <body class="single single-post">
@@ -283,6 +285,8 @@ MARKUP;
     <!--[if (gte IE 6)&(lte IE 8)]>
         <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'>
+<link rel='stylesheet' media='print' href='https://justsome.url/print.css'>
 </head>
 
 <body class="single single-post">
@@ -350,6 +354,8 @@ MARKUP;
     <!--[if (gte IE 6)&(lte IE 8)]>
         <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'>
+<link rel='stylesheet' media='print' href='https://justsome.url/print.css'>
 </head>
 
 <body class="single single-post">
@@ -408,7 +414,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="$cdnurl/${subfolder}${csspart}{$csshash}.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/${subfolder}${csspart}{$csshash}.css" onload="this.onload=null;this.media='all';" /><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -417,6 +423,8 @@ MARKUP;
     <!--[if (gte IE 6)&(lte IE 8)]>
         <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
+<noscript><link media='all' rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'></noscript><link media='print' onload="this.onload=null;this.media='all';" rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'>
+<link rel='stylesheet' media='print' href='https://justsome.url/print.css'>
 </head>
 
 <body class="single single-post">
@@ -475,7 +483,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style id="aoatfcss" media="all">1</style><link rel="preload" as="style" media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" onload="this.onload=null;this.rel='stylesheet'" /><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/${subfolder}${csspart}${csshash}.css" onload="this.onload=null;this.media='all';" /><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -484,6 +492,8 @@ MARKUP;
     <!--[if (gte IE 6)&(lte IE 8)]>
         <script type="text/javascript" src="$siteurl/wp-content/themes/my-theme/js/vendor/respond.min.js"></script>
     <![endif]-->
+<noscript><link media='all' rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'></noscript><link media='print' onload="this.onload=null;this.media='all';" rel='stylesheet' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'>
+<link rel='stylesheet' media='print' href='https://justsome.url/print.css'>
 </head>
 
 <body class="single single-post">
