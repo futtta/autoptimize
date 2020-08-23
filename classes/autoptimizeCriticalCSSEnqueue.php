@@ -189,6 +189,7 @@ class autoptimizeCriticalCSSEnqueue {
         // Get the type of a page
         // Attach the conditional tags array.
         global $ao_ccss_types;
+        global $ao_ccss_forcepath;
 
         // By default, a page type is false.
         $page_type = false;
@@ -198,14 +199,14 @@ class autoptimizeCriticalCSSEnqueue {
             if ( is_404() ) {
                 $page_type = 'is_404';
                 break;
-            } elseif ( strpos( $type, 'custom_post_' ) !== false ) {
-                // Match custom post types.
+            } elseif ( strpos( $type, 'custom_post_' ) !== false && ( ! $ao_ccss_forcepath || ! is_page() ) ) {
+                // Match custom post types and not page or page not forced to path-based.
                 if ( get_post_type( get_the_ID() ) === substr( $type, 12 ) ) {
                     $page_type = $type;
                     break;
                 }
-            } elseif ( strpos( $type, 'template_' ) !== false ) {
-                // Match templates.
+            } elseif ( strpos( $type, 'template_' ) !== false && ( ! $ao_ccss_forcepath || ! is_page() ) ) {
+                // Match templates if not page or if page is not forced to path-based.
                 if ( is_page_template( substr( $type, 9 ) ) ) {
                     $page_type = $type;
                     break;

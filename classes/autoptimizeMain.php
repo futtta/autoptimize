@@ -611,8 +611,8 @@ class autoptimizeMain
         $ao_ccss_dir = WP_CONTENT_DIR . '/uploads/ao_ccss/';
         if ( file_exists( $ao_ccss_dir ) && is_dir( $ao_ccss_dir ) ) {
             // fixme: should check for subdirs when in multisite and remove contents of those as well.
-            array_map( 'unlink', glob( AO_CCSS_DIR . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
-            rmdir( AO_CCSS_DIR );
+            array_map( 'unlink', glob( $ao_ccss_dir . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
+            rmdir( $ao_ccss_dir );
         }
     }
 

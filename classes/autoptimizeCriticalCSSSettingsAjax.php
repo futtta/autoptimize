@@ -281,7 +281,7 @@ class autoptimizeCriticalCSSSettingsAjax {
         $error = false;
 
         // Process an uploaded file with no errors.
-        if ( ! $_FILES['file']['error'] ) {
+        if ( current_user_can( 'manage_options' ) && ! $_FILES['file']['error'] && strpos( $_FILES['file']['name'], '.zip' ) === strlen( $_FILES['file']['name'] ) - 4 ) {
             // Save file to the cache directory.
             $zipfile = AO_CCSS_DIR . $_FILES['file']['name'];
             move_uploaded_file( $_FILES['file']['tmp_name'], $zipfile );
@@ -292,10 +292,20 @@ class autoptimizeCriticalCSSSettingsAjax {
                 $zip->extractTo( AO_CCSS_DIR );
                 $zip->close();
             } else {
-                $error = 'extracting';
+                $error = 'could not extract';
             }
 
             if ( ! $error ) {
+                // only known files allowed, all others are deleted.
+                $_dir_contents_ccss = glob( AO_CCSS_DIR . 'ccss_*.css' );
+                $_dir_known_ok      = array( AO_CCSS_DIR . 'queue.lock', AO_CCSS_DIR . 'queuelog.html', AO_CCSS_DIR . 'index.html', AO_CCSS_DIR . 'settings.json' );
+                $_dir_contents_ok   = array_merge( $_dir_contents_ccss, $_dir_known_ok );
+                $_dir_contents_all  = glob( AO_CCSS_DIR . '*' );
+                $_dir_to_be_deleted = array_diff( $_dir_contents_all, $_dir_contents_ok );
+                foreach ( $_dir_to_be_deleted as $_file_to_be_deleted ) {
+                    unlink( $_file_to_be_deleted );
+                }
+
                 // Archive extraction ok, continue settings importing
                 // Settings file.
                 $importfile = AO_CCSS_DIR . 'settings.json';
@@ -318,6 +328,8 @@ class autoptimizeCriticalCSSSettingsAjax {
                     $error = 'settings file does not exist';
                 }
             }
+        } else {
+            $error = 'file could not be saved';
         }
 
         // Prepare response.

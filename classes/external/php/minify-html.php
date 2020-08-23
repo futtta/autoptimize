@@ -158,6 +158,9 @@ class Minify_HTML {
         // use newlines before 1st attribute in open tags (to limit line lengths)
         //$this->_html = preg_replace('/(<[a-z\\-]+)\\s+([^>]+>)/i', "$1\n$2", $this->_html);
 
+        // reverse order while preserving keys to ensure the last replacement is done first, etc ...
+        $this->_placeholders = array_reverse( $this->_placeholders, true );
+
         // fill placeholders
         $this->_html = str_replace(
             array_keys($this->_placeholders)

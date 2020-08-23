@@ -195,6 +195,10 @@ class autoptimizeCriticalCSSCore {
         // set media attrib of inline CCSS to none at onLoad to avoid it impacting full CSS (rarely needed).
         $_unloadccss_js = apply_filters( 'autoptimize_filter_ccss_core_unloadccss_js', '<script>window.addEventListener("load", function(event) {document.getElementById("aoatfcss").media="none";})</script>' );
 
+        if ( false !== strpos( $html_in, $_unloadccss_js . '</body>' ) ) {
+            return $html_in;
+        }
+
         return str_replace( '</body>', $_unloadccss_js . '</body>', $html_in );
     }
 

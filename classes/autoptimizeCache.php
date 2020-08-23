@@ -669,6 +669,11 @@ class autoptimizeCache
             $js_or_css     = pathinfo( $original_request, PATHINFO_EXTENSION );
             $fallback_path = AUTOPTIMIZE_CACHE_DIR . $js_or_css . '/autoptimize_fallback.' . $js_or_css;
 
+            // prepare for Shakeeb's Unused CSS files to be 404-handled as well.
+            if ( strpos( $original_request, 'uucss/uucss-' ) !== false ) {
+                $original_request = preg_replace( '/uucss\/uucss-[a-z0-9]{32}-/', 'css/', $original_request  );
+            }
+
             // set fallback URL.
             $fallback_target = preg_replace( '/(.*)_(?:[a-z0-9]{32})\.(js|css)$/', '${1}_fallback.${2}', $original_request );
 
@@ -756,6 +761,8 @@ class autoptimizeCache
             w3tc_pgcache_flush();
         } elseif ( function_exists( 'wp_fast_cache_bulk_delete_all' ) ) {
             wp_fast_cache_bulk_delete_all();
+        } elseif ( class_exists( 'Swift_Performance_Cache' ) ) {
+            Swift_Performance_Cache::clear_all_cache();
         } elseif ( class_exists( 'WpFastestCache' ) ) {
             $wpfc = new WpFastestCache();
             $wpfc->deleteCache();
