@@ -698,7 +698,7 @@ class autoptimizeCriticalCSSCron {
         return $filename;
     }
 
-    public function ao_ccss_rule_update( $ljid, $srule, $file, $hash, $critImg = false ) {
+    public function ao_ccss_rule_update( $ljid, $srule, $file, $hash, $crit_img = false ) {
         // Update or create a rule
         // Attach required arrays.
         global $ao_ccss_rules;
