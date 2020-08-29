@@ -43,6 +43,7 @@ class autoptimizeConfig
 
             add_action( 'admin_menu', array( $this, 'addmenu' ) );
             add_action( 'admin_init', array( $this, 'registersettings' ) );
+            add_action( 'admin_init', array( 'PAnD', 'init' ) );
 
             // Set meta info.
             if ( function_exists( 'plugin_row_meta' ) ) {
