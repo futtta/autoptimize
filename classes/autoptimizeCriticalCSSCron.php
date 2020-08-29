@@ -238,6 +238,9 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jftime'] = microtime( true );
                             $rule_update      = true;
                             autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . '>, file saved <' . $jprops['file'] . '>', 3 );
+                            if ( array_key_exists( 'criticalImages', $apireq ) && ! empty( $apireq['criticalImages'] ) ) {
+                                $jprops['criticalImages'] = $apireq['criticalImages'];
+                            }
                         } elseif ( 'GOOD' == $apireq['resultStatus'] && ( 'WARN' == $apireq['validationStatus'] || 'BAD' == $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' == $apireq['validationStatus'] ) ) {
                             // SUCCESS: GOOD job with WARN or BAD validation
                             // Update job properties.
@@ -248,6 +251,9 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jftime'] = microtime( true );
                             $rule_update      = true;
                             autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file saved <' . $jprops['file'] . '> but requires REVIEW', 3 );
+                            if ( array_key_exists( 'criticalImages', $apireq ) && ! empty( $apireq['criticalImages'] ) ) {
+                                $jprops['criticalImages'] = $apireq['criticalImages'];
+                            }
                         } elseif ( 'GOOD' != $apireq['resultStatus'] && ( 'GOOD' != $apireq['validationStatus'] || 'WARN' != $apireq['validationStatus'] || 'BAD' != $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' != $apireq['validationStatus'] ) ) {
                             // ERROR: no GOOD, WARN or BAD results
                             // Update job properties.
@@ -335,7 +341,7 @@ class autoptimizeCriticalCSSCron {
 
                     // Update target rule.
                     if ( $rule_update ) {
-                        $this->ao_ccss_rule_update( $jprops['ljid'], $jprops['rtarget'], $jprops['file'], $jprops['hash'] );
+                        $this->ao_ccss_rule_update( $jprops['ljid'], $jprops['rtarget'], $jprops['file'], $jprops['hash'], $jprops['criticalImages'] );
                         autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> updated the target rule <' . $jprops['rtarget'] . '>', 3 );
                     }
                 } else {
@@ -488,6 +494,11 @@ class autoptimizeCriticalCSSCron {
         $finclude = $this->ao_ccss_finclude( $ao_ccss_finclude );
         if ( ! empty( $finclude ) ) {
             $body['forceInclude'] = $finclude;
+        }
+        
+        // If AO lazyload is on, ask for critical Images so those can be excluded.
+        if ( autoptimizeImages::should_lazyload_wrapper() && apply_filters( 'autoptimize_filter_ccss_exclude_critical_images_lazyload', true ) ) {
+            $body['detectCriticalImages'] = 'true';
         }
 
         // Add filter to allow the body array to be altered (e.g. to add customPageHeaders).
@@ -687,7 +698,7 @@ class autoptimizeCriticalCSSCron {
         return $filename;
     }
 
-    public function ao_ccss_rule_update( $ljid, $srule, $file, $hash ) {
+    public function ao_ccss_rule_update( $ljid, $srule, $file, $hash, $critImg = false ) {
         // Update or create a rule
         // Attach required arrays.
         global $ao_ccss_rules;
@@ -709,6 +720,9 @@ class autoptimizeCriticalCSSCron {
             $rule['file'] = $file;
             $action       = 'UPDATED';
             $rtype        = 'AUTO';
+            if ( false !== $crit_img ) {
+                $rule['critImg'] = $crit_img;
+            }
         } elseif ( 0 !== $rule['hash'] && ctype_alnum( $rule['hash'] ) ) {
             // If this is an genuine AUTO rule, update its hash and filename
             // Set rule hash, file and action flag.
@@ -716,6 +730,9 @@ class autoptimizeCriticalCSSCron {
             $rule['file'] = $file;
             $action       = 'UPDATED';
             $rtype        = 'AUTO';
+            if ( false !== $crit_img ) {
+                $rule['critImg'] = $crit_img;
+            }
         } else {
             // If rule doesn't exist, create an AUTO rule
             // AUTO rules were only for types, but will now also work for paths.
@@ -725,6 +742,9 @@ class autoptimizeCriticalCSSCron {
                 $rule['file'] = $file;
                 $action       = 'CREATED';
                 $rtype        = 'AUTO';
+                if ( false !== $crit_img ) {
+                    $rule['critImg'] = $crit_img;
+                }
             } else {
                 // Log that no rule was created.
                 autoptimizeCriticalCSSCore::ao_ccss_log( 'Exception, no AUTO rule created', 3 );

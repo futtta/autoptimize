@@ -17,6 +17,8 @@ class autoptimizeCriticalCSSCore {
             global ${$_option};
             ${$_option} = $_value;
         }
+        
+        global $ao_ccss_lazyload_excl_img;
 
         $this->run();
     }
@@ -62,6 +64,9 @@ class autoptimizeCriticalCSSCore {
 
             // When autoptimize cache is cleared, also clear transient cache for page templates.
             add_action( 'autoptimize_action_cachepurged', array( 'autoptimizeCriticalCSSCore', 'ao_ccss_clear_page_tpl_cache' ), 10, 0 );
+            
+            // hook into lazyload exclusions.
+            add_filter( 'autoptimize_filter_imgopt_should_lazyload', array( $this, 'ao_ccss_lazyload_excl_img' ), 10, 1 );
         }
     }
 
@@ -87,6 +92,9 @@ class autoptimizeCriticalCSSCore {
                         if ( file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
                             $_ccss_contents = file_get_contents( AO_CCSS_DIR . $rule['file'] );
                             if ( 'none' != $_ccss_contents ) {
+                                if ( array_key_exists( 'critImg', $rule) && ! empty( $rule['critImg'] ) ) {
+                                    $ao_ccss_lazyload_excl_img = $rule['critImg'];
+                                }
                                 if ( $ao_ccss_debug ) {
                                     $_ccss_contents = '/* PATH: ' . $path . ' hash: ' . $rule['hash'] . ' file: ' . $rule['file'] . ' */ ' . $_ccss_contents;
                                 }
@@ -110,6 +118,9 @@ class autoptimizeCriticalCSSCore {
                         $_ccss_contents = file_get_contents( AO_CCSS_DIR . $rule['file'] );
                         if ( $is_front_page && 'is_front_page' == $type ) {
                             if ( 'none' != $_ccss_contents ) {
+                                if ( array_key_exists( 'critImg', $rule) && ! empty( $rule['critImg'] ) ) {
+                                    $ao_ccss_lazyload_excl_img = $rule['critImg'];
+                                }
                                 if ( $ao_ccss_debug ) {
                                     $_ccss_contents = '/* TYPES: ' . $type . ' hash: ' . $rule['hash'] . ' file: ' . $rule['file'] . ' */ ' . $_ccss_contents;
                                 }
@@ -189,6 +200,12 @@ class autoptimizeCriticalCSSCore {
             }
         }
         return $in;
+    }
+
+    public function ao_ccss_lazyload_excl_img( $lazyload_exclusions ) {
+        global $ao_ccss_lazyload_excl_img;
+        $lazyload_exclusions = array_merge( $lazyload_exclusions, $ao_ccss_lazyload_excl_img );
+        return $lazyload_exclusions;
     }
 
     public function ao_ccss_unloadccss( $html_in ) {
