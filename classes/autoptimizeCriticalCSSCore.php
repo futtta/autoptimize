@@ -79,6 +79,7 @@ class autoptimizeCriticalCSSCore {
         global $ao_ccss_loggedin;
         global $ao_ccss_debug;
         global $ao_ccss_keyst;
+        global $ao_ccss_lazyload_excl_img;
         $no_ccss = '';
 
         // Only if keystatus is OK and option to add CCSS for logged on users is on or user is not logged in.
