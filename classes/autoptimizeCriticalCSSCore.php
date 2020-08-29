@@ -204,13 +204,14 @@ class autoptimizeCriticalCSSCore {
 
     public function ao_ccss_lazyload_excl_img( $lazyload_exclusions ) {
         global $ao_ccss_lazyload_excl_img;
-        if ( empty( $ao_ccss_lazyload_excl_img ) || ! is_array( $ao_ccss_lazyload_excl_img ) ) {
+        $ao_ccss_lazyload_excl_img_arr = json_decode( $ao_ccss_lazyload_excl_img );
+        if ( empty( $ao_ccss_lazyload_excl_img_arr ) || ! is_array( $ao_ccss_lazyload_excl_img_arr ) ) {
             return $lazyload_exclusions;
         }
         if ( empty( $lazyload_exclusions ) || ! is_array( $lazyload_exclusions ) ) {
             $lazyload_exclusions = array();
         }
-        $lazyload_exclusions = array_merge( $lazyload_exclusions, $ao_ccss_lazyload_excl_img );
+        $lazyload_exclusions = array_merge( $lazyload_exclusions, $ao_ccss_lazyload_excl_img_arr );
         return $lazyload_exclusions;
     }
 

@@ -721,7 +721,7 @@ class autoptimizeCriticalCSSCron {
             $action       = 'UPDATED';
             $rtype        = 'AUTO';
             if ( false !== $crit_img ) {
-                $rule['critImg'] = $crit_img;
+                $rule['critImg'] = json_encode( $crit_img );
             }
         } elseif ( 0 !== $rule['hash'] && ctype_alnum( $rule['hash'] ) ) {
             // If this is an genuine AUTO rule, update its hash and filename
@@ -731,7 +731,7 @@ class autoptimizeCriticalCSSCron {
             $action       = 'UPDATED';
             $rtype        = 'AUTO';
             if ( false !== $crit_img ) {
-                $rule['critImg'] = $crit_img;
+                $rule['critImg'] = json_encode( $crit_img );
             }
         } else {
             // If rule doesn't exist, create an AUTO rule
@@ -743,7 +743,7 @@ class autoptimizeCriticalCSSCron {
                 $action       = 'CREATED';
                 $rtype        = 'AUTO';
                 if ( false !== $crit_img ) {
-                    $rule['critImg'] = $crit_img;
+                    $rule['critImg'] = json_encode( $crit_img );
                 }
             } else {
                 // Log that no rule was created.
