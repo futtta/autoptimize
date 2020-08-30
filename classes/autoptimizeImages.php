@@ -752,7 +752,7 @@ class autoptimizeImages
 
     public function add_lazyload( $tag, $placeholder = '' ) {
         // adds actual lazyload-attributes to an image node.
-        if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+        if ( str_ireplace( $this->get_lazyload_exclusions(), '', htmlspecialchars_decode( $tag ) ) === htmlspecialchars_decode( $tag ) ) {
             $tag = $this->maybe_fix_missing_quotes( $tag );
 
             // store original tag for use in noscript version.
