@@ -791,7 +791,7 @@ class autoptimizeImages
             // add the noscript-tag from earlier.
             $tag = $noscript_tag . $tag;
             $tag = apply_filters( 'autoptimize_filter_imgopt_lazyloaded_img', $tag );
-        } else if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_exclusion_to_native', true) ) {
+        } else if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_exclusion_to_native_lazyload', false ) ) {
             // if excluded from AO optimization, fall back to native lazyload as also done by WordPress core.
             $tag = str_replace( ' src=', ' loading="lazy" src=', $tag );
         }
@@ -868,6 +868,9 @@ class autoptimizeImages
 
             // and filter for developer-initiated changes.
             $exclude_lazyload_array = apply_filters( 'autoptimize_filter_imgopt_lazyload_exclude_array', $exclude_lazyload_array );
+
+            // and make sure all exclusions are htmlspecialchars_decode'd as that's what we'll compare against.
+            $exclude_lazyload_array = array_map( 'htmlspecialchars_decode', $exclude_lazyload_array );
         }
 
         return $exclude_lazyload_array;
