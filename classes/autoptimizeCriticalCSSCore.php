@@ -66,7 +66,9 @@ class autoptimizeCriticalCSSCore {
             add_action( 'autoptimize_action_cachepurged', array( 'autoptimizeCriticalCSSCore', 'ao_ccss_clear_page_tpl_cache' ), 10, 0 );
             
             // hook into lazyload exclusions.
-            add_filter( 'autoptimize_filter_imgopt_should_lazyload', array( $this, 'ao_ccss_lazyload_excl_img' ), 10, 1 );
+            if ( autoptimizeImages::should_lazyload_wrapper() && apply_filters( 'autoptimize_filter_ccss_exclude_critical_images_lazyload', true ) ) {
+                add_filter( 'autoptimize_filter_imgopt_lazyload_exclude_array', array( $this, 'ao_ccss_lazyload_excl_img' ), 10, 1 );
+            }
         }
     }
 
@@ -204,15 +206,22 @@ class autoptimizeCriticalCSSCore {
     }
 
     public function ao_ccss_lazyload_excl_img( $lazyload_exclusions ) {
+        // add images identied as critical to the AO lazyload exclusion list on the fly.
         global $ao_ccss_lazyload_excl_img;
-        $ao_ccss_lazyload_excl_img_arr = json_decode( $ao_ccss_lazyload_excl_img );
-        if ( empty( $ao_ccss_lazyload_excl_img_arr ) || ! is_array( $ao_ccss_lazyload_excl_img_arr ) ) {
+        if ( empty( $ao_ccss_lazyload_excl_img ) ) {
             return $lazyload_exclusions;
         }
+        $ao_ccss_lazyload_excl_img_arr = json_decode( $ao_ccss_lazyload_excl_img );
+
+        // if no exclusions set, make sure we have an empty array.
         if ( empty( $lazyload_exclusions ) || ! is_array( $lazyload_exclusions ) ) {
             $lazyload_exclusions = array();
         }
-        $lazyload_exclusions = array_merge( $lazyload_exclusions, $ao_ccss_lazyload_excl_img_arr );
+
+        // merge "critical images" array with other exclusions.
+        $lazyload_exclusions = array_unique( array_merge( $lazyload_exclusions, $ao_ccss_lazyload_excl_img_arr ) );
+
+        // and return to autoptimize lazyload.
         return $lazyload_exclusions;
     }
 
