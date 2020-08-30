@@ -793,7 +793,7 @@ class autoptimizeImages
             $tag = apply_filters( 'autoptimize_filter_imgopt_lazyloaded_img', $tag );
         } else if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_exclusion_to_native', true) ) {
             // if excluded from AO optimization, fall back to native lazyload as also done by WordPress core.
-            $tag = str_replace( ' src=', 'loading="lazy" src=', $tag );
+            $tag = str_replace( ' src=', ' loading="lazy" src=', $tag );
         }
 
         return $tag;
