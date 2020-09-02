@@ -791,8 +791,14 @@ class autoptimizeImages
             // add the noscript-tag from earlier.
             $tag = $noscript_tag . $tag;
             $tag = apply_filters( 'autoptimize_filter_imgopt_lazyloaded_img', $tag );
-        } else if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_exclusion_to_native_lazyload', false ) ) {
-            // if excluded from AO optimization, fall back to native lazyload as also done by WordPress core.
+        } else if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_exclusion_to_native_lazyload', true ) ) {
+            // If excluded from AO optimization, fall back to native lazyload as also done by WordPress core.
+            //
+            // This ensures the browser can decide if the image is lazyloaded or not, meaning images that are marked
+            // critical based on desktop viewport but are not above-the-fold can be natively lazyloaded while browsers
+            // will not lazyload above-the-fold images even if loading="lazy".
+            //
+            // This can be disabled with the "autoptimize_filter_imgopt_lazyload_exclusion_to_native_lazyload" filter.
             $tag = str_replace( ' src=', ' loading="lazy" src=', $tag );
         }
 
