@@ -59,6 +59,7 @@ class autoptimizeScripts extends autoptimizeBase
         'post_id',
         'data-noptimize',
         'logHuman',
+        'amp-mobile-version-switcher',
     );
 
     /**
