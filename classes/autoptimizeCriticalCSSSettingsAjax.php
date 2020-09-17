@@ -287,8 +287,8 @@ class autoptimizeCriticalCSSSettingsAjax {
             $_import_tmp_dir = trailingslashit( AO_CCSS_DIR . $_secret_dir );
             mkdir( $_import_tmp_dir );
 
-            // Save file to that tmp directory.
-            $zipfile = $_import_tmp_dir . $_FILES['file']['name'];
+            // Save file to that tmp directory but give it our own name to prevent directory traversal risks when using original name.
+            $zipfile = $_import_tmp_dir . uniqid( 'import_settings-', true ) . '.zip';
             move_uploaded_file( $_FILES['file']['tmp_name'], $zipfile );
 
             // Extract archive in the tmp directory.
