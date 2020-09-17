@@ -281,9 +281,9 @@ class autoptimizeCriticalCSSSettingsAjax {
         $error = false;
 
         // Process an uploaded file with no errors.
-        if ( current_user_can( 'manage_options' ) && ! $_FILES['file']['error'] && strpos( $_FILES['file']['name'], '.zip' ) === strlen( $_FILES['file']['name'] ) - 4 ) {
+        if ( current_user_can( 'manage_options' ) && ! $_FILES['file']['error'] && $_FILES['userfile']['size'] < 500001 && strpos( $_FILES['file']['name'], '.zip' ) === strlen( $_FILES['file']['name'] ) - 4 ) {
             // create tmp dir with hard guess name in AO_CCSS_DIR.
-            $_secret_dir    = wp_hash( AUTOPTIMIZE_CACHE_URL );
+            $_secret_dir     = wp_hash( uniqid( md5( AUTOPTIMIZE_CACHE_URL ), true ) );
             $_import_tmp_dir = trailingslashit( AO_CCSS_DIR . $_secret_dir );
             mkdir( $_import_tmp_dir );
 
@@ -294,35 +294,22 @@ class autoptimizeCriticalCSSSettingsAjax {
             // Extract archive in the tmp directory.
             $zip = new ZipArchive;
             if ( $zip->open( $zipfile ) === true ) {
-                $zip->extractTo( $_import_tmp_dir );
+                // loop through all files in the zipfile.
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    // but only extract known good files.
+                    if ( preg_match('/settings\.json|ccss_[a-z0-9]{32}\.css$/', $zip->getNameIndex( $i ) ) > 0 ) {
+                        $zip->extractTo( AO_CCSS_DIR, $zip->getNameIndex( $i ) );
+                    }
+                }
                 $zip->close();
             } else {
                 $error = 'could not extract';
             }
+            
+            // and remove temp. dir with all contents (the import-zipfile).
+            $this->rrmdir( $_import_tmp_dir );
 
             if ( ! $error ) {
-                // only known files allowed, all others are deleted.
-                $_dir_contents_ccss = glob( $_import_tmp_dir . 'ccss_*.css' );
-                $_dir_known_ok      = array( $_import_tmp_dir . 'settings.json' );
-                $_dir_contents_ok   = array_merge( $_dir_contents_ccss, $_dir_known_ok );
-                $_dir_contents_all  = glob( $_import_tmp_dir . '*' );
-                $_dir_to_be_deleted = array_diff( $_dir_contents_all, $_dir_contents_ok );
-                foreach ( $_dir_to_be_deleted as $_file_to_be_deleted ) {
-                    if ( is_dir( $_file_to_be_deleted ) ) {
-                        $this->rrmdir( $_file_to_be_deleted );
-                    } else {
-                        unlink( $_file_to_be_deleted );
-                    }
-                }
-
-                // and then move known good files to AO_CCSS_DIR.
-                foreach ( $_dir_contents_ok as $ok_file ) {
-                    rename( $ok_file, str_replace( $_secret_dir, '', $ok_file ) );
-                }
-                
-                // and then remove the tmp dir recursively.
-                $this->rrmdir( $_import_tmp_dir );
-
                 // Archive extraction ok, continue importing settings from AO_CCSS_DIR.
                 // Settings file.
                 $importfile = AO_CCSS_DIR . 'settings.json';
