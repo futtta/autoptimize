@@ -281,7 +281,7 @@ class autoptimizeCriticalCSSSettingsAjax {
         $error = false;
 
         // Process an uploaded file with no errors.
-        if ( current_user_can( 'manage_options' ) && ! $_FILES['file']['error'] && $_FILES['userfile']['size'] < 500001 && strpos( $_FILES['file']['name'], '.zip' ) === strlen( $_FILES['file']['name'] ) - 4 ) {
+        if ( current_user_can( 'manage_options' ) && ! $_FILES['file']['error'] && $_FILES['file']['size'] < 500001 && strpos( $_FILES['file']['name'], '.zip' ) === strlen( $_FILES['file']['name'] ) - 4 ) {
             // create tmp dir with hard guess name in AO_CCSS_DIR.
             $_secret_dir     = wp_hash( uniqid( md5( AUTOPTIMIZE_CACHE_URL ), true ) );
             $_import_tmp_dir = trailingslashit( AO_CCSS_DIR . $_secret_dir );
@@ -297,7 +297,7 @@ class autoptimizeCriticalCSSSettingsAjax {
                 // loop through all files in the zipfile.
                 for ($i = 0; $i < $zip->numFiles; $i++) {
                     // but only extract known good files.
-                    if ( preg_match('/settings\.json|ccss_[a-z0-9]{32}\.css$/', $zip->getNameIndex( $i ) ) > 0 ) {
+                    if ( preg_match('/^settings\.json$|^ccss_[a-z0-9]{32}\.css$/', $zip->getNameIndex( $i ) ) > 0 ) {
                         $zip->extractTo( AO_CCSS_DIR, $zip->getNameIndex( $i ) );
                     }
                 }
