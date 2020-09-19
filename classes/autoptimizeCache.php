@@ -647,7 +647,7 @@ class autoptimizeCache
         static $_do_fallback = null;
 
         if ( null === $_do_fallback ) {
-            $_do_fallback = (bool) apply_filters( 'autoptimize_filter_cache_do_fallback', autoptimizeOptionWrapper::get_option( 'autoptimize_cache_fallback', '' ) );
+            $_do_fallback = (bool) apply_filters( 'autoptimize_filter_cache_do_fallback', autoptimizeOptionWrapper::get_option( 'autoptimize_cache_fallback', '1' ) );
         }
 
         return $_do_fallback;
