@@ -358,6 +358,11 @@ class autoptimizeImages
                 $result = str_replace( $cdn_domain, $parsed_site_url['host'], $result );
             }
 
+            // filter (default off) to remove QS from image URL's to avoid eating away optimization credits.
+            if ( apply_filters( 'autoptimize_filter_imgopt_no_querystring', false ) && strpos( $result, '?' ) !== false ) {
+                $result = strtok( $result, '?' );
+            }
+
             $result = apply_filters( 'autoptimize_filter_imgopt_normalized_url', $result );
 
             // Store in cache.
@@ -531,8 +536,9 @@ class autoptimizeImages
                 // first do (data-)srcsets.
                 if ( preg_match_all( '#srcset=("|\')(.*)("|\')#Usmi', $tag, $allsrcsets, PREG_SET_ORDER ) ) {
                     foreach ( $allsrcsets as $srcset ) {
-                        $srcset  = $srcset[2];
-                        $srcsets = explode( ',', $srcset );
+                        $srcset      = $srcset[2];
+                        $orig_srcset = $srcset;
+                        $srcsets     = explode( ',', $srcset );
                         foreach ( $srcsets as $indiv_srcset ) {
                             $indiv_srcset_parts = explode( ' ', trim( $indiv_srcset ) );
                             if ( isset( $indiv_srcset_parts[1] ) && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
@@ -540,9 +546,10 @@ class autoptimizeImages
                             }
                             if ( $this->can_optimize_image( $indiv_srcset_parts[0], $tag ) ) {
                                 $imgopt_url = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
-                                $tag        = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
+                                $srcset     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $srcset );
                             }
                         }
+                        $tag = str_replace( $orig_srcset, $srcset, $tag );
                     }
                 }
 
