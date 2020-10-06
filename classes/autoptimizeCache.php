@@ -95,6 +95,11 @@ class autoptimizeCache
      */
     public function cache( $data, $mime )
     {
+        // readonly FS explicitly OK'ed by developer, so just pretend all is OK.
+        if ( defined( 'AUTOPTIMIZE_CACHE_READONLY' ) ) {
+            return true;
+        }
+
         // off by default; check if cachedirs exist every time before caching
         //
         // to be activated for users that experience these ugly errors;
@@ -529,6 +534,11 @@ class autoptimizeCache
      */
     public static function cacheavail()
     {
+        // readonly FS explicitly OK'ed by dev, let's assume the cache dirs are there!
+        if ( defined( 'AUTOPTIMIZE_CACHE_READONLY' ) ) {
+            return true;
+        }
+
         if ( false === autoptimizeCache::check_and_create_dirs() ) {
             return false;
         }
