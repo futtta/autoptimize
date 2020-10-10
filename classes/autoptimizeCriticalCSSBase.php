@@ -80,7 +80,7 @@ class autoptimizeCriticalCSSBase {
         // Required libs, core is always needed.
         $criticalcss_core = new autoptimizeCriticalCSSCore();
 
-        if ( defined( 'DOING_CRON' ) || is_admin() ) {
+        if ( defined( 'WP_CLI' ) || defined( 'DOING_CRON' ) || is_admin() ) {
             // TODO: also include if overridden somehow to force queue processing to be executed?
             $criticalcss_cron = new autoptimizeCriticalCSSCron();
         }

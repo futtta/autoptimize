@@ -95,6 +95,11 @@ class autoptimizeCache
      */
     public function cache( $data, $mime )
     {
+        // readonly FS explicitly OK'ed by developer, so just pretend all is OK.
+        if ( defined( 'AUTOPTIMIZE_CACHE_READONLY' ) ) {
+            return true;
+        }
+
         // off by default; check if cachedirs exist every time before caching
         //
         // to be activated for users that experience these ugly errors;
@@ -529,6 +534,11 @@ class autoptimizeCache
      */
     public static function cacheavail()
     {
+        // readonly FS explicitly OK'ed by dev, let's assume the cache dirs are there!
+        if ( defined( 'AUTOPTIMIZE_CACHE_READONLY' ) ) {
+            return true;
+        }
+
         if ( false === autoptimizeCache::check_and_create_dirs() ) {
             return false;
         }
@@ -647,7 +657,7 @@ class autoptimizeCache
         static $_do_fallback = null;
 
         if ( null === $_do_fallback ) {
-            $_do_fallback = (bool) apply_filters( 'autoptimize_filter_cache_do_fallback', autoptimizeOptionWrapper::get_option( 'autoptimize_cache_fallback', '' ) );
+            $_do_fallback = (bool) apply_filters( 'autoptimize_filter_cache_do_fallback', autoptimizeOptionWrapper::get_option( 'autoptimize_cache_fallback', '1' ) );
         }
 
         return $_do_fallback;
@@ -761,6 +771,8 @@ class autoptimizeCache
             w3tc_pgcache_flush();
         } elseif ( function_exists( 'wp_fast_cache_bulk_delete_all' ) ) {
             wp_fast_cache_bulk_delete_all();
+        } elseif ( function_exists( 'rapidcache_clear_cache' ) ) {
+            rapidcache_clear_cache();
         } elseif ( class_exists( 'Swift_Performance_Cache' ) ) {
             Swift_Performance_Cache::clear_all_cache();
         } elseif ( class_exists( 'WpFastestCache' ) ) {

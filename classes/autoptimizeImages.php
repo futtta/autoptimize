@@ -358,6 +358,11 @@ class autoptimizeImages
                 $result = str_replace( $cdn_domain, $parsed_site_url['host'], $result );
             }
 
+            // filter (default off) to remove QS from image URL's to avoid eating away optimization credits.
+            if ( apply_filters( 'autoptimize_filter_imgopt_no_querystring', false ) && strpos( $result, '?' ) !== false ) {
+                $result = strtok( $result, '?' );
+            }
+
             $result = apply_filters( 'autoptimize_filter_imgopt_normalized_url', $result );
 
             // Store in cache.
@@ -419,7 +424,7 @@ class autoptimizeImages
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
-        } elseif ( str_ireplace( array( '.png', '.gif', '.jpg', '.jpeg', '.webp' ), '', $url_parsed['path'] ) === $url_parsed['path'] ) {
+        } elseif ( str_ireplace( array( '.png', '.gif', '.jpg', '.jpeg', '.webp', '.avif' ), '', $url_parsed['path'] ) === $url_parsed['path'] ) {
             // fixme: better check against end of string.
             return false;
         } elseif ( ! empty( $nopti_images ) ) {
@@ -531,8 +536,9 @@ class autoptimizeImages
                 // first do (data-)srcsets.
                 if ( preg_match_all( '#srcset=("|\')(.*)("|\')#Usmi', $tag, $allsrcsets, PREG_SET_ORDER ) ) {
                     foreach ( $allsrcsets as $srcset ) {
-                        $srcset  = $srcset[2];
-                        $srcsets = explode( ',', $srcset );
+                        $srcset      = $srcset[2];
+                        $orig_srcset = $srcset;
+                        $srcsets     = explode( ',', $srcset );
                         foreach ( $srcsets as $indiv_srcset ) {
                             $indiv_srcset_parts = explode( ' ', trim( $indiv_srcset ) );
                             if ( isset( $indiv_srcset_parts[1] ) && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
@@ -540,9 +546,10 @@ class autoptimizeImages
                             }
                             if ( $this->can_optimize_image( $indiv_srcset_parts[0], $tag ) ) {
                                 $imgopt_url = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
-                                $tag        = str_replace( $indiv_srcset_parts[0], $imgopt_url, $tag );
+                                $srcset     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $srcset );
                             }
                         }
+                        $tag = str_replace( $orig_srcset, $srcset, $tag );
                     }
                 }
 
@@ -825,10 +832,18 @@ class autoptimizeImages
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $type_js . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
 
         // And add webp detection and loading JS.
-        if ( $this->should_webp() ) {
-            $_webp_detect = "function c_webp(A){var n=new Image;n.onload=function(){var e=0<n.width&&0<n.height;A(e)},n.onerror=function(){A(!1)},n.src='data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA=='}function s_webp(e){window.supportsWebP=e}c_webp(s_webp);";
-            $_webp_load   = "document.addEventListener('lazybeforeunveil',function({target:b}){window.supportsWebP&&['data-src','data-srcset'].forEach(function(c){attr=b.getAttribute(c),null!==attr&&-1==attr.indexOf('/client/to_webp')&&b.setAttribute(c,attr.replace(/\/client\//,'/client/to_webp,'))})});";
-            echo apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script' . $type_js . $noptimize_flag . '>' . $_webp_detect . $_webp_load . '</script>' );
+        if ( $this->should_ngimg() ) {
+            // Add AVIF code, can be disabled for now to only do webp.
+            if ( apply_filters( 'autoptimize_filter_imgopt_do_avif', true ) ) {
+                $_ngimg_detect = 'function c_img(a,b){src="avif"==b?"data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAABoAAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAEAAAABAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACJtZGF0EgAKCBgADsgQEAwgMgwf8AAAWAAAAACvJ+o=":"data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==";var c=new Image;c.onload=function(){var d=0<c.width&&0<c.height;a(d,b)},c.onerror=function(){a(!1,b)},c.src=src}function s_img(a,b){w=window,"avif"==b?!1==a?c_img(s_img,"webp"):w.ngImg="avif":!1==a?w.ngImg=!1:w.ngImg="webp"}c_img(s_img,"avif");';
+                $_ngimg_load   = 'document.addEventListener("lazybeforeunveil",function({target:a}){window.ngImg&&["data-src","data-srcset"].forEach(function(b){attr=a.getAttribute(b),null!==attr&&-1==attr.indexOf("/client/to_")&&a.setAttribute(b,attr.replace(/\/client\//,"/client/to_"+window.ngImg+","))})});';
+            } else {
+                $_ngimg_detect = "function c_webp(A){var n=new Image;n.onload=function(){var e=0<n.width&&0<n.height;A(e)},n.onerror=function(){A(!1)},n.src='data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA=='}function s_webp(e){window.supportsWebP=e}c_webp(s_webp);";
+                $_ngimg_load   = "document.addEventListener('lazybeforeunveil',function({target:b}){window.supportsWebP&&['data-src','data-srcset'].forEach(function(c){attr=b.getAttribute(c),null!==attr&&-1==attr.indexOf('/client/to_webp')&&b.setAttribute(c,attr.replace(/\/client\//,'/client/to_webp,'))})});";
+            }
+            // Keeping autoptimize_filter_imgopt_webp_js filter for now, but it is deprecated as not only for webp any more.
+            $_ngimg_output = apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script' . $type_js . $noptimize_flag . '>' . $_ngimg_detect . $_ngimg_load . '</script>' );
+            echo apply_filters( 'autoptimize_filter_imgopt_ngimg_js', $_ngimg_output );
         }
     }
 
@@ -884,19 +899,19 @@ class autoptimizeImages
         return 'data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20' . $imgopt_w . '%20' . $imgopt_h . '%22%3E%3C/svg%3E';
     }
 
-    public function should_webp() {
-        static $webp_return = null;
+    public function should_ngimg() {
+        static $ngimg_return = null;
 
-        if ( is_null( $webp_return ) ) {
+        if ( is_null( $ngimg_return ) ) {
             // webp only works if imgopt and lazyload are also active.
             if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_4'] ) && ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && $this->imgopt_active() ) {
-                $webp_return = true;
+                $ngimg_return = true;
             } else {
-                $webp_return = false;
+                $ngimg_return = false;
             }
         }
 
-        return $webp_return;
+        return $ngimg_return;
     }
 
     public function process_picture_tag( $in, $imgopt = false, $lazy = false ) {
@@ -1047,7 +1062,7 @@ class autoptimizeImages
     <form id='ao_settings_form' action='<?php echo admin_url( 'options.php' ); ?>' method='post'>
         <?php settings_fields( 'autoptimize_imgopt_settings' ); ?>
         <h2><?php _e( 'Image optimization', 'autoptimize' ); ?></h2>
-        <span id='autoptimize_imgopt_descr'><?php _e( 'Make your site significantly faster by just ticking a couple of checkboxes to optimize and lazy load your images, WebP support included!', 'autoptimize' ); ?></span>
+        <span id='autoptimize_imgopt_descr'><?php _e( 'Make your site significantly faster by just ticking a couple of checkboxes to optimize and lazy load your images, WebP and AVIF support included!', 'autoptimize' ); ?></span>
         <table class="form-table">
             <tr>
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
@@ -1075,17 +1090,17 @@ class autoptimizeImages
                         echo apply_filters( 'autoptimize_filter_imgopt_settings_status', '<p><strong><span style="color:' . $_notice_color . ';">' . __( 'Shortpixel status: ', 'autoptimize' ) . '</span></strong>' . $_notice['notice'] . '</p>' );
                     } else {
                         // translators: link points to shortpixel.
-                        $upsell_msg_1 = '<p>' . sprintf( __( 'Get more Google love and improve your website\'s loading speed by having your publicly available images optimized on the fly (also in the "next-gen" WebP image format) by %1$sShortPixel%2$s and then cached and served fast from Shortpixel\'s global CDN.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
+                        $upsell_msg_1 = '<p>' . sprintf( __( 'Get more Google love and improve your website\'s loading speed by having your publicly available images optimized on the fly (also in the "next-gen" WebP and AVIF image format) by %1$sShortPixel%2$s and then cached and served fast from Shortpixel\'s global CDN.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
                         if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] ) {
                             $upsell_msg_2 = __( 'For a limited time only, this service is offered free for all Autoptimize users, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
                         } else {
                             // translators: link points to shortpixel.
-                            $upsell_msg_2 = sprintf( __( '%1$sSign-up now%2$s to receive a 1 000 bonus + 50&#37; more image optimization credits regardless of the traffic used. More image optimizations can be purchased starting with $4.99.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
+                            $upsell_msg_2 = sprintf( __( '%1$sSign-up now%2$s to receive extra traffic or image optimization credits for free. You\'ll also receive +50&percnt; more CDN traffic or image optimization credits regardless for any future plan that you\'ll choose to purchase.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
                         }
                         echo apply_filters( 'autoptimize_imgopt_imgopt_settings_copy', $upsell_msg_1 . ' ' . $upsell_msg_2 . '</p>' );
                     }
                     // translators: link points to shortpixel FAQ.
-                    $faqcopy = sprintf( __( '<strong>Questions</strong>? Have a look at the %1$sShortPixel FAQ%2$s!', 'autoptimize' ), '<strong><a href="https://shortpixel.helpscoutdocs.com/category/60-shortpixel-ai-cdn" target="_blank">', '</strong></a>' );
+                    $faqcopy = sprintf( __( '<strong>Questions</strong>? Have a look at the %1$sShortPixel FAQ%2$s!', 'autoptimize' ), '<strong><a href="https://help.shortpixel.com/category/405-autoptimize" target="_blank">', '</strong></a>' );
                     $faqcopy = $faqcopy . ' ' . __( 'Only works for sites/ images that are publicly available.', 'autoptimize' );
                     // translators: links points to shortpixel TOS & Privacy Policy.
                     $toscopy = sprintf( __( 'Usage of this feature is subject to Shortpixel\'s %1$sTerms of Use%2$s and %3$sPrivacy policy%4$s.', 'autoptimize' ), '<a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">', '</a>', '<a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">', '</a>' );
@@ -1121,10 +1136,10 @@ class autoptimizeImages
                     </p>
                 </td>
             </tr>
-            <tr id='autoptimize_imgopt_webp' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
-                <th scope="row"><?php _e( 'Load WebP in supported browsers?', 'autoptimize' ); ?></th>
+            <tr id='autoptimize_imgopt_ngimg' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
+                <th scope="row"><?php _e( 'Load WebP or AVIF in supported browsers?', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input type='checkbox' id='autoptimize_imgopt_webp_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Automatically serve "next-gen" WebP image format to any browser that supports it (requires lazy load to be active).', 'autoptimize' ); ?></label>
+                    <label><input type='checkbox' id='autoptimize_imgopt_ngimg_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Automatically serve "next-gen" WebP or AVIF image formats to any browser that supports it (requires lazy load to be active).', 'autoptimize' ); ?></label>
                 </td>
             </tr>
             <tr>
@@ -1147,13 +1162,13 @@ class autoptimizeImages
             jQuery("#autoptimize_imgopt_checkbox").change(function() {
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_quality").show("slow");
-                    jQuery("#autoptimize_imgopt_webp").show("slow");
+                    jQuery("#autoptimize_imgopt_ngimg").show("slow");
                 } else {
                     jQuery("#autoptimize_imgopt_quality").hide("slow");
-                    jQuery("#autoptimize_imgopt_webp").hide("slow");
+                    jQuery("#autoptimize_imgopt_ngimg").hide("slow");
                 }
             });
-            jQuery("#autoptimize_imgopt_webp_checkbox").change(function() {
+            jQuery("#autoptimize_imgopt_ngimg_checkbox").change(function() {
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_lazyload_checkbox")[0].checked = true;
                     jQuery("#autoptimize_imgopt_lazyload_exclusions").show("slow");
@@ -1164,7 +1179,7 @@ class autoptimizeImages
                     jQuery("#autoptimize_imgopt_lazyload_exclusions").show("slow");
                 } else {
                     jQuery("#autoptimize_imgopt_lazyload_exclusions").hide("slow");
-                    jQuery("#autoptimize_imgopt_webp_checkbox")[0].checked = false;
+                    jQuery("#autoptimize_imgopt_ngimg_checkbox")[0].checked = false;
                 }
             });
         });
@@ -1192,7 +1207,7 @@ class autoptimizeImages
                     // translators: "add more credits" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                     // translators: "associate your domain" will appear in a "a href".
-                    $_imgopt_notice = $_imgopt_notice . ' ' . sprintf( __( 'If you already have enough credits then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $_imgopt_assoc . '" target="_blank">', '</a>' );
+                    $_imgopt_notice = $_imgopt_notice . ' ' . sprintf( __( 'If you have enough credits/ CDN quota remaining, then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $_imgopt_assoc . '" target="_blank">', '</a>' );
                 } elseif ( -3 == $_stat['Status'] ) {
                     // translators: "check the documentation here" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'It seems ShortPixel image optimization is not able to fetch images from your site, %1$scheck the documentation here%2$s for more information', 'autoptimize' ), '<a href="' . $_imgopt_unreach . '" target="_blank">', '</a>' );
