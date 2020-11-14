@@ -310,7 +310,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}8db7472e1ba26a5b2a7c5ddca8e488e9.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}c862759dd26e04ab4d9a785f5e834f04.js"></script></body>
 </html>
 MARKUP;
 
@@ -379,7 +379,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}8db7472e1ba26a5b2a7c5ddca8e488e9.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}c862759dd26e04ab4d9a785f5e834f04.js"></script></body>
 </html>
 MARKUP;
 
@@ -448,7 +448,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}8db7472e1ba26a5b2a7c5ddca8e488e9.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}c862759dd26e04ab4d9a785f5e834f04.js"></script></body>
 </html>
 MARKUP;
 
@@ -517,7 +517,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}8db7472e1ba26a5b2a7c5ddca8e488e9.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}c862759dd26e04ab4d9a785f5e834f04.js"></script></body>
 </html>
 MARKUP;
 
