@@ -33,10 +33,9 @@ matrix:
 
 install:
     # flags to pass to install
-    - flags="--ansi --prefer-dist --no-interaction --optimize-autoloader --no-suggest --no-progress"
+    - flags="--ansi --prefer-dist --no-interaction --optimize-autoloader --no-progress"
     # install dependencies using system provided composer binary
     - composer install $flags
-    - composer selfupdate --rollback
 
 before_script:
   # install wp tests infra
