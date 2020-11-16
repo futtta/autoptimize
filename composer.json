@@ -17,13 +17,13 @@
         "issues": "https://wordpress.org/support/plugin/autoptimize"
     },
     "require": {
-        "php": ">=5.6"
+        "php": ">=7.2"
     },
     "require-dev": {
-        "php": ">=5.6",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.2 || ^0.7.0",
+        "php": ">=7.2",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "squizlabs/php_codesniffer": "^3.1",
-        "phpunit/phpunit": "^5.7.27",
+        "phpunit/phpunit": "^7.5.0",
         "wimg/php-compatibility": "*",
         "wp-coding-standards/wpcs": "*"
     },
