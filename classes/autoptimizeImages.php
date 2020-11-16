@@ -504,7 +504,13 @@ class autoptimizeImages
             $width  = 180;
             $height = 180;
         }
-        return $this->replace_img_callback( $matches, $width, $height );
+
+        // make sure we're not trying to optimize a *.ico file
+        if ( strpos( $matches[1], '.ico' ) === false ) {
+            return $this->replace_img_callback( $matches, $width, $height );
+        } else {
+            return $matches;
+        }
     }
 
     public function filter_optimize_images( $in )
