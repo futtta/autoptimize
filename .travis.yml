@@ -1,5 +1,5 @@
 language: php
-dist: trusty
+dist: bionic
 sudo: false
 
 notifications:
@@ -9,6 +9,9 @@ notifications:
 
 git:
     depth: 1
+
+services:
+  - mysql
 
 php:
   - 7.2
