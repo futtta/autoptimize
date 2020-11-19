@@ -31,7 +31,7 @@ Just install from your WordPress "Plugins > Add New" screen and all will be well
 
 = Do you offer or recommend a course on how to speed up WordPress/ use Autoptimize? =
 
-There are many great resources online, both free and premium, but [the "Autoptimize Masterclass" by Load Labz](https://www.loadlabz.com/autoptimize-ao) stands out for the systematic and detailed approach in the video-based course. Have a look at the free sample class(es) and when interested make sure to use the `EarlyBird` coupon to get a discount!
+There are many great resources online, both free and premium, but [the "Autoptimize Masterclass" by Load Labz](https://misc.optimizingmatters.com/partners/?from=faq&partner=loadlabz) stands out for the systematic and detailed approach in the video-based course. Have a look at the free sample class(es) and when interested make sure to use the `EarlyBird` coupon to get a discount!
 
 = What does the plugin do to help speed up my site? =
 
