@@ -238,7 +238,8 @@ class autoptimizeExtra
                 if ( strpos( $font, 'fonts.googleapis.com/css2' ) !== false ) {
                     // (Somewhat) change Google Fonts APIv2 syntax back to v1.
                     // todo: support for 100..900
-                    $font = str_replace( array( 'css2?', 'ital,wght@', 'ital,wght%40', 'wght@', 'wght%40', '0,', '1,', ';', '%3B', '&family=' ), array( 'css?', '', '', '', '', '', 'italic', ',', ',', '%7C' ), $font );
+                    $font = rawurldecode( $font );
+                    $font = str_replace( array( 'css2?', 'ital,wght@', 'wght@', 'ital@', '0,', '1,', ':1', ';', '&family=' ), array( 'css?', '', '', '', '', 'italic', ':italic', ',', '%7C' ), $font );
                 }
                 $font = explode( 'family=', $font );
                 $font = ( isset( $font[1] ) ) ? explode( '&', $font[1] ) : array();
