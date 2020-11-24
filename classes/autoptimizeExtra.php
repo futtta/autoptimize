@@ -421,7 +421,7 @@ class autoptimizeExtra
                 $preload_as = 'style';
             } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.js' ) ) {
                 $preload_as = 'script';
-            } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.woff' ) || autoptimizeUtils::str_ends_in( $_preload, '.woff2' ) || autoptimizeUtils::str_ends_in( $_preload, '.ttf' ) || autoptimizeUtils::str_ends_in( $_preload, '.eot' ) ) {
+            } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.woff' ) || autoptimizeUtils::str_ends_in( $_preload, '.woff2' ) || autoptimizeUtils::str_ends_in( $_preload, '.ttf' ) || autoptimizeUtils::str_ends_in( $_preload, '.eot' ) || autoptimizeUtils::str_ends_in( $_preload, '.otf' ) ) {
                 $preload_as  = 'font';
                 $crossorigin = ' crossorigin';
                 $mime_type   = ' type="font/' . pathinfo( $_preload, PATHINFO_EXTENSION ) . '"';
