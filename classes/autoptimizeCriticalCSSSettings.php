@@ -222,6 +222,7 @@ class autoptimizeCriticalCSSSettings {
                     <div class="notice-success notice"><p>
                     <?php
                     _e( 'Great, Autoptimize will now automatically start creating new critical CSS rules, you should see those appearing below in the next couple of hours.', 'autoptimize' );
+                    _e( 'In the meantime you might want to add a default rule now, to avoid all CSS being inlined when no (applicable) rules are found.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
