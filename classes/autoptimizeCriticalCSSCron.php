@@ -116,14 +116,14 @@ class autoptimizeCriticalCSSCron {
 
                     // If job hash is new or different of a previous one.
                     if ( $hash ) {
+                        if ( $jr > 2 ) {
+                            // we already posted 2 jobs to criticalcss.com, don't post more this run
+                            // but we can keep on processing the queue to keep it tidy.
+                            continue;
+                        }
+
                         // Set job hash.
                         $jprops['hash'] = $hash;
-
-                        // If this is not the first job, wait 10 seconds before process next job due criticalcss.com API limits.
-                        if ( $jr > 1 ) {
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Waiting ' . AO_CCSS_SLEEP . ' seconds due to criticalcss.com API limits', 3 );
-                            sleep( AO_CCSS_SLEEP );
-                        }
 
                         // Dispatch the job generate request and increment request count.
                         $apireq = $this->ao_ccss_api_generate( $path, $queue_debug, $qdobj['htcode'] );
@@ -191,15 +191,8 @@ class autoptimizeCriticalCSSCron {
                     // Log the pending job.
                     autoptimizeCriticalCSSCore::ao_ccss_log( 'Found PENDING job with local ID <' . $jprops['ljid'] . '>, continuing its queue processing', 3 );
 
-                    // If this is not the first job, wait before process next job due criticalcss.com API limits.
-                    if ( $jr > 1 ) {
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Waiting ' . AO_CCSS_SLEEP . ' seconds due to criticalcss.com API limits', 3 );
-                        sleep( AO_CCSS_SLEEP );
-                    }
-
                     // Dispatch the job result request and increment request count.
                     $apireq = $this->ao_ccss_api_results( $jprops['jid'], $queue_debug, $qdobj['htcode'] );
-                    $jr++;
 
                     // NOTE: All the following condigitons maps to the ones in admin_settings_queue.js.php
                     // Replace API response values if queue debugging is enabled and some value is set.
@@ -343,11 +336,12 @@ class autoptimizeCriticalCSSCron {
                     autoptimizeCriticalCSSCore::ao_ccss_log( 'Nothing to do on this job', 3 );
                 }
 
+                // fixme: request limit to become time limit?
                 // Break the loop if request limit is set and was reached.
-                if ( $ao_ccss_rlimit && $ao_ccss_rlimit == $jr ) {
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'The limit of ' . $ao_ccss_rlimit . ' request(s) to criticalcss.com was reached, queue control must finish now', 3 );
-                    break;
-                }
+                // if ( $ao_ccss_rlimit && $ao_ccss_rlimit == $jr ) {
+                //     autoptimizeCriticalCSSCore::ao_ccss_log( 'The limit of ' . $ao_ccss_rlimit . ' request(s) to criticalcss.com was reached, queue control must finish now', 3 );
+                //    break;
+                // }
 
                 // Increment job counter.
                 $jc++;
@@ -733,6 +727,7 @@ class autoptimizeCriticalCSSCron {
 
         if ( $action ) {
             // If a rule creation/update is required, persist updated rules object.
+            // fixme: check if rule count is not too big and do notice if so.
             $ao_ccss_rules[ $trule[0] ][ $trule[1] ] = $rule;
             $ao_ccss_rules_raw                       = json_encode( $ao_ccss_rules );
             update_option( 'autoptimize_ccss_rules', $ao_ccss_rules_raw );
