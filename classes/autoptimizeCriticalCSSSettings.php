@@ -143,9 +143,9 @@ class autoptimizeCriticalCSSSettings {
                     <?php
                 }
 
-                // Check for Autoptimize.
+                // Check for "inline & defer CSS" being active in Autoptimize.
                 if ( ! empty( $ao_ccss_key ) && ! $ao_css_defer ) {
-                    if ( empty( $ao_ccss_key_status ) {
+                    if ( empty( $ao_ccss_keyst ) ) {
                         // no keystate so likely in activation-process of CCSS, let's enable "inline & defer CSS" immediately to make things easier!
                         autoptimizeOptionWrapper::update_option( 'autoptimize_css_defer', 'on' );
                         ?>
@@ -160,7 +160,7 @@ class autoptimizeCriticalCSSSettings {
                         ?>
                         <div class="notice-warning notice"><p>
                         <?php
-                        _e( "Oops! Please <strong>activate the \"Inline and Defer CSS\" option</strong> on Autoptimize's main settings page to use this power-up.", 'autoptimize' );
+                        _e( "Oops! Please <strong>activate the \"Inline and Defer CSS\" option</strong> on Autoptimize's main settings page ensure critical CSS is used on the front-end.", 'autoptimize' );
                         ?>
                         </p></div>
                         <?php
@@ -234,7 +234,8 @@ class autoptimizeCriticalCSSSettings {
                     <div class="notice-success notice"><p>
                     <?php
                     _e( 'Great, Autoptimize will now automatically start creating new critical CSS rules, you should see those appearing below in the next couple of hours.', 'autoptimize' );
-                    _e( 'In the meantime you might want to add a default rule now, to avoid all CSS being inlined when no (applicable) rules are found.', 'autoptimize' );
+                    echo ' ';
+                    _e( 'In the meantime you might want to <strong>edit default rule CSS now</strong>, to avoid all CSS being inlined when no (applicable) rules are found.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
