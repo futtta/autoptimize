@@ -145,14 +145,26 @@ class autoptimizeCriticalCSSSettings {
 
                 // Check for Autoptimize.
                 if ( ! empty( $ao_ccss_key ) && ! $ao_css_defer ) {
-                    ?>
-                    <div class="notice-error notice"><p>
-                    <?php
-                    _e( "Oops! Please <strong>activate the \"Inline and Defer CSS\" option</strong> on Autoptimize's main settings page to use this power-up.", 'autoptimize' );
-                    ?>
-                    </p></div>
-                    <?php
-                    return;
+                    if ( empty( $ao_ccss_key_status ) {
+                        // no keystate so likely in activation-process of CCSS, let's enable "inline & defer CSS" immediately to make things easier!
+                        autoptimizeOptionWrapper::update_option( 'autoptimize_css_defer', 'on' );
+                        ?>
+                        <div class="notice-info notice"><p>
+                        <?php
+                        _e( "The \"Inline and Defer CSS\" option was activated to allow critical CSS to be used.", 'autoptimize' );
+                        ?>
+                        </p></div>
+                        <?php
+                    } else {
+                        // we have keystate, so "inline & defer CSS" was probably disable for troubleshooting, warn but let users continue.
+                        ?>
+                        <div class="notice-warning notice"><p>
+                        <?php
+                        _e( "Oops! Please <strong>activate the \"Inline and Defer CSS\" option</strong> on Autoptimize's main settings page to use this power-up.", 'autoptimize' );
+                        ?>
+                        </p></div>
+                        <?php
+                    }
                 }
 
                 // check if WordPress cron is disabled and warn if so.
