@@ -252,6 +252,19 @@ class autoptimizeCriticalCSSSettings {
                     <?php
                 }
 
+                // warn if too many rules (based on length of ao_ccss_rules option) as that might cause issues at e.g. wpengine
+                // see https://wpengine.com/support/database-optimization-best-practices/#Autoloaded_Data
+                $_raw_rules_length = strlen( get_option( 'autoptimize_ccss_rules', '') );
+                if ( $_raw_rules_length > apply_filters( 'autoptimize_ccss_rules_length_warning', 500000 ) ) {
+                    ?>
+                    <div class="notice-warning notice"><p>
+                    <?php
+                    _e( 'It looks like the amount of Critical CSS rules is very high, it is recommended to reconfigure Autoptimize (e.g. by manually creating broader rules) to ensure less rules are created.', 'autoptimize' );
+                    ?>
+                    </p></div>
+                    <?php
+                }
+
                 // Settings Form.
                 ?>
                 <form id="settings" method="post" action="options.php">
