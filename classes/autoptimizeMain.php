@@ -590,6 +590,7 @@ class autoptimizeMain
             'autoptimize_ccss_viewport',
             'autoptimize_ccss_finclude',
             'autoptimize_ccss_rlimit',
+            'autoptimize_ccss_rtimelimit',
             'autoptimize_ccss_noptimize',
             'autoptimize_ccss_debug',
             'autoptimize_ccss_key',

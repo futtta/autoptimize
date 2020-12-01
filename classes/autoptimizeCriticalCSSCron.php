@@ -83,12 +83,17 @@ class autoptimizeCriticalCSSCron {
 
             // Attach required variables.
             global $ao_ccss_queue;
-            global $ao_ccss_rlimit;
+            global $ao_ccss_rtimelimit;
 
-            // Initialize job counters.
-            $jc = 1;
-            $jr = 1;
-            $jt = count( $ao_ccss_queue );
+            // Initialize counters.
+            if ( $ao_ccss_rtimelimit === 0 ) {
+                // no time limit set, let's go with 1000 seconds.
+                $ao_ccss_rtimelimit = 1000;
+            }
+            $mt = time() + $ao_ccss_rtimelimit; // maxtime queue processing can run.
+            $jc = 1; // job count number.
+            $jr = 1; // jobs requests number.
+            $jt = count( $ao_ccss_queue ); // number of jobs in queue.
 
             // Sort queue by ascending job status (e.g. ERROR, JOB_ONGOING, JOB_QUEUED, NEW...).
             array_multisort( array_column( $ao_ccss_queue, 'jqstat' ), $ao_ccss_queue ); // @codingStandardsIgnoreLine
@@ -336,12 +341,11 @@ class autoptimizeCriticalCSSCron {
                     autoptimizeCriticalCSSCore::ao_ccss_log( 'Nothing to do on this job', 3 );
                 }
 
-                // fixme: request limit to become time limit?
-                // Break the loop if request limit is set and was reached.
-                // if ( $ao_ccss_rlimit && $ao_ccss_rlimit == $jr ) {
-                //     autoptimizeCriticalCSSCore::ao_ccss_log( 'The limit of ' . $ao_ccss_rlimit . ' request(s) to criticalcss.com was reached, queue control must finish now', 3 );
-                //    break;
-                // }
+                // Break the loop if request time limit is (almost exceeded).
+                if ( time() > $mt ) {
+                    autoptimizeCriticalCSSCore::ao_ccss_log( 'The time limit of ' . $ao_ccss_rtimelimit . ' seconds was exceeded, queue control must finish now', 3 );
+                    break;
+                }
 
                 // Increment job counter.
                 $jc++;

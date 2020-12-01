@@ -10,7 +10,7 @@ function ao_ccss_render_adv() {
     // Attach required globals.
     global $ao_ccss_debug;
     global $ao_ccss_finclude;
-    global $ao_ccss_rlimit;
+    global $ao_ccss_rtimelimit;
     global $ao_ccss_noptimize;
     global $ao_ccss_loggedin;
     global $ao_ccss_forcepath;
@@ -59,12 +59,12 @@ function ao_ccss_render_adv() {
                     </tr>
                     <tr>
                         <th scope="row">
-                            <?php _e( 'Request Limit', 'autoptimize' ); ?>
+                            <?php _e( 'Queue processing time limit', 'autoptimize' ); ?>
                         </th>
                         <td>
-                            <input type="number" id="autoptimize_ccss_rlimit" name="autoptimize_ccss_rlimit" min="1" max="240" placeholder="0" value="<?php echo $ao_ccss_rlimit; ?>" />
+                            <input type="number" id="autoptimize_ccss_rtimelimit" name="autoptimize_ccss_rtimelimit" min="0" max="240" placeholder="0" value="<?php echo $ao_ccss_rtimelimit; ?>" />
                             <p class="notes">
-                                <?php _e( 'Certain hosting services impose hard limitations to background processes on either execution time, requests made from your server to any third party services, or both. This could lead to a faulty operation of the queue background process triggered by WP-Cron. If automated rules are not being created, you may be facing this limitation from your hosting provider. In that case, set the request limit to a reasonable number between 1 and 240. The queue fire a request to <a href="https://criticalcss.com/account/api-keys?aff=1" target="_blank">criticalcss.com</a> on every 15 seconds (due to service limitations). If your hosting provider allows a 60 seconds time span to background processes runtime, set this value to 3 or 4 so the queue can operate within the boundaries. The maximum value of 240 allows enough requests for one hour long. To disable this limit and to let requests be made at will, just delete any values in this setting (a grey 0 will show).', 'autoptimize' ); ?>
+                                <?php _e( 'The cronned queue processing is an asynchronous process triggerd by (WordPress) cron. To avoid this process from running too long and potentially getting killed, you can set the number of seconds here, 0 means no limit.', 'autoptimize' ); ?>
                             </p>
                         </td>
                     </tr>

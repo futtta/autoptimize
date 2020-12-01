@@ -58,7 +58,7 @@ class autoptimizeCriticalCSSSettings {
         register_setting( 'ao_ccss_options_group', 'autoptimize_ccss_queue' );
         register_setting( 'ao_ccss_options_group', 'autoptimize_ccss_viewport' );
         register_setting( 'ao_ccss_options_group', 'autoptimize_ccss_finclude' );
-        register_setting( 'ao_ccss_options_group', 'autoptimize_ccss_rlimit' );
+        register_setting( 'ao_ccss_options_group', 'autoptimize_ccss_rtimelimit' );
         register_setting( 'ao_ccss_options_group', 'autoptimize_ccss_noptimize' );
         register_setting( 'ao_ccss_options_group', 'autoptimize_ccss_debug' );
         register_setting( 'ao_ccss_options_group', 'autoptimize_ccss_key' );
@@ -308,7 +308,7 @@ class autoptimizeCriticalCSSSettings {
                             echo '<input class="hidden" name="autoptimize_ccss_viewport[w]" value="' . $viewport['w'] . '">';
                             echo '<input class="hidden" name="autoptimize_ccss_viewport[h]" value="' . $viewport['h'] . '">';
                             echo '<input class="hidden" name="autoptimize_ccss_finclude" value="' . $ao_ccss_finclude . '">';
-                            echo '<input class="hidden" name="autoptimize_ccss_rlimit" value="' . $ao_ccss_rlimit . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_rtimelimit" value="' . $ao_ccss_rtimelimit . '">';
                             echo '<input class="hidden" name="autoptimize_ccss_debug" value="' . $ao_ccss_debug . '">';
                             echo '<input class="hidden" name="autoptimize_ccss_noptimize" value="' . $ao_ccss_noptimize . '">';
                             echo '<input class="hidden" name="autoptimize_css_defer_inline" value="' . esc_attr( $ao_css_defer_inline ) . '">';
