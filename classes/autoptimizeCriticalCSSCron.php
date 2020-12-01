@@ -86,7 +86,7 @@ class autoptimizeCriticalCSSCron {
             global $ao_ccss_rtimelimit;
 
             // Initialize counters.
-            if ( $ao_ccss_rtimelimit === 0 ) {
+            if ( $ao_ccss_rtimelimit == 0 ) {
                 // no time limit set, let's go with 1000 seconds.
                 $ao_ccss_rtimelimit = 1000;
             }
