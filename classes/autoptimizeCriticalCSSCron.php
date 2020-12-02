@@ -124,6 +124,7 @@ class autoptimizeCriticalCSSCron {
                         if ( $jr > 2 ) {
                             // we already posted 2 jobs to criticalcss.com, don't post more this run
                             // but we can keep on processing the queue to keep it tidy.
+                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Holding off on generating request for job with local ID <' . $jprops['ljid'] . '>, maximum number of POSTS reached.', 3 );
                             continue;
                         }
 
