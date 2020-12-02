@@ -114,7 +114,7 @@ If you want your uploaded images to be on the CDN as well, you can change the up
 
 Autoptimize supports this, but it is not enabled by default because [non-local fonts might require some extra configuration](http://davidwalsh.name/cdn-fonts). But if you have your cross-origin request policy in order, you can tell Autoptimize to put your fonts on the CDN by hooking into the API, setting `autoptimize_filter_css_fonts_cdn` to `true` this way;
 
-`add_filter('autoptimize_filter_css_fonts_cdn',__return_true);`
+`add_filter( 'autoptimize_filter_css_fonts_cdn', '__return_true' );`
 
 = I'm using Cloudflare, what should I enter as CDN root directory =
 
@@ -319,6 +319,12 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.7.9 =
+* Critical CSS: major improvements of the job processing mechanism, reducing time spent from up to 1 minute to just a couple of seconds.
+* Critical CSS: under "advanced options" replace "request limit" with "queue processing time limit" (default 30s).
+* Extra | Google Fonts: better parsing of version 2 Google Font URL's (/css2/).
+* Misc. other minor fixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
+
 = 2.7.8 =
 * Image optimization: add support for AVIF image format for browsers that support it (enabled with the existing WebP-option, also requires lazy-load to be active)
 * Critical CSS: further security improvements of critical CSS import settings upload, based on the input of [Marcin Weglowski of afine.com](https://afine.com)
@@ -378,42 +384,6 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * Integration of critical CSS power-up.
 * New option to ensure missing autoptimized files are served with fallback JS/ CSS.
 * Batch of misc. smaller improvements & fixes, more info in the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
-
-= 2.6.2 =
-* auto-exclude images from lazyload when they have `loading="eager"` attribute.
-* bugfix: don't take querystring into account when deciding as-value for preloaded resources.
-* bugfix; ensure lqip images (used when both image optimization and lazyload are active) always work by normalizing the URL before sending it to shortpixel.
-* minimum WordPress version bumped to 4.4.
-
-= 2.6.1 =
-* bugfixes for multiple lazyload bugs causing images not to load or load incorrectly
-* bugfixes for multiple multisite bugs causing settings-screen to be unavailable
-* bugfix re-added 3rd parameter to `autoptimize_filter_js_minify_excluded`-filter to ensure backwards-compatibility and thus avoid breaking Smart Cookie Kit which expected that 3rd parameter.
-
-= 2.6.0 =
-* New: Autoptimize can be configured at network level or at individual site-level when on multisite.
-* Extra: new option to specify what resources need to be preloaded.
-* Extra: add `display=swap` to Autoptimized (CSS-based) Google Fonts.
-* Images: support for lazyloading of background-images when set in the inline style attribute of a div.
-* Images: updated to lazysizes 5.2.
-* CSS/ JS: no longer add type attributes to Autoptimized resources.
-* Improvement: cache clearing now also integrates with Kinsta, WP-Optimize & Nginx helper.
-* Added "Critical CSS" tab to highlight the criticalcss.com integration, which will be fully included in Autoptimize 2.7.
-* Batch of misc. smaller improvements & fixes, more info in the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
-
-= 2.5.1 =
-* Images: Also optimize & lazyload &lt;picture>&lt;source>
-* Images: Misc. improvements to lazyload
-* Images: Updated to LazySizes 5.0.0
-* CSS: improvements to the deferring logic for non-aggregated CSS resources.
-* Settings-page: Show "JS, CSS & HTML" advanced options by default (many people did not see the button)
-
-= 2.5.0 =
-* moved image optimization to a separate tab and move all code to a separate file.
-* added lazyloading (using lazysizes)
-* added webp support (requires image optimization and lazyloading to be active)
-* added option to enable/ disable the minification of excluded JS/ CSS files (on by default)
-* misc. bugfixes and smaller improvements
 
 = older =
 * see [https://plugins.svn.wordpress.org/autoptimize/tags/2.7.2/readme.txt](https://plugins.svn.wordpress.org/autoptimize/tags/2.7.2/readme.txt)
