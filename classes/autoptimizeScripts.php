@@ -243,7 +243,7 @@ class autoptimizeScripts extends autoptimizeBase
         }
         
         // Defer when not aggregating.
-        if ( ! $this->aggregate && apply_filters( 'autoptimize_js_filter_defer_not_aggregate', false ) ) {
+        if ( false === $this->aggregate && apply_filters( 'autoptimize_js_filter_defer_not_aggregate', $options['defer_not_aggregate'] ) ) {
             $this->defer_not_aggregate = true;
         }
 
