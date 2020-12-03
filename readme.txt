@@ -319,7 +319,8 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
-= 2.7.9 =
+= 2.8.0 =
+* JavaScript: new option "defer but don't aggregate"
 * Critical CSS: major improvements of the job processing mechanism, reducing time spent from up to 1 minute to just a couple of seconds.
 * Critical CSS: under "advanced options" replace "request limit" with "queue processing time limit" (default 30s).
 * Extra | Google Fonts: better parsing of version 2 Google Font URL's (/css2/).
