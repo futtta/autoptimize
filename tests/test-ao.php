@@ -47,14 +47,15 @@ class AOTest extends WP_UnitTestcase
         $conf = autoptimizeConfig::instance();
 
         return [
-            'aggregate'       => $conf->get( 'autoptimize_js_aggregate' ),
-            'justhead'        => $conf->get( 'autoptimize_js_justhead' ),
-            'forcehead'       => $conf->get( 'autoptimize_js_forcehead' ),
-            'trycatch'        => $conf->get( 'autoptimize_js_trycatch' ),
-            'js_exclude'      => $conf->get( 'autoptimize_js_exclude' ),
-            'cdn_url'         => $conf->get( 'autoptimize_cdn_url' ),
-            'include_inline'  => $conf->get( 'autoptimize_js_include_inline' ),
-            'minify_excluded' => $conf->get( 'autoptimize_minify_excluded' ),
+            'aggregate'           => $conf->get( 'autoptimize_js_aggregate' ),
+            'defer_not_aggregate' => $conf->get( 'autoptimize_js_defer_not_aggregate' ),
+            'justhead'            => $conf->get( 'autoptimize_js_justhead' ),
+            'forcehead'           => $conf->get( 'autoptimize_js_forcehead' ),
+            'trycatch'            => $conf->get( 'autoptimize_js_trycatch' ),
+            'js_exclude'          => $conf->get( 'autoptimize_js_exclude' ),
+            'cdn_url'             => $conf->get( 'autoptimize_cdn_url' ),
+            'include_inline'      => $conf->get( 'autoptimize_js_include_inline' ),
+            'minify_excluded'     => $conf->get( 'autoptimize_minify_excluded' ),
         ];
     }
 
