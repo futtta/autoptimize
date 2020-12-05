@@ -232,7 +232,7 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <th scope="row"><?php _e( 'Optimize JavaScript Code?', 'autoptimize' ); ?></th>
 <td><input type="checkbox" id="autoptimize_js" name="autoptimize_js" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_js' ) ? 'checked="checked" ' : ''; ?>/></td>
 </tr>
-<tr valign="top" class="js_sub">
+<tr valign="top" class="js_sub js_aggregate_master">
 <th scope="row"><?php _e( 'Aggregate JS-files?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" id="autoptimize_js_aggregate" name="autoptimize_js_aggregate" <?php echo $conf->get( 'autoptimize_js_aggregate' ) ? 'checked="checked" ' : ''; ?>/>
 <?php _e( 'Aggregate all linked JS-files to have them loaded non-render blocking? If this option is off, the individual JS-files will remain in place but will be minified.', 'autoptimize' ); ?></label></td>
@@ -538,9 +538,12 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
             if (this.checked && jQuery("#autoptimize_js").prop('checked')) {
                 jQuery( ".js_aggregate:visible" ).fadeTo( "fast",1 );
                 jQuery( "#autoptimize_js_defer_not_aggregate" ).prop( 'checked', false );
+                jQuery( ".js_not_aggregate:visible" ).fadeTo( "fast", .33 );
+                jQuery( ".js_aggregate_master:visible" ).fadeTo( "fast", 1 );
                 jQuery( "#min_excl_row" ).show();
             } else {
                 jQuery( ".js_aggregate:visible" ).fadeTo( "fast", .33 );
+                jQuery( ".js_not_aggregate:visible" ).fadeTo( "fast", 1 );
                 if ( jQuery( "#autoptimize_css_aggregate" ).prop( 'checked' ) == false ) {
                     jQuery( "#min_excl_row" ).hide();
                 }
@@ -551,6 +554,10 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
             if (this.checked && jQuery("#autoptimize_js").prop('checked')) {
                 jQuery( "#autoptimize_js_aggregate" ).prop( 'checked', false );
                 jQuery( ".js_aggregate:visible" ).fadeTo( "fast", .33 );
+                jQuery( ".js_aggregate_master:visible" ).fadeTo( "fast", .33 );
+                jQuery( ".js_not_aggregate:visible" ).fadeTo( "fast", 1 );
+            } else {
+                jQuery( ".js_aggregate_master:visible" ).fadeTo( "fast", 1 );
             }
         });
 
@@ -634,6 +641,8 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         }
         if (!jQuery("#autoptimize_js_aggregate").prop('checked')) {
             jQuery(".js_aggregate:visible").fadeTo('fast',.33);
+        } else {
+            jQuery( ".js_not_aggregate:visible" ).fadeTo( 'fast', .33 );
         }
         if (jQuery("#autoptimize_enable_site_config").prop('checked')) {
             jQuery("li.itemDetail:not(.multiSite)").fadeTo('fast',.33);
