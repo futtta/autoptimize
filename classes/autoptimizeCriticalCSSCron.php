@@ -240,13 +240,17 @@ class autoptimizeCriticalCSSCron {
                         } elseif ( 'GOOD' == $apireq['resultStatus'] && ( 'WARN' == $apireq['validationStatus'] || 'BAD' == $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' == $apireq['validationStatus'] ) ) {
                             // SUCCESS: GOOD job with WARN or BAD validation
                             // Update job properties.
-                            $jprops['file']   = $this->ao_ccss_save_file( $apireq['css'], $trule, true );
                             $jprops['jqstat'] = $apireq['status'];
                             $jprops['jrstat'] = $apireq['resultStatus'];
                             $jprops['jvstat'] = $apireq['validationStatus'];
                             $jprops['jftime'] = microtime( true );
-                            $rule_update      = true;
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file saved <' . $jprops['file'] . '> but requires REVIEW', 3 );
+                            if ( apply_filters( 'autoptimize_filter_ccss_save_review_rules', true ) ) {
+                                $jprops['file']   = $this->ao_ccss_save_file( $apireq['css'], $trule, true );
+                                $rule_update      = true;
+                                autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file saved <' . $jprops['file'] . '> but requires REVIEW', 3 );
+                            } else {
+                                autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file saved <' . $jprops['file'] . '> but required REVIEW so not saved.', 3 );
+                            }
                         } elseif ( 'GOOD' != $apireq['resultStatus'] && ( 'GOOD' != $apireq['validationStatus'] || 'WARN' != $apireq['validationStatus'] || 'BAD' != $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' != $apireq['validationStatus'] ) ) {
                             // ERROR: no GOOD, WARN or BAD results
                             // Update job properties.
