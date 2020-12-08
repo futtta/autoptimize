@@ -31,6 +31,7 @@ class autoptimizeImages
         }
 
         $this->set_options( $options );
+        $this->lazyload_counter = 0;
     }
 
     public function set_options( array $options )
@@ -768,7 +769,8 @@ class autoptimizeImages
 
     public function add_lazyload( $tag, $placeholder = '' ) {
         // adds actual lazyload-attributes to an image node.
-        if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+        $this->lazyload_counter++;
+        if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag && $this->lazyload_counter >= apply_filters( 'autoptimize_filter_imgopt_lazyload_from_nth', 0 ) ) {
             $tag = $this->maybe_fix_missing_quotes( $tag );
 
             // store original tag for use in noscript version.
