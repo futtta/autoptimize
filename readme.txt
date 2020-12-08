@@ -322,6 +322,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 = 2.8.0 =
 * JavaScript: new option "defer but don't aggregate"
 * Images: add field to exclude images from being optimized.
+* Images: new filter (`autoptimize_filter_imgopt_lazyload_from_nth`) to tell AO not to lazyload the first X images (to improve LCP/ CLS).
 * Critical CSS: major improvements of the job processing mechanism, reducing time spent from up to 1 minute to just a couple of seconds.
 * Critical CSS: under "advanced options" replace "request limit" with "queue processing time limit" (default 30s).
 * Extra | Google Fonts: better parsing of version 2 Google Font URL's (/css2/).
