@@ -321,6 +321,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 = 2.8.0 =
 * JavaScript: new option "defer but don't aggregate"
+* JavaScript: ensure Autopitimize also acts on jQuery in WordPress 5.6 which is renamed to jquery.min.js from jquery.js before.
 * Images: add field to exclude images from being optimized.
 * Images: new filter (`autoptimize_filter_imgopt_lazyload_from_nth`) to tell AO not to lazyload the first X images (to improve LCP/ CLS).
 * Critical CSS: major improvements of the job processing mechanism, reducing time spent from up to 1 minute to just a couple of seconds.
