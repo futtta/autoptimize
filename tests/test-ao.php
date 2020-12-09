@@ -1189,6 +1189,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
                 '/wp-includes/js/jquery/jquery.js',
                 WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.js',
             ),
+            // This file comes with core as of 5.6, so should exist...
+            array(
+                '/wp-includes/js/jquery/jquery.min.js',
+                WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.min.js',
+            ),
             // Empty $url should return false.
             array(
                 '',
