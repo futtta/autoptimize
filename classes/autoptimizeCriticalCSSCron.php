@@ -736,7 +736,6 @@ class autoptimizeCriticalCSSCron {
 
         if ( $action ) {
             // If a rule creation/update is required, persist updated rules object.
-            // fixme: check if rule count is not too big and do notice if so.
             $ao_ccss_rules[ $trule[0] ][ $trule[1] ] = $rule;
             $ao_ccss_rules_raw                       = json_encode( $ao_ccss_rules );
             update_option( 'autoptimize_ccss_rules', $ao_ccss_rules_raw );
