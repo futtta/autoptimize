@@ -266,7 +266,7 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <?php } ?>
 <tr valign="top" class="js_sub">
 <th scope="row"><?php _e( 'Exclude scripts from Autoptimize:', 'autoptimize' ); ?></th>
-<td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo esc_attr( autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude', 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js', 'js/jquery/jquery.min.js' ) ); ?>"/><br />
+<td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo esc_attr( autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude', 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js, js/jquery/jquery.min.js' ) ); ?>"/><br />
 <?php
 echo __( 'A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated by Autoptimize.', 'autoptimize' ) . ' ' . __( 'Important: excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
 ?>
