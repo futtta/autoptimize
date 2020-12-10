@@ -47,14 +47,15 @@ class AOTest extends WP_UnitTestcase
         $conf = autoptimizeConfig::instance();
 
         return [
-            'aggregate'       => $conf->get( 'autoptimize_js_aggregate' ),
-            'justhead'        => $conf->get( 'autoptimize_js_justhead' ),
-            'forcehead'       => $conf->get( 'autoptimize_js_forcehead' ),
-            'trycatch'        => $conf->get( 'autoptimize_js_trycatch' ),
-            'js_exclude'      => $conf->get( 'autoptimize_js_exclude' ),
-            'cdn_url'         => $conf->get( 'autoptimize_cdn_url' ),
-            'include_inline'  => $conf->get( 'autoptimize_js_include_inline' ),
-            'minify_excluded' => $conf->get( 'autoptimize_minify_excluded' ),
+            'aggregate'           => $conf->get( 'autoptimize_js_aggregate' ),
+            'defer_not_aggregate' => $conf->get( 'autoptimize_js_defer_not_aggregate' ),
+            'justhead'            => $conf->get( 'autoptimize_js_justhead' ),
+            'forcehead'           => $conf->get( 'autoptimize_js_forcehead' ),
+            'trycatch'            => $conf->get( 'autoptimize_js_trycatch' ),
+            'js_exclude'          => $conf->get( 'autoptimize_js_exclude' ),
+            'cdn_url'             => $conf->get( 'autoptimize_cdn_url' ),
+            'include_inline'      => $conf->get( 'autoptimize_js_include_inline' ),
+            'minify_excluded'     => $conf->get( 'autoptimize_minify_excluded' ),
         ];
     }
 
@@ -310,7 +311,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}c10a3ded8515331810ba81308bdd18dd.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}c862759dd26e04ab4d9a785f5e834f04.js"></script></body>
 </html>
 MARKUP;
 
@@ -379,7 +380,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}c10a3ded8515331810ba81308bdd18dd.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}c862759dd26e04ab4d9a785f5e834f04.js"></script></body>
 </html>
 MARKUP;
 
@@ -448,7 +449,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}c10a3ded8515331810ba81308bdd18dd.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}c862759dd26e04ab4d9a785f5e834f04.js"></script></body>
 </html>
 MARKUP;
 
@@ -517,7 +518,7 @@ MARKUP;
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$siteurl/wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}c10a3ded8515331810ba81308bdd18dd.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}c862759dd26e04ab4d9a785f5e834f04.js"></script></body>
 </html>
 MARKUP;
 
@@ -1187,6 +1188,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             array(
                 '/wp-includes/js/jquery/jquery.js',
                 WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.js',
+            ),
+            // This file comes with core as of 5.6, so should exist...
+            array(
+                '/wp-includes/js/jquery/jquery.min.js',
+                WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.min.js',
             ),
             // Empty $url should return false.
             array(
@@ -2237,7 +2243,7 @@ MARKUP;
     {
         add_filter( 'autoptimize_filter_cache_clear_advanced', '__return_true' );
 
-        autoptimizeCache::clearall_actionless();
+        $this->assertTrue( autoptimizeCache::clearall_actionless() );
 
         remove_all_filters( 'autoptimize_filter_cache_clear_advanced' );
     }
@@ -2326,6 +2332,36 @@ MARKUP;
 
         $expected = <<<MARKUP
 <img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+    
+    /**
+     * Test image optimization in autoptimizeImages.php with one excluded image.
+     *
+     * Default case: img with srcsets
+     */
+    public function test_imgopt_exclusion()
+    {
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
+        $opts['autoptimize_imgopt_text_field_6'] = 'excluded.jpg';
+
+        $markup = <<<MARKUP
+<img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+<img src='$siteurl/wp-content/excluded.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+MARKUP;
+
+        $expected = <<<MARKUP
+<img src='$imgopthost/client/q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
+<img src='$siteurl/wp-content/excluded.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
         $instance = autoptimizeImages::instance();
         $instance->set_options( $opts );
@@ -2781,6 +2817,27 @@ MARKUP;
         $this->assertEquals( $expected, $actual );
     }
 
+    /**
+     * Test aggregating Google Fonts.
+     */
+    public function test_google_font_aggregate_preload()
+    {
+        $opts                                    = autoptimizeExtra::fetch_options();
+        $opts['autoptimize_extra_radio_field_4'] = '5';
+
+        $markup = <<<MARKUP
+<link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600&subset=latin,cyrillic-ext,greek-ext,greek,vietnamese,latin-ext,cyrillic' rel='stylesheet' type='text/css'><link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,700;1,400'><link rel="dummy">
+MARKUP;
+
+        $expected = <<<MARKUP
+<link rel="stylesheet" media="print" onload="this.onload=null;this.media='all';" id="ao_optimized_gfonts" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600%7CCrimson+Pro:700,italic400&#038;subset=latin%2Ccyrillic-ext%2Cgreek-ext%2Cgreek%2Cvietnamese%2Clatin-ext%2Ccyrillic&amp;display=swap" /><link rel="dummy">
+MARKUP;
+
+        $instance = autoptimizeExtra::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_google_fonts( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
 
     /**
      * Test network vs site settings: network only.
@@ -2798,6 +2855,8 @@ MARKUP;
             $expected = 'network';
             $actual   = autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude' );
             $this->assertEquals( $expected, $actual );
+        } else {
+            $this->assertEquals( 1, 1 ); // just to ensure this isn't marked as a risky test.
         }
     }
 
@@ -2817,6 +2876,8 @@ MARKUP;
             $expected = 'site';
             $actual   = autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude' );
             $this->assertEquals( $expected, $actual );
+        } else {
+            $this->assertEquals( 1, 1 ); // just to ensure this isn't marked as a risky test.
         }
     }
 }

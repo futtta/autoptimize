@@ -1,5 +1,5 @@
 language: php
-dist: trusty
+dist: bionic
 sudo: false
 
 notifications:
@@ -10,10 +10,10 @@ notifications:
 git:
     depth: 1
 
+services:
+  - mysql
+
 php:
-  - 5.6
-  - 7.0
-  - 7.1
   - 7.2
   - 7.3
   - 7.4
@@ -23,8 +23,6 @@ env:
 
 matrix:
   include:
-    - php: 5.6
-      env: WP_VERSION=latest WP_MULTISITE=1
     - php: 7.3
       env: WP_VERSION=latest WP_MULTISITE=1 CUSTOM_CONSTANTS=1
     - php: 7.3
@@ -32,7 +30,7 @@ matrix:
 
 install:
     # flags to pass to install
-    - flags="--ansi --prefer-dist --no-interaction --optimize-autoloader --no-suggest --no-progress"
+    - flags="--ansi --prefer-dist --no-interaction --optimize-autoloader --no-progress"
     # install dependencies using system provided composer binary
     - composer install $flags
 
@@ -43,3 +41,4 @@ before_script:
   # - which phpunit && phpunit --version
 
 script: ./vendor/bin/phpunit
+
