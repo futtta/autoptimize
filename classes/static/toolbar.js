@@ -13,7 +13,7 @@ jQuery( document ).ready(function()
 	jQuery( '#wp-admin-bar-autoptimize-cache-info .autoptimize-radial-bar .inset' ).css( 'background-color',  jQuery( '#wp-admin-bar-autoptimize .ab-sub-wrapper' ).css( 'background-color') );
 	jQuery( '#wp-admin-bar-autoptimize-delete-cache .ab-item' ).css( 'background-color',  jQuery( '#wpadminbar' ).css( 'background-color') );
 
-	jQuery( '#wp-admin-bar-autoptimize-default li' ).click(function(e)
+	jQuery( '#wp-admin-bar-autoptimize-default li' ).on('click', function(e)
 	{
 		var id = ( typeof e.target.id != 'undefined' && e.target.id ) ? e.target.id : jQuery( e.target ).parent( 'li' ).attr( 'id' );
 		var action = '';
