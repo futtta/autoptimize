@@ -83,12 +83,17 @@ class autoptimizeCriticalCSSCron {
 
             // Attach required variables.
             global $ao_ccss_queue;
-            global $ao_ccss_rlimit;
+            global $ao_ccss_rtimelimit;
 
-            // Initialize job counters.
-            $jc = 1;
-            $jr = 1;
-            $jt = count( $ao_ccss_queue );
+            // Initialize counters.
+            if ( $ao_ccss_rtimelimit == 0 ) {
+                // no time limit set, let's go with 1000 seconds.
+                $ao_ccss_rtimelimit = 1000;
+            }
+            $mt = time() + $ao_ccss_rtimelimit; // maxtime queue processing can run.
+            $jc = 1; // job count number.
+            $jr = 1; // jobs requests number.
+            $jt = count( $ao_ccss_queue ); // number of jobs in queue.
 
             // Sort queue by ascending job status (e.g. ERROR, JOB_ONGOING, JOB_QUEUED, NEW...).
             array_multisort( array_column( $ao_ccss_queue, 'jqstat' ), $ao_ccss_queue ); // @codingStandardsIgnoreLine
@@ -116,14 +121,15 @@ class autoptimizeCriticalCSSCron {
 
                     // If job hash is new or different of a previous one.
                     if ( $hash ) {
+                        if ( $jr > 2 ) {
+                            // we already posted 2 jobs to criticalcss.com, don't post more this run
+                            // but we can keep on processing the queue to keep it tidy.
+                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Holding off on generating request for job with local ID <' . $jprops['ljid'] . '>, maximum number of POSTS reached.', 3 );
+                            continue;
+                        }
+
                         // Set job hash.
                         $jprops['hash'] = $hash;
-
-                        // If this is not the first job, wait 10 seconds before process next job due criticalcss.com API limits.
-                        if ( $jr > 1 ) {
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Waiting ' . AO_CCSS_SLEEP . ' seconds due to criticalcss.com API limits', 3 );
-                            sleep( AO_CCSS_SLEEP );
-                        }
 
                         // Dispatch the job generate request and increment request count.
                         $apireq = $this->ao_ccss_api_generate( $path, $queue_debug, $qdobj['htcode'] );
@@ -191,15 +197,8 @@ class autoptimizeCriticalCSSCron {
                     // Log the pending job.
                     autoptimizeCriticalCSSCore::ao_ccss_log( 'Found PENDING job with local ID <' . $jprops['ljid'] . '>, continuing its queue processing', 3 );
 
-                    // If this is not the first job, wait before process next job due criticalcss.com API limits.
-                    if ( $jr > 1 ) {
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Waiting ' . AO_CCSS_SLEEP . ' seconds due to criticalcss.com API limits', 3 );
-                        sleep( AO_CCSS_SLEEP );
-                    }
-
                     // Dispatch the job result request and increment request count.
                     $apireq = $this->ao_ccss_api_results( $jprops['jid'], $queue_debug, $qdobj['htcode'] );
-                    $jr++;
 
                     // NOTE: All the following condigitons maps to the ones in admin_settings_queue.js.php
                     // Replace API response values if queue debugging is enabled and some value is set.
@@ -241,13 +240,17 @@ class autoptimizeCriticalCSSCron {
                         } elseif ( 'GOOD' == $apireq['resultStatus'] && ( 'WARN' == $apireq['validationStatus'] || 'BAD' == $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' == $apireq['validationStatus'] ) ) {
                             // SUCCESS: GOOD job with WARN or BAD validation
                             // Update job properties.
-                            $jprops['file']   = $this->ao_ccss_save_file( $apireq['css'], $trule, true );
                             $jprops['jqstat'] = $apireq['status'];
                             $jprops['jrstat'] = $apireq['resultStatus'];
                             $jprops['jvstat'] = $apireq['validationStatus'];
                             $jprops['jftime'] = microtime( true );
-                            $rule_update      = true;
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file saved <' . $jprops['file'] . '> but requires REVIEW', 3 );
+                            if ( apply_filters( 'autoptimize_filter_ccss_save_review_rules', true ) ) {
+                                $jprops['file']   = $this->ao_ccss_save_file( $apireq['css'], $trule, true );
+                                $rule_update      = true;
+                                autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file saved <' . $jprops['file'] . '> but requires REVIEW', 3 );
+                            } else {
+                                autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file saved <' . $jprops['file'] . '> but required REVIEW so not saved.', 3 );
+                            }
                         } elseif ( 'GOOD' != $apireq['resultStatus'] && ( 'GOOD' != $apireq['validationStatus'] || 'WARN' != $apireq['validationStatus'] || 'BAD' != $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' != $apireq['validationStatus'] ) ) {
                             // ERROR: no GOOD, WARN or BAD results
                             // Update job properties.
@@ -343,9 +346,9 @@ class autoptimizeCriticalCSSCron {
                     autoptimizeCriticalCSSCore::ao_ccss_log( 'Nothing to do on this job', 3 );
                 }
 
-                // Break the loop if request limit is set and was reached.
-                if ( $ao_ccss_rlimit && $ao_ccss_rlimit == $jr ) {
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'The limit of ' . $ao_ccss_rlimit . ' request(s) to criticalcss.com was reached, queue control must finish now', 3 );
+                // Break the loop if request time limit is (almost exceeded).
+                if ( time() > $mt ) {
+                    autoptimizeCriticalCSSCore::ao_ccss_log( 'The time limit of ' . $ao_ccss_rtimelimit . ' seconds was exceeded, queue control must finish now', 3 );
                     break;
                 }
 

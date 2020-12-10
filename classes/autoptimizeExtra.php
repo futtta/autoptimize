@@ -237,7 +237,9 @@ class autoptimizeExtra
                 $font = str_replace( array( '%7C', '%7c' ), '|', $font );
                 if ( strpos( $font, 'fonts.googleapis.com/css2' ) !== false ) {
                     // (Somewhat) change Google Fonts APIv2 syntax back to v1.
-                    $font = str_replace( array( 'wght@', 'wght%40', ';', '%3B' ), array( '', '', ',', ',' ), $font );
+                    // todo: support for 100..900
+                    $font = rawurldecode( $font );
+                    $font = str_replace( array( 'css2?', 'ital,wght@', 'wght@', 'ital@', '0,', '1,', ':1', ';', '&family=' ), array( 'css?', '', '', '', '', 'italic', ':italic', ',', '%7C' ), $font );
                 }
                 $font = explode( 'family=', $font );
                 $font = ( isset( $font[1] ) ) ? explode( '&', $font[1] ) : array();
@@ -419,7 +421,7 @@ class autoptimizeExtra
                 $preload_as = 'style';
             } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.js' ) ) {
                 $preload_as = 'script';
-            } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.woff' ) || autoptimizeUtils::str_ends_in( $_preload, '.woff2' ) || autoptimizeUtils::str_ends_in( $_preload, '.ttf' ) || autoptimizeUtils::str_ends_in( $_preload, '.eot' ) ) {
+            } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.woff' ) || autoptimizeUtils::str_ends_in( $_preload, '.woff2' ) || autoptimizeUtils::str_ends_in( $_preload, '.ttf' ) || autoptimizeUtils::str_ends_in( $_preload, '.eot' ) || autoptimizeUtils::str_ends_in( $_preload, '.otf' ) ) {
                 $preload_as  = 'font';
                 $crossorigin = ' crossorigin';
                 $mime_type   = ' type="font/' . pathinfo( $_preload, PATHINFO_EXTENSION ) . '"';

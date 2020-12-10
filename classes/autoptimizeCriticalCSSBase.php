@@ -105,7 +105,7 @@ class autoptimizeCriticalCSSBase {
             $autoptimize_ccss_options['ao_ccss_queue_raw']     = get_option( 'autoptimize_ccss_queue', false );
             $autoptimize_ccss_options['ao_ccss_viewport']      = get_option( 'autoptimize_ccss_viewport', false );
             $autoptimize_ccss_options['ao_ccss_finclude']      = get_option( 'autoptimize_ccss_finclude', false );
-            $autoptimize_ccss_options['ao_ccss_rlimit']        = get_option( 'autoptimize_ccss_rlimit', '5' );
+            $autoptimize_ccss_options['ao_ccss_rtimelimit']    = get_option( 'autoptimize_ccss_rtimelimit', '30' );
             $autoptimize_ccss_options['ao_ccss_noptimize']     = get_option( 'autoptimize_ccss_noptimize', false );
             $autoptimize_ccss_options['ao_ccss_debug']         = get_option( 'autoptimize_ccss_debug', false );
             $autoptimize_ccss_options['ao_ccss_key']           = get_option( 'autoptimize_ccss_key' );

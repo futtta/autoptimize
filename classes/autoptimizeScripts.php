@@ -110,6 +110,13 @@ class autoptimizeScripts extends autoptimizeBase
     private $aggregate = true;
 
     /**
+     * Setting; if not aggregated, should we defer?
+     *
+     * @var bool
+     */
+    private $defer_not_aggregate = false;
+
+    /**
      * Setting; try/catch wrapping or not.
      *
      * @var bool
@@ -234,6 +241,11 @@ class autoptimizeScripts extends autoptimizeBase
         if ( $this->aggregate && apply_filters( 'autoptimize_filter_js_dontaggregate', false ) ) {
             $this->aggregate = false;
         }
+        
+        // Defer when not aggregating.
+        if ( false === $this->aggregate && apply_filters( 'autoptimize_js_filter_defer_not_aggregate', $options['defer_not_aggregate'] ) ) {
+            $this->defer_not_aggregate = true;
+        }
 
         // include inline?
         if ( apply_filters( 'autoptimize_js_include_inline', $options['include_inline'] ) ) {
@@ -334,6 +346,15 @@ class autoptimizeScripts extends autoptimizeBase
                                 if ( false !== strpos( $orig_tag, $excl_tag ) && in_array( $excl_flags, array( 'async', 'defer' ) ) ) {
                                     $new_tag = str_replace( '<script ', '<script ' . $excl_flags . ' ', $new_tag );
                                 }
+                            }
+                        }
+                        
+                        // not aggregating but deferring?
+                        if ( $this->defer_not_aggregate && false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path && strpos( $new_tag, ' defer' ) === false ) {
+                            $new_tag = str_replace( '<script ', '<script defer ', $new_tag );
+                            // and remove async as async+defer=async while we explicitly want defer.
+                            if ( strpos( $new_tag, ' async' ) !== false && apply_filters( 'autoptimize_filter_js_defer_remove_async', true ) ) {
+                                $new_tag = str_replace( array( ' async', ' async="async"', " async='async'" ), '', $new_tag );
                             }
                         }
 

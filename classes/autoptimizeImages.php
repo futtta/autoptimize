@@ -31,6 +31,7 @@ class autoptimizeImages
         }
 
         $this->set_options( $options );
+        $this->lazyload_counter = 0;
     }
 
     public function set_options( array $options )
@@ -411,7 +412,10 @@ class autoptimizeImages
         }
 
         if ( null === $nopti_images ) {
-            $nopti_images = apply_filters( 'autoptimize_filter_imgopt_noptimize', '' );
+            if ( is_array( $this->options ) && array_key_exists( 'autoptimize_imgopt_text_field_6', $this->options ) ) {
+                $nopti_images = $this->options['autoptimize_imgopt_text_field_6'];
+            }
+            $nopti_images = apply_filters( 'autoptimize_filter_imgopt_noptimize', $nopti_images );
         }
 
         $site_host  = AUTOPTIMIZE_SITE_DOMAIN;
@@ -504,7 +508,13 @@ class autoptimizeImages
             $width  = 180;
             $height = 180;
         }
-        return $this->replace_img_callback( $matches, $width, $height );
+
+        // make sure we're not trying to optimize a *.ico file
+        if ( strpos( $matches[1], '.ico' ) === false ) {
+            return $this->replace_img_callback( $matches, $width, $height );
+        } else {
+            return $matches;
+        }
     }
 
     public function filter_optimize_images( $in )
@@ -759,7 +769,8 @@ class autoptimizeImages
 
     public function add_lazyload( $tag, $placeholder = '' ) {
         // adds actual lazyload-attributes to an image node.
-        if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag ) {
+        $this->lazyload_counter++;
+        if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag && $this->lazyload_counter >= apply_filters( 'autoptimize_filter_imgopt_lazyload_from_nth', 0 ) ) {
             $tag = $this->maybe_fix_missing_quotes( $tag );
 
             // store original tag for use in noscript version.
@@ -889,7 +900,7 @@ class autoptimizeImages
         if ( strpos( $tag, 'class=' ) !== false ) {
             $tag = preg_replace( '/(\sclass\s?=\s?("|\'))/', '$1' . $target_class, $tag );
         } else {
-            $tag = preg_replace( '/(<img)\s/', '$1 class="' . trim( $target_class ) . '" ', $tag );
+            $tag = preg_replace( '/(<[a-zA-Z]*)\s/', '$1 class="' . trim( $target_class ) . '" ', $tag );
         }
 
         return $tag;
@@ -1108,6 +1119,12 @@ class autoptimizeImages
                     ?>
                 </td>
             </tr>
+            <tr id='autoptimize_imgopt_optimization_exclusions' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
+                <th scope="row"><?php _e( 'Optimization exclusions', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='text' style='width:80%' id='autoptimize_imgopt_optimization_exclusions' name='autoptimize_imgopt_settings[autoptimize_imgopt_text_field_6]' value='<?php if ( ! empty( $options['autoptimize_imgopt_text_field_6'] ) ) { echo esc_attr( $options['autoptimize_imgopt_text_field_6'] ); } ?>'><br /><?php _e( 'Comma-separated list of image classes or filenames that should not be optimized.', 'autoptimize' ); ?></label>
+                </td>
+            </tr>
             <tr id='autoptimize_imgopt_quality' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
                 <th scope="row"><?php _e( 'Image Optimization quality', 'autoptimize' ); ?></th>
                 <td>
@@ -1163,9 +1180,11 @@ class autoptimizeImages
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_quality").show("slow");
                     jQuery("#autoptimize_imgopt_ngimg").show("slow");
+                    jQuery("#autoptimize_imgopt_optimization_exclusions").show("slow");
                 } else {
                     jQuery("#autoptimize_imgopt_quality").hide("slow");
                     jQuery("#autoptimize_imgopt_ngimg").hide("slow");
+                    jQuery("#autoptimize_imgopt_optimization_exclusions").hide("slow");
                 }
             });
             jQuery("#autoptimize_imgopt_ngimg_checkbox").change(function() {

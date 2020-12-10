@@ -216,8 +216,8 @@ class autoptimizeCriticalCSSEnqueue {
                 // but remove prefix to be able to check if the function exists & returns true.
                 $_type = str_replace( array( 'woo_', 'bp_', 'bbp_', 'edd_' ), '', $type );
                 if ( function_exists( $_type ) && call_user_func( $_type ) ) {
-                    // Make sure we only return is_front_page (and is_home) for one page, not for the "paged frontpage" (/page/2 ..).
-                    if ( ( 'is_front_page' !== $_type && 'is_home' !== $_type ) || ! is_paged() ) {
+                    // Make sure we only return for one page, not for the "paged pages" (/page/2 ..).
+                    if ( ! is_page() || ! is_paged() ) {
                         $page_type = $type;
                         break;
                     }

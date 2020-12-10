@@ -115,6 +115,8 @@ class autoptimizeConfig
 
 input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:normal;}
 #autoptimize_main .cb_label {display: block; padding-left: 25px; text-indent: -25px;}
+#autoptimize_main .form-table th {padding-top: 15px; padding-bottom: 15px;}
+#autoptimize_main .js_not_aggregate td, #autoptimize_main .js_not_aggregate th{padding-top:0px;}
 
 /* rss block */
 #futtta_feed ul{list-style:outside;}
@@ -222,10 +224,15 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <th scope="row"><?php _e( 'Optimize JavaScript Code?', 'autoptimize' ); ?></th>
 <td><input type="checkbox" id="autoptimize_js" name="autoptimize_js" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_js' ) ? 'checked="checked" ' : ''; ?>/></td>
 </tr>
-<tr valign="top" class="js_sub">
+<tr valign="top" class="js_sub js_aggregate_master">
 <th scope="row"><?php _e( 'Aggregate JS-files?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" id="autoptimize_js_aggregate" name="autoptimize_js_aggregate" <?php echo $conf->get( 'autoptimize_js_aggregate' ) ? 'checked="checked" ' : ''; ?>/>
 <?php _e( 'Aggregate all linked JS-files to have them loaded non-render blocking? If this option is off, the individual JS-files will remain in place but will be minified.', 'autoptimize' ); ?></label></td>
+</tr>
+<tr valign="top" class="js_sub js_not_aggregate">
+<th scope="row"><?php _e( 'Do not aggregate but defer?', 'autoptimize' ); ?></th>
+<td><label class="cb_label"><input type="checkbox" id="autoptimize_js_defer_not_aggregate" name="autoptimize_js_defer_not_aggregate" <?php echo $conf->get( 'autoptimize_js_defer_not_aggregate' ) ? 'checked="checked" ' : ''; ?>/>
+<?php _e( 'When JS is not aggregated, all linked JS-files can be deferred instead, making them non-render-blocking.', 'autoptimize' ); ?></label></td>
 </tr>
 <tr valign="top" class="js_sub js_aggregate">
 <th scope="row"><?php _e( 'Also aggregate inline JS?', 'autoptimize' ); ?></th>
@@ -251,7 +258,7 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <?php } ?>
 <tr valign="top" class="js_sub">
 <th scope="row"><?php _e( 'Exclude scripts from Autoptimize:', 'autoptimize' ); ?></th>
-<td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo esc_attr( autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude', 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js' ) ); ?>"/><br />
+<td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo esc_attr( autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude', 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js, js/jquery/jquery.min.js' ) ); ?>"/><br />
 <?php
 echo __( 'A comma-separated list of scripts you want to exclude from being optimized, for example \'whatever.js, another.js\' (without the quotes) to exclude those scripts from being aggregated by Autoptimize.', 'autoptimize' ) . ' ' . __( 'Important: excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
 ?>
@@ -521,13 +528,28 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
 
         jQuery( "#autoptimize_js_aggregate" ).change(function() {
             if (this.checked && jQuery("#autoptimize_js").prop('checked')) {
-                jQuery(".js_aggregate:visible").fadeTo("fast",1);
+                jQuery( ".js_aggregate:visible" ).fadeTo( "fast",1 );
+                jQuery( "#autoptimize_js_defer_not_aggregate" ).prop( 'checked', false );
+                jQuery( ".js_not_aggregate:visible" ).fadeTo( "fast", .33 );
+                jQuery( ".js_aggregate_master:visible" ).fadeTo( "fast", 1 );
                 jQuery( "#min_excl_row" ).show();
             } else {
-                jQuery(".js_aggregate:visible").fadeTo("fast",.33);
-                if ( jQuery( "#autoptimize_css_aggregate" ).prop('checked') == false ) {
+                jQuery( ".js_aggregate:visible" ).fadeTo( "fast", .33 );
+                jQuery( ".js_not_aggregate:visible" ).fadeTo( "fast", 1 );
+                if ( jQuery( "#autoptimize_css_aggregate" ).prop( 'checked' ) == false ) {
                     jQuery( "#min_excl_row" ).hide();
                 }
+            }
+        });
+        
+        jQuery( "#autoptimize_js_defer_not_aggregate" ).change(function() {
+            if (this.checked && jQuery("#autoptimize_js").prop('checked')) {
+                jQuery( "#autoptimize_js_aggregate" ).prop( 'checked', false );
+                jQuery( ".js_aggregate:visible" ).fadeTo( "fast", .33 );
+                jQuery( ".js_aggregate_master:visible" ).fadeTo( "fast", .33 );
+                jQuery( ".js_not_aggregate:visible" ).fadeTo( "fast", 1 );
+            } else {
+                jQuery( ".js_aggregate_master:visible" ).fadeTo( "fast", 1 );
             }
         });
 
@@ -611,6 +633,8 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         }
         if (!jQuery("#autoptimize_js_aggregate").prop('checked')) {
             jQuery(".js_aggregate:visible").fadeTo('fast',.33);
+        } else {
+            jQuery( ".js_not_aggregate:visible" ).fadeTo( 'fast', .33 );
         }
         if (jQuery("#autoptimize_enable_site_config").prop('checked')) {
             jQuery("li.itemDetail:not(.multiSite)").fadeTo('fast',.33);
@@ -664,6 +688,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         register_setting( 'autoptimize', 'autoptimize_enable_site_config' );
         register_setting( 'autoptimize', 'autoptimize_js' );
         register_setting( 'autoptimize', 'autoptimize_js_aggregate' );
+        register_setting( 'autoptimize', 'autoptimize_js_defer_not_aggregate' );
         register_setting( 'autoptimize', 'autoptimize_js_exclude' );
         register_setting( 'autoptimize', 'autoptimize_js_trycatch' );
         register_setting( 'autoptimize', 'autoptimize_js_justhead' );
@@ -720,31 +745,32 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
     public static function get_defaults()
     {
         static $config = array(
-            'autoptimize_html'               => 0,
-            'autoptimize_html_keepcomments'  => 0,
-            'autoptimize_enable_site_config' => 1,
-            'autoptimize_js'                 => 0,
-            'autoptimize_js_aggregate'       => 1,
-            'autoptimize_js_exclude'         => 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js',
-            'autoptimize_js_trycatch'        => 0,
-            'autoptimize_js_justhead'        => 0,
-            'autoptimize_js_include_inline'  => 0,
-            'autoptimize_js_forcehead'       => 0,
-            'autoptimize_css'                => 0,
-            'autoptimize_css_aggregate'      => 1,
-            'autoptimize_css_exclude'        => 'admin-bar.min.css, dashicons.min.css, wp-content/cache/, wp-content/uploads/',
-            'autoptimize_css_justhead'       => 0,
-            'autoptimize_css_include_inline' => 1,
-            'autoptimize_css_defer'          => 0,
-            'autoptimize_css_defer_inline'   => '',
-            'autoptimize_css_inline'         => 0,
-            'autoptimize_css_datauris'       => 0,
-            'autoptimize_cdn_url'            => '',
-            'autoptimize_cache_nogzip'       => 1,
-            'autoptimize_optimize_logged'    => 1,
-            'autoptimize_optimize_checkout'  => 0,
-            'autoptimize_minify_excluded'    => 1,
-            'autoptimize_cache_fallback'     => 1,
+            'autoptimize_html'                   => 0,
+            'autoptimize_html_keepcomments'      => 0,
+            'autoptimize_enable_site_config'     => 1,
+            'autoptimize_js'                     => 0,
+            'autoptimize_js_aggregate'           => 1,
+            'autoptimize_js_defer_not_aggregate' => 0,
+            'autoptimize_js_exclude'             => 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js, js/jquery/jquery.min.js',
+            'autoptimize_js_trycatch'            => 0,
+            'autoptimize_js_justhead'            => 0,
+            'autoptimize_js_include_inline'      => 0,
+            'autoptimize_js_forcehead'           => 0,
+            'autoptimize_css'                    => 0,
+            'autoptimize_css_aggregate'          => 1,
+            'autoptimize_css_exclude'            => 'admin-bar.min.css, dashicons.min.css, wp-content/cache/, wp-content/uploads/',
+            'autoptimize_css_justhead'           => 0,
+            'autoptimize_css_include_inline'     => 1,
+            'autoptimize_css_defer'              => 0,
+            'autoptimize_css_defer_inline'       => '',
+            'autoptimize_css_inline'             => 0,
+            'autoptimize_css_datauris'           => 0,
+            'autoptimize_cdn_url'                => '',
+            'autoptimize_cache_nogzip'           => 1,
+            'autoptimize_optimize_logged'        => 1,
+            'autoptimize_optimize_checkout'      => 0,
+            'autoptimize_minify_excluded'        => 1,
+            'autoptimize_cache_fallback'         => 1,
         );
 
         return $config;

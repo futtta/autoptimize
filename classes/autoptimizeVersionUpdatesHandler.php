@@ -53,6 +53,10 @@ class autoptimizeVersionUpdatesHandler
                 $this->upgrade_from_2_4();
                 $major_update = false;
                 // No break, intentionally, so all upgrades are ran during a single request...
+            case '2.7':
+                $this->upgrade_from_2_7();
+                $major_update = true;
+                // No break, intentionally, so all upgrades are ran during a single request...
         }
 
         if ( true === $major_update ) {
@@ -247,6 +251,18 @@ class autoptimizeVersionUpdatesHandler
                 $imgopt_settings['autoptimize_imgopt_select_field_2'] = $extra_settings['autoptimize_extra_select_field_6'];
             }
             autoptimizeOptionWrapper::update_option( 'autoptimize_imgopt_settings', $imgopt_settings );
+        }
+    }
+
+    /**
+     * remove CCSS request limit option + update jquery exclusion to include WordPress 5.6 jquery.min.js.
+     */    
+    private function upgrade_from_2_7() {
+        delete_option( 'autoptimize_ccss_rlimit' );
+        $js_exclusions = get_option( 'autoptimize_js_exclude', '' );
+        if ( strpos( $js_exclusions, 'js/jquery/jquery.js' ) !== false && strpos( $js_exclusions, 'js/jquery/jquery.min.js' ) === false ) {
+            $js_exclusions .= ', js/jquery/jquery.min.js';
+            update_option( 'autoptimize_js_exclude', $js_exclusions );
         }
     }
 }
