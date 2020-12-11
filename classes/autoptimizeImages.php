@@ -770,7 +770,8 @@ class autoptimizeImages
     public function add_lazyload( $tag, $placeholder = '' ) {
         // adds actual lazyload-attributes to an image node.
         $this->lazyload_counter++;
-        if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag && $this->lazyload_counter >= apply_filters( 'autoptimize_filter_imgopt_lazyload_from_nth', 0 ) ) {
+        $_lazyload_from_nth = apply_filters( 'autoptimize_filter_imgopt_lazyload_from_nth', $this->options['autoptimize_imgopt_number_field_7'] );
+        if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag && $this->lazyload_counter >= $_lazyload_from_nth ) {
             $tag = $this->maybe_fix_missing_quotes( $tag );
 
             // store original tag for use in noscript version.
@@ -1165,10 +1166,16 @@ class autoptimizeImages
                     <label><input type='checkbox' id='autoptimize_imgopt_lazyload_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_3]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Image lazy-loading will delay the loading of non-visible images to allow the browser to optimally load all resources for the "above the fold"-page first.', 'autoptimize' ); ?></label>
                 </td>
             </tr>
-            <tr id='autoptimize_imgopt_lazyload_exclusions' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_3', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_3'] ) ) { echo 'class="hidden"'; } ?>>
+            <tr id='autoptimize_imgopt_lazyload_exclusions' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_3', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_3'] ) ) { echo 'class="autoptimize_lazyload_child hidden"'; } else { echo 'class="autoptimize_lazyload_child"'; } ?>>
                 <th scope="row"><?php _e( 'Lazy-load exclusions', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input type='text' style='width:80%' id='autoptimize_imgopt_lazyload_exclusions' name='autoptimize_imgopt_settings[autoptimize_imgopt_text_field_5]' value='<?php if ( ! empty( $options['autoptimize_imgopt_text_field_5'] ) ) { echo esc_attr( $options['autoptimize_imgopt_text_field_5'] ); } ?>'><br /><?php _e( 'Comma-separated list of to be excluded image classes or filenames.', 'autoptimize' ); ?></label>
+                    <label><input type='text' style='width:80%' id='autoptimize_imgopt_lazyload_exclusions_text' name='autoptimize_imgopt_settings[autoptimize_imgopt_text_field_5]' value='<?php if ( ! empty( $options['autoptimize_imgopt_text_field_5'] ) ) { echo esc_attr( $options['autoptimize_imgopt_text_field_5'] ); } ?>'><br /><?php _e( 'Comma-separated list of to be excluded image classes or filenames.', 'autoptimize' ); ?></label>
+                </td>
+            </tr>
+            <tr id='autoptimize_imgopt_lazyload_from_nth_image' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_3', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_3'] ) ) { echo 'class="autoptimize_lazyload_child hidden"'; } else { echo 'class="autoptimize_lazyload_child"'; } ?>>
+                <th scope="row"><?php _e( 'Lazy-load from nth image', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='number' min='0' max='50' style='width:80%' id='autoptimize_imgopt_lazyload_from_nth_image_number' name='autoptimize_imgopt_settings[autoptimize_imgopt_number_field_7]' value='<?php if ( ! empty( $options['autoptimize_imgopt_number_field_7'] ) ) { echo esc_attr( $options['autoptimize_imgopt_number_field_7'] ); } else { echo '0'; } ?>'><br /><?php _e( 'Don\'t lazyload the first X images, \'0\' lazyloads all.', 'autoptimize' ); ?></label>
                 </td>
             </tr>
         </table>
@@ -1190,14 +1197,14 @@ class autoptimizeImages
             jQuery("#autoptimize_imgopt_ngimg_checkbox").change(function() {
                 if (this.checked) {
                     jQuery("#autoptimize_imgopt_lazyload_checkbox")[0].checked = true;
-                    jQuery("#autoptimize_imgopt_lazyload_exclusions").show("slow");
+                    jQuery(".autoptimize_lazyload_child").show("slow");
                 }
             });
             jQuery("#autoptimize_imgopt_lazyload_checkbox").change(function() {
                 if (this.checked) {
-                    jQuery("#autoptimize_imgopt_lazyload_exclusions").show("slow");
+                    jQuery(".autoptimize_lazyload_child").show("slow");
                 } else {
-                    jQuery("#autoptimize_imgopt_lazyload_exclusions").hide("slow");
+                    jQuery(".autoptimize_lazyload_child").hide("slow");
                     jQuery("#autoptimize_imgopt_ngimg_checkbox")[0].checked = false;
                 }
             });
