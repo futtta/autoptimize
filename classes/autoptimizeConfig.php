@@ -812,6 +812,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
     {
         $defaults = array(
             'autoptimize_imgopt_checkbox_field_1' => '0', // imgopt off.
+            'autoptimize_imgopt_text_field_6'     => '',  // optimization exclusions.
             'autoptimize_imgopt_select_field_2'   => '2', // quality glossy.
             'autoptimize_imgopt_checkbox_field_3' => '0', // lazy load off.
             'autoptimize_imgopt_checkbox_field_4' => '0', // webp off (might be removed).
