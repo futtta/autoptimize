@@ -2352,7 +2352,7 @@ MARKUP;
         $opts                                        = autoptimizeImages::fetch_options();
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
-        $opts['autoptimize_imgopt_text_field_6'] = 'excluded.jpg';
+        $opts['autoptimize_imgopt_text_field_6']     = 'excluded.jpg';
 
         $markup = <<<MARKUP
 <img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
