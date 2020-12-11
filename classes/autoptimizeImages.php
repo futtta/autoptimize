@@ -513,7 +513,7 @@ class autoptimizeImages
         if ( strpos( $matches[1], '.ico' ) === false ) {
             return $this->replace_img_callback( $matches, $width, $height );
         } else {
-            return $matches;
+            return $matches[0];
         }
     }
 
