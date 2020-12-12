@@ -319,6 +319,11 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.8.1 =
+* Images: new option not to lazyload first X images
+* fix for "array to string" conversion errors in image optimization logic of .ico files
+* switch jQuery .click shorthand to please jQuery Migrate helper (and because it's better that way)
+
 = 2.8.0 =
 * JavaScript: new option "defer but don't aggregate"
 * JavaScript: ensure Autopitimize also acts on jQuery in WordPress 5.6 which is renamed to jquery.min.js from jquery.js before.
