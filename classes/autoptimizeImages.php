@@ -596,7 +596,7 @@ class autoptimizeImages
                     $_url = $this->normalize_img_url( $_url );
 
                     $placeholder = '';
-                    if ( $this->can_optimize_image( $_url, $tag ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true ) ) {
+                    if ( $this->can_optimize_image( $_url, $tag ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true, $_url ) ) {
                         $lqip_w = '';
                         $lqip_h = '';
                         if ( isset( $imgopt_w ) && ! empty( $imgopt_w ) ) {
