@@ -816,7 +816,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
             'autoptimize_imgopt_checkbox_field_3' => '0', // lazy load off.
             'autoptimize_imgopt_checkbox_field_4' => '0', // webp off (might be removed).
             'autoptimize_imgopt_text_field_5'     => '',  // lazy load exclusions empty.
-            // 'autoptimize_imgopt_text_field_6'     => '',  // optimization exclusions empty.
+            'autoptimize_imgopt_text_field_6'     => '',  // optimization exclusions empty.
             'autoptimize_imgopt_number_field_7'   => '0', // lazy load from nth image (0 = lazyload all).
         );
         return $defaults;

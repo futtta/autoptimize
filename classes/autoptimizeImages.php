@@ -399,7 +399,7 @@ class autoptimizeImages
         return $imgopt_base_url;
     }
 
-    private function can_optimize_image( $url, $tag = '' )
+    private function can_optimize_image( $url, $tag = '', $testing = false )
     {
         static $cdn_url      = null;
         static $nopti_images = null;
@@ -411,7 +411,7 @@ class autoptimizeImages
             );
         }
 
-        if ( null === $nopti_images ) {
+        if ( null === $nopti_images || $testing ) {
             if ( is_array( $this->options ) && array_key_exists( 'autoptimize_imgopt_text_field_6', $this->options ) ) {
                 $nopti_images = $this->options['autoptimize_imgopt_text_field_6'];
             }
@@ -517,7 +517,7 @@ class autoptimizeImages
         }
     }
 
-    public function filter_optimize_images( $in )
+    public function filter_optimize_images( $in, $testing = false )
     {
         /*
          * potential future functional improvements:
@@ -554,7 +554,7 @@ class autoptimizeImages
                             if ( isset( $indiv_srcset_parts[1] ) && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
                                 $imgopt_w = rtrim( $indiv_srcset_parts[1], 'w' );
                             }
-                            if ( $this->can_optimize_image( $indiv_srcset_parts[0], $tag ) ) {
+                            if ( $this->can_optimize_image( $indiv_srcset_parts[0], $tag, $testing ) ) {
                                 $imgopt_url = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
                                 $srcset     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $srcset );
                             }
@@ -574,7 +574,7 @@ class autoptimizeImages
                     foreach ( $urls as $url ) {
                         $full_src_orig = $url[0];
                         $url           = $url[1];
-                        if ( $this->can_optimize_image( $url, $full_src_orig ) ) {
+                        if ( $this->can_optimize_image( $url, $full_src_orig, $testing ) ) {
                             $imgopt_url      = $this->build_imgopt_url( $url, $imgopt_w, $imgopt_h );
                             $full_imgopt_src = str_replace( $url, $imgopt_url, $full_src_orig );
                             $tag             = str_replace( $full_src_orig, $full_imgopt_src, $tag );

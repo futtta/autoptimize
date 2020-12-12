@@ -2365,7 +2365,7 @@ MARKUP;
 MARKUP;
         $instance = autoptimizeImages::instance();
         $instance->set_options( $opts );
-        $actual = $instance->filter_optimize_images( $markup );
+        $actual = $instance->filter_optimize_images( $markup, true );
         $this->assertEquals( $expected, $actual );
     }
 
