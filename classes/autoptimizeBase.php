@@ -164,7 +164,7 @@ abstract class autoptimizeBase
         }
 
         // Prepend with WP_ROOT_DIR to have full path to file.
-        $path = str_replace( '//', '/', WP_ROOT_DIR . $path );
+        $path = str_replace( '//', '/', trailingslashit( WP_ROOT_DIR ) . $path );
 
         // Final check: does file exist and is it readable?
         if ( file_exists( $path ) && is_file( $path ) && is_readable( $path ) ) {
