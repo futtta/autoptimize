@@ -144,6 +144,14 @@ abstract class autoptimizeBase
             // As we replaced the content-domain with the site-domain, we should match against that.
             $tmp_ao_root = preg_replace( '/https?:/', '', AUTOPTIMIZE_WP_SITE_URL );
         }
+        
+        if ( is_multisite() && ! is_main_site() && ! empty( $this->cdn_url ) ) {
+            // multisite child sites with CDN need the network_site_url as tmp_ao_root but only if directory-based multisite.
+            $_network_site_url = network_site_url();
+            if ( strpos( AUTOPTIMIZE_WP_SITE_URL, $_network_site_url ) !== false ) {
+                $tmp_ao_root = preg_replace( '/https?:/', '', network_site_url() );
+            }
+        }
 
         $tmp_url = preg_replace( '/https?:/', '', $url );
         $path    = str_replace( $tmp_ao_root, '', $tmp_url );
