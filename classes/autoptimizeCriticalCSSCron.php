@@ -227,8 +227,8 @@ class autoptimizeCriticalCSSCron {
                             $apireq['resultStatus'] = 'GOOD';
                         }
 
-                        if ( 'GOOD' == $apireq['resultStatus'] && 'GOOD' == $apireq['validationStatus'] ) {
-                            // SUCCESS: GOOD job with GOOD validation
+                        if ( 'GOOD' == $apireq['resultStatus'] && ( 'GOOD' == $apireq['validationStatus'] || 'WARN' == $apireq['validationStatus'] ) ) {
+                            // SUCCESS: GOOD job with GOOD or WARN validation
                             // Update job properties.
                             $jprops['file']   = $this->ao_ccss_save_file( $apireq['css'], $trule, false );
                             $jprops['jqstat'] = $apireq['status'];
@@ -237,8 +237,8 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jftime'] = microtime( true );
                             $rule_update      = true;
                             autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . '>, file saved <' . $jprops['file'] . '>', 3 );
-                        } elseif ( 'GOOD' == $apireq['resultStatus'] && ( 'WARN' == $apireq['validationStatus'] || 'BAD' == $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' == $apireq['validationStatus'] ) ) {
-                            // SUCCESS: GOOD job with WARN or BAD validation
+                        } elseif ( 'GOOD' == $apireq['resultStatus'] && ( 'BAD' == $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' == $apireq['validationStatus'] ) ) {
+                            // SUCCESS: GOOD job with BAD or SCREENSHOT_WARN_BLANK validation
                             // Update job properties.
                             $jprops['jqstat'] = $apireq['status'];
                             $jprops['jrstat'] = $apireq['resultStatus'];
