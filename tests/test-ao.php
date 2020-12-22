@@ -2415,7 +2415,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<picture><source data-srcset="$imgopthost/client/q_glossy,ret_img/$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img src="$imgopthost/client/q_glossy,ret_img/$siteurl/wp-content/image.jpg"/></noscript><img class="lazyload" src='$imgopthost/client/q_lqip,ret_wait/$siteurl/wp-content/image.jpg' data-src="https://cdn.shortpixel.ai/client/q_glossy,ret_img/$siteurl/wp-content/image.jpg"/></picture>
+<picture><source data-srcset="$imgopthost/client/q_glossy,ret_img/$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img src="$imgopthost/client/q_glossy,ret_img/$siteurl/wp-content/image.jpg"/></noscript><img class="lazyload" src='$imgopthost/client/q_lqip,ret_wait/$siteurl/wp-content/image.jpg' data-src='$imgopthost/client/q_glossy,ret_img/$siteurl/wp-content/image.jpg'/></picture>
 MARKUP;
         $instance = autoptimizeImages::instance();
         $instance->set_options( $opts );
