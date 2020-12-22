@@ -55,7 +55,7 @@ if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
 }
 
 function autoptimize_autoload( $class_name ) {
-    if ( in_array( $class_name, array( 'Minify_HTML', 'JSMin' ) ) ) {
+    if ( in_array( $class_name, array( 'AO_Minify_HTML', 'JSMin' ) ) ) {
         $file     = strtolower( $class_name );
         $file     = str_replace( '_', '-', $file );
         $path     = dirname( __FILE__ ) . '/classes/external/php/';
