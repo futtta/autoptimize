@@ -689,7 +689,7 @@ class autoptimizeMain
         $_ao_imgopt_launch_ok        = autoptimizeImages::launch_ok_wrapper();
         $_ao_imgopt_plug_dismissible = 'ao-img-opt-plug-123';
         $_ao_imgopt_active           = autoptimizeImages::imgopt_active();
-        $_is_ao_settings_page        = ( str_replace( array( 'autoptimize', 'autoptimize_imgopt', 'ao_critcss', 'autoptimize_extra', 'ao_partners' ), '', $_SERVER['REQUEST_URI'] ) !== $_SERVER['REQUEST_URI'] ? true : false);
+        $_is_ao_settings_page        = ( str_replace( array( 'autoptimize', 'autoptimize_imgopt', 'ao_critcss', 'autoptimize_extra', 'ao_partners' ), '', $_SERVER['REQUEST_URI'] ) !== $_SERVER['REQUEST_URI'] ? true : false );
 
         if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && '' !== $_ao_imgopt_plug_notice && ! $_ao_imgopt_active && $_ao_imgopt_launch_ok && PAnD::is_admin_notice_active( $_ao_imgopt_plug_dismissible ) ) {
             echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_imgopt_plug_dismissible . '"><p>';
