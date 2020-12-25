@@ -611,8 +611,10 @@ class autoptimizeImages
                     $tag = $this->add_lazyload( $tag, $placeholder );
                 }
 
-                // and add tag to array for later replacement.
                 if ( $tag !== $orig_tag ) {
+                    // add filter to tag.
+                    $tag = apply_filters( 'autoptimize_filter_imgopt_tag_postopt', $tag );
+                    // and add tag to array for later replacement.
                     $to_replace[ $orig_tag ] = $tag;
                 }
             }
@@ -770,7 +772,13 @@ class autoptimizeImages
     public function add_lazyload( $tag, $placeholder = '' ) {
         // adds actual lazyload-attributes to an image node.
         $this->lazyload_counter++;
-        $_lazyload_from_nth = apply_filters( 'autoptimize_filter_imgopt_lazyload_from_nth', $this->options['autoptimize_imgopt_number_field_7'] );
+
+        $_lazyload_from_nth = '';
+        if ( array_key_exists( 'autoptimize_imgopt_number_field_7', $this->options ) ) {
+            $_lazyload_from_nth = $this->options['autoptimize_imgopt_number_field_7'];
+        }
+        $_lazyload_from_nth = apply_filters( 'autoptimize_filter_imgopt_lazyload_from_nth', $_lazyload_from_nth );
+
         if ( str_ireplace( $this->get_lazyload_exclusions(), '', $tag ) === $tag && $this->lazyload_counter >= $_lazyload_from_nth ) {
             $tag = $this->maybe_fix_missing_quotes( $tag );
 
