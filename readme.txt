@@ -319,6 +319,13 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.8.2 =
+* Images: fix for PHP "undefined index" notice
+* Images: only show "did you know shortpixel" notice on Autoptimize settings pages
+* Images: update lazysizes to 5.3.0 from upstream
+* HTML: rename HTML minify class from minify_HTML to AO_minify_HTML to avoid conflicts with e.g. W3TC
+* JS/ CSS: fix for AO not optimizing multisite child sites when CDN set
+
 = 2.8.1 =
 * Images: new option not to lazyload first X images
 * fix for "array to string" conversion errors in image optimization logic of .ico files
