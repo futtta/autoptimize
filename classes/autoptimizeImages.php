@@ -539,6 +539,8 @@ class autoptimizeImages
         // extract img tags.
         if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
             foreach ( $matches[0] as $tag ) {
+                $tag = apply_filters( 'autoptimize_filter_imgopt_tag_preopt' , $tag );
+
                 $orig_tag = $tag;
                 $imgopt_w = '';
                 $imgopt_h = '';
@@ -610,6 +612,8 @@ class autoptimizeImages
                     // then call add_lazyload-function with lpiq placeholder if set.
                     $tag = $this->add_lazyload( $tag, $placeholder );
                 }
+
+                $tag = apply_filters( 'autoptimize_filter_imgopt_tag_postopt' , $tag );
 
                 // and add tag to array for later replacement.
                 if ( $tag !== $orig_tag ) {
