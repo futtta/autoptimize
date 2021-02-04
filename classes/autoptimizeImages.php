@@ -975,7 +975,7 @@ class autoptimizeImages
     public function process_bgimage( $in ) {
         if ( strpos( $in, 'background-image:' ) !== false && apply_filters( 'autoptimize_filter_imgopt_lazyload_backgroundimages', true ) ) {
             $out = preg_replace_callback(
-                '/(<(?:article|aside|body|div|footer|header|p|section|table)[^>]*)\sstyle=(?:"|\')[^<>]*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)[^>]*/',
+                '/(<(?:article|aside|body|div|footer|header|p|section|span|table)[^>]*)\sstyle=(?:"|\')[^<>]*?background-image:\s?url\((?:"|\')?([^"\')]*)(?:"|\')?\)[^>]*/',
                 array( $this, 'lazyload_bgimg_callback' ),
                 $in
             );
