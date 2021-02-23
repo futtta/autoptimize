@@ -231,7 +231,7 @@ class autoptimizeImages
 
     public static function get_service_url_suffix()
     {
-        $suffix = '/af/SPZURYE109483' . AUTOPTIMIZE_SITE_DOMAIN;
+        $suffix = '/af/SPZURYE109483/' . AUTOPTIMIZE_SITE_DOMAIN;
 
         return $suffix;
     }
@@ -1231,7 +1231,7 @@ class autoptimizeImages
             $_imgopt_notice  = '';
             $_stat           = autoptimizeOptionWrapper::get_option( 'autoptimize_imgopt_provider_stat', '' );
             $_site_host      = AUTOPTIMIZE_SITE_DOMAIN;
-            $_imgopt_upsell  = 'https://shortpixel.com/otp/af/SPZURYE109483' . $_site_host;
+            $_imgopt_upsell  = 'https://shortpixel.com/aospai/af/SPZURYE109483/' . $_site_host;
             $_imgopt_assoc   = 'https://shortpixel.helpscoutdocs.com/article/94-how-to-associate-a-domain-to-my-account';
             $_imgopt_unreach = 'https://shortpixel.helpscoutdocs.com/article/148-why-are-my-images-redirected-from-cdn-shortpixel-ai';
 
@@ -1248,7 +1248,7 @@ class autoptimizeImages
                     // translators: "check the documentation here" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'It seems ShortPixel image optimization is not able to fetch images from your site, %1$scheck the documentation here%2$s for more information', 'autoptimize' ), '<a href="' . $_imgopt_unreach . '" target="_blank">', '</a>' );
                 } else {
-                    $_imgopt_upsell = 'https://shortpixel.com/otp/af/SPZURYE109483';
+                    $_imgopt_upsell = 'https://shortpixel.com/g/af/SPZURYE109483';
                     // translators: "log in to check your account" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota are in good shape, %1$slog in to check your account%2$s.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                 }
