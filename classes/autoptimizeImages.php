@@ -990,7 +990,7 @@ class autoptimizeImages
             $placeholder    = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $this->get_default_lazyload_placeholder( 500, 300 ) );
             $lazyload_class = apply_filters( 'autoptimize_filter_imgopt_lazyload_class', 'lazyload' );
             // replace background-image URL with SVG placeholder.
-            $out = str_replace( $matches[2], $placeholder, $matches[0] );
+            $out = str_replace( 'url(' . $matches[2], 'url(' . $placeholder, $matches[0] );
             // add data-bg attribute with real background-image URL for lazyload to pick up.
             $out = str_replace( $matches[1], $matches[1] . ' data-bg="' . trim( str_replace( array( "\r\n", '&quot;' ), '', $matches[2] ) ) . '"', $out );
             // add lazyload class to tag.
