@@ -722,7 +722,7 @@ class autoptimizeCriticalCSSCron {
         } else {
             // If rule doesn't exist, create an AUTO rule
             // AUTO rules were only for types, but will now also work for paths.
-            if ( 'types' == $trule[0] || 'paths' == $trule[0] ) {
+            if ( ( 'types' == $trule[0] || 'paths' == $trule[0] ) && ! empty( $trule[1] ) ) {
                 // Set rule hash and file and action flag.
                 $rule['hash'] = $hash;
                 $rule['file'] = $file;
