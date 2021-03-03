@@ -41,7 +41,21 @@ class autoptimizeCriticalCSSEnqueue {
             global $ao_ccss_forcepath;
 
             // Get request path and page type, and initialize the queue update flag.
-            $req_path        = strtok( $_SERVER['REQUEST_URI'], '?' );
+            $req_orig        = $_SERVER['REQUEST_URI'];
+            $req_path        = strtok( $req_orig, '?' );
+
+            // Check if we have a lang param. we need to keep as WPML can switch languages based on that
+            // and that includes RTL -> LTR so diff. structure, so rules would be RTL vs LTR
+            // but this needs changes in the structur of the rule object so off by default for now
+            // as now this will simply result in conditional rules being overwritten.
+            if ( apply_filters( 'autoptimize_filter_ccss_coreenqueue_honor_lang', false ) && strpos( $req_orig, 'lang=' ) !== false ) {
+                $req_params = strtok( '?' );
+                parse_str( $req_params, $req_params_arr );
+                if ( array_key_exists( 'lang', $req_params_arr ) && !empty( $req_params_arr['lang'] ) ) {
+                    $req_path .= '?lang=' . $req_params_arr['lang'];
+                }
+            }
+
             $req_type        = $self->ao_ccss_get_type();
             $job_qualify     = false;
             $target_rule     = false;
