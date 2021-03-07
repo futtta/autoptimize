@@ -346,9 +346,7 @@ class autoptimizeImages
             $result = trim( $in );
 
             // Some silly plugins wrap background images in html-encoded quotes, so remove those from the img url.
-            if ( strpos( $result, '&quot;' ) !== false ) {
-                $result = str_replace( '&quot;', '', $result );
-            }
+            $result = $this->fix_silly_bgimg_quotes( $result );
 
             if ( autoptimizeUtils::is_protocol_relative( $result ) ) {
                 $result = $parsed_site_url['scheme'] . ':' . $result;
@@ -991,13 +989,20 @@ class autoptimizeImages
             $lazyload_class = apply_filters( 'autoptimize_filter_imgopt_lazyload_class', 'lazyload' );
             // replace background-image URL with SVG placeholder.
             $out = str_replace( 'url(' . $matches[2], 'url(' . $placeholder, $matches[0] );
+            // sanitize bgimg src for quote sillyness.
+            $bgimg_src = $this->fix_silly_bgimg_quotes( $matches[2] );
             // add data-bg attribute with real background-image URL for lazyload to pick up.
-            $out = str_replace( $matches[1], $matches[1] . ' data-bg="' . trim( str_replace( array( "\r\n", '&quot;' ), '', $matches[2] ) ) . '"', $out );
-            // add lazyload class to tag.
+            $out = str_replace( $matches[1], $matches[1] . ' data-bg="' . $bgimg_src . '"', $out );
+            // and finally add lazyload class to tag.
             $out = $this->inject_classes_in_tag( $out, "$lazyload_class " );
             return $out;
         }
         return $matches[0];
+    }
+    
+    public function fix_silly_bgimg_quotes( $tag_in ) {
+        // some themes/ pagebuilders wrap backgroundimages in HTML-encoded quotes (or linebreaks) which breaks imgopt/ lazyloading, this removes them.
+        return trim( str_replace( array( "\r\n", '&quot;', '&#034;', '&apos;', '&#039;' ), '', $tag_in ) );
     }
 
     public function maybe_fix_missing_quotes( $tag_in ) {
