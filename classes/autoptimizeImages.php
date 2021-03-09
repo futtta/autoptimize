@@ -1298,7 +1298,8 @@ class autoptimizeImages
     public function query_img_provider_stats() {
         if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_1'] ) ) {
             $url      = '';
-            $endpoint = $this->get_imgopt_host() . 'read-domain/';
+            $stat_dom = 'https://no-cdn.shortpixel.ai/';
+            $endpoint = $stat_dom . 'read-domain/';
             $domain   = AUTOPTIMIZE_SITE_DOMAIN;
 
             // make sure parse_url result makes sense, keeping $url empty if not.
