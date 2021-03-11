@@ -464,7 +464,13 @@ class autoptimizeImages
             return $filtered_url;
         }
 
-        $orig_url        = $this->normalize_img_url( $orig_url );
+        $normalized_url = $this->normalize_img_url( $orig_url );
+
+        // if the URL is ascii we check if we have a real URL with filter_var (which only works on ascii url's) and if not a real URL we return the original one.
+        if ( apply_filters( 'autoptimize_filter_imgopt_check_normalized_url', true ) && ! preg_match( '/[^\x20-\x7e]/', $normalized_url ) && false === filter_var( $normalized_url, FILTER_VALIDATE_URL ) ) {
+            return $orig_url;
+        }
+
         $imgopt_base_url = $this->get_imgopt_base_url();
         $imgopt_size     = '';
 
@@ -476,7 +482,7 @@ class autoptimizeImages
             $imgopt_size .= ',h_' . $height;
         }
 
-        $url = $imgopt_base_url . $imgopt_size . '/' . $orig_url;
+        $url = $imgopt_base_url . $imgopt_size . '/' . $normalized_url;
 
         return $url;
     }
