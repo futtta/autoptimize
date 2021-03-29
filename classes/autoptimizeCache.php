@@ -827,6 +827,9 @@ class autoptimizeCache
                 prune_super_cache( $cache_path . 'supercache/', true );
                 prune_super_cache( $cache_path, true );
             }
+        } elseif(class_exists( 'NginxCache' )){         
+            $nginx_cahce = new NginxCache();
+            $nginx_cahce->purge_zone_once();
         }
     }
     // @codingStandardsIgnoreEnd
