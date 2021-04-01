@@ -3,7 +3,7 @@ Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, pagespeed, images, lazy-load, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 5.6
 Stable tag: 2.8.1
 
@@ -45,9 +45,9 @@ HTTP/2 is a great step forward for sure, reducing the impact of multiple request
 
 Although Autoptimize comes without any warranties, it will in general work flawlessly if you configure it correctly. See "Troubleshooting" below for info on how to configure in case of problems.
 
-= Why is jquery.js not optimized =
+= Why is jquery.min.js not optimized =
 
-Starting from AO 2.1 WordPress core's jquery.js is not optimized for the simple reason a lot of popular plugins inject inline JS that is not aggregated either (due to possible cache size issues with unique code in inline JS) which relies on jquery being available, so excluding jquery.js ensures that most sites will work out of the box. If you want optimize jquery as well, you can remove it from the JS optimization exclusion-list (you might have to enable "also aggregate inline JS" as well or switch to "force JS in head").
+Starting from AO 2.1 WordPress core's jquery.min.js is not optimized for the simple reason a lot of popular plugins inject inline JS that is not aggregated either (due to possible cache size issues with unique code in inline JS) which relies on jquery being available, so excluding jquery.min.js ensures that most sites will work out of the box. If you want optimize jquery as well, you can remove it from the JS optimization exclusion-list (you might have to enable "also aggregate inline JS" as well or switch to "force JS in head").
 
 = Why is Autoptimized JS render blocking? =
 
@@ -141,7 +141,7 @@ If your blog doesn't function normally after having turned on Autoptimize, here 
 * If all works but you notice your blog is slower, ensure you have a page caching plugin installed (WP Super Cache or similar) and check the info on cache size (the soution for that problem also impacts performance for uncached pages) in this FAQ as well.
 * In case your blog looks weird, i.e. when the layout gets messed up, there is problem with CSS optimization. Try excluding one or more CSS-files from being optimized. You can also force CSS not to be aggregated by wrapping it in noptimize-tags in your theme or widget or by adding filename (for external stylesheets) or string (for inline styles) to the exclude-list.
 * In case some functionality on your site stops working (a carroussel, a menu, the search input, ...) you're likely hitting JavaScript optimization trouble. Change the "Aggregate inline JS" and/ or "Force JavaScript in head?" settings and try again. Excluding 'js/jquery/jquery.min.js' from optimization (see below) and optionally activating "[Add try/catch wrapping](http://blog.futtta.be/2014/08/18/when-should-you-trycatch-javascript/)") can also help. Alternatively -for the technically savvy- you can exclude specific scripts from being treated (moved and/ or aggregated) by Autoptimize by adding a string that will match the offending Javascript or excluding it from within your template files or widgets by wrapping the code between noptimize-tags. Identifying the offending JavaScript and choosing the correct exclusion-string can be trial and error, but in the majority of cases JavaScript optimization issues can be solved this way. When debugging JavaScript issues, your browsers error console is the most important tool to help you understand what is going on.
-* If your theme or plugin require jQuery, you can try either forcing all in head and/ or excluding jquery.js (and jQuery-plugins if needed).
+* If your theme or plugin require jQuery, you can try either forcing all in head and/ or excluding jquery.min.js (and jQuery-plugins if needed).
 * If you can't get either CSS or JS optimization working, you can off course always continue using the other two optimization-techniques.
 * If you tried the troubleshooting tips above and you still can't get CSS and JS working at all, you can ask for support on the [WordPress Autoptimize support forum](http://wordpress.org/support/plugin/autoptimize). See below for a description of what information you should provide in your "trouble ticket"
 
@@ -320,16 +320,17 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 2.8.2 =
-* Images: fix for PHP "undefined index" notice
-* Images: only show "did you know shortpixel" notice on Autoptimize settings pages
-* Images: update lazysizes to 5.3.0 from upstream
+* Images: only show "did you know shortpixel" notice on Autoptimize settings pages (no more littering all over the backend)
+* Images: update lazysizes from upstream
+* Images: misc. improvements such as fix for PHP "undefined index" notice, updated copy, ...
 * HTML: rename HTML minify class from minify_HTML to AO_minify_HTML to avoid conflicts with e.g. W3TC
+* Critical CSS: misc. improvements such as detect is_front_page before any other conditional, fix for conditional rules without an actual condition, improved debug logging, ...
 * JS/ CSS: fix for AO not optimizing multisite child sites when CDN set
 
 = 2.8.1 =
 * Images: new option not to lazyload first X images
 * fix for "array to string" conversion errors in image optimization logic of .ico files
-* switch jQuery .click shorthand to please jQuery Migrate helper (and because it's better that way)
+* switch jQuery shorthand .click (in toolbar JS & PaND dismiss notice JS) to please jQuery Migrate helper (and because it's better that way)
 
 = 2.8.0 =
 * JavaScript: new option "defer but don't aggregate"
