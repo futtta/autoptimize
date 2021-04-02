@@ -1054,7 +1054,7 @@ class autoptimizeImages
     {
         // Check querystring for "refreshCacheChecker" and call cachechecker if so.
         if ( array_key_exists( 'refreshImgProvStats', $_GET ) && 1 == $_GET['refreshImgProvStats'] ) {
-            $this->query_img_provider_stats();
+            $this->query_img_provider_stats( true );
         }
 
         $options       = $this->fetch_options();
@@ -1254,7 +1254,7 @@ class autoptimizeImages
                     // translators: "add more credits" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
                     // translators: "associate your domain" will appear in a "a href".
-                    $_imgopt_notice = $_imgopt_notice . ' ' . sprintf( __( 'If you have enough credits/ CDN quota remaining, then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $_imgopt_assoc . '" target="_blank">', '</a>' );
+                    $_imgopt_notice = $_imgopt_notice . ' ' . sprintf( __( 'If you have enough CDN quota remaining, then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $_imgopt_assoc . '" target="_blank">', '</a>' );
                 } elseif ( -3 == $_stat['Status'] ) {
                     // translators: "check the documentation here" will appear in a "a href".
                     $_imgopt_notice = sprintf( __( 'It seems ShortPixel image optimization is not able to fetch images from your site, %1$scheck the documentation here%2$s for more information', 'autoptimize' ), '<a href="' . $_imgopt_unreach . '" target="_blank">', '</a>' );
@@ -1277,7 +1277,7 @@ class autoptimizeImages
                     }
                     $_imgopt_notice .= ' (' . $_imgopt_stats_last_run . ', ';
                     // translators: "here to refresh" links to the Autoptimize Extra page and forces a refresh of the img opt stats.
-                    $_imgopt_notice .= sprintf( __( 'click %1$shere to refresh%2$s', 'autoptimize' ), '<a href="' . $_imgopt_stats_refresh_url . '">', '</a>).' );
+                    $_imgopt_notice .= sprintf( __( 'you can click %1$shere to refresh your quota status%2$s', 'autoptimize' ), '<a href="' . $_imgopt_stats_refresh_url . '">', '</a>).' );
                 }
 
                 // and make the full notice filterable.
@@ -1301,7 +1301,7 @@ class autoptimizeImages
     /**
      * Get img provider stats (used to display notice).
      */
-    public function query_img_provider_stats() {
+    public function query_img_provider_stats( $_refresh = false ) {
         if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_1'] ) ) {
             $url      = '';
             $stat_dom = 'https://no-cdn.shortpixel.ai/';
@@ -1311,6 +1311,9 @@ class autoptimizeImages
             // make sure parse_url result makes sense, keeping $url empty if not.
             if ( $domain && ! empty( $domain ) ) {
                 $url = $endpoint . $domain;
+                if ( true === $_refresh ) {
+                    $url = $url . '/refresh';
+                }
             }
 
             $url = apply_filters(
