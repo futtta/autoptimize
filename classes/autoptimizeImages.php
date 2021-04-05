@@ -993,8 +993,10 @@ class autoptimizeImages
             // get placeholder & lazyload class strings.
             $placeholder    = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $this->get_default_lazyload_placeholder( 500, 300 ) );
             $lazyload_class = apply_filters( 'autoptimize_filter_imgopt_lazyload_class', 'lazyload' );
+            // remove quotes from url() to be able to replace in next step.
+            $out = str_replace( array( "url('" . $matches[2] . "')", 'url("' . $matches[2] . '")' ), 'url(' . $matches[2] . ')', $matches[0] );
             // replace background-image URL with SVG placeholder.
-            $out = str_replace( 'url(' . $matches[2], 'url(' . $placeholder, $matches[0] );
+            $out = str_replace( 'url(' . $matches[2], 'url(' . $placeholder, $out );
             // sanitize bgimg src for quote sillyness.
             $bgimg_src = $this->fix_silly_bgimg_quotes( $matches[2] );
             // add data-bg attribute with real background-image URL for lazyload to pick up.

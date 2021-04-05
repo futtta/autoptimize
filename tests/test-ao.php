@@ -2536,7 +2536,7 @@ MARKUP;
     /**
      * Test lazyload in autoptimizeImages.php.
      *
-     * case: picture tag
+     * case: background image (default).
      */
     public function test_bgimg_lazyload()
     {
@@ -2559,6 +2559,48 @@ MARKUP;
         $actual = $instance->filter_lazyload_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
+
+    /**
+     * Test lazyload in autoptimizeImages.php.
+     *
+     * case: background image variations.
+     */
+    public function test_bgimg_lazyload_variations()
+    {
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '1';
+
+        $markup = <<<MARKUP
+<div id="just-an-id-1" style="height:250px;background-image: url('/wp-content/uploads/2018/05/DSC_1615-300x201.jpg');" class="hero background-image"></div>
+<div id="just-an-id-2" style="background-image: url('/wp-content/uploads/2018/05/DSC_1615-300x201.jpg');height:250px;" class="hero background-image"></div>
+<div id="just-an-id-3" style="height:250px;background-image:url('/wp-content/uploads/2018/05/DSC_1615-300x201.jpg');" class="hero background-image"></div>
+<div id="just-an-id-4" style='height:250px;background-image: url("/wp-content/uploads/2018/05/DSC_1615-300x201.jpg");' class="hero background-image"></div>
+<div id="just-an-id-5" style="height:250px;background-image: url(&quot;/wp-content/uploads/2018/05/DSC_1615-300x201.jpg&quot;);" class="hero background-image"></div>
+<div id="just-an-id-6" style="height:250px;background-image: url(&#034;/wp-content/uploads/2018/05/DSC_1615-300x201.jpg&#034;);" class="hero background-image"></div>
+<div id="just-an-id-7" style="height:250px;background-image: url(&apos;/wp-content/uploads/2018/05/DSC_1615-300x201.jpg&apos;);" class="hero background-image"></div>
+<div id="just-an-id-8" style="height:250px;background-image: url(&#039;/wp-content/uploads/2018/05/DSC_1615-300x201.jpg&#039;);" class="hero background-image"></div>
+MARKUP;
+
+        $expected = <<<MARKUP
+<div id="just-an-id-1" data-bg="/wp-content/uploads/2018/05/DSC_1615-300x201.jpg" style="height:250px;background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20300%22%3E%3C/svg%3E);" class="lazyload hero background-image"></div>
+<div id="just-an-id-2" data-bg="/wp-content/uploads/2018/05/DSC_1615-300x201.jpg" style="background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20300%22%3E%3C/svg%3E);height:250px;" class="lazyload hero background-image"></div>
+<div id="just-an-id-3" data-bg="/wp-content/uploads/2018/05/DSC_1615-300x201.jpg" style="height:250px;background-image:url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20300%22%3E%3C/svg%3E);" class="lazyload hero background-image"></div>
+<div id="just-an-id-4" data-bg="/wp-content/uploads/2018/05/DSC_1615-300x201.jpg" style='height:250px;background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20300%22%3E%3C/svg%3E);' class="lazyload hero background-image"></div>
+<div id="just-an-id-5" data-bg="/wp-content/uploads/2018/05/DSC_1615-300x201.jpg" style="height:250px;background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20300%22%3E%3C/svg%3E);" class="lazyload hero background-image"></div>
+<div id="just-an-id-6" data-bg="/wp-content/uploads/2018/05/DSC_1615-300x201.jpg" style="height:250px;background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20300%22%3E%3C/svg%3E);" class="lazyload hero background-image"></div>
+<div id="just-an-id-7" data-bg="/wp-content/uploads/2018/05/DSC_1615-300x201.jpg" style="height:250px;background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20300%22%3E%3C/svg%3E);" class="lazyload hero background-image"></div>
+<div id="just-an-id-8" data-bg="/wp-content/uploads/2018/05/DSC_1615-300x201.jpg" style="height:250px;background-image: url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20500%20300%22%3E%3C/svg%3E);" class="lazyload hero background-image"></div>
+MARKUP;
+
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_lazyload_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
 
     /**
      * Test image optimization in autoptimizeImages.php.
