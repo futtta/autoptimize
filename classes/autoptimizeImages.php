@@ -114,12 +114,7 @@ class autoptimizeImages
             if ( $this->should_lazyload() ) {
                 add_filter(
                     'wp_lazy_loading_enabled',
-                    function( $flag, $tag, $context ) {
-                        if ( 'img' === $tag ) {
-                            return false;
-                        }
-                        return $flag;
-                    },
+                    array( $this, 'should_disable_core_lazyload' ),
                     10,
                     3
                 );
@@ -173,7 +168,9 @@ class autoptimizeImages
         if ( $this->should_lazyload() ) {
             add_filter(
                 'wp_lazy_loading_enabled',
-                '__return_false'
+                array( $this, 'should_disable_core_lazyload' ),
+                10,
+                3
             );
             add_action(
                 'wp_footer',
@@ -182,6 +179,18 @@ class autoptimizeImages
                 0
             );
         }
+    }
+
+    /**
+     * Disables core's native lazyload for images, not for iframes.
+     *
+     * @return bool
+     */
+    public function should_disable_core_lazyload( $flag, $tag, $context ) {
+        if ( 'img' === $tag ) {
+            return false;
+        }
+        return $flag;
     }
 
     /**
