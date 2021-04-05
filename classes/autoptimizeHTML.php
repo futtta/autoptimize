@@ -82,7 +82,7 @@ class autoptimizeHTML extends autoptimizeBase
             $options['xhtml'] = true;
         }
 
-        $tmp_content = Minify_HTML::minify( $this->content, $options );
+        $tmp_content = AO_Minify_HTML::minify( $this->content, $options );
         if ( ! empty( $tmp_content ) ) {
             $this->content = $tmp_content;
             unset( $tmp_content );

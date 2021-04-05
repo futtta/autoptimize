@@ -3,9 +3,9 @@ Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, pagespeed, images, lazy-load, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 2.8.1
+Stable tag: 2.8.3
 
 Autoptimize speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -318,6 +318,17 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 2.8.3 =
+* fix for missing ao-minify-html.php file
+
+= 2.8.2 =
+* Images: only show "did you know shortpixel" notice on Autoptimize settings pages (no more littering all over the backend)
+* Images: update lazysizes from upstream
+* Images: misc. improvements such as fix for PHP "undefined index" notice, updated copy, ...
+* HTML: rename HTML minify class from minify_HTML to AO_minify_HTML to avoid conflicts with e.g. W3TC
+* Critical CSS: misc. improvements such as detect is_front_page before any other conditional, fix for conditional rules without an actual condition, improved debug logging, ...
+* JS/ CSS: fix for AO not optimizing multisite child sites when CDN set
 
 = 2.8.1 =
 * Images: new option not to lazyload first X images

@@ -3,7 +3,7 @@
  * Plugin Name: Autoptimize
  * Plugin URI: https://autoptimize.com/
  * Description: Makes your site faster by optimizing CSS, JS, Images, Google fonts and more.
- * Version: 2.8.1
+ * Version: 2.8.3
  * Author: Frank Goossens (futtta)
  * Author URI: https://autoptimize.com/
  * Text Domain: autoptimize
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AUTOPTIMIZE_PLUGIN_VERSION', '2.8.1' );
+define( 'AUTOPTIMIZE_PLUGIN_VERSION', '2.8.3' );
 
 // plugin_dir_path() returns the trailing slash!
 define( 'AUTOPTIMIZE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
@@ -44,7 +44,7 @@ if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
 }
 
 function autoptimize_autoload( $class_name ) {
-    if ( in_array( $class_name, array( 'Minify_HTML', 'JSMin' ) ) ) {
+    if ( in_array( $class_name, array( 'AO_Minify_HTML', 'JSMin' ) ) ) {
         $file     = strtolower( $class_name );
         $file     = str_replace( '_', '-', $file );
         $path     = dirname( __FILE__ ) . '/classes/external/php/';

@@ -60,6 +60,8 @@ class autoptimizeScripts extends autoptimizeBase
         'data-noptimize',
         'logHuman',
         'amp-mobile-version-switcher',
+        'data-rocketlazyloadscript',
+        'rocket-browser-checker-js-after',
     );
 
     /**
