@@ -114,7 +114,14 @@ class autoptimizeImages
             if ( $this->should_lazyload() ) {
                 add_filter(
                     'wp_lazy_loading_enabled',
-                    '__return_false'
+                    function( $flag, $tag, $context ) {
+                        if ( 'img' === $tag ) {
+                            return false;
+                        }
+                        return $flag;
+                    },
+                    10,
+                    3
                 );
                 add_filter(
                     'autoptimize_html_after_minify',
