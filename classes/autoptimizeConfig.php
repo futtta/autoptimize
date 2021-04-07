@@ -62,6 +62,10 @@ class autoptimizeConfig
             }
 
             $this->settings_screen_do_remote_http = apply_filters( 'autoptimize_settingsscreen_remotehttp', $this->settings_screen_do_remote_http );
+            
+            if ( apply_filters( 'autoptimize_filter_enable_meta_ao_settings', true ) ) {
+                $metaBox = new autoptimizeMetabox();
+            }
         }
 
         // Adds the Autoptimize Toolbar to the Admin bar.
@@ -952,6 +956,29 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Returns the post meta AO settings for reuse in different optimizers.
+     *
+     * @return bool
+     */
+    public static function get_post_meta_ao_settings( $optim ) {
+        static $_meta_value = null;
+
+        if ( null === $_meta_value ) {
+            if ( is_page() || is_single() ) {
+                $_meta_value = get_post_meta( get_the_ID(), 'ao_post_optimize', true );
+            } else {
+                $_meta_value = false;
+            }
+        }
+        
+        if ( ! empty( $_meta_value ) && is_array( $_meta_value ) && array_key_exists( $optim, $_meta_value ) && $_meta_value[$optim] !== 'on' ) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

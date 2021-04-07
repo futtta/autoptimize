@@ -365,6 +365,11 @@ class autoptimizeMain
             if ( false === $ao_noptimize && array_key_exists( 'PageSpeed', $_GET ) && 'off' === $_GET['PageSpeed'] ) {
                 $ao_noptimize = true;
             }
+            
+            // If page/ post check post_meta to see if optimize is off.
+            if ( apply_filters( 'autoptimize_filter_enable_meta_ao_settings', true ) && false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_optimize' ) ) {
+                $ao_noptimize = true;
+            }
 
             // And finally allows blocking of autoptimization on your own terms regardless of above decisions.
             $ao_noptimize = (bool) apply_filters( 'autoptimize_filter_noptimize', $ao_noptimize );

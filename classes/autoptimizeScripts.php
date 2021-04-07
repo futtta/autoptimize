@@ -210,7 +210,17 @@ class autoptimizeScripts extends autoptimizeBase
      */
     public function read( $options )
     {
-        $noptimize_js = apply_filters( 'autoptimize_filter_js_noptimize', false, $this->content );
+        $noptimize_js = false;
+        
+        // If page/ post check post_meta to see if optimize is off.
+        if ( apply_filters( 'autoptimize_filter_enable_meta_ao_settings', true ) && false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_js_optimize' ) ) {
+            $noptimize_js = true;
+        }
+
+        // And a filter to enforce JS noptimize.
+        $noptimize_js = apply_filters( 'autoptimize_filter_js_noptimize', $noptimize_js, $this->content );
+        
+        // And finally bail if noptimize_js is true.
         if ( $noptimize_js ) {
             return false;
         }

@@ -221,6 +221,11 @@ class autoptimizeStyles extends autoptimizeBase
         $this->defer = $options['defer'];
         $this->defer = apply_filters( 'autoptimize_filter_css_defer', $this->defer, $this->content );
 
+        // If page/ post check post_meta to see if optimize is off.
+        if ( $this->defer && apply_filters( 'autoptimize_filter_enable_meta_ao_settings', true ) && false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_ccss' ) ) {
+             $this->defer = false;
+        }
+
         // Should we inline while deferring?
         // value: inlined CSS.
         $this->defer_inline = apply_filters( 'autoptimize_filter_css_defer_inline', $options['defer_inline'], $this->content );
