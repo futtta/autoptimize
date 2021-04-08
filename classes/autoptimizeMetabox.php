@@ -16,11 +16,11 @@ class autoptimizeMetabox
 
     public function run()
     {
-        add_action( 'add_meta_boxes', array( $this, 'ao_metabox_add_custom_box' ) );
-        add_action( 'save_post', array( $this, 'ao_metabox_save_postdata' ) );
+        add_action( 'add_meta_boxes', array( $this, 'ao_metabox_add_box' ) );
+        add_action( 'save_post', array( $this, 'ao_metabox_save' ) );
     }
 
-    public function ao_metabox_add_custom_box()
+    public function ao_metabox_add_box()
     {
         $screens = array( 
             'post',
@@ -30,9 +30,9 @@ class autoptimizeMetabox
 
         foreach ( $screens as $screen ) {
             add_meta_box(
-                'ao_metabox_sectionid',
-                __( 'Autoptimize', 'autoptimize' ),
-                array( $this, 'ao_metabox_inner_custom_box' ),
+                'ao_metabox',
+                __( 'Autoptimize page/ post settings', 'autoptimize' ),
+                array( $this, 'ao_metabox_content' ),
                 $screen,
                 'side',
             );
@@ -44,8 +44,8 @@ class autoptimizeMetabox
      * 
      * @param WP_Post $post The object for the current post/page.
      */
-    function ao_metabox_inner_custom_box( $post ) {
-        wp_nonce_field( 'ao_metabox_inner_custom_box', 'ao_metabox_inner_custom_box_nonce' );
+    function ao_metabox_content( $post ) {
+        wp_nonce_field( 'ao_metabox', 'ao_metabox_nonce' );
 
         $ao_opt_value = get_post_meta( $post->ID, 'ao_post_optimize', true );
 
@@ -119,20 +119,20 @@ class autoptimizeMetabox
      *
      * @param int $post_id The ID of the post being saved.
      */
-    public function ao_metabox_save_postdata( $post_id ) {
+    public function ao_metabox_save( $post_id ) {
         // If this is an autosave, our form has not been submitted, so we don't want to do anything.
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
             return $post_id;
         }
 
         // check if from our own data.
-        if ( ! isset( $_POST['ao_metabox_inner_custom_box_nonce'] ) ) {
+        if ( ! isset( $_POST['ao_metabox_nonce'] ) ) {
             return $post_id;
         }
 
         // Check if our nonce is set and verify if valid.
-        $nonce = $_POST['ao_metabox_inner_custom_box_nonce'];
-        if ( ! wp_verify_nonce( $nonce, 'ao_metabox_inner_custom_box' ) ) {
+        $nonce = $_POST['ao_metabox_nonce'];
+        if ( ! wp_verify_nonce( $nonce, 'ao_metabox' ) ) {
             return $post_id;
         }
 
