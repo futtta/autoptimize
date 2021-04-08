@@ -31,7 +31,7 @@ class autoptimizeMetabox
         foreach ( $screens as $screen ) {
             add_meta_box(
                 'ao_metabox',
-                __( 'Autoptimize page/ post settings', 'autoptimize' ),
+                __( 'Autoptimize this page', 'autoptimize' ),
                 array( $this, 'ao_metabox_content' ),
                 $screen,
                 'side',
@@ -73,7 +73,7 @@ class autoptimizeMetabox
         ?>
         <input type="checkbox" id="autoptimize_post_optimize_js" name="ao_post_js_optimize" <?php echo 'on' !== $ao_opt_value['ao_post_js_optimize'] ? '' : 'checked="checked" '; ?> />
             <label for="autoptimize_post_optimize_js">
-                 <?php _e( 'Optimize JS on this page?', 'autoptimize' ); ?>
+                 <?php _e( 'Optimize JS?', 'autoptimize' ); ?>
             </label>
         </p>
         <?php 
@@ -97,7 +97,7 @@ class autoptimizeMetabox
         ?>
             <input type="checkbox" id="autoptimize_post_lazyload" name="ao_post_lazyload" <?php echo 'on' !== $ao_opt_value['ao_post_lazyload'] ? '' : 'checked="checked" '; ?> />
             <label for="autoptimize_post_lazyload">
-                 <?php _e( 'Lazyload images on this page?', 'autoptimize' ); ?>
+                 <?php _e( 'Lazyload images?', 'autoptimize' ); ?>
             </label>
         </p>
         <script>
