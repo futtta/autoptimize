@@ -55,29 +55,46 @@ class autoptimizeMetabox
         
         $_ao_meta_sub_opacity = '';
         if ( 'on' !== $ao_opt_value['ao_post_optimize'] ) {
-            $_ao_meta_sub_opacity = 'style="opacity:.33;"';
+            $_ao_meta_sub_opacity = 'opacity:.33;';
         }
-        
         ?>
-        <p>
+        <p >
             <input type="checkbox" id="autoptimize_post_optimize" class="ao_meta_main" name="ao_post_optimize" <?php echo 'on' !== $ao_opt_value['ao_post_optimize'] ? '' : 'checked="checked" '; ?> />
             <label for="autoptimize_post_optimize">
                  <?php _e( 'Optimize this page?', 'autoptimize' ); ?>
             </label>
         </p>
-        <p class="ao_meta_sub" <?php echo $_ao_meta_sub_opacity; ?>>
-            <input type="checkbox" id="autoptimize_post_optimize_js" name="ao_post_js_optimize" <?php echo 'on' !== $ao_opt_value['ao_post_js_optimize'] ? '' : 'checked="checked" '; ?> />
+        <?php 
+        $_ao_meta_js_style = '';
+        if ( 'on' !== get_option( 'autoptimize_js', false ) ) {
+            $_ao_meta_js_style = 'display:none;';
+        }
+        echo '<p class="ao_meta_sub" style="' . $_ao_meta_sub_opacity . $_ao_meta_js_style . '">';
+        ?>
+        <input type="checkbox" id="autoptimize_post_optimize_js" name="ao_post_js_optimize" <?php echo 'on' !== $ao_opt_value['ao_post_js_optimize'] ? '' : 'checked="checked" '; ?> />
             <label for="autoptimize_post_optimize_js">
                  <?php _e( 'Optimize JS on this page?', 'autoptimize' ); ?>
             </label>
         </p>
-            <p class="ao_meta_sub" <?php echo $_ao_meta_sub_opacity; ?>>
+        <?php 
+        $_ao_meta_ccss_style = '';
+        if ( 'on' !== get_option( 'autoptimize_css_defer', false ) ) {
+            $_ao_meta_ccss_style = 'display:none;';
+        }
+        echo '<p class="ao_meta_sub" style="' . $_ao_meta_sub_opacity . $_ao_meta_ccss_style . '">';
+        ?>
             <input type="checkbox" id="autoptimize_post_ccss" name="ao_post_ccss" <?php echo 'on' !== $ao_opt_value['ao_post_ccss'] ? '' : 'checked="checked" '; ?> />
             <label for="autoptimize_post_ccss">
                  <?php _e( 'Inline critical CSS?', 'autoptimize' ); ?>
             </label>
         </p>
-        <p class="ao_meta_sub" <?php echo $_ao_meta_sub_opacity; ?>>
+        <?php 
+        $_ao_meta_lazyload_style = '';
+        if ( false === autoptimizeImages::should_lazyload_wrapper() ) {
+            $_ao_meta_lazyload_style = 'display:none;';
+        }
+        echo '<p class="ao_meta_sub" style="' . $_ao_meta_sub_opacity . $_ao_meta_lazyload_style . '">';
+        ?>
             <input type="checkbox" id="autoptimize_post_lazyload" name="ao_post_lazyload" <?php echo 'on' !== $ao_opt_value['ao_post_lazyload'] ? '' : 'checked="checked" '; ?> />
             <label for="autoptimize_post_lazyload">
                  <?php _e( 'Lazyload images on this page?', 'autoptimize' ); ?>
