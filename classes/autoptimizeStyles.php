@@ -164,7 +164,7 @@ class autoptimizeStyles extends autoptimizeBase
     public function read( $options )
     {
         $noptimize_css = apply_filters( 'autoptimize_filter_css_noptimize', false, $this->content );
-        if ( $noptimize_css ) {
+        if ( $noptimize_css  || false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_css_optimize' )) {
             return false;
         }
 
