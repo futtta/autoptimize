@@ -58,6 +58,8 @@ class autoptimizeScripts extends autoptimizeBase
         'nonce',
         'post_id',
         'data-noptimize',
+        'data-cfasync',
+        'data-pagespeed-no-defer',
         'logHuman',
         'amp-mobile-version-switcher',
         'data-rocketlazyloadscript',
@@ -117,6 +119,13 @@ class autoptimizeScripts extends autoptimizeBase
      * @var bool
      */
     private $defer_not_aggregate = false;
+    
+    /**
+     * Setting; defer inline JS?
+     *
+     * @var bool
+     */
+    private $defer_inline = false;
 
     /**
      * Setting; try/catch wrapping or not.
@@ -257,6 +266,11 @@ class autoptimizeScripts extends autoptimizeBase
         // Defer when not aggregating.
         if ( false === $this->aggregate && apply_filters( 'autoptimize_js_filter_defer_not_aggregate', $options['defer_not_aggregate'] ) ) {
             $this->defer_not_aggregate = true;
+        }
+        
+        // Defer inline JS?
+        if ( true === $this->defer_not_aggregate && apply_filters( 'autoptimize_js_filter_defer_inline', $options['defer_inline'] ) ) {
+            $this->defer_inline = true;
         }
 
         // include inline?
@@ -420,16 +434,25 @@ class autoptimizeScripts extends autoptimizeBase
                         $code            = preg_replace( '/(?:^\\s*<!--\\s*|\\s*(?:\\/\\/)?\\s*-->\\s*$)/', '', $code );
                         $this->scripts[] = 'INLINE;' . $code;
                     } else {
-                        // Can we move this?
-                        $autoptimize_js_moveable = apply_filters( 'autoptimize_js_moveable', '', $tag );
-                        if ( $this->ismovable( $tag ) || '' !== $autoptimize_js_moveable ) {
-                            if ( $this->movetolast( $tag ) || 'last' === $autoptimize_js_moveable ) {
-                                $this->move['last'][] = $tag;
+                        if ( false === $this->defer_inline ) {
+                            // Can we move this?
+                            $autoptimize_js_moveable = apply_filters( 'autoptimize_js_moveable', '', $tag );
+                            if ( $this->ismovable( $tag ) || '' !== $autoptimize_js_moveable ) {
+                                if ( $this->movetolast( $tag ) || 'last' === $autoptimize_js_moveable ) {
+                                    $this->move['last'][] = $tag;
+                                } else {
+                                    $this->move['first'][] = $tag;
+                                }
                             } else {
-                                $this->move['first'][] = $tag;
+                                $tag = '';
                             }
+                        } else if ( str_replace( $this->dontmove, '', $tag ) === $tag ) {
+                            // defer inline JS by base64 encoding it.
+                            preg_match( '#<script.*>(.*)</script>#Usmi', $tag, $match );
+                            $new_tag       = '<script defer src="data:text/javascript;base64,' . base64_encode( $match[1] ) . '"></script>';
+                            $this->content = str_replace( $tag, $new_tag, $this->content );
+                            $tag           = '';
                         } else {
-                            // We shouldn't touch this.
                             $tag = '';
                         }
                     }

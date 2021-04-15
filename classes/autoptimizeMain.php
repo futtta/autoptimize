@@ -493,6 +493,7 @@ class autoptimizeMain
             'autoptimizeScripts' => array(
                 'aggregate'           => $conf->get( 'autoptimize_js_aggregate' ),
                 'defer_not_aggregate' => $conf->get( 'autoptimize_js_defer_not_aggregate' ),
+                'defer_inline'        => $conf->get( 'autoptimize_js_defer_inline' ),
                 'justhead'            => $conf->get( 'autoptimize_js_justhead' ),
                 'forcehead'           => $conf->get( 'autoptimize_js_forcehead' ),
                 'trycatch'            => $conf->get( 'autoptimize_js_trycatch' ),
@@ -572,6 +573,7 @@ class autoptimizeMain
             'autoptimize_js',
             'autoptimize_js_aggregate',
             'autoptimize_js_defer_not_aggregate',
+            'autoptimize_js_defer_inline',
             'autoptimize_js_exclude',
             'autoptimize_js_forcehead',
             'autoptimize_js_justhead',

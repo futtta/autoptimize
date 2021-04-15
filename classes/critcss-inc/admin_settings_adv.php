@@ -103,12 +103,13 @@ function ao_ccss_render_adv() {
                     </tr>
                     <tr>
                         <th scope="row">
-                            <?php _e( 'Defer jQuery and other non-aggregated JS-files?', 'autoptimize' ); ?>
+                            <?php _e( 'Defer jQuery and other non-aggregated JS-files? (deprecated)', 'autoptimize' ); ?>
                         </th>
                         <td>
                             <input type="checkbox" id="autoptimize_ccss_deferjquery" name="autoptimize_ccss_deferjquery" value="1" <?php checked( 1 == $ao_ccss_deferjquery ); ?>>
                             <p class="notes">
                                 <?php _e( 'Defer all non-aggregated JS, including jQuery and inline JS to fix remaining render-blocking issues. Make sure to test your site thoroughly when activating this option!', 'autoptimize' ); ?>
+                                <?php _e( '<b>This functionality will be removed in a next major version of Autoptimize</b>, being replaced by the combination of the "do not aggregate but defer JS" + "defer inline JS" options on the main settings page.', 'autoptimize' ); ?>
                             </p>
                         </td>
                     </tr>
