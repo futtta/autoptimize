@@ -319,6 +319,13 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.9.0 =
+* New: per page/ post Autoptimize settings so one can disable specific optimizations
+* New: "defer inline JS" as sub-option of "do not aggregate but defer" allowing to defer (almost) all JS
+* Improvement: re-ordering of "JavaScript optimization" settings
+* ... and more to come in next beta versions ...
+* Misc. other minor fixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
+
 = 2.8.3 =
 * fix for missing ao-minify-html.php
 
