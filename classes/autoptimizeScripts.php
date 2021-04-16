@@ -376,12 +376,8 @@ class autoptimizeScripts extends autoptimizeBase
                         }
                         
                         // not aggregating but deferring?
-                        if ( $this->defer_not_aggregate && false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path && strpos( $new_tag, ' defer' ) === false ) {
+                        if ( $this->defer_not_aggregate && false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path && strpos( $new_tag, ' defer' ) === false && strpos( $new_tag, ' async' ) === false ) {
                             $new_tag = str_replace( '<script ', '<script defer ', $new_tag );
-                            // and remove async as async+defer=async while we explicitly want defer.
-                            if ( strpos( $new_tag, ' async' ) !== false && apply_filters( 'autoptimize_filter_js_defer_remove_async', true ) ) {
-                                $new_tag = str_replace( array( ' async', ' async="async"', " async='async'" ), '', $new_tag );
-                            }
                         }
 
                         // Should we minify the non-aggregated script?
