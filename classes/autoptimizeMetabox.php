@@ -34,7 +34,7 @@ class autoptimizeMetabox
                 __( 'Autoptimize this page', 'autoptimize' ),
                 array( $this, 'ao_metabox_content' ),
                 $screen,
-                'side',
+                'side'
             );
         }
     }
