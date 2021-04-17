@@ -277,14 +277,18 @@ class autoptimizeStyles extends autoptimizeBase
                     // Get the media.
                     if ( false !== strpos( $tag, 'media=' ) ) {
                         preg_match( '#media=(?:"|\')([^>]*)(?:"|\')#Ui', $tag, $medias );
-                        $medias = explode( ',', $medias[1] );
-                        $media  = array();
-                        foreach ( $medias as $elem ) {
-                            if ( empty( $elem ) ) {
-                                $elem = 'all';
-                            }
+                        if ( !empty( $medias ) ) {
+                            $medias = explode( ',', $medias[1] );
+                            $media  = array();
+                            foreach ( $medias as $elem ) {
+                                if ( empty( $elem ) ) {
+                                    $elem = 'all';
+                                }
 
-                            $media[] = $elem;
+                                $media[] = $elem;
+                            }
+                        } else {
+                            $media = array( 'all' );
                         }
                     } else {
                         // No media specified - applies to all.
