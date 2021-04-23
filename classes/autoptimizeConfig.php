@@ -63,7 +63,7 @@ class autoptimizeConfig
 
             $this->settings_screen_do_remote_http = apply_filters( 'autoptimize_settingsscreen_remotehttp', $this->settings_screen_do_remote_http );
             
-            if ( apply_filters( 'autoptimize_filter_enable_meta_ao_settings', true ) ) {
+            if ( $this->is_ao_meta_settings_active() ) {
                 $metaBox = new autoptimizeMetabox();
             }
         }
@@ -451,6 +451,15 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         </td>
     </tr>
     <?php } ?>
+    <?php
+    if ( true === apply_filters( 'autoptimize_filter_enable_meta_ao_settings', true ) ) {
+    ?>
+    <tr valign="top">
+    <th scope="row"><?php _e( 'Enable configuration per post/ page?', 'autoptimize' ); ?></th>
+    <td><label class="cb_label"><input type="checkbox" name="autoptimize_enable_meta_ao_settings" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_enable_meta_ao_settings', '0' ) ? 'checked="checked" ' : ''; ?>/>
+    <?php _e( 'Add a "metabox" to the post/ page edit screen allowing different optimizations to be turned off on a per post/ page level?', 'autoptimize' ); ?></label></td>
+    </tr>
+    <?php } ?>
 </table>
 </li>
 
@@ -736,6 +745,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         register_setting( 'autoptimize', 'autoptimize_optimize_checkout' );
         register_setting( 'autoptimize', 'autoptimize_minify_excluded' );
         register_setting( 'autoptimize', 'autoptimize_cache_fallback' );
+        register_setting( 'autoptimize', 'autoptimize_enable_meta_ao_settings' );
     }
 
     public function setmeta( $links, $file = null )
@@ -771,33 +781,34 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
     public static function get_defaults()
     {
         static $config = array(
-            'autoptimize_html'                   => 0,
-            'autoptimize_html_keepcomments'      => 0,
-            'autoptimize_enable_site_config'     => 1,
-            'autoptimize_js'                     => 0,
-            'autoptimize_js_aggregate'           => 1,
-            'autoptimize_js_defer_not_aggregate' => 0,
-            'autoptimize_js_defer_inline'        => 0,
-            'autoptimize_js_exclude'             => 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js, js/jquery/jquery.min.js',
-            'autoptimize_js_trycatch'            => 0,
-            'autoptimize_js_justhead'            => 0,
-            'autoptimize_js_include_inline'      => 0,
-            'autoptimize_js_forcehead'           => 0,
-            'autoptimize_css'                    => 0,
-            'autoptimize_css_aggregate'          => 1,
-            'autoptimize_css_exclude'            => 'admin-bar.min.css, dashicons.min.css, wp-content/cache/, wp-content/uploads/',
-            'autoptimize_css_justhead'           => 0,
-            'autoptimize_css_include_inline'     => 1,
-            'autoptimize_css_defer'              => 0,
-            'autoptimize_css_defer_inline'       => '',
-            'autoptimize_css_inline'             => 0,
-            'autoptimize_css_datauris'           => 0,
-            'autoptimize_cdn_url'                => '',
-            'autoptimize_cache_nogzip'           => 1,
-            'autoptimize_optimize_logged'        => 1,
-            'autoptimize_optimize_checkout'      => 0,
-            'autoptimize_minify_excluded'        => 1,
-            'autoptimize_cache_fallback'         => 1,
+            'autoptimize_html'                      => 0,
+            'autoptimize_html_keepcomments'         => 0,
+            'autoptimize_enable_site_config'        => 1,
+            'autoptimize_js'                        => 0,
+            'autoptimize_js_aggregate'              => 1,
+            'autoptimize_js_defer_not_aggregate'    => 0,
+            'autoptimize_js_defer_inline'           => 0,
+            'autoptimize_js_exclude'                => 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.js, js/jquery/jquery.min.js',
+            'autoptimize_js_trycatch'               => 0,
+            'autoptimize_js_justhead'               => 0,
+            'autoptimize_js_include_inline'         => 0,
+            'autoptimize_js_forcehead'              => 0,
+            'autoptimize_css'                       => 0,
+            'autoptimize_css_aggregate'             => 1,
+            'autoptimize_css_exclude'               => 'admin-bar.min.css, dashicons.min.css, wp-content/cache/, wp-content/uploads/',
+            'autoptimize_css_justhead'              => 0,
+            'autoptimize_css_include_inline'        => 1,
+            'autoptimize_css_defer'                 => 0,
+            'autoptimize_css_defer_inline'          => '',
+            'autoptimize_css_inline'                => 0,
+            'autoptimize_css_datauris'              => 0,
+            'autoptimize_cdn_url'                   => '',
+            'autoptimize_cache_nogzip'              => 1,
+            'autoptimize_optimize_logged'           => 1,
+            'autoptimize_optimize_checkout'         => 0,
+            'autoptimize_minify_excluded'           => 1,
+            'autoptimize_cache_fallback'            => 1,
+            'autoptimize_enable_meta_ao_settings'   => 0,
         );
 
         return $config;
@@ -980,8 +991,12 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
      * @return bool
      */
     public static function get_post_meta_ao_settings( $optim ) {
-        static $_meta_value = null;
+        if ( ! autoptimizeConfig::is_ao_meta_settings_active() ) {
+            // Per page/post settings not active, so always return true (as in; can be optimized).
+            return true;
+        }
 
+        static $_meta_value = null;
         if ( null === $_meta_value ) {
             if ( is_page() || is_single() ) {
                 $_meta_value = get_post_meta( get_the_ID(), 'ao_post_optimize', true );
@@ -995,5 +1010,20 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         } else {
             return true;
         }
+    }
+
+    /**
+     * Are the post meta AO settings active (default: no)?
+     *
+     * @return bool
+     */
+    public static function is_ao_meta_settings_active() {
+        static $_meta_settings_active = null;
+
+        if ( null === $_meta_settings_active ) {
+            $_meta_settings_active = apply_filters( 'autoptimize_filter_enable_meta_ao_settings', autoptimizeOptionWrapper::get_option( 'autoptimize_enable_meta_ao_settings', '0' ) );
+        }
+
+        return $_meta_settings_active;
     }
 }

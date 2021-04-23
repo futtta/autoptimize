@@ -367,7 +367,7 @@ class autoptimizeMain
             }
             
             // If page/ post check post_meta to see if optimize is off.
-            if ( apply_filters( 'autoptimize_filter_enable_meta_ao_settings', true ) && false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_optimize' ) ) {
+            if ( false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_optimize' ) ) {
                 $ao_noptimize = true;
             }
 
@@ -570,6 +570,7 @@ class autoptimizeMain
             'autoptimize_html',
             'autoptimize_html_keepcomments',
             'autoptimize_enable_site_config',
+            'autoptimize_enable_meta_ao_settings',
             'autoptimize_js',
             'autoptimize_js_aggregate',
             'autoptimize_js_defer_not_aggregate',

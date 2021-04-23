@@ -222,7 +222,7 @@ class autoptimizeStyles extends autoptimizeBase
         $this->defer = apply_filters( 'autoptimize_filter_css_defer', $this->defer, $this->content );
 
         // If page/ post check post_meta to see if optimize is off.
-        if ( $this->defer && apply_filters( 'autoptimize_filter_enable_meta_ao_settings', true ) && false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_ccss' ) ) {
+        if ( $this->defer && false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_ccss' ) ) {
              $this->defer = false;
         }
 

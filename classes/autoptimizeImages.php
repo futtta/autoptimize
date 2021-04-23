@@ -742,7 +742,7 @@ class autoptimizeImages
         }
 
         // If page/ post check post_meta to see if lazyload is off for page.
-        if ( apply_filters( 'autoptimize_filter_enable_meta_ao_settings', true ) && false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_lazyload' ) ) {
+        if ( false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_lazyload' ) ) {
               $lazyload_return = false;
         }
 

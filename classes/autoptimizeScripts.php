@@ -222,7 +222,7 @@ class autoptimizeScripts extends autoptimizeBase
         $noptimize_js = false;
         
         // If page/ post check post_meta to see if optimize is off.
-        if ( apply_filters( 'autoptimize_filter_enable_meta_ao_settings', true ) && false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_js_optimize' ) ) {
+        if ( false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_js_optimize' ) ) {
             $noptimize_js = true;
         }
 
