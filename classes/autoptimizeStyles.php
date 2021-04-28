@@ -169,7 +169,6 @@ class autoptimizeStyles extends autoptimizeBase
         }
 
         $allowlist_css = apply_filters( 'autoptimize_filter_css_allowlist', '', $this->content );
-        $allowlist_css = apply_filters( 'autoptimize_filter_css_whitelist', $allowlist_css, $this->content ); // fixme: to be removed in next version.
         if ( ! empty( $allowlist_css ) ) {
             $this->allowlist = array_filter( array_map( 'trim', explode( ',', $allowlist_css ) ) );
         }

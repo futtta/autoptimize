@@ -236,7 +236,6 @@ class autoptimizeScripts extends autoptimizeBase
 
         // only optimize known good JS?
         $allowlist_js = apply_filters( 'autoptimize_filter_js_allowlist', '', $this->content );
-        $allowlist_js = apply_filters( 'autoptimize_filter_js_whitelist', $allowlist_js, $this->content ); // fixme: to be removed in next version.
         if ( ! empty( $allowlist_js ) ) {
             $this->allowlist = array_filter( array_map( 'trim', explode( ',', $allowlist_js ) ) );
         }
