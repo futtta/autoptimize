@@ -241,17 +241,17 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <td><label class="cb_label"><input type="checkbox" id="autoptimize_js_aggregate" name="autoptimize_js_aggregate" <?php echo $conf->get( 'autoptimize_js_aggregate' ) ? 'checked="checked" ' : ''; ?>/>
 <?php _e( 'Aggregate all linked JS-files to have them loaded non-render blocking?', 'autoptimize' ); ?></label></td>
 </tr>
-<tr valign="top" class="js_sub js_aggregate">
+<tr valign="top" class="js_sub js_aggregate hidden">
 <th scope="row">&emsp;<?php _e( 'Also aggregate inline JS?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_include_inline" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_js_include_inline' ) ? 'checked="checked" ' : ''; ?>/>
 <?php _e( 'Let Autoptimize also extract JS from the HTML (discouraged as it can make Autoptimize\'s cache size grow quickly)', 'autoptimize' ); ?></label></td>
 </tr>
-<tr valign="top" class="js_sub js_aggregate">
+<tr valign="top" class="js_sub js_aggregate hidden">
 <th scope="row">&emsp;<?php _e( 'Force JavaScript in &lt;head&gt;?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_forcehead" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_js_forcehead' ) ? 'checked="checked" ' : ''; ?>/>
 <?php _e( 'Load JavaScript early (discouraged as it makes the JS render blocking)', 'autoptimize' ); ?></label></td>
 </tr>
-<tr valign="top" class="js_sub js_aggregate">
+<tr valign="top" class="js_sub js_aggregate hidden">
 <th scope="row">&emsp;<?php _e( 'Add try-catch wrapping?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_trycatch" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_js_trycatch' ) ? 'checked="checked" ' : ''; ?>/>
 <?php _e( 'If your aggregated scripts break because of a JS-error, you might want to try this, but generally discouraged.', 'autoptimize' ); ?></label></td>
@@ -261,7 +261,7 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <td><label class="cb_label"><input type="checkbox" id="autoptimize_js_defer_not_aggregate" name="autoptimize_js_defer_not_aggregate" <?php echo $conf->get( 'autoptimize_js_defer_not_aggregate' ) ? 'checked="checked" ' : ''; ?>/>
 <?php _e( 'Individual JS-files will be minified and deferred, making them non-render-blocking.', 'autoptimize' ); ?></label></td>
 </tr>
-<tr valign="top" id="js_defer_inline" class="js_sub js_not_aggregate">
+<tr valign="top" id="js_defer_inline" class="js_sub js_not_aggregate hidden">
 <th scope="row">&emsp;<?php _e( 'Also defer inline JS?', 'autoptimize' ); ?> (beta)</th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_defer_inline" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_js_defer_inline' ) ? 'checked="checked" ' : ''; ?>/>
 <?php _e( 'Also defer inline JS. Generally this will allow all JS to be deferred, so you should remove default exclusions, test and only exclude specific items if still needed.', 'autoptimize' ); ?></label></td>
@@ -660,14 +660,12 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
         if (!jQuery("#autoptimize_js").prop('checked')) {
             jQuery(".js_sub:visible").fadeTo('fast',.33);
         }
-        if (!jQuery("#autoptimize_js_aggregate").prop('checked')) {
-            jQuery( ".js_aggregate").hide( 'fast' );
-        } else {
+        if (jQuery("#autoptimize_js_aggregate").prop('checked')) {
+            jQuery( ".js_aggregate" ).show( 'fast' );
             jQuery( ".js_not_aggregate_master:visible" ).fadeTo( 'fast', .33 );
         }
-        if (!jQuery("#autoptimize_js_defer_not_aggregate").prop('checked')) {
-            jQuery( ".js_not_aggregate").hide( 'fast' );
-        } else {
+        if (jQuery("#autoptimize_js_defer_not_aggregate").prop('checked')) {
+            jQuery( ".js_not_aggregate" ).show( 'fast' );
             jQuery( ".js_aggregate_master:visible" ).fadeTo( 'fast', .33 );
         }
         if (jQuery("#autoptimize_enable_site_config").prop('checked')) {
