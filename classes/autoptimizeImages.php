@@ -406,7 +406,8 @@ class autoptimizeImages
             $imgopt_host     = $this->get_imgopt_host();
             $quality         = $this->get_img_quality_string();
             $ret_val         = apply_filters( 'autoptimize_filter_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
-            $imgopt_base_url = $imgopt_host . 'client/' . $quality . ',' . $ret_val;
+            $to_format       = apply_filters( 'autoptimize_filter_imgopt_format', 'to_webp' ); // values: empty (= jpeg), to_webp (smart; webp or jpeg), to_avif and soon to_auto (smart avif, webp or jpeg).
+            $imgopt_base_url = $imgopt_host . 'client/' . $to_format . ',' . $quality . ',' . $ret_val;
             $imgopt_base_url = apply_filters( 'autoptimize_filter_imgopt_base_url', $imgopt_base_url );
         }
 
@@ -879,18 +880,14 @@ class autoptimizeImages
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $type_js . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $type_js . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
 
-        // And add webp detection and loading JS.
+        // And add next-gen image detection for AVIF hooking into lazyload.
         if ( $this->should_ngimg() ) {
-            // Add AVIF code, can be disabled for now to only do webp.
+            // Add AVIF code, replacing the default smart to_webp.
             if ( apply_filters( 'autoptimize_filter_imgopt_do_avif', true ) ) {
-                $_ngimg_detect = 'function c_img(a,b){src="avif"==b?"data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAABoAAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAEAAAABAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACJtZGF0EgAKCBgADsgQEAwgMgwf8AAAWAAAAACvJ+o=":"data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==";var c=new Image;c.onload=function(){var d=0<c.width&&0<c.height;a(d,b)},c.onerror=function(){a(!1,b)},c.src=src}function s_img(a,b){w=window,"avif"==b?!1==a?c_img(s_img,"webp"):w.ngImg="avif":!1==a?w.ngImg=!1:w.ngImg="webp"}c_img(s_img,"avif");';
-                $_ngimg_load   = 'document.addEventListener("lazybeforeunveil",function({target:a}){window.ngImg&&["data-src","data-srcset"].forEach(function(b){attr=a.getAttribute(b),null!==attr&&-1==attr.indexOf("/client/to_")&&a.setAttribute(b,attr.replace(/\/client\//,"/client/to_"+window.ngImg+","))})});';
-            } else {
-                $_ngimg_detect = "function c_webp(A){var n=new Image;n.onload=function(){var e=0<n.width&&0<n.height;A(e)},n.onerror=function(){A(!1)},n.src='data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA=='}function s_webp(e){window.supportsWebP=e}c_webp(s_webp);";
-                $_ngimg_load   = "document.addEventListener('lazybeforeunveil',function({target:b}){window.supportsWebP&&['data-src','data-srcset'].forEach(function(c){attr=b.getAttribute(c),null!==attr&&-1==attr.indexOf('/client/to_webp')&&b.setAttribute(c,attr.replace(/\/client\//,'/client/to_webp,'))})});";
+                $_ngimg_detect = 'function c_img(B){var g=new Image;g.onload=function(){var A=0<g.width&&0<g.height;B(A)},g.onerror=function(){B(!1)},g.src="data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAABoAAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAEAAAABAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACJtZGF0EgAKCBgADsgQEAwgMgwf8AAAWAAAAACvJ+o="}function s_img(A){w=window,w.ngImg=0!=A&&"avif"}c_img(s_img);';
+                $_ngimg_load   = 'document.addEventListener("lazybeforeunveil",function({target:e}){window.ngImg&&["data-src","data-srcset"].forEach(function(t){attr=e.getAttribute(t),null!==attr&&e.setAttribute(t,attr.replace(/\/client\/to_webp/,"/client/to_"+window.ngImg))})});';
             }
-            // Keeping autoptimize_filter_imgopt_webp_js filter for now, but it is deprecated as not only for webp any more.
-            $_ngimg_output = apply_filters( 'autoptimize_filter_imgopt_webp_js', '<script' . $type_js . $noptimize_flag . '>' . $_ngimg_detect . $_ngimg_load . '</script>' );
+            $_ngimg_output = '<script' . $type_js . $noptimize_flag . '>' . $_ngimg_detect . $_ngimg_load . '</script>';
             echo apply_filters( 'autoptimize_filter_imgopt_ngimg_js', $_ngimg_output );
         }
     }
@@ -1200,9 +1197,9 @@ class autoptimizeImages
                 </td>
             </tr>
             <tr id='autoptimize_imgopt_ngimg' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
-                <th scope="row"><?php _e( 'Load WebP or AVIF in supported browsers?', 'autoptimize' ); ?></th>
+                <th scope="row"><?php _e( 'Load AVIF in supported browsers?', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input type='checkbox' id='autoptimize_imgopt_ngimg_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Automatically serve "next-gen" WebP or AVIF image formats to any browser that supports it (requires lazy load to be active).', 'autoptimize' ); ?></label>
+                    <label><input type='checkbox' id='autoptimize_imgopt_ngimg_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Automatically serve AVIF image format to any browser that supports it (requires lazy load to be active).', 'autoptimize' ); ?></label>
                 </td>
             </tr>
             <tr>
