@@ -319,6 +319,8 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.8.4 =
+
 = 2.8.3 =
 * fix for missing ao-minify-html.php file
 
