@@ -1287,7 +1287,7 @@ class autoptimizeStyles extends autoptimizeBase
     /**
      * Sanitize user-provided CSS.
      *
-     * For now just strip_slashes and preg_replace to escape < in certain cases but might do full CSS escaping in the future, see:
+     * For now just strip_tags (the WordPress way) and preg_replace to escape < in certain cases but might do full CSS escaping in the future, see:
      * https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-4-css-encode-and-strictly-validate-before-inserting-untrusted-data-into-html-style-property-values
      * https://github.com/twigphp/Twig/blob/3.x/src/Extension/EscaperExtension.php#L300-L319
      * https://github.com/laminas/laminas-escaper/blob/2.8.x/src/Escaper.php#L205-L221
@@ -1297,7 +1297,7 @@ class autoptimizeStyles extends autoptimizeBase
      */
     public static function sanitize_css( $css )
     {
-        $css = strip_tags( $css );
+        $css = wp_strip_all_tags( $css );
         if ( strpos( $css, '<' ) !== false ) {
             $css = preg_replace( '#<(\/?\w+)#', '\00003C$1', $css );
         }
