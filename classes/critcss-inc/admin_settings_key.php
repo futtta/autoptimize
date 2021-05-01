@@ -43,7 +43,7 @@ function ao_ccss_render_key( $key, $status, $status_msg, $message, $color ) {
                             <?php _e( 'Your API Key', 'autoptimize' ); ?>
                         </th>
                         <td>
-                            <textarea id="autoptimize_ccss_key" name="autoptimize_ccss_key" rows='3' style="width:100%;" placeholder="<?php _e( 'Please enter your criticalcss.com API key here.', 'autoptimize' ); ?>"><?php echo trim( $key ); ?></textarea>
+                            <textarea id="autoptimize_ccss_key" name="autoptimize_ccss_key" rows='3' style="width:100%;" placeholder="<?php _e( 'Please enter your criticalcss.com API key here.', 'autoptimize' ); ?>"><?php echo trim( esc_textarea( $key ) ); ?></textarea>
                             <p class="notes">
                                 <?php _e( 'Enter your <a href="https://criticalcss.com/account/api-keys?aff=1" target="_blank">criticalcss.com</a> API key above. The key is revalidated every time a new job is sent to it.<br />To obtain your API key, go to <a href="https://criticalcss.com/account/api-keys?aff=1" target="_blank">criticalcss.com</a> > Account > API Keys.<br />Requests to generate a critical CSS via the API are priced at £5 per domain per month.<br /><strong>Not sure yet? With the <a href="https://criticalcss.com/faq/?aff=1#trial" target="_blank">30 day money back guarantee</a>, you have nothing to lose!</strong>', 'autoptimize' ); ?>
                             </p>

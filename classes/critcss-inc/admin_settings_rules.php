@@ -185,8 +185,8 @@ function ao_ccss_render_rules() {
                     </ol>
                 </div>
             </div>
-            <textarea id="autoptimize_css_defer_inline" name="autoptimize_css_defer_inline" rows="19" cols="10" style="width:100%;"><?php echo get_option( 'autoptimize_css_defer_inline', '' ); ?></textarea>
-            <textarea id="autoptimize_ccss_additional" name="autoptimize_ccss_additional" rows="19" cols="10" style="width:100%;"><?php echo get_option( 'autoptimize_ccss_additional', '' ); ?></textarea>
+            <textarea id="autoptimize_css_defer_inline" name="autoptimize_css_defer_inline" rows="19" cols="10" style="width:100%;"><?php echo autoptimizeStyles::sanitize_css( get_option( 'autoptimize_css_defer_inline', '' ) ); ?></textarea>
+            <textarea id="autoptimize_ccss_additional" name="autoptimize_ccss_additional" rows="19" cols="10" style="width:100%;"><?php echo autoptimizeStyles::sanitize_css( get_option( 'autoptimize_ccss_additional', '' ) ); ?></textarea>
             <table class="rules-list" cellspacing="0"><tbody id="rules-list"></tbody></table>
             <input class="hidden" type="text" id="critCssOrigin" name="autoptimize_ccss_rules" value='<?php echo ( json_encode( $ao_ccss_rules, JSON_FORCE_OBJECT ) ); ?>'>
             <div class="submit rules-btn">
