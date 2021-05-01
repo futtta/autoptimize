@@ -74,7 +74,9 @@ class autoptimizeCriticalCSSCore {
         global $ao_ccss_loggedin;
         global $ao_ccss_debug;
         global $ao_ccss_keyst;
+
         $no_ccss = '';
+        $ao_ccss_additional = autoptimizeStyles::sanitize_css( $ao_ccss_additional );
 
         // Only if keystatus is OK and option to add CCSS for logged on users is on or user is not logged in.
         if ( ( $ao_ccss_keyst && 2 == $ao_ccss_keyst ) && ( $ao_ccss_loggedin || ! is_user_logged_in() ) ) {
