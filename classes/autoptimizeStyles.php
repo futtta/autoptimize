@@ -363,6 +363,11 @@ class autoptimizeStyles extends autoptimizeBase
                         if ( '' !== $new_tag ) {
                             // Optionally defer (preload) non-aggregated CSS.
                             $new_tag = $this->optionally_defer_excluded( $new_tag, $url );
+                            
+                            // Check if we still need to CDN (esp. for already minified resources).
+                            if ( ! empty( $this->cdn_url ) || has_filter( 'autoptimize_filter_base_replace_cdn' ) ) {
+                                $new_tag = str_replace( $url, $this->url_replace_cdn( $url ), $new_tag );
+                            }
                         }
 
                         // And replace!

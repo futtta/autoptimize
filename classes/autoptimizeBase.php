@@ -310,7 +310,6 @@ abstract class autoptimizeBase
         // Allows API/filter to further tweak the cdn url...
         $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', $cdn_url );
         if ( ! empty( $cdn_url ) ) {
-            $this->debug_log( 'before=' . $url );
 
             // Simple str_replace-based approach fails when $url is protocol-or-host-relative.
             $is_protocol_relative = autoptimizeUtils::is_protocol_relative( $url );
@@ -329,11 +328,8 @@ abstract class autoptimizeBase
                 } else {
                     $site_url = AUTOPTIMIZE_WP_SITE_URL;
                 }
-                $this->debug_log( '`' . $site_url . '` -> `' . $cdn_url . '` in `' . $url . '`' );
                 $url = str_replace( $site_url, $cdn_url, $url );
             }
-
-            $this->debug_log( 'after=' . $url );
         }
 
         // Allow API filter to take further care of CDN replacement.

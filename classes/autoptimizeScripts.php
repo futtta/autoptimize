@@ -397,6 +397,11 @@ class autoptimizeScripts extends autoptimizeBase
                             }
                         }
 
+                        // Check if we still need to CDN (esp. for already minified resources).
+                        if ( ! empty( $this->cdn_url ) || has_filter( 'autoptimize_filter_base_replace_cdn' ) ) {
+                            $new_tag = str_replace( $url, $this->url_replace_cdn( $url ), $new_tag );
+                        }
+
                         if ( $this->ismovable( $new_tag ) ) {
                             // can be moved, flags and all.
                             if ( $this->movetolast( $new_tag ) ) {
