@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
 Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 2.8.3
+Stable tag: 2.8.4
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -326,6 +326,9 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * Improvement: re-ordering of "JavaScript optimization" settings
 * ... and more to come in next beta versions ...
 * Misc. other minor fixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
+
+= 2.8.4 =
+* fix for an authenticated XSS vulnerability
 
 = 2.8.3 =
 * fix for missing ao-minify-html.php
