@@ -371,14 +371,14 @@ MARKUP;
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='$cdnurl/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/main.js'></script>
 
 <script defer src="$cdnurl/${subfolder}${jspart}2d6e668fad0726747cb413ac61486ee0.js"></script></body>
 </html>
@@ -509,14 +509,14 @@ MARKUP;
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='$cdnurl/wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='$cdnurl/wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/main.js'></script>
 
 <script defer src="$cdnurl/${subfolder}${jspart}2d6e668fad0726747cb413ac61486ee0.js"></script></body>
 </html>
