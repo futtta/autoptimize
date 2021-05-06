@@ -412,6 +412,7 @@ class autoptimizeExtra
         // iterate through array and add preload link to tmp string.
         $preload_output = '';
         foreach ( $preloads as $preload ) {
+            $preload     = esc_url_raw( $preload );
             $crossorigin = '';
             $preload_as  = '';
             $mime_type   = '';
