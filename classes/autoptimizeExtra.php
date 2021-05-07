@@ -429,7 +429,7 @@ class autoptimizeExtra
                 if ( ' type="font/eot"' === $mime_type ) {
                     $mime_type = 'application/vnd.ms-fontobject';
                 }
-            } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.jpeg' ) || autoptimizeUtils::str_ends_in( $_preload, '.jpg' ) || autoptimizeUtils::str_ends_in( $_preload, '.webp' ) || autoptimizeUtils::str_ends_in( $_preload, '.png' ) || autoptimizeUtils::str_ends_in( $_preload, '.gif' ) ) {
+            } elseif ( autoptimizeUtils::str_ends_in( $_preload, '.jpeg' ) || autoptimizeUtils::str_ends_in( $_preload, '.jpg' ) || autoptimizeUtils::str_ends_in( $_preload, '.webp' ) || autoptimizeUtils::str_ends_in( $_preload, '.png' ) || autoptimizeUtils::str_ends_in( $_preload, '.gif' ) || autoptimizeUtils::str_ends_in( $_preload, '.svg' ) ) {
                 $preload_as = 'image';
             } else {
                 $preload_as = 'other';
