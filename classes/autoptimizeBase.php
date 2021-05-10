@@ -96,7 +96,7 @@ abstract class autoptimizeBase
             if ( AUTOPTIMIZE_WP_SITE_URL === $site_host ) {
                 $url = AUTOPTIMIZE_WP_SITE_URL . $url;
             } elseif ( 0 === strpos( $url, '/' ) ) {
-                $url = '//' . $content_host . autoptimizeUtils::path_canonicalize( $url );
+                $url = '//' . $site_host . autoptimizeUtils::path_canonicalize( $url );
             } else {
                 $url = AUTOPTIMIZE_WP_SITE_URL . autoptimizeUtils::path_canonicalize( $url );
             }
@@ -132,11 +132,9 @@ abstract class autoptimizeBase
                 if ( in_array( $url_host, $multidomains ) ) {
                     $url = str_replace( $url_host, $site_host, $url );
                 } else {
-                    error_log( 'false 1: '.$url);
                     return false;
                 }
             } else {
-                error_log( 'false 2: '.$url);
                 return false;
             }
         }
@@ -175,9 +173,6 @@ abstract class autoptimizeBase
         if ( file_exists( $path ) && is_file( $path ) && is_readable( $path ) ) {
             return $path;
         } else {
-            if ( strpos( $path, 'jquery') !== false ) {
-                error_log( 'false 4: ' . $path );
-            }
             return false;
         }
     }
