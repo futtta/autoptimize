@@ -95,6 +95,8 @@ abstract class autoptimizeBase
         } elseif ( ( false === $double_slash_position ) && ( false === strpos( $url, $site_host ) ) ) {
             if ( AUTOPTIMIZE_WP_SITE_URL === $site_host ) {
                 $url = AUTOPTIMIZE_WP_SITE_URL . $url;
+            } elseif ( 0 === strpos( $url, '/' ) ) {
+                $url = '//' . $site_host . $url;
             } else {
                 $url = AUTOPTIMIZE_WP_SITE_URL . autoptimizeUtils::path_canonicalize( $url );
             }
