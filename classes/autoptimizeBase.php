@@ -96,7 +96,7 @@ abstract class autoptimizeBase
             if ( AUTOPTIMIZE_WP_SITE_URL === $site_host ) {
                 $url = AUTOPTIMIZE_WP_SITE_URL . $url;
             } elseif ( 0 === strpos( $url, '/' ) ) {
-                $url = '//' . $site_host . $url;
+                $url = '//' . $content_host . $url;
             } else {
                 $url = AUTOPTIMIZE_WP_SITE_URL . autoptimizeUtils::path_canonicalize( $url );
             }
