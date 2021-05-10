@@ -132,9 +132,11 @@ abstract class autoptimizeBase
                 if ( in_array( $url_host, $multidomains ) ) {
                     $url = str_replace( $url_host, $site_host, $url );
                 } else {
+                    error_log( 'false 1: '.$url);
                     return false;
                 }
             } else {
+                error_log( 'false 2: '.$url);
                 return false;
             }
         }
@@ -162,6 +164,7 @@ abstract class autoptimizeBase
         // we have to assume we can't aggregate.
         if ( preg_match( '#^:?//#', $path ) ) {
             // External script/css (adsense, etc).
+            error_log( 'false 3: '.$path);
             return false;
         }
 
@@ -173,7 +176,7 @@ abstract class autoptimizeBase
             return $path;
         } else {
             if ( strpos( $path, 'jquery') !== false ) {
-                error_log( 'false: ' . $path );
+                error_log( 'false 4: ' . $path );
             }
             return false;
         }
