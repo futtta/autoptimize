@@ -162,7 +162,6 @@ abstract class autoptimizeBase
         // we have to assume we can't aggregate.
         if ( preg_match( '#^:?//#', $path ) ) {
             // External script/css (adsense, etc).
-            error_log( 'false 3: '.$path);
             return false;
         }
 

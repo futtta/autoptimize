@@ -1167,7 +1167,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
 
     public function provider_getpath()
     {
-        return array(
+        $getpath_tests = array(
             /**
              * These all don't really exist, and getpath() returns false for
              * non-existing files since upstream's 1386e4fe1d commit.
@@ -1183,16 +1183,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             array(
                 '//something/somewhere/example.png',
                 false,
-            ),
-            // This file comes with core, so should exist...
-            array(
-                '/wp-includes/js/jquery/jquery.js',
-                WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.js',
-            ),
-            // This file comes with core as of 5.6, so should exist...
-            array(
-                '/wp-includes/js/jquery/jquery.min.js',
-                WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.min.js',
             ),
             // Empty $url should return false.
             array(
@@ -1212,6 +1202,41 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
                 false,
             ),
         );
+
+        if ( getenv( 'CUSTOM_CONSTANTS' ) ) {
+            /*
+             * custom constants = subfolder install, in which case /wp-inludes/.. as
+             * absolute path is outside of wordpress installation, so those tests would
+             * correctly fail so make paths to jquery relative instead.
+             */
+            $extra_getpath_tests = array(
+                // This file comes with core, so should exist...-
+                array(
+                    'wp-includes/js/jquery/jquery.js',
+                    WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.js',
+                ),
+                // This file comes with core as of 5.6, so should exist...
+                array(
+                    'wp-includes/js/jquery/jquery.min.js',
+                    WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.min.js',
+                ),
+            );
+        } else {
+            $extra_getpath_tests = array(
+                // This file comes with core, so should exist...
+                array(
+                    '/wp-includes/js/jquery/jquery.js',
+                    WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.js',
+                ),
+                // This file comes with core as of 5.6, so should exist...
+                array(
+                    '/wp-includes/js/jquery/jquery.min.js',
+                    WP_ROOT_DIR . '/wp-includes/js/jquery/jquery.min.js',
+                ),
+            );
+        }
+
+        return array_merge( $getpath_tests, $extra_getpath_tests );
     }
 
     /**
