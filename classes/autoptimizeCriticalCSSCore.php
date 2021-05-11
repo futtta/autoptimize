@@ -85,7 +85,7 @@ class autoptimizeCriticalCSSCore {
             if ( ! empty( $ao_ccss_rules['paths'] ) ) {
                 foreach ( $ao_ccss_rules['paths'] as $path => $rule ) {
                     // explicit match OR partial match if MANUAL rule.
-                    if ( $req_path == $path || urldecode( $req_path ) == $path || ( false == $rule['hash'] && false != $rule['file'] && strpos( $req_path, str_replace( site_url(), '', $path ) ) !== false ) ) {
+                    if ( $req_path == $path || urldecode( $req_path ) == $path || ( apply_filters( 'autoptimize_filter_ccss_core_path_partial_match', true ) && false == $rule['hash'] && false != $rule['file'] && strpos( $req_path, str_replace( site_url(), '', $path ) ) !== false ) ) {
                         if ( file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
                             $_ccss_contents = file_get_contents( AO_CCSS_DIR . $rule['file'] );
                             if ( 'none' != $_ccss_contents ) {
