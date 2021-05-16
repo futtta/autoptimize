@@ -178,6 +178,17 @@ class autoptimizeCriticalCSSSettings {
                     <?php
                 }
 
+                // check if defer jQuery is active and warn if so.
+                if ( 1 == $ao_ccss_deferjquery && PAnD::is_admin_notice_active( 'i-know-about-defer-inline-forever' ) ) {
+                    ?>
+                    <div data-dismissible="i-know-about-defer-inline-forever" class="notice-warning notice is-dismissible"><p>
+                    <?php
+                    _e( 'You have "defer jQuery and other non-aggregated JS-files" active (under Advanced Settings), but that functionality is deprecated and will be removed in the next major version of Autoptimize. Consider using the new "Do not aggregate but defer" and "Also defer inline JS" options on the main settings page instead.', 'autoptimize' );
+                    ?>
+                    </p></div>
+                    <?php
+                }
+
                 // warn if it looks as though the queue processing job looks isn't running
                 // but store result in transient as to not to have to go through 2 arrays each and every time.
                 $_warn_cron = get_transient( 'ao_ccss_cronwarning' );
