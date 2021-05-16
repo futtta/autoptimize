@@ -36,8 +36,12 @@ class autoptimizeCriticalCSSCore {
             // Add the action to enqueue jobs for CriticalCSS cron.
             add_action( 'autoptimize_action_css_hash', array( 'autoptimizeCriticalCSSEnqueue', 'ao_ccss_enqueue' ), 10, 1 );
 
-            // conditionally add the filter to defer jquery and others.
-            if ( $ao_ccss_deferjquery ) {
+            // conditionally add the filter to defer jquery and others but only if not done so in autoptimizeScripts.
+            $_native_defer = false;
+            if ( 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_js_defer_not_aggregate' ) && 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_js_defer_inline' ) ) {
+                $_native_defer = true;
+            }
+            if ( $ao_ccss_deferjquery && ! $_native_defer ) {
                 add_filter( 'autoptimize_html_after_minify', array( $this, 'ao_ccss_defer_jquery' ), 11, 1 );
             }
 
