@@ -362,8 +362,9 @@ function updateAfterChange() {
     document.getElementById('ao_title_and_button').scrollIntoView();
 }
 
-function displayNotice(textIn) {
-    jQuery('<div class="error notice is-dismissable"><p>'+textIn+'</p></div>').insertBefore("#unSavedWarning");
+function displayNotice(textIn, level) {
+    if ( '' == level ) { level = 'error'; }
+    jQuery('<div class="notice-' + level + ' notice is-dismissable"><p>'+textIn+'</p></div>').insertBefore("#unSavedWarning");
     document.getElementById('ao_title_and_button').scrollIntoView();
 }
 

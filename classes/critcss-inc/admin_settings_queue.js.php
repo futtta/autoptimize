@@ -223,10 +223,12 @@ function queuerunner() {
     jQuery.post(ajaxurl, data, function(response) {
         response_array=JSON.parse(response);
         if (response_array['code'] == 200) {
-            displayNotice( 'Queue processed, reloading page.' )
+            displayNotice( '<?php _e('Queue processed, reloading page.', 'autoptimize'); ?>', 'success' )
             setTimeout(window.location.reload.bind(window.location), 1.5*1000);
+        } else if ( response_array['code'] == 302 ) {
+            displayNotice( '<?php _e('The queue is locked, retry in a couple of minutes. If this problem persists and the queue is not moving at all remove the <code>wp-content/uploads/ao_ccss/queue.lock</code> file.', 'autoptimize' ); ?>', 'warning' )
         } else {
-            displayNotice( 'Could not process queue.' )
+            displayNotice( '<?php _e('Could not process queue.', 'autoptimize'); ?>', 'error' )
         }
     });
 }

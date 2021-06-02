@@ -358,10 +358,15 @@ class autoptimizeCriticalCSSSettingsAjax {
 
         // Process an uploaded file with no errors.
         if ( current_user_can( 'manage_options' ) ) {
-            $ccss_cron = new autoptimizeCriticalCSSCron();
-            $ccss_cron->ao_ccss_queue_control();
-            $response['code'] = '200';
-            $response['msg']  = 'Queue processing done';            
+            if ( ! file_exists( AO_CCSS_LOCK ) ) {
+                $ccss_cron = new autoptimizeCriticalCSSCron();
+                $ccss_cron->ao_ccss_queue_control();
+                $response['code'] = '200';
+                $response['msg']  = 'Queue processing done';
+            } else {
+                $response['code'] = '302';
+                $response['msg']  = 'Lock file found';
+            }
         } else {
             $response['code'] = '500';
             $response['msg']  = 'Not allowed';                        
