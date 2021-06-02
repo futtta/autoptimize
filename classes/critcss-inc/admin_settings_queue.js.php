@@ -40,8 +40,8 @@ if (queueOriginEl) {
             });
         }
         
-        // unhide queuerunner button conditionally and attach event to it.
-        if (queueBodyEl > 4) {
+        // unhide queuerunner button conditionally (we don't want people running the queue continuously) and attach event to it.
+        if (queueBodyEl > 4 || ( queueBodyEl > 0 && jQuery('#rules > tr').length < 1 ) ) {
             jQuery('#queuerunner-container').show();
             jQuery("#queuerunner").click(function(){queuerunner();});
         }
