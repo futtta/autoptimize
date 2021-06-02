@@ -364,6 +364,7 @@ function updateAfterChange() {
 
 function displayNotice(textIn) {
     jQuery('<div class="error notice is-dismissable"><p>'+textIn+'</p></div>').insertBefore("#unSavedWarning");
+    document.getElementById('ao_title_and_button').scrollIntoView();
 }
 
 function resetForm() {

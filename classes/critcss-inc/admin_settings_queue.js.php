@@ -39,6 +39,12 @@ if (queueOriginEl) {
                 headers: {6: {sorter: false}}
             });
         }
+        
+        // unhide queuerunner button conditionally and attach event to it.
+        if (queueBodyEl > 4) {
+            jQuery('#queuerunner-container').show();
+            jQuery("#queuerunner").click(function(){queuerunner();});
+        }
     });
 }
 
@@ -205,6 +211,24 @@ function updateQueue(queue) {
         echo "console.log('Updated Queue Object:', queue);\n";
     }
     ?>
+}
+
+// Run the queue manually (in case of cron issues/ impatient users).
+function queuerunner() {
+    var data = {
+        'action': 'ao_ccss_queuerunner',
+        'ao_ccss_queuerunner_nonce': '<?php echo wp_create_nonce( 'ao_ccss_queuerunner_nonce' ); ?>',
+    };
+
+    jQuery.post(ajaxurl, data, function(response) {
+        response_array=JSON.parse(response);
+        if (response_array['code'] == 200) {
+            displayNotice( 'Queue processed, reloading page.' )
+            setTimeout(window.location.reload.bind(window.location), 1.5*1000);
+        } else {
+            displayNotice( 'Could not process queue.' )
+        }
+    });
 }
 
 // Convert epoch to date for job times

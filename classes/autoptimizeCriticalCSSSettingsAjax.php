@@ -27,6 +27,7 @@ class autoptimizeCriticalCSSSettingsAjax {
         add_action( 'wp_ajax_rm_critcss_all', array( $this, 'critcss_rm_all_callback' ) );
         add_action( 'wp_ajax_ao_ccss_export', array( $this, 'ao_ccss_export_callback' ) );
         add_action( 'wp_ajax_ao_ccss_import', array( $this, 'ao_ccss_import_callback' ) );
+        add_action( 'wp_ajax_ao_ccss_queuerunner', array( $this, 'ao_ccss_queuerunner_callback' ) );
     }
 
     public function critcss_fetch_callback() {
@@ -343,6 +344,27 @@ class autoptimizeCriticalCSSSettingsAjax {
         } else {
             $response['code'] = '200';
             $response['msg']  = 'Settings imported successfully';
+        }
+
+        // Dispatch respose.
+        echo json_encode( $response );
+
+        // Close ajax request.
+        wp_die();
+    }
+    
+    public function ao_ccss_queuerunner_callback() {
+        check_ajax_referer( 'ao_ccss_queuerunner_nonce', 'ao_ccss_queuerunner_nonce' );
+
+        // Process an uploaded file with no errors.
+        if ( current_user_can( 'manage_options' ) ) {
+            $ccss_cron = new autoptimizeCriticalCSSCron();
+            $ccss_cron->ao_ccss_queue_control();
+            $response['code'] = '200';
+            $response['msg']  = 'Queue processing done';            
+        } else {
+            $response['code'] = '500';
+            $response['msg']  = 'Not allowed';                        
         }
 
         // Dispatch respose.
