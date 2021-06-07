@@ -406,8 +406,13 @@ class autoptimizeImages
             $imgopt_host     = $this->get_imgopt_host();
             $quality         = $this->get_img_quality_string();
             $ret_val         = apply_filters( 'autoptimize_filter_imgopt_wait', 'ret_img' ); // values: ret_wait, ret_img, ret_json, ret_blank.
-            $to_format       = apply_filters( 'autoptimize_filter_imgopt_format', 'to_webp' ); // values: empty (= jpeg), to_webp (smart; webp or jpeg), to_avif and soon to_auto (smart avif, webp or jpeg).
-            $imgopt_base_url = $imgopt_host . 'client/' . $to_format . ',' . $quality . ',' . $ret_val;
+            if ( $this->should_ngimg() ) {
+                $sp_to_string = 'to_auto';
+            } else {
+                $sp_to_string = 'to_webp';
+            }
+            $sp_to_string    = apply_filters( 'autoptimize_filter_imgopt_format', $sp_to_string ); // values: empty (= jpeg), to_webp (smart; webp or fallback), to_avif (avif or fallback) or to_auto (smart avif, webp or fallback).
+            $imgopt_base_url = $imgopt_host . 'client/' . $sp_to_string . ',' . $quality . ',' . $ret_val;
             $imgopt_base_url = apply_filters( 'autoptimize_filter_imgopt_base_url', $imgopt_base_url );
         }
 
@@ -879,17 +884,6 @@ class autoptimizeImages
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<noscript><style>.lazyload{display:none;}</style></noscript>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $type_js . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $type_js . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
-
-        // And add next-gen image detection for AVIF hooking into lazyload.
-        if ( $this->should_ngimg() ) {
-            // Add AVIF code, replacing the default smart to_webp.
-            if ( apply_filters( 'autoptimize_filter_imgopt_do_avif', true ) ) {
-                $_ngimg_detect = 'function c_img(B){var g=new Image;g.onload=function(){var A=0<g.width&&0<g.height;B(A)},g.onerror=function(){B(!1)},g.src="data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAABoAAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAEAAAABAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACJtZGF0EgAKCBgADsgQEAwgMgwf8AAAWAAAAACvJ+o="}function s_img(A){w=window,w.ngImg=0!=A&&"avif"}c_img(s_img);';
-                $_ngimg_load   = 'document.addEventListener("lazybeforeunveil",function({target:e}){window.ngImg&&["data-src","data-srcset"].forEach(function(t){attr=e.getAttribute(t),null!==attr&&e.setAttribute(t,attr.replace(/\/client\/to_webp/,"/client/to_"+window.ngImg))})});';
-            }
-            $_ngimg_output = '<script' . $type_js . $noptimize_flag . '>' . $_ngimg_detect . $_ngimg_load . '</script>';
-            echo apply_filters( 'autoptimize_filter_imgopt_ngimg_js', $_ngimg_output );
-        }
     }
 
     public function get_cdn_url() {
@@ -948,8 +942,8 @@ class autoptimizeImages
         static $ngimg_return = null;
 
         if ( is_null( $ngimg_return ) ) {
-            // webp only works if imgopt and lazyload are also active.
-            if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_4'] ) && ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && $this->imgopt_active() ) {
+            // nextgen img only works if imgopt is active.
+            if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_4'] ) && $this->imgopt_active() ) {
                 $ngimg_return = true;
             } else {
                 $ngimg_return = false;
@@ -1199,7 +1193,7 @@ class autoptimizeImages
             <tr id='autoptimize_imgopt_ngimg' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
                 <th scope="row"><?php _e( 'Load AVIF in supported browsers?', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input type='checkbox' id='autoptimize_imgopt_ngimg_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Automatically serve AVIF image format to any browser that supports it (requires lazy load to be active).', 'autoptimize' ); ?></label>
+                    <label><input type='checkbox' id='autoptimize_imgopt_ngimg_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Automatically serve AVIF image format to any browser that supports it.', 'autoptimize' ); ?></label>
                 </td>
             </tr>
             <tr>
@@ -1236,18 +1230,11 @@ class autoptimizeImages
                     jQuery("#autoptimize_imgopt_optimization_exclusions").hide("slow");
                 }
             });
-            jQuery("#autoptimize_imgopt_ngimg_checkbox").change(function() {
-                if (this.checked) {
-                    jQuery("#autoptimize_imgopt_lazyload_checkbox")[0].checked = true;
-                    jQuery(".autoptimize_lazyload_child").show("slow");
-                }
-            });
             jQuery("#autoptimize_imgopt_lazyload_checkbox").change(function() {
                 if (this.checked) {
                     jQuery(".autoptimize_lazyload_child").show("slow");
                 } else {
                     jQuery(".autoptimize_lazyload_child").hide("slow");
-                    jQuery("#autoptimize_imgopt_ngimg_checkbox")[0].checked = false;
                 }
             });
         });
