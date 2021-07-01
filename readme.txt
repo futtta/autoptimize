@@ -287,6 +287,15 @@ location ~* /wp-content/cache/autoptimize/.*\.(js|css)$ {
     try_files $uri $uri/ /wp-content/autoptimize_404_handler.php;
 }`
 
+And this a nice alternative approach (provided by fboylovesyou);
+
+`location ~* /wp-content/cache/autoptimize/.*\.(css)$ {
+    try_files $uri $uri/ /wp-content/cache/autoptimize/css/autoptimize_fallback.css;
+}
+location ~* /wp-content/cache/autoptimize/.*\.(js)$ {
+    try_files $uri $uri/ /wp-content/cache/autoptimize/js/autoptimize_fallback.js;
+}`
+
 = What open source software/ projects are used in Autoptimize? =
 
 The following great open source projects are used in Autoptimize in some form or another:
