@@ -286,6 +286,10 @@ echo __( 'A comma-separated list of scripts you do not want optimized, for examp
 ?>
 </label></td>
 </tr>
+<tr valign="top">
+<th scope="row"><?php _e( 'Remove Unused JavaScript?', 'autoptimize' ); ?></th>
+<td><?php _e( 'Autoptimize combines your theme & plugins\' JavaScript, but does not know what is needed and what not. If Google Pagespeed Insights detects unused JavaScript, consider using a plugin like "Plugin Organizer" or similar to stop plugins from adding their JS where it is not needed.', 'autoptimize' ); ?></td>
+</tr>
 </table>
 </li>
 
@@ -324,7 +328,7 @@ echo ' <i>' . __( '(deprecated)', 'autoptimize' ) . '</i>';
 </tr>
 <?php } ?>
 <tr valign="top" class="css_sub">
-<th scope="row"><?php _e( 'Inline and Defer CSS?', 'autoptimize' ); ?></th>
+<th scope="row"><?php _e( 'Eliminate render-blocking CSS?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_defer" id="autoptimize_css_defer" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer' ) ? 'checked="checked" ' : ''; ?>/>
 <?php
 _e( 'Inline "above the fold CSS" while loading the main autoptimized CSS only after page load. <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank">Check the FAQ</a> for more info.', 'autoptimize' );
@@ -352,6 +356,15 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
 ?>
 </label></td>
 </tr>
+<?php if ( false === autoptimizeUtils::is_plugin_active( 'unusedcss/unusedcss.php' ) ) { ?>
+<tr valign="top">
+<th scope="row"><?php _e( 'Remove Unused CSS?', 'autoptimize' ); ?></th>
+<?php 
+$_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssettings&partner=rapidload';
+?>
+<td><?php echo sprintf( __( 'If Google Pagespeed Insights detects unused CSS, consider using %s to <strong>reduce your site\'s CSS size to up to 90&#37;</strong>, resulting in a slimmer, faster site!', 'autoptimize' ), '<a href="' . $_rapidload_link . '" target="_blank">the premium Rapidload service</a>' ); ?></td>
+</tr>
+<?php } ?>
 </table>
 </li>
 
