@@ -288,7 +288,7 @@ echo __( 'A comma-separated list of scripts you do not want optimized, for examp
 </tr>
 <tr valign="top">
 <th scope="row"><?php _e( 'Remove Unused JavaScript?', 'autoptimize' ); ?></th>
-<td><?php _e( 'Autoptimize combines your theme & plugins\' JavaScript, but does not know what is needed and what not. If Google Pagespeed Insights detects unused JavaScript, consider using a plugin like "Plugin Organizer" or similar to stop plugins from adding their JS where it is not needed.', 'autoptimize' ); ?></td>
+<td><?php _e( 'Autoptimize combines your theme & plugins\' JavaScript, but does not know what is used and what not. If Google Pagespeed Insights detects unused JavaScript, consider using a plugin like "Plugin Organizer" or similar to manage what JavaScript is added where.', 'autoptimize' ); ?></td>
 </tr>
 </table>
 </li>
