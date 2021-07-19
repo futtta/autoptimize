@@ -989,7 +989,7 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
      * @return bool
      */
     public static function should_show_menu_tabs() {
-        if ( ! is_multisite() || is_network_admin() || 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_enable_site_config' ) ) {
+        if ( ! is_multisite() || is_network_admin() || 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_enable_site_config' ) || false === autoptimizeOptionWrapper::is_ao_active_for_network() ) {
             return true;
         } else {
             return false;
