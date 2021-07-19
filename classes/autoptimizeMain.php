@@ -186,6 +186,9 @@ class autoptimizeMain
                 if ( class_exists( 'Jetpack' ) && apply_filters( 'autoptimize_filter_main_disable_jetpack_cdn', true ) && ( $conf->get( 'autoptimize_js' ) || $conf->get( 'autoptimize_css' ) ) ) {
                     add_filter( 'jetpack_force_disable_site_accelerator', '__return_true' );
                 }
+                
+                // Add "no cache found" notice.
+                add_action( 'admin_notices', 'autoptimizeMain::notice_nopagecache', 99 );
             }
         } else {
             add_action( 'admin_notices', 'autoptimizeMain::notice_cache_unavailable' );
@@ -702,6 +705,27 @@ class autoptimizeMain
         if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && '' !== $_ao_imgopt_plug_notice && ! $_ao_imgopt_active && $_ao_imgopt_launch_ok && PAnD::is_admin_notice_active( $_ao_imgopt_plug_dismissible ) ) {
             echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_imgopt_plug_dismissible . '"><p>';
             echo $_ao_imgopt_plug_notice;
+            echo '</p></div>';
+        }
+    }
+    
+    public static function notice_nopagecache()
+    {
+        /*
+         * Autoptimize does not do page caching (yet) but not everyone knows, so below logic tries to find out if page caching is available and if not show a notice on the AO Settings pages.
+         * 
+         * uses helper function in autoptimizeUtils.php
+         */
+        $_ao_nopagecache_notice      = __( 'It looks like your site might not have <strong>page caching</strong> which is a <strong>must-have for performance</strong>, check with your host if they offer this or install a page caching plugin like for example', 'autoptimize' );
+        $_ao_pagecache_install_url   = network_admin_url() . 'plugin-install.php?tab=search&type=term&s=';
+        $_ao_nopagecache_notice     .= ' <a href="' . $_ao_pagecache_install_url . 'wp+super+cache' . '">WP Super Cache</a>, <a href="' . $_ao_pagecache_install_url . 'keycdn+cache+enabler' . '">KeyCDN Cache Enabler</a>, ...';
+        $_ao_nopagecache_dismissible = 'ao-nopagecache-forever'; // the notice is only shown once and will not re-appear when dismissed.
+        $_is_ao_settings_page        = ( str_replace( array( 'autoptimize', 'autoptimize_imgopt', 'ao_critcss', 'autoptimize_extra', 'ao_partners' ), '', $_SERVER['REQUEST_URI'] ) !== $_SERVER['REQUEST_URI'] ? true : false );
+        $_found_pagecache            = false;
+
+        if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && PAnD::is_admin_notice_active( $_ao_nopagecache_dismissible ) && true === apply_filters( 'autopitmize_filter_main_show_pagecache_notice', true ) && false === autoptimizeUtils::find_pagecache() ) {
+            echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_nopagecache_dismissible . '"><p>';
+            echo $_ao_nopagecache_notice;
             echo '</p></div>';
         }
     }
