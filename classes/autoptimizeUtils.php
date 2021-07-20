@@ -405,7 +405,7 @@ class autoptimizeUtils
         static $_found_pagecache = null;
 
         if ( null === $_found_pagecache ) {
-            $_page_cache_constants   = array( 'NGINX_HELPER_BASENAME', 'KINSTA_CACHE_ZONE', 'PL_INSTANCE_REF', 'WP_NINUKIS_WP_NAME', 'CACHE_ENABLER_VERSION', 'SBP_PLUGIN_NAME', 'SERVEBOLT_PLUGIN_FILE' );
+            $_page_cache_constants   = array( 'NGINX_HELPER_BASENAME', 'KINSTA_CACHE_ZONE', 'PL_INSTANCE_REF', 'WP_NINUKIS_WP_NAME', 'CACHE_ENABLER_VERSION', 'SBP_PLUGIN_NAME', 'SERVEBOLT_PLUGIN_FILE', 'SWCFPC_PLUGIN_PATH' );
             $_page_cache_classes     = array( 'Swift_Performance_Cache', 'WpFastestCache', 'c_ws_plugin__qcache_purging_routines', 'zencache', 'comet_cache', 'WpeCommon', 'FlywheelNginxCompat', 'PagelyCachePurge' );
             $_page_cache_functions   = array( 'wp_cache_clear_cache', 'cachify_flush_cache', 'w3tc_pgcache_flush', 'wp_fast_cache_bulk_delete_all', 'rapidcache_clear_cache', 'sg_cachepress_purge_cache', 'prune_super_cache', 'after_rocket_clean_domain', 'wpo_cache_flush', 'rt_nginx_helper_after_fastcgi_purge_all', 'hyper_cache_purged' );
             $_ao_pagecache_transient = 'autoptimize_pagecache_check';
