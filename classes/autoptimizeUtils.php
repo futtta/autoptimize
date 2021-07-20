@@ -447,4 +447,15 @@ class autoptimizeUtils
 
         return $_found_pagecache;
     }
+
+    /**
+     * Returns true if on one of the AO settings tabs, false if not.
+     * Used to limit notifications to AO settings pages.
+     *
+     * @return bool
+     */    
+    public static function is_ao_settings() {
+        $_is_ao_settings = ( str_replace( array( 'autoptimize', 'autoptimize_imgopt', 'ao_critcss', 'autoptimize_extra', 'ao_partners' ), '', $_SERVER['REQUEST_URI'] ) !== $_SERVER['REQUEST_URI'] ? true : false );
+        return $_is_ao_settings;
+    }
 }

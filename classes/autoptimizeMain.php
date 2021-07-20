@@ -700,7 +700,7 @@ class autoptimizeMain
         $_ao_imgopt_launch_ok        = autoptimizeImages::launch_ok_wrapper();
         $_ao_imgopt_plug_dismissible = 'ao-img-opt-plug-123';
         $_ao_imgopt_active           = autoptimizeImages::imgopt_active();
-        $_is_ao_settings_page        = ( str_replace( array( 'autoptimize', 'autoptimize_imgopt', 'ao_critcss', 'autoptimize_extra', 'ao_partners' ), '', $_SERVER['REQUEST_URI'] ) !== $_SERVER['REQUEST_URI'] ? true : false );
+        $_is_ao_settings_page        = autoptimizeUtils::is_ao_settings();
 
         if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && '' !== $_ao_imgopt_plug_notice && ! $_ao_imgopt_active && $_ao_imgopt_launch_ok && PAnD::is_admin_notice_active( $_ao_imgopt_plug_dismissible ) ) {
             echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_imgopt_plug_dismissible . '"><p>';
@@ -720,13 +720,15 @@ class autoptimizeMain
         $_ao_pagecache_install_url   = network_admin_url() . 'plugin-install.php?tab=search&type=term&s=';
         $_ao_nopagecache_notice     .= ' <a href="' . $_ao_pagecache_install_url . 'wp+super+cache' . '">WP Super Cache</a>, <a href="' . $_ao_pagecache_install_url . 'keycdn+cache+enabler' . '">KeyCDN Cache Enabler</a>, ...';
         $_ao_nopagecache_dismissible = 'ao-nopagecache-forever'; // the notice is only shown once and will not re-appear when dismissed.
-        $_is_ao_settings_page        = ( str_replace( array( 'autoptimize', 'autoptimize_imgopt', 'ao_critcss', 'autoptimize_extra', 'ao_partners' ), '', $_SERVER['REQUEST_URI'] ) !== $_SERVER['REQUEST_URI'] ? true : false );
+        $_is_ao_settings_page        = autoptimizeUtils::is_ao_settings();
         $_found_pagecache            = false;
 
-        if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && PAnD::is_admin_notice_active( $_ao_nopagecache_dismissible ) && true === apply_filters( 'autopitmize_filter_main_show_pagecache_notice', true ) && false === autoptimizeUtils::find_pagecache() ) {
-            echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_nopagecache_dismissible . '"><p>';
-            echo $_ao_nopagecache_notice;
-            echo '</p></div>';
+        if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && PAnD::is_admin_notice_active( $_ao_nopagecache_dismissible ) && true === apply_filters( 'autopitmize_filter_main_show_pagecache_notice', true ) ) {
+            if ( false === autoptimizeUtils::find_pagecache() ) {
+                echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_nopagecache_dismissible . '"><p>';
+                echo $_ao_nopagecache_notice;
+                echo '</p></div>';
+            }
         }
     }
 }
