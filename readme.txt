@@ -332,8 +332,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * New: per page/ post Autoptimize settings so one can disable specific optimizations (needs to be enabled on the main settings page under "Misc Options").
 * New: "defer inline JS" as sub-option of "do not aggregate but defer" allowing to defer (almost) all JS.
 * Improvement: Image optimization now automatically switches between AVIF & WebP & Jpeg even if lazyload is not active (AVIF has to be explicitly enabled).
-* Improvement: re-ordering of "JavaScript optimization" settings
+* Improvement: re-ordering of "JavaScript optimization" settings & copy improvements.
 * Misc. other minor fixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
+
+This release coincides with my father's 76th birthday, who continues to be a big inspritation to me. He's a mechanical engineer who after retirement focused his technical insights, experience and never-ending inquisitiveness on fountain pen design and prototyping, inventing a new bulkfiller mechanism in the process. Search the web for `Fountainbel` to find out more about him. Love you pops!
 
 = 2.8.4 =
 * fix for an authenticated XSS vulnerability
