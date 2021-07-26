@@ -335,7 +335,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * Improvement: re-ordering of "JavaScript optimization" settings & copy improvements.
 * Misc. other minor fixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
 
-This release coincides with my father's 76th birthday, who continues to be a big inspritation to me. He's a mechanical engineer who after retirement focused his technical insights, experience and never-ending inquisitiveness on fountain pen design and prototyping, inventing a new bulkfiller mechanism in the process. Search the web for `Fountainbel` to find out more about him. Love you pops!
+This release coincides with my father's 76th birthday, who continues to be a big inspritation to me. He's a mechanical engineer who after retirement focused his technical insights, experience and never-ending inquisitiveness on fountain pen design and prototyping, inventing a new bulkfiller mechanism in the process. Search the web for `Fountainbel` to find out more about him (or read [this older blogpost I wrote in Dutch](https://blog.futtta.be/2008/04/09/mijn-vader-is-een-tovenaar/)). Love you pops!
 
 = 2.8.4 =
 * fix for an authenticated XSS vulnerability
