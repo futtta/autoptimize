@@ -716,7 +716,7 @@ class autoptimizeMain
          * 
          * uses helper function in autoptimizeUtils.php
          */
-        $_ao_nopagecache_notice      = __( 'It looks like your site might not have <strong>page caching</strong> which is a <strong>must-have for performance</strong>, check with your host if they offer this or install a page caching plugin like for example', 'autoptimize' );
+        $_ao_nopagecache_notice      = __( 'It looks like your site might not have <strong>page caching</strong> which is a <strong>must-have for performance</strong>. If you are sure you have a page cache, you can close this notice, but when in doubt check with your host if they offer this or install a page caching plugin like for example', 'autoptimize' );
         $_ao_pagecache_install_url   = network_admin_url() . 'plugin-install.php?tab=search&type=term&s=';
         $_ao_nopagecache_notice     .= ' <a href="' . $_ao_pagecache_install_url . 'wp+super+cache' . '">WP Super Cache</a>, <a href="' . $_ao_pagecache_install_url . 'keycdn+cache+enabler' . '">KeyCDN Cache Enabler</a>, ...';
         $_ao_nopagecache_dismissible = 'ao-nopagecache-forever'; // the notice is only shown once and will not re-appear when dismissed.
