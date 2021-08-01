@@ -158,10 +158,6 @@ function ao_ccss_render_rules() {
                 <textarea id="dummyAdditional" rows="19" cols="10" style="width:100%;" placeholder="<?php _e( 'Paste your MINIFIED additional critical CSS here and hit submit to save. This is the CSS to be added AT THE END of every critical CSS provided by a matching rule, or the default one.', 'autoptimize' ); ?>"></textarea>
             </div>
 
-            <!-- Wrapper for in screen notices -->
-            <div id="rules-notices"></div>
-            <!-- END Rule add/edit dialogs -->
-
             <!-- BEGIN Rules UI -->
             <div class="howto">
                 <div class="title-wrap">
@@ -189,6 +185,9 @@ function ao_ccss_render_rules() {
             <textarea id="autoptimize_ccss_additional" name="autoptimize_ccss_additional" rows="19" cols="10" style="width:100%;"><?php echo autoptimizeStyles::sanitize_css( get_option( 'autoptimize_ccss_additional', '' ) ); ?></textarea>
             <table class="rules-list" cellspacing="0"><tbody id="rules-list"></tbody></table>
             <input class="hidden" type="text" id="critCssOrigin" name="autoptimize_ccss_rules" value='<?php echo ( json_encode( $ao_ccss_rules, JSON_FORCE_OBJECT ) ); ?>'>
+            <!-- Wrapper for in screen notices -->
+            <div id="rules-notices"></div>
+            <!-- END Rule add/edit dialogs -->
             <div class="submit rules-btn">
                 <div class="alignleft">
                     <span id="addCritCssButton" class="button-secondary"><?php _e( 'Add New Rule', 'autoptimize' ); ?></span>

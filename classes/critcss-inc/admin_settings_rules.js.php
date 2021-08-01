@@ -37,6 +37,7 @@ if (rulesOriginEl) {
 
 function drawTable(critCssArray) {
     jQuery("#rules-list").empty();
+    rnotice = 0;
     jQuery.each(critCssArray,function(k,v) {
         if (k=="paths") {
             kstring="<?php _e( 'Path Based Rules', 'autoptimize' ); ?>";
@@ -65,11 +66,9 @@ function drawTable(critCssArray) {
                 typeClass = 'auto';
             }
             if (file && typeof file == 'string') {
-                rmark=file.split('_');
-                if (rmark[2] || rmark[2] == 'R.css') {
-                    rmark = '<span class="badge review rule">R</span>'
-                } else {
-                    rmark = '';
+                rmark_find=file.split('_');
+                if (rmark_find[2] || rmark_find[2] == 'R.css') {
+                    rnotice = rnotice + 1;
                 }
             }
             if ( k == "paths" ) {
@@ -77,11 +76,15 @@ function drawTable(critCssArray) {
             } else {
                 target = i.replace(/(woo_|template_|custom_post_|edd_|bp_|bbp_)/,'');
             }
-            jQuery("#rules-list").append("<tr class='rule "+k+"Rule'><td class='type'><span class='badge " + typeClass + "'>" + type + "</span>" + rmark + "</td><td class='target'>" + target + "</td><td class='file'>" + file + "</td><td class='btn edit'><span class=\"button-secondary\" id=\"" + nodeId + "_edit\"><?php _e( 'Edit', 'autoptimize' ); ?></span></td><td class='btn delete'><span class=\"button-secondary\" id=\"" + nodeId + "_remove\"><?php _e( 'Remove', 'autoptimize' ); ?></span></td></tr>");
+            jQuery("#rules-list").append("<tr class='rule "+k+"Rule'><td class='type'><span class='badge " + typeClass + "'>" + type + "</span></td><td class='target'>" + target + "</td><td class='file'>" + file + "</td><td class='btn edit'><span class=\"button-secondary\" id=\"" + nodeId + "_edit\"><?php _e( 'Edit', 'autoptimize' ); ?></span></td><td class='btn delete'><span class=\"button-secondary\" id=\"" + nodeId + "_remove\"><?php _e( 'Remove', 'autoptimize' ); ?></span></td></tr>");
             jQuery("#" + nodeId + "_edit").click(function(){addEditRow(this.id);});
             jQuery("#" + nodeId + "_remove").click(function(){confirmRemove(this.id);});
         })
     });
+    if ( rnotice == true ) {
+        // R rules were found, show notice
+        jQuery("#rules-notices").append( "&nbsp;<p class='notice notice-warning'>" + rnotice + " " + "<?php _e('of above rules was flagged by criticalcss.com as up for review. This is often due to font-related issues which can be safely ignored, but you can log in to your account at https://criticalcss.com and compare screenshots for rules by clicking the red exclamation mark.', 'autoptimize') ?>" + "</p>");
+    }
 }
 
 function confirmRemove(idToRemove) {
