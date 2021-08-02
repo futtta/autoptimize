@@ -150,18 +150,18 @@ function ao_ccss_render_rules() {
 
             <!-- Add/edit default critical CSS dialog -->
             <div id="default_critcss_wrapper" class="hidden">
-                <textarea id="dummyDefault" rows="19" cols="10" style="width:100%;" placeholder="<?php _e( 'Paste your MINIFIED default critical CSS here and hit submit to save. This is the critical CSS to be used for every page NOT MATCHING any rule.', 'autoptimize' ); ?>"></textarea>
+                <textarea id="dummyDefault" rows="19" cols="10" style="width:100%;" placeholder="<?php _e( 'Paste your minified default critical CSS here and hit submit to save. This is the critical CSS to be used for every page not matching any rule.', 'autoptimize' ); ?>"></textarea>
             </div>
 
             <!-- Add/edit additional critical CSS dialog -->
             <div id="additional_critcss_wrapper" class="hidden">
-                <textarea id="dummyAdditional" rows="19" cols="10" style="width:100%;" placeholder="<?php _e( 'Paste your MINIFIED additional critical CSS here and hit submit to save. This is the CSS to be added AT THE END of every critical CSS provided by a matching rule, or the default one.', 'autoptimize' ); ?>"></textarea>
+                <textarea id="dummyAdditional" rows="19" cols="10" style="width:100%;" placeholder="<?php _e( 'Paste your minified additional critical CSS here and hit submit to save. This is the CSS to be added AT THE END of every critical CSS provided by a matching rule, or the default one.', 'autoptimize' ); ?>"></textarea>
             </div>
 
             <!-- BEGIN Rules UI -->
             <div class="howto">
                 <div class="title-wrap">
-                    <h4 class="title"><?php _e( 'How To Use Autoptimize CriticalCSS Power-Up Rules', 'autoptimize' ); ?></h4>
+                    <h4 class="title"><?php _e( 'How To Use Autoptimize CriticalCSS Rules', 'autoptimize' ); ?></h4>
                     <p class="subtitle"><?php _e( 'Click the side arrow to toggle instructions', 'autoptimize' ); ?></p>
                 </div>
                 <button type="button" class="toggle-btn">

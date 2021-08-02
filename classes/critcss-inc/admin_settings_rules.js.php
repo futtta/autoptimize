@@ -86,7 +86,7 @@ function drawTable(critCssArray) {
         // and add some JS magic to ensure the notice works as a notice, but is shown inline 
         // in the rules panel instead of in the notice area where it would be too prominent.
         <?php 
-        $_ao_ccss_review_notice_id   = 'autoptimize-ccss-review-notice-30';
+        $_ao_ccss_review_notice_id   = 'autoptimize-ccss-review-rules-notice-30';
         // Translators: before the 1st word a number + a space will be displayed, as in e.g. "2 of above rules".
         $_ao_ccss_review_notice_copy = __('of the above rules got flagged by criticalcss.com as to be reviewed. This is often due to font-related issues which can be safely ignored, but you can log in to your account at https://criticalcss.com and compare screenshots for rules by clicking the red exclamation mark to confirm if all is OK.', 'autoptimize');
         if ( PAnD::is_admin_notice_active( $_ao_ccss_review_notice_id ) ) {
