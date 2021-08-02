@@ -81,9 +81,22 @@ function drawTable(critCssArray) {
             jQuery("#" + nodeId + "_remove").click(function(){confirmRemove(this.id);});
         })
     });
-    if ( rnotice == true ) {
-        // R rules were found, show notice
-        jQuery("#rules-notices").append( "&nbsp;<p class='notice notice-warning'>" + rnotice + " " + "<?php _e('of above rules was flagged by criticalcss.com as up for review. This is often due to font-related issues which can be safely ignored, but you can log in to your account at https://criticalcss.com and compare screenshots for rules by clicking the red exclamation mark.', 'autoptimize') ?>" + "</p>");
+    if ( rnotice == true && rnotice != 0 ) {
+        // R rules were found, show a notice!
+        // and add some JS magic to ensure the notice works as a notice, but is shown inline 
+        // in the rules panel instead of in the notice area where it would be too prominent.
+        <?php 
+        $_ao_ccss_review_notice_id = 'autoptimize-ccss-review-notice-30';
+        if ( PAnD::is_admin_notice_active( $_ao_ccss_review_notice_id ) ) {
+        ?>
+            jQuery("#rules-notices").append( "&nbsp;<div class='rnotice notice notice-info is-dismissible hidden' data-dismissible='<?php echo $_ao_ccss_review_notice_id; ?>' ><p>" + rnotice + " " + "<?php _e('of the above rules got flagged by criticalcss.com as to be reviewed. This is often due to font-related issues which can be safely ignored, but you can log in to your account at https://criticalcss.com and compare screenshots for rules by clicking the red exclamation mark to confirm if all is OK.', 'autoptimize') ?>" + "</p></div>");
+            jQuery( document ).ready(function() {
+                jQuery("div.rnotice").detach().appendTo('#rules-notices');
+                jQuery("div.rnotice").show();
+            });
+        <?php
+        }
+        ?>
     }
 }
 
@@ -367,7 +380,7 @@ function updateAfterChange() {
 
 function displayNotice(textIn, level) {
     if ( '' == level ) { level = 'error'; }
-    jQuery('<div class="notice-' + level + ' notice is-dismissable"><p>'+textIn+'</p></div>').insertBefore("#unSavedWarning");
+    jQuery('<div class="notice-' + level + ' notice is-dismissible"><p>'+textIn+'</p></div>').insertBefore("#unSavedWarning");
     document.getElementById('ao_title_and_button').scrollIntoView();
 }
 
