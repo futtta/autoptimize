@@ -4,7 +4,7 @@
  */
 
 if ( $ao_ccss_debug ) {
-    echo "console.log('[WARN] Autoptimize CriticalCSS Power-Up is in DEBUG MODE!');\n";
+    echo "console.log('[WARN] Autoptimize CriticalCSS is in debug mode!');\n";
     echo "console.log('[WARN] Avoid using debug mode on production/live environments unless for ad-hoc troubleshooting purposes and make sure to disable it after!');\n";
 }
 ?>
@@ -86,14 +86,20 @@ function drawTable(critCssArray) {
         // and add some JS magic to ensure the notice works as a notice, but is shown inline 
         // in the rules panel instead of in the notice area where it would be too prominent.
         <?php 
-        $_ao_ccss_review_notice_id = 'autoptimize-ccss-review-notice-30';
+        $_ao_ccss_review_notice_id   = 'autoptimize-ccss-review-notice-30';
+        // Translators: before the 1st word a number + a space will be displayed, as in e.g. "2 of above rules".
+        $_ao_ccss_review_notice_copy = __('of the above rules got flagged by criticalcss.com as to be reviewed. This is often due to font-related issues which can be safely ignored, but you can log in to your account at https://criticalcss.com and compare screenshots for rules by clicking the red exclamation mark to confirm if all is OK.', 'autoptimize');
         if ( PAnD::is_admin_notice_active( $_ao_ccss_review_notice_id ) ) {
         ?>
-            jQuery("#rules-notices").append( "&nbsp;<div class='rnotice notice notice-info is-dismissible hidden' data-dismissible='<?php echo $_ao_ccss_review_notice_id; ?>' ><p>" + rnotice + " " + "<?php _e('of the above rules got flagged by criticalcss.com as to be reviewed. This is often due to font-related issues which can be safely ignored, but you can log in to your account at https://criticalcss.com and compare screenshots for rules by clicking the red exclamation mark to confirm if all is OK.', 'autoptimize') ?>" + "</p></div>");
+            jQuery("#rules-notices").append( "&nbsp;<div class='rnotice notice notice-info is-dismissible hidden' data-dismissible='<?php echo $_ao_ccss_review_notice_id; ?>'><p>" + rnotice + " <?php echo $_ao_ccss_review_notice_copy; ?>" + "</p></div>");
             jQuery( document ).ready(function() {
                 jQuery("div.rnotice").detach().appendTo('#rules-notices');
                 jQuery("div.rnotice").show();
             });
+        <?php
+        } else {
+        ?>
+            console.log( "Autoptimize: " + rnotice + " <?php echo $_ao_ccss_review_notice_copy; ?>" );
         <?php
         }
         ?>
