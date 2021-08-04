@@ -186,7 +186,7 @@ class autoptimizeImages
      *
      * @return bool
      */
-    public function should_disable_core_lazyload( $flag, $tag, $context ) {
+    public function should_disable_core_lazyload( $flag = true, $tag = '', $context = '' ) {
         if ( 'img' === $tag ) {
             return false;
         }
