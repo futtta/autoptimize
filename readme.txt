@@ -328,6 +328,14 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.9.1 =
+* New: logic to detect possibly conflicting plugins, with notification if found.
+* Improvement: to be reviewed critical css rules UI change.
+* Fix for no CCSS jobs being created when "aggregate CSS" is off and all files are minified.
+* Fix for some page caches not being detected correctly leading to notification being shown when it should not (thanks @optimocha for warning me!)
+* Fix for (rare) lazyload-regression in 2.9.0.
+* Fix for a (rare) image optimization issue when the same image is referenced multiple times as background-image in optimized CSS.
+
 = 2.9.0 =
 * New: per page/ post Autoptimize settings so one can disable specific optimizations (needs to be enabled on the main settings page under "Misc Options").
 * New: "defer inline JS" as sub-option of "do not aggregate but defer" allowing to defer (almost) all JS.
