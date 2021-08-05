@@ -738,7 +738,8 @@ class autoptimizeMain
         /*
          * Using other plugins to do CSS/ JS optimization can cause unexpected and hard to troubleshoot issues, warn users who seem to be in that situation.
          */
-        $_ao_potential_conflict_notice      = __( 'It looks like you have <strong>another plugin also doing CSS and/ or JS optimization</strong>, which can lead to unexpected and hard to troubleshoot <strong>conflicts</strong>. For this reason it is recommended to disable this functionality in', 'autoptimize' ) . ' ';
+        // Translators: the sentence will be finished with the name of the offending plugin and a final stop.
+        $_ao_potential_conflict_notice      = __( 'It looks like you have <strong>another plugin also doing CSS and/ or JS optimization</strong>, which can result in hard to troubleshoot <strong>conflicts</strong>. For this reason it is recommended to disable this functionality in', 'autoptimize' ) . ' ';
         $_ao_potential_conflict_dismissible = 'ao-potential-conflict-forever'; // the notice is only shown once and will not re-appear when dismissed.
         $_is_ao_settings_page               = autoptimizeUtils::is_ao_settings();
 
