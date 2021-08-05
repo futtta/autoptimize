@@ -189,6 +189,7 @@ class autoptimizeMain
                 
                 // Add "no cache found" notice.
                 add_action( 'admin_notices', 'autoptimizeMain::notice_nopagecache', 99 );
+                add_action( 'admin_notices', 'autoptimizeMain::notice_potential_conflict', 99 );
             }
         } else {
             add_action( 'admin_notices', 'autoptimizeMain::notice_cache_unavailable' );
@@ -727,6 +728,26 @@ class autoptimizeMain
             if ( false === autoptimizeUtils::find_pagecache() ) {
                 echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_nopagecache_dismissible . '"><p>';
                 echo $_ao_nopagecache_notice;
+                echo '</p></div>';
+            }
+        }
+    }
+
+    public static function notice_potential_conflict()
+    {
+        /*
+         * Using other plugins to do CSS/ JS optimization can cause unexpected and hard to troubleshoot issues, warn users who seem to be in that situation.
+         */
+        $_ao_potential_conflict_notice      = __( 'It looks like you have <strong>another plugin also doing CSS and/ or JS optimization</strong>, which can lead to unexpected and hard to troubleshoot <strong>conflicts</strong>. For this reason it is recommended to disable this functionality in', 'autoptimize' ) . ' ';
+        $_ao_potential_conflict_dismissible = 'ao-potential-conflict-forever'; // the notice is only shown once and will not re-appear when dismissed.
+        $_is_ao_settings_page               = autoptimizeUtils::is_ao_settings();
+
+        if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && PAnD::is_admin_notice_active( $_ao_potential_conflict_dismissible ) && true === apply_filters( 'autopitmize_filter_main_show_potential_conclict_notice', true ) ) {
+            $_potential_conflicts = autoptimizeUtils::find_potential_conflicts();
+            if ( false !== $_potential_conflicts ) {
+                $_ao_potential_conflict_notice .= '<strong>' . $_potential_conflicts . '</strong>.';
+                echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_potential_conflict_dismissible . '"><p>';
+                echo $_ao_potential_conflict_notice;
                 echo '</p></div>';
             }
         }

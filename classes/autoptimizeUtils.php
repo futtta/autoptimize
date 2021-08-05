@@ -458,4 +458,46 @@ class autoptimizeUtils
         $_is_ao_settings = ( str_replace( array( 'autoptimize', 'autoptimize_imgopt', 'ao_critcss', 'autoptimize_extra', 'ao_partners' ), '', $_SERVER['REQUEST_URI'] ) !== $_SERVER['REQUEST_URI'] ? true : false );
         return $_is_ao_settings;
     }
+
+    /**
+     * Returns false if no conflicting plugins are found, the name if the plugin if found.
+     *
+     * @return bool|string
+     */
+    public static function find_potential_conflicts() {
+        if ( defined( 'WPFC_WP_CONTENT_BASENAME' ) ) {
+            $_wpfc_options =  json_decode( get_option( 'WpFastestCache' ) );
+            foreach ( array( 'wpFastestCacheMinifyCss', 'wpFastestCacheCombineCss','wpFastestCacheCombineJs' ) as $_wpfc_conflicting ) {
+                if ( isset( $_wpfc_options->$_wpfc_conflicting ) && $_wpfc_options->$_wpfc_conflicting === 'on' ) {
+                    return 'WP Fastest Cache';
+                }
+            }
+        } else if ( defined( 'W3TC_VERSION' ) ) {
+            $w3tcConfig     = file_get_contents( WP_CONTENT_DIR . '/w3tc-config/master.php' );
+            $w3tc_minify_on = strpos( $w3tcConfig, '"minify.enabled": true' );
+            if ( $w3tc_minify ) {
+                return 'W3 Total Cache';
+            }
+        } else if ( defined('SiteGround_Optimizer\VERSION') ) {
+            if ( get_option('siteground_optimizer_optimize_css') == 1 || get_option('siteground_optimizer_optimize_javascript') == 1 || get_option('siteground_optimizer_combine_javascript') == 1 || get_option('siteground_optimizer_combine_css') == 1 ) {
+                return 'Siteground Optimizer';
+            }
+        } else if ( defined( 'WPO_VERSION' ) ) {
+            $_wpo_options = get_site_option( 'wpo_minify_config' );
+            if ( is_array( $_wpo_options ) && $_wpo_options['enabled'] == 1 && ( $_wpo_options['enable_css'] == 1 || $_wpo_options['enable_js'] == 1 ) ) {
+                return 'WP Optimize';
+            }
+        } else if ( defined( 'WPACU_PLUGIN_VERSION' ) || defined( 'WPACU_PRO_PLUGIN_VERSION' ) ) {
+            $wpacuSettingsClass = new \WpAssetCleanUp\Settings();
+            $wpacuSettings      = $wpacuSettingsClass->getAll();
+
+            if ( $wpacuSettings['minify_loaded_css'] || $wpacuSettings['minify_loaded_js'] || $wpacuSettings['combine_loaded_js'] || $wpacuSettings['combine_loaded_css'] ) {
+                return 'Asset Cleanup';
+            }
+        } else if ( function_exists( 'fvm_get_settings' ) ) {
+            return 'Fast Velocity Minify';
+        }
+
+        return false;
+    }
 }
