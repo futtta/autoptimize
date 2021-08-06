@@ -81,7 +81,7 @@ function drawTable(critCssArray) {
             jQuery("#" + nodeId + "_remove").click(function(){confirmRemove(this.id);});
         })
     });
-    if ( rnotice == true && rnotice != 0 ) {
+    if ( rnotice && rnotice != 0 ) {
         // R rules were found, show a notice!
         // and add some JS magic to ensure the notice works as a notice, but is shown inline 
         // in the rules panel instead of in the notice area where it would be too prominent.
