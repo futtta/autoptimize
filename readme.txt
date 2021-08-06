@@ -331,6 +331,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 = 2.9.1 =
 * New: logic to detect possibly conflicting plugins, with notification if found.
 * Improvement: to be reviewed critical css rules UI change.
+* Improvement: automatically save rules when changed.
 * Fix for no CCSS jobs being created when "aggregate CSS" is off and all files are minified.
 * Fix for some page caches not being detected correctly leading to notification being shown when it should not (thanks @optimocha for warning me!)
 * Fix for (rare) lazyload-regression in 2.9.0.
