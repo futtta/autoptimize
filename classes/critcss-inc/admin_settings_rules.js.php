@@ -405,14 +405,13 @@ function updateAfterChange() {
     document.getElementById('ao_title_and_button').scrollIntoView();
 }
 
-function displayNotice(textIn, level) {
-    if ( '' == level ) { level = 'error'; }
-    jQuery('<div class="notice-' + level + ' notice is-dismissible"><p>'+textIn+'</p></div>').insertBefore("#unSavedWarning");
+function displayNotice(textIn, level = 'error') {
+    jQuery('<div class="notice notice-' + level + ' notice is-dismissible"><p>'+textIn+'</p></div>').insertBefore("#unSavedWarning");
     document.getElementById('ao_title_and_button').scrollIntoView();
 }
 
 function resetForm() {
-    jQuery("#critcss_addedit_css").attr("placeholder", "<?php _e( 'For path based rules, paste your specific and minified critical CSS here or leave this empty to fetch it from criticalcss.com and hit submit to save. If you want to create a rule to exclude from critical CSS injection, enter \"none\"', 'autoptimize' ); ?>");
+    jQuery("#critcss_addedit_css").attr("placeholder", "<?php _e( 'For path based rules, paste your specific and minified critical CSS. If you want to create a rule to exclude from critical CSS injection, enter \"none\"', 'autoptimize' ); ?>");
     jQuery("#critcss_addedit_type").attr("disabled",false);
     jQuery("#critcss_addedit_path_wrapper").show();
     jQuery("#critcss_addedit_id").val("");
