@@ -380,7 +380,28 @@ function saveEditCritCss(){
 function updateAfterChange() {
     document.getElementById("critCssOrigin").value=JSON.stringify(critCssArray);
     drawTable(critCssArray);
+
+    <?php
+    // autosave rules is on by default, but can be disabled with a filter.
+    if ( apply_filters( 'autoptimize_filter_ccss_settings_rules_autosave', true ) ) {
+    ?>
+    var data = {
+        'action': 'ao_ccss_saverules',
+        'ao_ccss_saverules_nonce': '<?php echo wp_create_nonce( 'ao_ccss_saverules_nonce' ); ?>',
+        'critcssrules': document.getElementById("critCssOrigin").value
+    };
+
+    jQuery.post(ajaxurl, data, function(response) {
+        response_array=JSON.parse(response);
+        if (response_array["code"]!=200) {
+            displayNotice(response_array["msg"]);
+            jQuery("#unSavedWarning").show();
+        }
+    });
+    <?php } else { ?>
     jQuery("#unSavedWarning").show();
+    <?php } ?>
+
     document.getElementById('ao_title_and_button').scrollIntoView();
 }
 
