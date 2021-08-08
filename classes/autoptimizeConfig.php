@@ -469,7 +469,7 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
     ?>
     <tr valign="top">
     <th scope="row"><?php _e( 'Enable configuration per post/ page?', 'autoptimize' ); ?></th>
-    <td><label class="cb_label"><input type="checkbox" name="autoptimize_enable_meta_ao_settings" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_enable_meta_ao_settings', '0' ) ? 'checked="checked" ' : ''; ?>/>
+    <td><label class="cb_label"><input type="checkbox" name="autoptimize_enable_meta_ao_settings" <?php echo autoptimizeOptionWrapper::get_option( 'autoptimize_enable_meta_ao_settings', '1' ) ? 'checked="checked" ' : ''; ?>/>
     <?php _e( 'Add a "metabox" to the post/ page edit screen allowing different optimizations to be turned off on a per post/ page level?', 'autoptimize' ); ?></label></td>
     </tr>
     <?php } ?>
@@ -819,7 +819,7 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
             'autoptimize_optimize_checkout'         => 0,
             'autoptimize_minify_excluded'           => 1,
             'autoptimize_cache_fallback'            => 1,
-            'autoptimize_enable_meta_ao_settings'   => 0,
+            'autoptimize_enable_meta_ao_settings'   => 1,
         );
 
         return $config;
@@ -1032,7 +1032,7 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
         static $_meta_settings_active = null;
 
         if ( null === $_meta_settings_active ) {
-            $_meta_settings_active = apply_filters( 'autoptimize_filter_enable_meta_ao_settings', autoptimizeOptionWrapper::get_option( 'autoptimize_enable_meta_ao_settings', '0' ) );
+            $_meta_settings_active = apply_filters( 'autoptimize_filter_enable_meta_ao_settings', autoptimizeOptionWrapper::get_option( 'autoptimize_enable_meta_ao_settings', '1' ) );
         }
 
         return $_meta_settings_active;
