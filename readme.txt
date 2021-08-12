@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.9.0
+Stable tag: 2.9.1
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -331,10 +331,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 = 2.9.1 =
 * New: logic to detect possibly conflicting plugins, with notification if found.
 * Improvement: to be reviewed critical css rules UI change.
-* Improvement: automatically save rules when changed.
+* Improvement: automatically save critical CSS rules when changed.
 * Fix for no CCSS jobs being created when "aggregate CSS" is off and all files are minified.
 * Fix for some page caches not being detected correctly leading to notification being shown when it should not (thanks @optimocha for warning me!)
-* Fix for (rare) lazyload-regression in 2.9.0.
+* Fix for a (rare) lazyload-regression in 2.9.0.
 * Fix for a (rare) image optimization issue when the same image is referenced multiple times as background-image in optimized CSS.
 
 = 2.9.0 =
