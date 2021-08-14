@@ -370,6 +370,10 @@ class autoptimizeCriticalCSSCron {
     }
 
     public function ao_ccss_diff_hashes( $ljid, $hash, $hashes, $rule ) {
+        if ( empty( $hash ) ) {
+            $hash = 'new';
+        }
+        
         // Compare job hashes
         // STEP 1: update job hashes.
         if ( 1 == count( $hashes ) ) {
