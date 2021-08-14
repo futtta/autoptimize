@@ -1009,7 +1009,8 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
 
         static $_meta_value = null;
         if ( null === $_meta_value ) {
-            if ( is_page() || is_single() ) {
+            global $wp_query;
+            if ( isset( $wp_query ) && ( is_page() || is_single() ) ) {
                 $_meta_value = get_post_meta( get_the_ID(), 'ao_post_optimize', true );
             } else {
                 $_meta_value = false;
