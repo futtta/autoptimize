@@ -370,10 +370,6 @@ class autoptimizeCriticalCSSCron {
     }
 
     public function ao_ccss_diff_hashes( $ljid, $hash, $hashes, $rule ) {
-        if ( empty( $hash ) ) {
-            $hash = 'new';
-        }
-        
         // Compare job hashes
         // STEP 1: update job hashes.
         if ( 1 == count( $hashes ) ) {
@@ -429,7 +425,13 @@ class autoptimizeCriticalCSSCron {
                 return $hash;
             }
         } else {
-            // Or just return the hash if no rule exist yet.
+            // no rule yet.
+            // empty hash, from forced job, so setting to "new" to make sure it gets processed.
+            if ( empty( $hash ) ) {
+                $hash = 'new';
+            }
+            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> had no hash, assuming forced job so setting hash to new', 3  );
+            // Return the hash for a job that has no rule yet.
             autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> with hash <' . $hash . '> has no rule yet', 3 );
             return $hash;
         }
