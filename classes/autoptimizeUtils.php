@@ -494,6 +494,10 @@ class autoptimizeUtils
             if ( $wpacuSettings['minify_loaded_css'] || $wpacuSettings['minify_loaded_js'] || $wpacuSettings['combine_loaded_js'] || $wpacuSettings['combine_loaded_css'] ) {
                 return 'Asset Cleanup';
             }
+        } else if ( defined( 'WP_ROCKET_VERSION' ) && function_exists( 'get_rocket_option' ) ) {
+            if ( get_rocket_option( 'minify_js' ) || get_rocket_option( 'minify_concatenate_js' ) || get_rocket_option( 'minify_css' ) || get_rocket_option( 'minify_concatenate_css' ) || get_rocket_option('async_css' ) ) {
+                return 'WP Rocket';
+            }
         } else if ( function_exists( 'fvm_get_settings' ) ) {
             return 'Fast Velocity Minify';
         }
