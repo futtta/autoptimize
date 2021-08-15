@@ -30,10 +30,10 @@ class autoptimizeCriticalCSSEnqueue {
         if ( 'nokey' == $key['status'] || 'invalid' == $key['status'] ) {
             $enqueue = false;
             autoptimizeCriticalCSSCore::ao_ccss_log( "Job queuing is not available: no valid API key found.", 3 );
-        } else if ( ! empty( $hash ) && ( is_user_logged_in() || is_feed() || is_404() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $self->ao_ccss_ua() || false === apply_filters( 'autoptimize_filter_ccss_enqueue_should_enqueue', true ) ) ) {
+        } elseif ( ! empty( $hash ) && ( is_user_logged_in() || is_feed() || is_404() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $self->ao_ccss_ua() || false === apply_filters( 'autoptimize_filter_ccss_enqueue_should_enqueue', true ) ) ) {
             $enqueue = false;
             autoptimizeCriticalCSSCore::ao_ccss_log( "Job queuing is not available for WordPress's logged in users, feeds, error pages, ajax calls or calls from criticalcss.com itself.", 3 );
-        } else if ( empty( $hash ) && empty( $path ) || ( ( 'is_single' !== $type ) && ( 'is_page' !== $type ) ) ) {
+        } elseif ( empty( $hash ) && empty( $path ) || ( ( 'is_single' !== $type ) && ( 'is_page' !== $type ) ) ) {
             $enqueue = false;
             autoptimizeCriticalCSSCore::ao_ccss_log( "Forced job queuing failed, no path or not right type", 3 );            
         }
@@ -50,7 +50,7 @@ class autoptimizeCriticalCSSEnqueue {
             if ( ! empty( $hash ) ) {
                 $req_orig = $_SERVER['REQUEST_URI'];
                 $req_type = $self->ao_ccss_get_type();
-            } else if ( ! empty( $path ) ) {
+            } elseif ( ! empty( $path ) ) {
                 $req_orig = $path;
                 if ( $path === '/' ) {
                     $req_type = 'is_front_page';

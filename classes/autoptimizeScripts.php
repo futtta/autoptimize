@@ -446,7 +446,7 @@ class autoptimizeScripts extends autoptimizeBase
                             } else {
                                 $tag = '';
                             }
-                        } else if ( str_replace( $this->dontmove, '', $tag ) === $tag ) {
+                        } elseif ( str_replace( $this->dontmove, '', $tag ) === $tag ) {
                             // defer inline JS by base64 encoding it.
                             preg_match( '#<script.*>(.*)</script>#Usmi', $tag, $match );
                             $new_tag       = '<script defer src="data:text/javascript;base64,' . base64_encode( $match[1] ) . '"></script>';

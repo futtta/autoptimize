@@ -472,33 +472,33 @@ class autoptimizeUtils
                     return 'WP Fastest Cache';
                 }
             }
-        } else if ( defined( 'W3TC_VERSION' ) ) {
+        } elseif ( defined( 'W3TC_VERSION' ) ) {
             $w3tcConfig     = file_get_contents( WP_CONTENT_DIR . '/w3tc-config/master.php' );
             $w3tc_minify_on = strpos( $w3tcConfig, '"minify.enabled": true' );
             if ( $w3tc_minify ) {
                 return 'W3 Total Cache';
             }
-        } else if ( defined('SiteGround_Optimizer\VERSION') ) {
+        } elseif ( defined('SiteGround_Optimizer\VERSION') ) {
             if ( get_option('siteground_optimizer_optimize_css') == 1 || get_option('siteground_optimizer_optimize_javascript') == 1 || get_option('siteground_optimizer_combine_javascript') == 1 || get_option('siteground_optimizer_combine_css') == 1 ) {
                 return 'Siteground Optimizer';
             }
-        } else if ( defined( 'WPO_VERSION' ) ) {
+        } elseif ( defined( 'WPO_VERSION' ) ) {
             $_wpo_options = get_site_option( 'wpo_minify_config' );
             if ( is_array( $_wpo_options ) && $_wpo_options['enabled'] == 1 && ( $_wpo_options['enable_css'] == 1 || $_wpo_options['enable_js'] == 1 ) ) {
                 return 'WP Optimize';
             }
-        } else if ( defined( 'WPACU_PLUGIN_VERSION' ) || defined( 'WPACU_PRO_PLUGIN_VERSION' ) ) {
+        } elseif ( defined( 'WPACU_PLUGIN_VERSION' ) || defined( 'WPACU_PRO_PLUGIN_VERSION' ) ) {
             $wpacuSettingsClass = new \WpAssetCleanUp\Settings();
             $wpacuSettings      = $wpacuSettingsClass->getAll();
 
             if ( $wpacuSettings['minify_loaded_css'] || $wpacuSettings['minify_loaded_js'] || $wpacuSettings['combine_loaded_js'] || $wpacuSettings['combine_loaded_css'] ) {
                 return 'Asset Cleanup';
             }
-        } else if ( defined( 'WP_ROCKET_VERSION' ) && function_exists( 'get_rocket_option' ) ) {
+        } elseif ( defined( 'WP_ROCKET_VERSION' ) && function_exists( 'get_rocket_option' ) ) {
             if ( get_rocket_option( 'minify_js' ) || get_rocket_option( 'minify_concatenate_js' ) || get_rocket_option( 'minify_css' ) || get_rocket_option( 'minify_concatenate_css' ) || get_rocket_option('async_css' ) ) {
                 return 'WP Rocket';
             }
-        } else if ( function_exists( 'fvm_get_settings' ) ) {
+        } elseif ( function_exists( 'fvm_get_settings' ) ) {
             return 'Fast Velocity Minify';
         }
 
