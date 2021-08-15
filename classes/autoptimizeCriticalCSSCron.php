@@ -408,6 +408,12 @@ class autoptimizeCriticalCSSCron {
         // Prepare rule variables.
         $trule = explode( '|', $rule );
         $srule = $ao_ccss_rules[ $trule[0] ][ $trule[1] ];
+        
+        // If hash is empty, set it to now for a "forced job".
+        if ( empty( $hash  )  ) {     
+            $hash = 'new';
+            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> had no hash, assuming forced job so setting hash to new', 3   );  
+        }
 
         // Check if a MANUAL rule exist and return false.
         if ( ! empty( $srule ) && ( 0 == $srule['hash'] && 0 != $srule['file'] ) ) {
@@ -425,12 +431,6 @@ class autoptimizeCriticalCSSCron {
                 return $hash;
             }
         } else {
-            // no rule yet.
-            // empty hash, from forced job, so setting to "new" to make sure it gets processed.
-            if ( empty( $hash ) ) {
-                $hash = 'new';
-            }
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> had no hash, assuming forced job so setting hash to new', 3  );
             // Return the hash for a job that has no rule yet.
             autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> with hash <' . $hash . '> has no rule yet', 3 );
             return $hash;

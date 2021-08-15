@@ -100,7 +100,7 @@ class autoptimizeCriticalCSSEnqueue {
             }
 
             // Match for types in rules if no path rule matches and if we're not enforcing paths.
-            if ( ! $job_qualify && ( ! $ao_ccss_forcepath || ! in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) || ! apply_filters( 'autoptimize_filter_ccss_coreenqueue_ignorealltypes', false ) ) ) {
+            if ( '' !== $hash && ! $job_qualify && ( ! $ao_ccss_forcepath || ! in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) || ! apply_filters( 'autoptimize_filter_ccss_coreenqueue_ignorealltypes', false ) ) ) {
                 foreach ( $ao_ccss_rules['types'] as $type => $props ) {
 
                     // Prepare rule target and log.
