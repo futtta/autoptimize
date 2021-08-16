@@ -70,27 +70,27 @@ function drawQueueTable(queue) {
             statusClass = 'new';
             title       = '<?php _e( 'New', 'autoptimize' ); ?> (' + ljid + ')';
             buttons     = '<?php _e( 'None', 'autoptimize' ); ?>';
-        } elseif (keys.jqstat === 'JOB_QUEUED' || keys.jqstat === 'JOB_ONGOING') {
+        } else if (keys.jqstat === 'JOB_QUEUED' || keys.jqstat === 'JOB_ONGOING') {
             // Status: PENDING (P, sort order 2)
             status      = '<span class="hidden">2</span>P';
             statusClass = 'pending';
             title       = '<?php _e( 'PENDING', 'autoptimize' ); ?> (' + ljid + ')';
             buttons     = '<?php _e( 'None', 'autoptimize' ); ?>';
-        } elseif (keys.jqstat === 'JOB_DONE' && keys.jrstat === 'GOOD' && (keys.jvstat === 'WARN' || keys.jvstat === 'BAD')) {
+        } else if (keys.jqstat === 'JOB_DONE' && keys.jrstat === 'GOOD' && (keys.jvstat === 'WARN' || keys.jvstat === 'BAD')) {
             // Status: REVIEW (R, sort order 5)
             status      = '<span class="hidden">5</span>R';
             statusClass = 'review';
             title       = "<?php _e( 'REVIEW', 'autoptimize' ); ?> (" + ljid + ")\n<?php _e( 'Info from criticalcss.com:', 'autoptimize' ); ?>\n<?php _e( '- Job ID: ', 'autoptimize' ); ?>" + keys.jid + "\n<?php _e( '- Status: ', 'autoptimize' ); ?>" + keys.jqstat + "\n<?php _e( '- Result: ', 'autoptimize' ); ?>" + keys.jrstat + "\n<?php _e( '- Validation: ', 'autoptimize' ); ?>" + keys.jvstat;
             buttons     = '<span class="button-secondary" id="' + ljid + '_remove" title="<?php _e( 'Delete Job', 'autoptimize' ); ?>"><span class="dashicons dashicons-trash"></span></span>';
             dbtn        = true;
-        } elseif (keys.jqstat === 'JOB_DONE') {
+        } else if (keys.jqstat === 'JOB_DONE') {
             // Status: DONE (D, sort order 6)
             status      = '<span class="hidden">6</span>D';
             statusClass = 'done';
             title       = '<?php _e( 'DONE', 'autoptimize' ); ?> (' + ljid + ')';
             buttons     = '<span class="button-secondary" id="' + ljid + '_remove" title="<?php _e( 'Delete Job', 'autoptimize' ); ?>"><span class="dashicons dashicons-trash"></span></span>';
             dbtn        = true;
-        } elseif (keys.jqstat === 'JOB_FAILED' || keys.jqstat === 'STATUS_JOB_BAD' || keys.jqstat === 'INVALID_JWT_TOKEN' || keys.jqstat === 'NO_CSS' || keys.jqstat === 'NO_RESPONSE') {
+        } else if (keys.jqstat === 'JOB_FAILED' || keys.jqstat === 'STATUS_JOB_BAD' || keys.jqstat === 'INVALID_JWT_TOKEN' || keys.jqstat === 'NO_CSS' || keys.jqstat === 'NO_RESPONSE') {
         // Status: ERROR (E, sort order 4)
             status      = '<span class="hidden">4</span>E';
             statusClass = 'error';
@@ -225,7 +225,7 @@ function queuerunner() {
         if (response_array['code'] == 200) {
             displayNotice( '<?php _e('Queue processed, reloading page.', 'autoptimize'); ?>', 'success' )
             setTimeout(window.location.reload.bind(window.location), 1.5*1000);
-        } elseif ( response_array['code'] == 302 ) {
+        } else if ( response_array['code'] == 302 ) {
             displayNotice( '<?php _e('The queue is locked, retry in a couple of minutes. If this problem persists and the queue is not moving at all remove the <code>wp-content/uploads/ao_ccss/queue.lock</code> file.', 'autoptimize' ); ?>', 'warning' )
         } else {
             displayNotice( '<?php _e('Could not process queue.', 'autoptimize'); ?>', 'error' )

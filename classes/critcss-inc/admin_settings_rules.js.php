@@ -269,7 +269,7 @@ function addEditRow(idToEdit) {
                 console.log('rpath: ' + rpath, 'rtype: ' + rtype, 'rccss: ' + rccss);
                 if (rpath === '' && rtype === '') {
                     alert('<?php _e( "RULE VALIDATION ERROR!\\n\\nBased on your rule type, you SHOULD set a path or conditional tag.", 'autoptimize' ); ?>');
-                } elseif (rtype !== '' && rccss == '') {
+                } else if (rtype !== '' && rccss == '') {
                     alert('<?php _e( "RULE VALIDATION ERROR!\\n\\nType based rules REQUIRES a minified critical CSS.", 'autoptimize' ); ?>');
                 } else {
                     saveEditCritCss();
@@ -345,7 +345,7 @@ function saveEditCritCss(){
 
     if (!critcssfile && !critcsscontents) {
         critcssfile=0;
-    } elseif (!critcssfile && critcsscontents) {
+    } else if (!critcssfile && critcsscontents) {
         critcssfile="ccss_" + md5(critcsscontents+critcsstarget) + ".css";
     }
 
