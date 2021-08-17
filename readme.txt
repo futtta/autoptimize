@@ -328,6 +328,12 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.9.2 =
+* New: page/ post settings now have a "Generate Critical CSS"-button (critical CSS needs to be active with valid API key)
+* Improvement: also check WP Rocket settings for possible conflicts
+* Improvement: Image optimization CDN updated to new Autoptimize-specific subdomain
+* Bugfix: the metabox per page/post logic failed when all optimizations were off (hat tip to Valenki for reporting)
+
 = 2.9.1 =
 * New: logic to detect possibly conflicting plugins, with notification if found.
 * Improvement: to be reviewed critical css rules UI change.
