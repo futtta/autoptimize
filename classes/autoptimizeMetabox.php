@@ -175,15 +175,20 @@ class autoptimizeMetabox
                     jQuery.post(ajaxurl, data, function(response) {
                         response_array=JSON.parse(response);
                         if (response_array['code'] == 200) {
-                            jQuery("#generateccss").html("<?php _e('Added to CCSS job queue.', 'autoptimize' ); ?>");
+                            setCritCSSbutton("<?php _e('Added to CCSS job queue.', 'autoptimize' ); ?>", "green");
                         } else {
-                            jQuery("#generateccss").html("<?php _e('Could not add to CCSS job queue.', 'autoptimize' ); ?>");
+                            setCritCSSbutton("<?php _e('Could not add to CCSS job queue.', 'autoptimize' ); ?>", "orange");
                         }
                     }).fail(function() {
-                        jQuery("#generateccss").html("<?php _e('Something went wrong.', 'autoptimize' ); ?>");
+                        setCritCSSbutton("<?php _e('Something went wrong.', 'autoptimize' ); ?>", "orange");
                     });
                 });
             });
+
+            function setCritCSSbutton( message, color) {
+                jQuery("#generateccss").html(message);
+                jQuery("#generateccss").prop("style","border-color:" + color + "!important; color:" + color + "!important");
+            }
         </script>
         <?php
     }
