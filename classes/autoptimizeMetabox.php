@@ -180,7 +180,7 @@ class autoptimizeMetabox
                             setCritCSSbutton("<?php _e('Could not add to CCSS job queue.', 'autoptimize' ); ?>", "orange");
                         }
                     }).fail(function() {
-                        setCritCSSbutton("<?php _e('Something went wrong.', 'autoptimize' ); ?>", "orange");
+                        setCritCSSbutton("<?php _e('Sorry, something went wrong.', 'autoptimize' ); ?>", "orange");
                     });
                 });
             });
