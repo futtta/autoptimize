@@ -643,6 +643,12 @@ class autoptimizeMain
             array_map( 'unlink', glob( $ao_ccss_dir . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
             rmdir( $ao_ccss_dir );
         }
+
+        // Remove 404-handler (although that should have been removed in clearall already).
+        $_fallback_php = trailingslashit( WP_CONTENT_DIR ) . 'autoptimize_404_handler.php';
+        if ( file_exists( $_fallback_php ) ) {
+            unlink( $_fallback_php );
+        }
     }
 
     public static function on_deactivation()
