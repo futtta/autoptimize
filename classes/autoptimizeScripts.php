@@ -268,7 +268,7 @@ class autoptimizeScripts extends autoptimizeBase
         }
         
         // Defer inline JS?
-        if ( true === $this->defer_not_aggregate && apply_filters( 'autoptimize_js_filter_defer_inline', $options['defer_inline'] ) ) {
+        if ( ( true === $this->defer_not_aggregate && apply_filters( 'autoptimize_js_filter_defer_inline', $options['defer_inline'] ) ) || apply_filters( 'autoptimize_js_filter_force_defer_inline', false ) ) {
             $this->defer_inline = true;
         }
 
