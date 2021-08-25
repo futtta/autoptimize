@@ -373,9 +373,9 @@ class autoptimizeScripts extends autoptimizeBase
                                 }
                             }
                         }
-                        
+
                         // not aggregating but deferring?
-                        if ( $this->defer_not_aggregate && false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path && strpos( $new_tag, ' defer' ) === false && strpos( $new_tag, ' async' ) === false ) {
+                        if ( $this->defer_not_aggregate && false === $this->aggregate && str_replace( $this->dontmove, '', $url ) === $url && strpos( $new_tag, ' defer' ) === false && strpos( $new_tag, ' async' ) === false ) {
                             $new_tag = str_replace( '<script ', '<script defer ', $new_tag );
                         }
 
