@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.9.1
+Stable tag: 2.9.2
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -329,7 +329,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * New: page/ post settings now have a "Generate Critical CSS"-button (critical CSS needs to be active with valid API key)
 * Improvement: also check WP Rocket settings for possible conflicts
 * Improvement: Image optimization CDN updated to new Autoptimize-specific subdomain
-* Fix: "don't aggregate but defer" did not defer 3rd party hosted JS
+* Fix: "don't aggregate but defer" did not defer 3rd party hosted JS (can be disabled with a filter)
 * Fix: the metabox per page/post logic failed when all optimizations were off (hat tip to Valenki for reporting) resulting in PHP notices
 
 = 2.9.1 =
