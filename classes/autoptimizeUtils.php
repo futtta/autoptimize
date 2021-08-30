@@ -473,9 +473,9 @@ class autoptimizeUtils
                 }
             }
         } elseif ( defined( 'W3TC_VERSION' ) ) {
-            $w3tcConfig     = file_get_contents( WP_CONTENT_DIR . '/w3tc-config/master.php' );
+            $w3tcConfig  = file_get_contents( WP_CONTENT_DIR . '/w3tc-config/master.php' );
             $w3tc_minify_on = strpos( $w3tcConfig, '"minify.enabled": true' );
-            if ( $w3tc_minify ) {
+            if ( $w3tc_minify_on ) {
                 return 'W3 Total Cache';
             }
         } elseif ( defined('SiteGround_Optimizer\VERSION') ) {
