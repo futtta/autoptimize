@@ -369,7 +369,8 @@ class autoptimizeImages
             } elseif ( 0 === strpos( $result, '/' ) ) {
                 // Root-relative...
                 $result = $parsed_site_url['scheme'] . '://' . $parsed_site_url['host'] . $result;
-            } elseif ( ! empty( $cdn_domain ) && strpos( $result, $cdn_domain ) !== 0 ) {
+            } elseif ( ! empty( $cdn_domain ) && false === strpos( $this->get_imgopt_host(), $cdn_domain ) && strpos( $result, $cdn_domain ) !== 0 ) {
+                // remove CDN except if it is the image optimization one.
                 $result = str_replace( $cdn_domain, $parsed_site_url['host'], $result );
             }
 
