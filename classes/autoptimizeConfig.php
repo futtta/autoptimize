@@ -388,8 +388,22 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
 <table class="form-table">
 <tr valign="top">
 <th scope="row"><?php _e( 'CDN Base URL', 'autoptimize' ); ?></th>
-<td><label><input id="cdn_url" type="text" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" value="<?php echo esc_url( autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' ), array( 'http', 'https' ) ); ?>" /><br />
-<?php _e( 'Enter your CDN root URL to enable CDN for Autoptimized files. The URL can be http, https or protocol-relative (e.g. <code>//cdn.example.com/</code>). This is not needed for Cloudflare.', 'autoptimize' ); ?></label></td>
+<?php
+$cdn_by_filter = '';
+$placeholder   = '';
+
+if ( true === autoptimizeImages::imgopt_active() && true === has_filter( 'autoptimize_filter_base_cdnurl' ) ) {
+    $cdn_by_imgopt = 'disabled';
+    $placeholder   = 'placeholder="' . __( 'The CDN has automatically been set to make use of the image optimization CDN.', 'autoptimize' ) . ' "';
+}
+?>
+<td><label><input id="cdn_url" type="text" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" <?php echo $placeholder . $cdn_by_imgopt; ?> value="<?php echo esc_url( autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' ), array( 'http', 'https' ) ); ?>" /><br />
+<?php
+if ( empty( $cdn_by_imgopt ) ) {
+    _e( 'Enter your CDN root URL to enable CDN for Autoptimized files. The URL can be http, https or protocol-relative (e.g. <code>//cdn.example.com/</code>). This is not needed for Cloudflare.', 'autoptimize' );
+}
+?>
+</label></td>
 </tr>
 </table>
 </li>
