@@ -389,7 +389,7 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
 <tr valign="top">
 <th scope="row"><?php _e( 'CDN Base URL', 'autoptimize' ); ?></th>
 <?php
-$cdn_by_filter = '';
+$cdn_by_imgopt = '';
 $placeholder   = '';
 
 if ( true === autoptimizeImages::imgopt_active() && true === has_filter( 'autoptimize_filter_base_cdnurl' ) ) {
