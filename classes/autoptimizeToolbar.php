@@ -84,7 +84,7 @@ class autoptimizeToolbar
         // "Cache Info" node.
         $wp_admin_bar->add_node( array(
             'id'     => 'autoptimize-cache-info',
-            'title'  => '<p>' . __( 'Cache Info', 'autoptimize' ) . '</p>' .
+            'title'  => '<p>' . __( 'CSS/ JS Cache Info', 'autoptimize' ) . '</p>' .
                         '<div class="autoptimize-radial-bar" percentage="' . $percentage . '">' .
                         '<div class="autoptimize-circle">' .
                         '<div class="mask full"><div class="fill bg-' . $color . '"></div></div>' .
@@ -103,7 +103,7 @@ class autoptimizeToolbar
         // "Delete Cache" node.
         $wp_admin_bar->add_node( array(
             'id'     => 'autoptimize-delete-cache',
-            'title'  => __( 'Delete CSS/ JS Cache', 'autoptimize' ),
+            'title'  => __( 'Clear CSS/ JS Cache', 'autoptimize' ),
             'parent' => 'autoptimize',
         ));
     }
