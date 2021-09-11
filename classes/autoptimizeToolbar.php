@@ -103,7 +103,7 @@ class autoptimizeToolbar
         // "Delete Cache" node.
         $wp_admin_bar->add_node( array(
             'id'     => 'autoptimize-delete-cache',
-            'title'  => __( 'Delete Cache', 'autoptimize' ),
+            'title'  => __( 'Delete CSS/ JS Cache', 'autoptimize' ),
             'parent' => 'autoptimize',
         ));
     }
