@@ -500,6 +500,7 @@ if ( empty( $cdn_by_imgopt ) ) {
 </form>
 </div>
 <div id="autoptimize_admin_feed" class="hidden">
+    <?php if ( apply_filters( 'autoptimize_filter_show_partner_tabs', true ) ) { ?>
     <div class="autoptimize_banner hidden">
     <ul>
     <?php
@@ -521,47 +522,27 @@ if ( empty( $cdn_by_imgopt ) ) {
         <li><?php _e( 'Happy with Autoptimize?', 'autoptimize' ); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php _e( 'Try my other plugins!', 'autoptimize' ); ?></a></li>
     </ul>
     </div>
+    <?php } ?>
     <div style="margin-left:10px;margin-top:-5px;">
         <h2>
-            <?php _e( 'futtta about', 'autoptimize' ); ?>
-            <select id="feed_dropdown" >
-                <option value="1"><?php _e( 'Autoptimize', 'autoptimize' ); ?></option>
-                <option value="2"><?php _e( 'WordPress', 'autoptimize' ); ?></option>
-                <option value="3"><?php _e( 'Web Technology', 'autoptimize' ); ?></option>
-            </select>
+            <?php _e( 'Autoptimize news', 'autoptimize' ); ?>
         </h2>
         <div id="futtta_feed">
             <div id="autoptimizefeed">
                 <?php $this->get_futtta_feeds( 'http://feeds.feedburner.com/futtta_autoptimize' ); ?>
             </div>
-            <div id="wordpressfeed">
-                <?php $this->get_futtta_feeds( 'http://feeds.feedburner.com/futtta_wordpress' ); ?>
-            </div>
-            <div id="webtechfeed">
-                <?php $this->get_futtta_feeds( 'http://feeds.feedburner.com/futtta_webtech' ); ?>
-            </div>
         </div>
     </div>
+    <?php if ( apply_filters( 'autoptimize_filter_show_partner_tabs', true ) ) { ?>
     <div style="float:right;margin:50px 15px;"><a href="https://blog.futtta.be/2013/10/21/do-not-donate-to-me/" target="_blank"><img width="100px" height="85px" src="<?php echo plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) . '/external/do_not_donate_smallest.png'; ?>" title="<?php _e( 'Do not donate for this plugin!', 'autoptimize' ); ?>"></a></div>
+    <?php } ?>
 </div>
-
 <script type="text/javascript">
-    var feed = new Array;
-    feed[1]="autoptimizefeed";
-    feed[2]="wordpressfeed";
-    feed[3]="webtechfeed";
-    cookiename="autoptimize_feed";
-
     jQuery(document).ready(function() {
         check_ini_state();
 
         jQuery('#autoptimize_admin_feed').fadeTo("slow",1).show();
         jQuery('.autoptimize_banner').unslider({autoplay:true, delay:3500, infinite: false, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
-
-        jQuery( "#feed_dropdown" ).change(function() {
-            jQuery("#futtta_feed").fadeTo(0,0);
-            jQuery("#futtta_feed").fadeTo("slow",1);
-        });
 
         jQuery( "#autoptimize_html" ).change(function() {
             if (this.checked) {
@@ -652,11 +633,6 @@ if ( empty( $cdn_by_imgopt ) ) {
                 jQuery("li.itemDetail:not(.multiSite)").fadeTo("fast",1);
             }
         });
-
-        jQuery("#feed_dropdown").change(function() { show_feed(jQuery("#feed_dropdown").val()) });
-        feedid=jQuery.cookie(cookiename);
-        if(typeof(feedid) !== "string") feedid=1;
-        show_feed(feedid);
     })
 
     // validate cdn_url.
@@ -699,13 +675,6 @@ if ( empty( $cdn_by_imgopt ) ) {
             jQuery("li.itemDetail:not(.multiSite)").fadeTo('fast',.33);
         }
     }
-
-    function show_feed(id) {
-        jQuery('#futtta_feed').children().hide();
-        jQuery('#'+feed[id]).show();
-        jQuery("#feed_dropdown").val(id);
-        jQuery.cookie(cookiename,id,{ expires: 365 });
-    }
 </script>
 </div>
 
@@ -732,7 +701,6 @@ if ( empty( $cdn_by_imgopt ) ) {
 
     public function autoptimize_admin_scripts()
     {
-        wp_enqueue_script( 'jqcookie', plugins_url( '/external/js/jquery.cookie.min.js', __FILE__ ), array( 'jquery' ), null, true );
         wp_enqueue_script( 'unslider', plugins_url( '/external/js/unslider-min.js', __FILE__ ), array( 'jquery' ), null, true );
     }
 
