@@ -138,7 +138,7 @@ class autoptimizePartners
     </style>
     <script>document.title = "Autoptimize: <?php _e( 'Optimize More!', 'autoptimize' ); ?> " + document.title;</script>
     <div class="wrap">
-        <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
+        <h1><?php apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? _e( 'Autoptimize Pro Settings', 'autoptimize' ) : _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
         <?php echo '<h2>' . __( "These Autoptimize power-ups and related services will improve your site's performance even more!", 'autoptimize' ) . '</h2>'; ?>
         <div>
