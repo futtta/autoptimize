@@ -499,7 +499,7 @@ if ( empty( $cdn_by_imgopt ) ) {
 
 </form>
 </div>
-<div id="autoptimize_admin_feed" class="hidden">
+<div id="autoptimize_admin_feed">
     <?php if ( apply_filters( 'autoptimize_filter_show_partner_tabs', true ) ) { ?>
     <div class="autoptimize_banner hidden">
     <ul>
@@ -541,7 +541,6 @@ if ( empty( $cdn_by_imgopt ) ) {
     jQuery(document).ready(function() {
         check_ini_state();
 
-        jQuery('#autoptimize_admin_feed').fadeTo("slow",1).show();
         jQuery('.autoptimize_banner').unslider({autoplay:true, delay:3500, infinite: false, arrows:{prev:'<a class="unslider-arrow prev"></a>', next:'<a class="unslider-arrow next"></a>'}}).fadeTo("slow",1).show();
 
         jQuery( "#autoptimize_html" ).change(function() {
