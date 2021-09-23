@@ -401,15 +401,19 @@ class autoptimizeUtils
      *
      * @return bool
      */    
-    public static function find_pagecache() {
+    public static function find_pagecache( $disregard_transient = false ) {
         static $_found_pagecache = null;
 
         if ( null === $_found_pagecache ) {
             $_page_cache_constants   = array( 'NGINX_HELPER_BASENAME', 'KINSTA_CACHE_ZONE', 'PL_INSTANCE_REF', 'WP_NINUKIS_WP_NAME', 'CACHE_ENABLER_VERSION', 'SBP_PLUGIN_NAME', 'SERVEBOLT_PLUGIN_FILE', 'SWCFPC_PLUGIN_PATH', 'CACHIFY_CACHE_DIR', 'WP_ROCKET_CACHE_PATH', 'WPO_VERSION', 'NGINX_HELPER_BASEURL' );
             $_page_cache_classes     = array( 'Swift_Performance_Cache', 'WpFastestCache', 'c_ws_plugin__qcache_purging_routines', 'zencache', 'comet_cache', 'WpeCommon', 'FlywheelNginxCompat', 'PagelyCachePurge' );
             $_page_cache_functions   = array( 'wp_cache_clear_cache', 'w3tc_pgcache_flush', 'wp_fast_cache_bulk_delete_all', 'rapidcache_clear_cache', 'sg_cachepress_purge_cache', 'prune_super_cache' );
-            $_ao_pagecache_transient = 'autoptimize_pagecache_check';
-            $_found_pagecache        = get_transient( $_ao_pagecache_transient );
+
+            $_found_pagecache = false;
+            if ( true !== $disregard_transient ) {
+                $_ao_pagecache_transient = 'autoptimize_pagecache_check';
+                $_found_pagecache        = get_transient( $_ao_pagecache_transient );
+            }
 
             if ( current_user_can( 'manage_options' ) && false === $_found_pagecache ) {
                 // loop through known pagecache constants.
@@ -439,7 +443,7 @@ class autoptimizeUtils
                 }
                 
                 // store in transient for 1 week if pagecache found.
-                if ( true === $_found_pagecache ) {
+                if ( true === $_found_pagecache && true !== $disregard_transient ) {
                     set_transient( $_ao_pagecache_transient, true, WEEK_IN_SECONDS );
                 }
             }
