@@ -54,6 +54,12 @@ class autoptimizeImages
 
         if ( empty( $value['availabilities'] ) ) {
             $value['availabilities'] = autoptimizeUtils::check_service_availability( true );
+
+            if ( null === $value['availabilities'] ) {
+                // We can't seem to check service availability, use mock result with imgopt status UP.
+                $_mock_settings          = array( 'extra_imgopt' => array( 'status' => 'up', 'hosts' => array( '1' => 'https://sp-ao.shortpixel.ai/' ) ), 'critcss' => array( 'status' => 'up' ) );
+                $value['availabilities'] = $_mock_settings;
+            }
         }
 
         return $value;
