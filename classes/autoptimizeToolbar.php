@@ -74,9 +74,10 @@ class autoptimizeToolbar
 
         // Create or add new items into the Admin Toolbar.
         // Main "Autoptimize" node.
+        $_my_name = apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? __( 'Autoptimize Pro', 'autoptimize' ) : __( 'Autoptimize', 'autoptimize' );
         $wp_admin_bar->add_node( array(
             'id'    => 'autoptimize',
-            'title' => '<span class="ab-icon"></span><span class="ab-label">' . __( 'Autoptimize', 'autoptimize' ) . '</span>',
+            'title' => '<span class="ab-icon"></span><span class="ab-label">' . $_my_name . '</span>',
             'href'  => admin_url( 'options-general.php?page=autoptimize' ),
             'meta'  => array( 'class' => 'bullet-' . $color ),
         ));
