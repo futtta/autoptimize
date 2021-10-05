@@ -589,7 +589,7 @@ class autoptimizeImages
                             if ( isset( $indiv_srcset_parts[1] ) && rtrim( $indiv_srcset_parts[1], 'w' ) !== $indiv_srcset_parts[1] ) {
                                 $imgopt_w = rtrim( $indiv_srcset_parts[1], 'w' );
                             }
-                            if ( $this->can_optimize_image( $indiv_srcset_parts[0], $tag, $testing ) ) {
+                            if ( $this->can_optimize_image( $indiv_srcset_parts[0], $tag, $testing ) && false === apply_filters( 'autoptimize_filter_imgopt_do_spai', false ) ) {
                                 $imgopt_url = $this->build_imgopt_url( $indiv_srcset_parts[0], $imgopt_w, '' );
                                 $srcset     = str_replace( $indiv_srcset_parts[0], $imgopt_url, $srcset );
                             }
@@ -609,7 +609,7 @@ class autoptimizeImages
                     foreach ( $urls as $url ) {
                         $full_src_orig = $url[0];
                         $url           = $url[1];
-                        if ( $this->can_optimize_image( $url, $tag, $testing ) ) {
+                        if ( $this->can_optimize_image( $url, $tag, $testing ) && false === apply_filters( 'autoptimize_filter_imgopt_do_spai', false ) ) {
                             $imgopt_url      = $this->build_imgopt_url( $url, $imgopt_w, $imgopt_h );
                             $full_imgopt_src = str_replace( $url, $imgopt_url, $full_src_orig );
                             $tag             = str_replace( $full_src_orig, $full_imgopt_src, $tag );
@@ -631,7 +631,7 @@ class autoptimizeImages
                     $_url = $this->normalize_img_url( $_url );
 
                     $placeholder = '';
-                    if ( $this->can_optimize_image( $_url, $tag ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true, $_url ) ) {
+                    if ( $this->can_optimize_image( $_url, $tag ) && apply_filters( 'autoptimize_filter_imgopt_lazyload_dolqip', true, $_url ) && false === apply_filters( 'autoptimize_filter_imgopt_do_spai', false ) ) {
                         $lqip_w = '';
                         $lqip_h = '';
                         if ( isset( $imgopt_w ) && ! empty( $imgopt_w ) ) {
