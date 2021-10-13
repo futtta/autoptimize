@@ -701,7 +701,7 @@ class autoptimizeImages
         return $out;
     }
 
-    public function get_size_from_tag( $tag ) {
+    public static function get_size_from_tag( $tag ) {
         // reusable function to extract widht and height from an image tag
         // enforcing a filterable maximum width and height (default 4999X4999).
         $width  = '';
@@ -893,7 +893,7 @@ class autoptimizeImages
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $type_js . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
     }
 
-    public function get_cdn_url() {
+    public static function get_cdn_url() {
         // getting CDN url here to avoid having to make bigger changes to autoptimizeBase.
         static $cdn_url = null;
 
