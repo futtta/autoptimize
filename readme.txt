@@ -3,9 +3,9 @@ Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, images, core web vitals, lazy-load, pagespeed, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
-Tested up to: 5.7
+Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.8.4
+Stable tag: 2.9.2
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -13,9 +13,6 @@ Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. l
 
 Autoptimize makes optimizing your site really easy. It can aggregate, minify and cache scripts and styles, injects CSS in the page head by default but can also inline critical CSS and defer the aggregated full CSS, moves and defers scripts to the footer and minifies HTML. You can optimize and lazy-load images (with support for WebP and AVIF formats), optimize Google Fonts, async non-aggregated JavaScript, remove WordPress core emoji cruft and more. As such it can improve your site's performance even when already on HTTP/2! There is extensive API available to enable you to tailor Autoptimize to each and every site's specific needs.
 If you consider performance important, you really should use one of the many caching plugins to do page caching. Some good candidates to complement Autoptimize that way are e.g. [Speed Booster pack](https://wordpress.org/plugins/speed-booster-pack/), [KeyCDN's Cache Enabler](https://wordpress.org/plugins/cache-enabler), [WP Super Cache](http://wordpress.org/plugins/wp-super-cache/) or if you use Cloudflare [WP Cloudflare Super Page Cache](https://wordpress.org/plugins/wp-cloudflare-page-cache/).
-
-> <strong>Premium Support</strong><br>
-> We provide great [Autoptimize Pro Support and Web Performance Optimization services](https://autoptimize.com/), check out our offering on [https://autoptimize.com/](https://autoptimize.com/)!
 
 (Speed-surfing image under creative commons [by LL Twistiti](https://www.flickr.com/photos/twistiti/818552808/))
 
@@ -287,6 +284,15 @@ location ~* /wp-content/cache/autoptimize/.*\.(js|css)$ {
     try_files $uri $uri/ /wp-content/autoptimize_404_handler.php;
 }`
 
+And this a nice alternative approach (provided by fboylovesyou);
+
+`location ~* /wp-content/cache/autoptimize/.*\.(css)$ {
+    try_files $uri $uri/ /wp-content/cache/autoptimize/css/autoptimize_fallback.css;
+}
+location ~* /wp-content/cache/autoptimize/.*\.(js)$ {
+    try_files $uri $uri/ /wp-content/cache/autoptimize/js/autoptimize_fallback.js;
+}`
+
 = What open source software/ projects are used in Autoptimize? =
 
 The following great open source projects are used in Autoptimize in some form or another:
@@ -319,13 +325,30 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.9.2 =
+* New: page/ post settings now have a "Generate Critical CSS"-button (critical CSS needs to be active with valid API key)
+* Improvement: also check WP Rocket settings for possible conflicts
+* Improvement: Image optimization CDN updated to new Autoptimize-specific subdomain
+* Fix: "don't aggregate but defer" did not defer 3rd party hosted JS (can be disabled with a filter)
+* Fix: the metabox per page/post logic failed when all optimizations were off (hat tip to Valenki for reporting) resulting in PHP notices
+
+= 2.9.1 =
+* New: logic to detect possibly conflicting plugins, with notification if found.
+* Improvement: to be reviewed critical css rules UI change.
+* Improvement: automatically save critical CSS rules when changed.
+* Fix for no CCSS jobs being created when "aggregate CSS" is off and all files are minified.
+* Fix for some page caches not being detected correctly leading to notification being shown when it should not (thanks @optimocha for warning me!)
+* Fix for a (rare) lazyload-regression in 2.9.0.
+* Fix for a (rare) image optimization issue when the same image is referenced multiple times as background-image in optimized CSS.
+
 = 2.9.0 =
 * New: per page/ post Autoptimize settings so one can disable specific optimizations (needs to be enabled on the main settings page under "Misc Options").
 * New: "defer inline JS" as sub-option of "do not aggregate but defer" allowing to defer (almost) all JS.
-* Improvement: Image optimization now automatically switches between WebP & Jpeg even if lazyload is not active (lazyload is still required for AVIF-support).
-* Improvement: re-ordering of "JavaScript optimization" settings
-* ... and more to come in next beta versions ...
+* Improvement: Image optimization now automatically switches between AVIF & WebP & Jpeg even if lazyload is not active (AVIF has to be explicitly enabled).
+* Improvement: re-ordering of "JavaScript optimization" settings & copy improvements.
 * Misc. other minor fixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
+
+This release coincides with my father's 76th birthday, who continues to be a big inspritation to me. He's a mechanical engineer who after retirement focused his technical insights, experience and never-ending inquisitiveness on fountain pen design and prototyping, inventing a new bulkfiller mechanism in the process. Search the web for `Fountainbel` to find out more about him (or read [this older blogpost I wrote in Dutch](https://blog.futtta.be/2008/04/09/mijn-vader-is-een-tovenaar/)). Love you pops!
 
 = 2.8.4 =
 * fix for an authenticated XSS vulnerability

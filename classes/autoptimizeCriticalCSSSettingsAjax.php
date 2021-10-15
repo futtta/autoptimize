@@ -27,6 +27,8 @@ class autoptimizeCriticalCSSSettingsAjax {
         add_action( 'wp_ajax_rm_critcss_all', array( $this, 'critcss_rm_all_callback' ) );
         add_action( 'wp_ajax_ao_ccss_export', array( $this, 'ao_ccss_export_callback' ) );
         add_action( 'wp_ajax_ao_ccss_import', array( $this, 'ao_ccss_import_callback' ) );
+        add_action( 'wp_ajax_ao_ccss_queuerunner', array( $this, 'ao_ccss_queuerunner_callback' ) );
+        add_action( 'wp_ajax_ao_ccss_saverules', array( $this, 'ao_ccss_saverules_callback' ) );
     }
 
     public function critcss_fetch_callback() {
@@ -343,6 +345,82 @@ class autoptimizeCriticalCSSSettingsAjax {
         } else {
             $response['code'] = '200';
             $response['msg']  = 'Settings imported successfully';
+        }
+
+        // Dispatch respose.
+        echo json_encode( $response );
+
+        // Close ajax request.
+        wp_die();
+    }
+    
+    public function ao_ccss_queuerunner_callback() {
+        check_ajax_referer( 'ao_ccss_queuerunner_nonce', 'ao_ccss_queuerunner_nonce' );
+
+        // Process an uploaded file with no errors.
+        if ( current_user_can( 'manage_options' ) ) {
+            if ( ! file_exists( AO_CCSS_LOCK ) ) {
+                $ccss_cron = new autoptimizeCriticalCSSCron();
+                $ccss_cron->ao_ccss_queue_control();
+                $response['code'] = '200';
+                $response['msg']  = 'Queue processing done';
+            } else {
+                $response['code'] = '302';
+                $response['msg']  = 'Lock file found';
+            }
+        } else {
+            $response['code'] = '500';
+            $response['msg']  = 'Not allowed';                        
+        }
+
+        // Dispatch respose.
+        echo json_encode( $response );
+
+        // Close ajax request.
+        wp_die();
+    }
+
+    public function ao_ccss_saverules_callback() {
+        check_ajax_referer( 'ao_ccss_saverules_nonce', 'ao_ccss_saverules_nonce' );
+
+        // save rules over AJAX, too many users forget to press "save changes".
+        if ( current_user_can( 'manage_options' ) ) {
+            if ( array_key_exists( 'critcssrules', $_POST ) ) {
+                $rules = stripslashes( $_POST['critcssrules'] ); // ugly, but seems correct as per https://developer.wordpress.org/reference/functions/stripslashes_deep/#comment-1045
+                if ( ! empty( $rules ) ) {
+                    $_unsafe_rules_array = json_decode( wp_strip_all_tags( $rules ), true );
+                    if ( ! empty( $_unsafe_rules_array ) && is_array( $_unsafe_rules_array ) ) {
+                        $_safe_rules_array = array();
+                        if ( array_key_exists( 'paths', $_unsafe_rules_array ) ) {
+                            $_safe_rules_array['paths'] = $_unsafe_rules_array['paths'];
+                        }
+                        if ( array_key_exists( 'types', $_unsafe_rules_array ) ) {
+                            $_safe_rules_array['types'] = $_unsafe_rules_array['types'];
+                        }
+                        $_safe_rules = json_encode( $_safe_rules_array, JSON_FORCE_OBJECT );
+                        if ( ! empty( $_safe_rules ) ) {
+                            update_option( 'autoptimize_ccss_rules', $_safe_rules );
+                            $response['code'] = '200';
+                            $response['msg']  = 'Rules saved';
+                        } else {
+                            $_error = 'Could not auto-save rules (safe rules empty)';
+                        }
+                    } else {
+                        $_error = 'Could not auto-save rules (rules could not be json_decoded)';
+                    }
+                } else {
+                    $_error = 'Could not auto-save rules (rules empty)';
+                }
+            } else {
+                $_error = 'Could not auto-save rules (rules not in $_POST)';
+            }
+        } else {
+            $_error = 'Not allowed';
+        }
+
+        if ( ! isset( $response ) && $_error ) {
+            $response['code'] = '500';
+            $response['msg']  = $_error;
         }
 
         // Dispatch respose.

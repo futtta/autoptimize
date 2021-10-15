@@ -29,7 +29,16 @@ if ( strpos( $original_request, 'uucss/uucss-' ) !== false ) {
 $fallback_target  = preg_replace( '/(.*)_(?:[a-z0-9]{32})\.(js|css)$/', '${1}_fallback.${2}', $original_request );
 $ao_cache_dir     = '<!--ao-cache-dir-->';
 $js_or_css        = pathinfo( $original_request, PATHINFO_EXTENSION );
-$fallback_path    = $ao_cache_dir . $js_or_css . '/autoptimize_fallback.' . $js_or_css;
+
+// add multisite logic.
+$multisite = false;
+if ( true === $multisite ) {
+    preg_match( '#\/([0-9]{1,3})\/(?:js|css)\/[a-z0-9]*_fallback\.(?:js|css)$#', $fallback_target, $child_site_id );
+    $ao_root_cache_dir = preg_replace( '#[0-9]*\/$#', '', $ao_cache_dir );
+    $ao_cache_dir      = $ao_root_cache_dir . $child_site_id[1] . '/';
+}
+
+$fallback_path = $ao_cache_dir . $js_or_css . '/autoptimize_fallback.' . $js_or_css;
 
 if ( $original_request !== $fallback_target && file_exists( $fallback_path ) ) {
     // error_log( 'Autoptimize file ' . $original_request . ' not found, using fallback instead.' );

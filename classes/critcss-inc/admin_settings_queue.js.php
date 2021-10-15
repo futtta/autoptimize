@@ -39,6 +39,12 @@ if (queueOriginEl) {
                 headers: {6: {sorter: false}}
             });
         }
+        
+        // unhide queuerunner button conditionally (we don't want people running the queue continuously) and attach event to it.
+        if (queueBodyEl > 4 || ( queueBodyEl > 0 && jQuery('#rules > tr').length < 1 ) ) {
+            jQuery('#queuerunner-container').show();
+            jQuery("#queuerunner").click(function(){queuerunner();});
+        }
     });
 }
 
@@ -205,6 +211,26 @@ function updateQueue(queue) {
         echo "console.log('Updated Queue Object:', queue);\n";
     }
     ?>
+}
+
+// Run the queue manually (in case of cron issues/ impatient users).
+function queuerunner() {
+    var data = {
+        'action': 'ao_ccss_queuerunner',
+        'ao_ccss_queuerunner_nonce': '<?php echo wp_create_nonce( 'ao_ccss_queuerunner_nonce' ); ?>',
+    };
+
+    jQuery.post(ajaxurl, data, function(response) {
+        response_array=JSON.parse(response);
+        if (response_array['code'] == 200) {
+            displayNotice( '<?php _e('Queue processed, reloading page.', 'autoptimize'); ?>', 'success' )
+            setTimeout(window.location.reload.bind(window.location), 1.5*1000);
+        } else if ( response_array['code'] == 302 ) {
+            displayNotice( '<?php _e('The queue is locked, retry in a couple of minutes. If this problem persists and the queue is not moving at all remove the <code>wp-content/uploads/ao_ccss/queue.lock</code> file.', 'autoptimize' ); ?>', 'warning' )
+        } else {
+            displayNotice( '<?php _e('Could not process queue.', 'autoptimize'); ?>', 'error' )
+        }
+    });
 }
 
 // Convert epoch to date for job times

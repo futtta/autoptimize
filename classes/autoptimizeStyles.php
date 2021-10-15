@@ -1221,6 +1221,13 @@ class autoptimizeStyles extends autoptimizeBase
         $contents = $this->prepare_minify_single( $filepath );
 
         if ( empty( $contents ) ) {
+            // if aggregate is off and CCSS is used but all files are minified already, then we
+            // must make sure the autoptimize_action_css_hash action still fires for CCSS's sake.
+            $ao_ccss_key = get_option( 'autoptimize_ccss_key', '' );
+            if ( false === $this->aggregate && isset( $ao_ccss_key ) && ! empty( $ao_ccss_key ) ) {
+               $hash = 'single_' . md5( file_get_contents( $filepath ) );
+               do_action( 'autoptimize_action_css_hash', $hash );
+            }
             return false;
         }
 

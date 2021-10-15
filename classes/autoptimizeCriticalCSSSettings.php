@@ -111,7 +111,7 @@ class autoptimizeCriticalCSSSettings {
         <div class="wrap">
             <div id="autoptimize_main">
                 <div id="ao_title_and_button">
-                    <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
+                    <h1><?php apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? _e( 'Autoptimize Pro Settings', 'autoptimize' ) : _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
                 </div>
 
                 <?php
@@ -151,16 +151,16 @@ class autoptimizeCriticalCSSSettings {
                         ?>
                         <div class="notice-info notice"><p>
                         <?php
-                        _e( "The \"Inline and Defer CSS\" option was activated to allow critical CSS to be used.", 'autoptimize' );
+                        _e( "The \"Eliminate render-blocking CSS\" option was activated to allow critical CSS to be used.", 'autoptimize' );
                         ?>
                         </p></div>
                         <?php
                     } else {
-                        // we have keystate, so "inline & defer CSS" was probably disable for troubleshooting, warn but let users continue.
+                        // we have keystate, so "inline & defer CSS" was probably disabled for troubleshooting, warn but let users continue.
                         ?>
                         <div class="notice-warning notice"><p>
                         <?php
-                        _e( "Oops! Please <strong>activate the \"Inline and Defer CSS\" option</strong> on Autoptimize's main settings page to ensure critical CSS is used on the front-end.", 'autoptimize' );
+                        _e( "Please <strong>activate the \"Eliminate render-blocking CSS\" option</strong> on Autoptimize's main settings page to ensure critical CSS is used on the front-end.", 'autoptimize' );
                         ?>
                         </p></div>
                         <?php

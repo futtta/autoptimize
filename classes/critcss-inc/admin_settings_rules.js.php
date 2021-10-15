@@ -4,7 +4,7 @@
  */
 
 if ( $ao_ccss_debug ) {
-    echo "console.log('[WARN] Autoptimize CriticalCSS Power-Up is in DEBUG MODE!');\n";
+    echo "console.log('[WARN] Autoptimize CriticalCSS is in debug mode!');\n";
     echo "console.log('[WARN] Avoid using debug mode on production/live environments unless for ad-hoc troubleshooting purposes and make sure to disable it after!');\n";
 }
 ?>
@@ -37,6 +37,7 @@ if (rulesOriginEl) {
 
 function drawTable(critCssArray) {
     jQuery("#rules-list").empty();
+    rnotice = 0;
     jQuery.each(critCssArray,function(k,v) {
         if (k=="paths") {
             kstring="<?php _e( 'Path Based Rules', 'autoptimize' ); ?>";
@@ -65,11 +66,9 @@ function drawTable(critCssArray) {
                 typeClass = 'auto';
             }
             if (file && typeof file == 'string') {
-                rmark=file.split('_');
-                if (rmark[2] || rmark[2] == 'R.css') {
-                    rmark = '<span class="badge review rule">R</span>'
-                } else {
-                    rmark = '';
+                rmark_find=file.split('_');
+                if (rmark_find[2] || rmark_find[2] == 'R.css') {
+                    rnotice = rnotice + 1;
                 }
             }
             if ( k == "paths" ) {
@@ -77,11 +76,34 @@ function drawTable(critCssArray) {
             } else {
                 target = i.replace(/(woo_|template_|custom_post_|edd_|bp_|bbp_)/,'');
             }
-            jQuery("#rules-list").append("<tr class='rule "+k+"Rule'><td class='type'><span class='badge " + typeClass + "'>" + type + "</span>" + rmark + "</td><td class='target'>" + target + "</td><td class='file'>" + file + "</td><td class='btn edit'><span class=\"button-secondary\" id=\"" + nodeId + "_edit\"><?php _e( 'Edit', 'autoptimize' ); ?></span></td><td class='btn delete'><span class=\"button-secondary\" id=\"" + nodeId + "_remove\"><?php _e( 'Remove', 'autoptimize' ); ?></span></td></tr>");
+            jQuery("#rules-list").append("<tr class='rule "+k+"Rule'><td class='type'><span class='badge " + typeClass + "'>" + type + "</span></td><td class='target'>" + target + "</td><td class='file'>" + file + "</td><td class='btn edit'><span class=\"button-secondary\" id=\"" + nodeId + "_edit\"><?php _e( 'Edit', 'autoptimize' ); ?></span></td><td class='btn delete'><span class=\"button-secondary\" id=\"" + nodeId + "_remove\"><?php _e( 'Remove', 'autoptimize' ); ?></span></td></tr>");
             jQuery("#" + nodeId + "_edit").click(function(){addEditRow(this.id);});
             jQuery("#" + nodeId + "_remove").click(function(){confirmRemove(this.id);});
         })
     });
+    if ( rnotice && rnotice != 0 ) {
+        // R rules were found, show a notice!
+        // and add some JS magic to ensure the notice works as a notice, but is shown inline 
+        // in the rules panel instead of in the notice area where it would be too prominent.
+        <?php 
+        $_ao_ccss_review_notice_id   = 'autoptimize-ccss-review-rules-notice-30';
+        // Translators: before the 1st word a number + a space will be displayed, as in e.g. "2 of above rules".
+        $_ao_ccss_review_notice_copy = __('of the above rules got flagged by criticalcss.com as to be reviewed. This is often due to font-related issues which can be safely ignored, but you can log in to your account at https://criticalcss.com and compare screenshots for rules by clicking the red exclamation mark to confirm if all is OK.', 'autoptimize');
+        if ( PAnD::is_admin_notice_active( $_ao_ccss_review_notice_id ) ) {
+        ?>
+            jQuery("#rules-notices").append( "&nbsp;<div class='rnotice notice notice-info is-dismissible hidden' data-dismissible='<?php echo $_ao_ccss_review_notice_id; ?>'><p>" + rnotice + " <?php echo $_ao_ccss_review_notice_copy; ?>" + "</p></div>");
+            jQuery( document ).ready(function() {
+                jQuery("div.rnotice").detach().appendTo('#rules-notices');
+                jQuery("div.rnotice").show();
+            });
+        <?php
+        } else {
+        ?>
+            console.log( "Autoptimize: " + rnotice + " <?php echo $_ao_ccss_review_notice_copy; ?>" );
+        <?php
+        }
+        ?>
+    }
 }
 
 function confirmRemove(idToRemove) {
@@ -358,16 +380,38 @@ function saveEditCritCss(){
 function updateAfterChange() {
     document.getElementById("critCssOrigin").value=JSON.stringify(critCssArray);
     drawTable(critCssArray);
+
+    <?php
+    // autosave rules is on by default, but can be disabled with a filter.
+    if ( apply_filters( 'autoptimize_filter_ccss_settings_rules_autosave', true ) ) {
+    ?>
+    var data = {
+        'action': 'ao_ccss_saverules',
+        'ao_ccss_saverules_nonce': '<?php echo wp_create_nonce( 'ao_ccss_saverules_nonce' ); ?>',
+        'critcssrules': document.getElementById("critCssOrigin").value
+    };
+
+    jQuery.post(ajaxurl, data, function(response) {
+        response_array=JSON.parse(response);
+        if (response_array["code"]!=200) {
+            displayNotice(response_array["msg"]);
+            jQuery("#unSavedWarning").show();
+        }
+    });
+    <?php } else { ?>
     jQuery("#unSavedWarning").show();
+    <?php } ?>
+
     document.getElementById('ao_title_and_button').scrollIntoView();
 }
 
-function displayNotice(textIn) {
-    jQuery('<div class="error notice is-dismissable"><p>'+textIn+'</p></div>').insertBefore("#unSavedWarning");
+function displayNotice(textIn, level = 'error') {
+    jQuery('<div class="notice notice-' + level + ' notice is-dismissible"><p>'+textIn+'</p></div>').insertBefore("#unSavedWarning");
+    document.getElementById('ao_title_and_button').scrollIntoView();
 }
 
 function resetForm() {
-    jQuery("#critcss_addedit_css").attr("placeholder", "<?php _e( 'For path based rules, paste your specific and minified critical CSS here or leave this empty to fetch it from criticalcss.com and hit submit to save. If you want to create a rule to exclude from critical CSS injection, enter \"none\"', 'autoptimize' ); ?>");
+    jQuery("#critcss_addedit_css").attr("placeholder", "<?php _e( 'For path based rules, paste your specific and minified critical CSS. If you want to create a rule to exclude from critical CSS injection, enter \"none\"', 'autoptimize' ); ?>");
     jQuery("#critcss_addedit_type").attr("disabled",false);
     jQuery("#critcss_addedit_path_wrapper").show();
     jQuery("#critcss_addedit_id").val("");

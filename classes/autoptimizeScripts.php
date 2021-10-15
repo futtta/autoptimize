@@ -268,7 +268,7 @@ class autoptimizeScripts extends autoptimizeBase
         }
         
         // Defer inline JS?
-        if ( true === $this->defer_not_aggregate && apply_filters( 'autoptimize_js_filter_defer_inline', $options['defer_inline'] ) ) {
+        if ( ( true === $this->defer_not_aggregate && apply_filters( 'autoptimize_js_filter_defer_inline', $options['defer_inline'] ) ) || apply_filters( 'autoptimize_js_filter_force_defer_inline', false ) ) {
             $this->defer_inline = true;
         }
 
@@ -373,9 +373,9 @@ class autoptimizeScripts extends autoptimizeBase
                                 }
                             }
                         }
-                        
+
                         // not aggregating but deferring?
-                        if ( $this->defer_not_aggregate && false === $this->aggregate && str_replace( $this->dontmove, '', $path ) === $path && strpos( $new_tag, ' defer' ) === false && strpos( $new_tag, ' async' ) === false ) {
+                        if ( $this->defer_not_aggregate && false === $this->aggregate && ( str_replace( $this->dontmove, '', $path ) === $path || ( apply_filters( 'autoptimize_filter_js_defer_external', true ) && str_replace( $this->dontmove, '', $url ) === $url ) ) && strpos( $new_tag, ' defer' ) === false && strpos( $new_tag, ' async' ) === false ) {
                             $new_tag = str_replace( '<script ', '<script defer ', $new_tag );
                         }
 
@@ -446,7 +446,7 @@ class autoptimizeScripts extends autoptimizeBase
                             } else {
                                 $tag = '';
                             }
-                        } else if ( str_replace( $this->dontmove, '', $tag ) === $tag ) {
+                        } elseif ( str_replace( $this->dontmove, '', $tag ) === $tag ) {
                             // defer inline JS by base64 encoding it.
                             preg_match( '#<script.*>(.*)</script>#Usmi', $tag, $match );
                             $new_tag       = '<script defer src="data:text/javascript;base64,' . base64_encode( $match[1] ) . '"></script>';

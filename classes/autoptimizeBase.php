@@ -147,7 +147,7 @@ abstract class autoptimizeBase
             $tmp_ao_root = preg_replace( '/https?:/', '', AUTOPTIMIZE_WP_SITE_URL );
         }
         
-        if ( is_multisite() && ! is_main_site() && ! empty( $this->cdn_url ) ) {
+        if ( is_multisite() && ! is_main_site() && ! empty( $this->cdn_url ) && apply_filters( 'autoptimize_filter_base_getpage_multisite_cdn_juggling', true ) ) {
             // multisite child sites with CDN need the network_site_url as tmp_ao_root but only if directory-based multisite.
             $_network_site_url = network_site_url();
             if ( strpos( AUTOPTIMIZE_WP_SITE_URL, $_network_site_url ) !== false ) {

@@ -487,7 +487,7 @@ class autoptimizeExtra
     </style>
     <script>document.title = "Autoptimize: <?php _e( 'Extra', 'autoptimize' ); ?> " + document.title;</script>
     <div class="wrap">
-    <h1><?php _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
+    <h1><?php apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? _e( 'Autoptimize Pro Settings', 'autoptimize' ) : _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
         <?php if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_js' ) && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_css' ) && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_html' ) && ! autoptimizeImages::imgopt_active() ) { ?>
             <div class="notice-warning notice"><p>

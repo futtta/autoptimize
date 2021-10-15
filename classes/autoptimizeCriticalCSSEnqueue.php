@@ -18,7 +18,7 @@ class autoptimizeCriticalCSSEnqueue {
         }
     }
 
-    public static function ao_ccss_enqueue( $hash ) {
+    public static function ao_ccss_enqueue( $hash = '', $path = '', $type = 'is_page' ) {
         $self = new self();
         // Get key status.
         $key = autoptimizeCriticalCSSCore::ao_ccss_key_status( false );
@@ -27,9 +27,15 @@ class autoptimizeCriticalCSSEnqueue {
         $enqueue = true;
 
         // ... which are not the ones below.
-        if ( is_user_logged_in() || is_feed() || is_404() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $self->ao_ccss_ua() || 'nokey' == $key['status'] || 'invalid' == $key['status'] || false === apply_filters( 'autoptimize_filter_ccss_enqueue_should_enqueue', true ) ) {
+        if ( 'nokey' == $key['status'] || 'invalid' == $key['status'] ) {
             $enqueue = false;
-            autoptimizeCriticalCSSCore::ao_ccss_log( "Job queuing is not available for WordPress's logged in users, feeds, error pages, ajax calls, to criticalcss.com itself or when a valid API key is not found", 3 );
+            autoptimizeCriticalCSSCore::ao_ccss_log( "Job queuing is not available: no valid API key found.", 3 );
+        } elseif ( ! empty( $hash ) && ( is_user_logged_in() || is_feed() || is_404() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $self->ao_ccss_ua() || false === apply_filters( 'autoptimize_filter_ccss_enqueue_should_enqueue', true ) ) ) {
+            $enqueue = false;
+            autoptimizeCriticalCSSCore::ao_ccss_log( "Job queuing is not available for WordPress's logged in users, feeds, error pages, ajax calls or calls from criticalcss.com itself.", 3 );
+        } elseif ( empty( $hash ) && empty( $path ) || ( ( 'is_single' !== $type ) && ( 'is_page' !== $type ) ) ) {
+            $enqueue = false;
+            autoptimizeCriticalCSSCore::ao_ccss_log( "Forced job queuing failed, no path or not right type", 3 );            
         }
 
         if ( $enqueue ) {
@@ -41,8 +47,18 @@ class autoptimizeCriticalCSSEnqueue {
             global $ao_ccss_forcepath;
 
             // Get request path and page type, and initialize the queue update flag.
-            $req_orig        = $_SERVER['REQUEST_URI'];
-            $req_path        = strtok( $req_orig, '?' );
+            if ( ! empty( $hash ) ) {
+                $req_orig = $_SERVER['REQUEST_URI'];
+                $req_type = $self->ao_ccss_get_type();
+            } elseif ( ! empty( $path ) ) {
+                $req_orig = $path;
+                if ( $path === '/' ) {
+                    $req_type = 'is_front_page';
+                } else {
+                    $req_type = $type;
+                }
+            }
+            $req_path = strtok( $req_orig, '?' );
 
             // Check if we have a lang param. we need to keep as WPML can switch languages based on that
             // and that includes RTL -> LTR so diff. structure, so rules would be RTL vs LTR
@@ -56,7 +72,6 @@ class autoptimizeCriticalCSSEnqueue {
                 }
             }
 
-            $req_type        = $self->ao_ccss_get_type();
             $job_qualify     = false;
             $target_rule     = false;
             $rule_properties = false;
@@ -85,7 +100,7 @@ class autoptimizeCriticalCSSEnqueue {
             }
 
             // Match for types in rules if no path rule matches and if we're not enforcing paths.
-            if ( ! $job_qualify && ( ! $ao_ccss_forcepath || ! in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) || ! apply_filters( 'autoptimize_filter_ccss_coreenqueue_ignorealltypes', false ) ) ) {
+            if ( '' !== $hash && ! $job_qualify && ( ! $ao_ccss_forcepath || ! in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) || ! apply_filters( 'autoptimize_filter_ccss_coreenqueue_ignorealltypes', false ) ) ) {
                 foreach ( $ao_ccss_rules['types'] as $type => $props ) {
 
                     // Prepare rule target and log.
@@ -117,7 +132,7 @@ class autoptimizeCriticalCSSEnqueue {
                 // Should we switch to path-base AUTO-rules? Conditions:
                 // 1. forcepath option has to be enabled (off by default)
                 // 2. request type should be (by default, but filterable) one of is_page (removed for now: woo_is_product or woo_is_product_category).
-                if ( ( $ao_ccss_forcepath && in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) ) || apply_filters( 'autoptimize_filter_ccss_coreenqueue_ignorealltypes', false ) ) {
+                if ( ( $ao_ccss_forcepath && in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) ) || apply_filters( 'autoptimize_filter_ccss_coreenqueue_ignorealltypes', false ) || empty( $hash )) {
                     if ( '/' !== $req_path ) {
                         $target_rule = 'paths|' . $req_path;
                     } else {
