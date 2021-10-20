@@ -54,6 +54,9 @@
             e.preventDefault();
             e.stopPropagation();
             $(targetElement).unbind('click');
+
+            var modal_data = JSON.parse(atob($('#ao_uninstall_feedback_popup').data('modal')))
+
             var selectedOption = $(
                 '#ao_uninstall_feedback_popup input[name="ao-deactivate-option"]:checked');
 
@@ -66,14 +69,14 @@
             }
 
             var data = {
-                'url': null,
+                'url': modal_data.home,
                 'reason': reason,
                 'type': 'wordpress',
                 'version' : $('#ao_plugin_version').text().trim(),
             };
             $.ajax({
                 type: 'POST',
-                url: 'https://misc.optimizingmatters.com/ao_exit_survey/index.php',
+                url: modal_data.post_url,
                 data: data,
                 complete() {
                     $('body').removeClass('ao-feedback-open');

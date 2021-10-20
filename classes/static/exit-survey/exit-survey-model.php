@@ -1,7 +1,13 @@
 <?php
+
+$data = [
+    "home" => home_url(),
+    "post_url" => 'https://misc.optimizingmatters.com/ao_exit_survey/index.php'
+]
+
 ?>
 
-<div class="ao-plugin-uninstall-feedback-popup ao-feedback" id="ao_uninstall_feedback_popup">
+<div class="ao-plugin-uninstall-feedback-popup ao-feedback" id="ao_uninstall_feedback_popup" data-modal="<?php echo base64_encode(json_encode($data))?>">
     <div class="popup--header">
         <h5> Sorry to see you go, we would appreciate if you let us know why you're deactivating Autoptimize </h5>
     </div><!--/.popup--header-->

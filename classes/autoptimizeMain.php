@@ -63,7 +63,6 @@ class autoptimizeMain
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ), 20 );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss' ), 11 );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_notfound_fallback' ), 10 );
-        add_action( 'autoptimize_setup_done', array( $this, 'initiate_exit_survey' ), 10 );
 
         add_action( 'init', array( $this, 'load_textdomain' ) );
 
@@ -215,6 +214,7 @@ class autoptimizeMain
         // Loads partners tab code if in admin (and not in admin-ajax.php)!
         if ( autoptimizeConfig::is_admin_and_not_ajax() ) {
             new autoptimizePartners();
+            $this->initiate_exit_survey();
         }
     }
 
