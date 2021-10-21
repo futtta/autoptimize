@@ -34,14 +34,27 @@ class autoptimizeOptionWrapper {
      * @return mixed Value set for the option.
      */
     public static function get_option( $option, $default = false ) {
+        if ( is_multisite() && self::is_ao_active_for_network() ) {
+            static $configuration_per_site = null;
+            if ( null === $configuration_per_site || defined( 'TEST_MULTISITE_FORCE_AO_ON_NETWORK' ) ) {
+                $configuration_per_site = get_network_option( get_main_network_id(), 'autoptimize_enable_site_config', 'on' );
+                if ( null === $configuration_per_site ) {
+                    // Config per site is off, set as empty string to make sure the var it is not null any more so it can be cached.
+                    $configuration_per_site = '';
+                }
+            }
+        } else {
+            // Kind of dummy value as when not on multisite or if AO not network enabled, config is always on site-level.
+            $configuration_per_site = 'on';
+        }
+
         // This is always a network setting, it is on by default to ensure settings are available at site level unless explicitly turned off.
         if ( 'autoptimize_enable_site_config' === $option ) {
-            return get_network_option( get_main_network_id(), $option, 'on' );
+            return $configuration_per_site;
         }
 
         // If the plugin is network activated and our per site setting is not on, use the network configuration.
-        $configuration_per_site = get_network_option( get_main_network_id(), 'autoptimize_enable_site_config', 'on' );
-        if ( self::is_ao_active_for_network() && ( 'on' !== $configuration_per_site || is_network_admin() ) ) {
+        if ( is_multisite() && self::is_ao_active_for_network() && ( 'on' !== $configuration_per_site || is_network_admin() ) ) {
             return get_network_option( get_main_network_id(), $option, $default );
         }
 
