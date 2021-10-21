@@ -57,13 +57,12 @@
 
             var modal_data = JSON.parse(atob($('#ao_uninstall_feedback_popup').data('modal')))
 
-            var selectedOption = $(
-                '#ao_uninstall_feedback_popup input[name="ao-deactivate-option"]:checked');
+            var selectedOption = $( '#ao_uninstall_feedback_popup input[name="ao-deactivate-option"]:checked' );
 
             var reason;
 
-            if(selectedOption.attr("id") === "ao_feedback999"){
-                reason = selectedOption.parent().find('textarea').val().trim()
+            if( selectedOption.attr("id") === "ao_feedback999" ){
+                reason = 'Other: ' + selectedOption.parent().find('textarea').val().trim()
             }else{
                 reason = selectedOption.parent().find('label').text().trim()
             }
@@ -76,7 +75,7 @@
             };
             $.ajax({
                 type: 'POST',
-                url: modal_data.post_url,
+                url: atob( modal_data.dest ),
                 data: data,
                 complete() {
                     $('body').removeClass('ao-feedback-open');
