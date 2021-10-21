@@ -186,7 +186,7 @@ class autoptimizeMain
                 if ( class_exists( 'Jetpack' ) && apply_filters( 'autoptimize_filter_main_disable_jetpack_cdn', true ) && ( $conf->get( 'autoptimize_js' ) || $conf->get( 'autoptimize_css' ) ) ) {
                     add_filter( 'jetpack_force_disable_site_accelerator', '__return_true' );
                 }
-                
+
                 // Add "no cache found" notice.
                 add_action( 'admin_notices', 'autoptimizeMain::notice_nopagecache', 99 );
                 add_action( 'admin_notices', 'autoptimizeMain::notice_potential_conflict', 99 );
@@ -214,6 +214,7 @@ class autoptimizeMain
         // Loads partners tab code if in admin (and not in admin-ajax.php)!
         if ( autoptimizeConfig::is_admin_and_not_ajax() ) {
             new autoptimizePartners();
+            $this->initiate_exit_survey();
         }
     }
 
@@ -369,7 +370,7 @@ class autoptimizeMain
             if ( false === $ao_noptimize && array_key_exists( 'PageSpeed', $_GET ) && 'off' === $_GET['PageSpeed'] ) {
                 $ao_noptimize = true;
             }
-            
+
             // If page/ post check post_meta to see if optimize is off.
             if ( false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_optimize' ) ) {
                 $ao_noptimize = true;
@@ -715,12 +716,12 @@ class autoptimizeMain
             echo '</p></div>';
         }
     }
-    
+
     public static function notice_nopagecache()
     {
         /*
          * Autoptimize does not do page caching (yet) but not everyone knows, so below logic tries to find out if page caching is available and if not show a notice on the AO Settings pages.
-         * 
+         *
          * uses helper function in autoptimizeUtils.php
          */
         $_ao_nopagecache_notice      = __( 'It looks like your site might not have <strong>page caching</strong> which is a <strong>must-have for performance</strong>. If you are sure you have a page cache, you can close this notice, but when in doubt check with your host if they offer this or install a page caching plugin like for example', 'autoptimize' );
@@ -758,5 +759,11 @@ class autoptimizeMain
                 echo '</p></div>';
             }
         }
+    }
+
+
+    public function initiate_exit_survey()
+    {
+        new autoptimizeExitSurvey();
     }
 }
