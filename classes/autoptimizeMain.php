@@ -60,7 +60,7 @@ class autoptimizeMain
         add_action( 'autoptimize_setup_done', array( $this, 'version_upgrades_check' ) );
         add_action( 'autoptimize_setup_done', array( $this, 'check_cache_and_run' ) );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_extra' ), 15 );
-        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_partners_tab' ), 20 );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_admin_only_trinkets' ), 20 );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss' ), 11 );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_notfound_fallback' ), 10 );
 
@@ -209,12 +209,12 @@ class autoptimizeMain
         }
     }
 
-    public function maybe_run_partners_tab()
+    public function maybe_run_admin_only_trinkets()
     {
-        // Loads partners tab code if in admin (and not in admin-ajax.php)!
+        // Loads partners tab and exit survey code if in admin (and not in admin-ajax.php)!
         if ( autoptimizeConfig::is_admin_and_not_ajax() ) {
             new autoptimizePartners();
-            $this->initiate_exit_survey();
+            new autoptimizeExitSurvey();
         }
     }
 
@@ -759,11 +759,5 @@ class autoptimizeMain
                 echo '</p></div>';
             }
         }
-    }
-
-
-    public function initiate_exit_survey()
-    {
-        new autoptimizeExitSurvey();
     }
 }
