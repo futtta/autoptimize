@@ -35,7 +35,7 @@ class autoptimizeExitSurvey
         );
         ?>
 
-        <div class="ao-plugin-uninstall-feedback-popup ao-feedback" id="ao_uninstall_feedback_popup" data-modal="<?php echo base64_encode(json_encode($data))?>">
+        <div class="ao-plugin-uninstall-feedback-popup ao-feedback" id="ao_uninstall_feedback_popup" data-modal="<?php echo base64_encode(json_encode($data)) ?>">
             <div class="popup--header">
                 <h5>Sorry to see you go, we would appreciate if you let us know why you're deactivating Autoptimize!</h5>
             </div><!--/.popup--header-->
@@ -75,8 +75,7 @@ class autoptimizeExitSurvey
                     <div class="info-disclosure-content"><p>Below is a detailed view of all data that Optimizing Matters will receive if
                             you fill in this survey. Email address or IP addresses will not be sent.</p>
                         <ul>
-                            <li><strong>Plugin version </strong> <code
-                                        id="ao_plugin_version"> <?php echo AUTOPTIMIZE_PLUGIN_VERSION ?> </code></li>
+                            <li><strong>Plugin version </strong> <code id="ao_plugin_version"> <?php echo AUTOPTIMIZE_PLUGIN_VERSION ?> </code></li>
                             <li><strong>Current website:</strong> <code> <?php echo trailingslashit(get_site_url()) ?> </code></li>
                             <li><strong>Uninstall reason </strong> <i> Selected reason from the above survey </i></li>
                         </ul>
