@@ -405,7 +405,7 @@ class autoptimizeUtils
         static $_found_pagecache = null;
 
         if ( null === $_found_pagecache ) {
-            $_page_cache_constants   = array( 'NgInx' => 'NGINX_HELPER_BASENAME', 'Kinsta' => 'KINSTA_CACHE_ZONE', 'Presslabs' => 'PL_INSTANCE_REF', '' => 'Pressidium', 'Cache Enabler' => 'CACHE_ENABLER_VERSION', 'Speed Booster Pack' => 'SBP_PLUGIN_NAME', 'Servebolt' => 'SERVEBOLT_PLUGIN_FILE', 'WP CloudFlare Super Page Cache' => 'SWCFPC_PLUGIN_PATH', 'Cachify' => 'CACHIFY_CACHE_DIR', 'WP Rocket' => 'WP_ROCKET_CACHE_PATH', 'WP Optimize' => 'WPO_VERSION' );
+            $_page_cache_constants   = array( 'NgInx' => 'NGINX_HELPER_BASENAME', 'Kinsta' => 'KINSTA_CACHE_ZONE', 'Presslabs' => 'PL_INSTANCE_REF', '' => 'Pressidium', 'Cache Enabler' => 'CACHE_ENABLER_VERSION', 'Speed Booster Pack' => 'SBP_PLUGIN_NAME', 'Servebolt' => 'SERVEBOLT_PLUGIN_FILE', 'WP CloudFlare Super Page Cache' => 'SWCFPC_PLUGIN_PATH', 'Cachify' => 'CACHIFY_CACHE_DIR', 'WP Rocket' => 'WP_ROCKET_CACHE_PATH', 'WP Optimize' => 'WPO_VERSION', 'Autoptimize Pro' => 'AO_PRO_PAGECACHE_CACHE_DIR' );
             $_page_cache_classes     = array( 'Swift Performance' => 'Swift_Performance_Cache', 'WP Fastest Cache' => 'WpFastestCache', 'Quick Cache' => 'c_ws_plugin__qcache_purging_routines', 'ZenCache' => 'zencache', 'Comet Cache' => 'comet_cache', 'WP Engine' => 'WpeCommon', 'Flywheel' => 'FlywheelNginxCompat', 'Pagely' => 'PagelyCachePurge' );
             $_page_cache_functions   = array( 'WP Super Cache' => 'wp_cache_clear_cache', 'W3 Total Cache' => 'w3tc_pgcache_flush', 'WP Fast Cache' => 'wp_fast_cache_bulk_delete_all', 'Rapidcache' => 'rapidcache_clear_cache', 'Siteground' => 'sg_cachepress_purge_cache', 'WP Super Cache' => 'prune_super_cache' );
 
