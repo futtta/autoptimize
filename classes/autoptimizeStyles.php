@@ -1040,7 +1040,7 @@ class autoptimizeStyles extends autoptimizeBase
                 if ( $this->defer && 'print' !== $media ) {
                     $preload_onload = autoptimizeConfig::get_ao_css_preload_onload( $media );
 
-                    $preload_css_block .= '<link rel="stylesheet" media="print" href="' . $url . '" onload="' . $preload_onload . '" />';
+                    $preload_css_block .= apply_filters( 'autoptimize_filter_css_single_deferred_link', '<link rel="stylesheet" media="print" href="' . $url . '" onload="' . $preload_onload . '" />' );
                     if ( apply_filters( 'autoptimize_fitler_css_preload_and_print', false ) ) {
                         $preload_css_block = '<link rel="preload" as="stylesheet" href="' . $url . '"/>' . $preload_css_block;
                     }
