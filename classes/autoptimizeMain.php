@@ -729,7 +729,6 @@ class autoptimizeMain
         $_ao_nopagecache_notice     .= ' <a href="' . $_ao_pagecache_install_url . 'wp+super+cache' . '">WP Super Cache</a>, <a href="' . $_ao_pagecache_install_url . 'keycdn+cache+enabler' . '">KeyCDN Cache Enabler</a>, ...';
         $_ao_nopagecache_dismissible = 'ao-nopagecache-forever'; // the notice is only shown once and will not re-appear when dismissed.
         $_is_ao_settings_page        = autoptimizeUtils::is_ao_settings();
-        $_found_pagecache            = false;
 
         if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && PAnD::is_admin_notice_active( $_ao_nopagecache_dismissible ) && true === apply_filters( 'autopitmize_filter_main_show_pagecache_notice', true ) ) {
             if ( false === autoptimizeUtils::find_pagecache() ) {
