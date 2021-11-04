@@ -731,7 +731,7 @@ class autoptimizeMain
         $_is_ao_settings_page        = autoptimizeUtils::is_ao_settings();
         $_found_pagecache            = false;
 
-        if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && PAnD::is_admin_notice_active( $_ao_nopagecache_dismissible ) && true === apply_filters( 'autopitmize_filter_main_show_pagecache_notice', true ) ) {
+        if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && PAnD::is_admin_notice_active( $_ao_nopagecache_dismissible ) && true === apply_filters( 'autoptimize_filter_main_show_pagecache_notice', true ) ) {
             if ( false === autoptimizeUtils::find_pagecache() ) {
                 echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_nopagecache_dismissible . '"><p>';
                 echo $_ao_nopagecache_notice;
@@ -750,7 +750,7 @@ class autoptimizeMain
         $_ao_potential_conflict_dismissible = 'ao-potential-conflict-forever'; // the notice is only shown once and will not re-appear when dismissed.
         $_is_ao_settings_page               = autoptimizeUtils::is_ao_settings();
 
-        if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && PAnD::is_admin_notice_active( $_ao_potential_conflict_dismissible ) && true === apply_filters( 'autopitmize_filter_main_show_potential_conclict_notice', true ) ) {
+        if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && PAnD::is_admin_notice_active( $_ao_potential_conflict_dismissible ) && true === apply_filters( 'autoptimize_filter_main_show_potential_conclict_notice', true ) ) {
             $_potential_conflicts = autoptimizeUtils::find_potential_conflicts();
             if ( false !== $_potential_conflicts ) {
                 $_ao_potential_conflict_notice .= '<strong>' . $_potential_conflicts . '</strong>.';
