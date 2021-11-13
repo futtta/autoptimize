@@ -15,6 +15,12 @@
 function ao_ccss_render_key( $key, $status, $status_msg, $message, $color ) {
     if ( defined( 'AUTOPTIMIZE_CRITICALCSS_API_KEY' ) ) {
         $key = __( 'API key provided by your host/ WordPress administrator, no need to enter anything here. In case of problems with the API key, contact your host/ WordPress administrator.', 'autoptimize' );
+    } else if ( has_filter( 'autoptimize_filter_ccss_key' ) ) {
+        if ( defined( 'AO_PRO_VERSION' ) ) {
+            $key = __( 'You\'re using Autoptimize Pro, so you don\'t need to provide an API Key.', 'autoptimize' );
+        } else {
+            $key = __( 'API Key provided by a filter, no need to enter anything here.', 'autoptimize' );
+        }
     }
     ?>
     <ul id="key-panel">

@@ -108,7 +108,7 @@ class autoptimizeCriticalCSSBase {
             $autoptimize_ccss_options['ao_ccss_rtimelimit']    = get_option( 'autoptimize_ccss_rtimelimit', '30' );
             $autoptimize_ccss_options['ao_ccss_noptimize']     = get_option( 'autoptimize_ccss_noptimize', false );
             $autoptimize_ccss_options['ao_ccss_debug']         = get_option( 'autoptimize_ccss_debug', false );
-            $autoptimize_ccss_options['ao_ccss_key']           = get_option( 'autoptimize_ccss_key' );
+            $autoptimize_ccss_options['ao_ccss_key']           = apply_filters( 'autoptimize_filter_ccss_key', get_option( 'autoptimize_ccss_key' ) );
             $autoptimize_ccss_options['ao_ccss_keyst']         = get_option( 'autoptimize_ccss_keyst' );
             $autoptimize_ccss_options['ao_ccss_loggedin']      = get_option( 'autoptimize_ccss_loggedin', '1' );
             $autoptimize_ccss_options['ao_ccss_forcepath']     = get_option( 'autoptimize_ccss_forcepath', '1' );
