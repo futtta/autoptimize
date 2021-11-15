@@ -25,7 +25,8 @@
         "squizlabs/php_codesniffer": "^3.1",
         "phpunit/phpunit": "^7.5.0",
         "wimg/php-compatibility": "*",
-        "wp-coding-standards/wpcs": "*"
+        "wp-coding-standards/wpcs": "*",
+	"yoast/phpunit-polyfills": "*"
     },
     "scripts": {
         "test": [
