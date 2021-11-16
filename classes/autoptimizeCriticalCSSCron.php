@@ -473,7 +473,7 @@ class autoptimizeCriticalCSSCron {
         // Avoid AO optimizations if required by config or avoid lazyload if lazyload is active in AO.
         if ( ! empty( $ao_ccss_noptimize ) ) {
             $src_url .= '?ao_noptirocket=1';
-        } elseif ( class_exists( 'autoptimizeImages', false ) && autoptimizeImages::should_lazyload_wrapper() ) {
+        } elseif ( ( class_exists( 'autoptimizeImages', false ) && autoptimizeImages::should_lazyload_wrapper() ) || apply_filters( 'autoptimize_filter_ccss_enforce_nolazy', false ) ) {
             $src_url .= '?ao_nolazy=1';
         }
 
