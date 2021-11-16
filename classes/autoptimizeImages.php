@@ -768,7 +768,7 @@ class autoptimizeImages
         return $lazyload_return;
     }
 
-    public function check_nolazy() {
+    public static function check_nolazy() {
         if ( array_key_exists( 'ao_nolazy', $_GET ) && '1' === $_GET['ao_nolazy'] ) {
             return true;
         } else {
