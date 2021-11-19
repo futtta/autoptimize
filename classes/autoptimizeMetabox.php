@@ -132,7 +132,7 @@ class autoptimizeMetabox
             }
 
             // if CSS opt and inline & defer are on and if we have a slug, the button can be active.
-            if ( false !== $_slug && 'on' === get_option( 'autoptimize_css', false ) && 'on' === get_option( 'autoptimize_css_defer', false ) && ! empty( get_option( 'autoptimize_ccss_key', false ) ) && '2' === get_option( 'autoptimize_ccss_keyst', false ) ) {
+            if ( false !== $_slug && 'on' === get_option( 'autoptimize_css', false ) && 'on' === get_option( 'autoptimize_css_defer', false ) && ! empty( apply_filters( 'autoptimize_filter_ccss_key', get_option( 'autoptimize_ccss_key', false ) ) ) && '2' === get_option( 'autoptimize_ccss_keyst', false ) ) {
                 $_generate_disabled = false;
             }
             ?>
