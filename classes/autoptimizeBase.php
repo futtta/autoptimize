@@ -311,7 +311,7 @@ abstract class autoptimizeBase
 
         // Allows API/filter to further tweak the cdn url...
         $cdn_url = apply_filters( 'autoptimize_filter_base_cdnurl', $cdn_url );
-        if ( ! empty( $cdn_url ) ) {
+        if ( ! empty( $cdn_url ) && false === strpos( $url, $cdn_url ) ) {
 
             // Simple str_replace-based approach fails when $url is protocol-or-host-relative.
             $is_protocol_relative = autoptimizeUtils::is_protocol_relative( $url );
