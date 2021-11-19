@@ -23,7 +23,7 @@ class autoptimizeToolbar
     public function load_toolbar()
     {
         // Check permissions and that toolbar is not hidden via filter.
-        if ( current_user_can( 'manage_options' ) && apply_filters( 'autoptimize_filter_toolbar_show', true ) ) {
+        if ( current_user_can( 'manage_options' ) && apply_filters( 'autoptimize_filter_toolbar_show', true ) && ! autoptimizeMain::is_amp_markup('') ) {
 
             // Create a handler for the AJAX toolbar requests.
             add_action( 'wp_ajax_autoptimize_delete_cache', array( $this, 'delete_cache' ) );
