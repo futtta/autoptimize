@@ -325,6 +325,16 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.9.3 =
+* Improvement: add logic to autoptimize_404_handler.php to differentiate between different multisite sites.
+* Improvement: remove the different feeds (and all JS to switch between them) on the settings-page, keeping only the "Autoptimize news".
+* Improvement: reduced autoptimize_enable_site_config option lookups when on multisite and AO is active for network.
+* Fixed wrong variable name that caused PHP notices (but did not affect normal usage) to $w3tc_minify_on.
+* Fix for Autoptimize Toolbar being loaded on AMP pages for logged in administrators/ editors
+* Fix for CDN replacement edge case (if the CDN has the site_url in it).
+* Fix for service availability checks causing too many outgoing requests (root cause likely to be object caching resulting in the autoptimize_service_availability option not being updated)
+* Added "exit survey" when Autoptimize is deactivated (with the kind help of Shakeeb of RapidLoad, thanks brother!)
+
 = 2.9.2 =
 * New: page/ post settings now have a "Generate Critical CSS"-button (critical CSS needs to be active with valid API key)
 * Improvement: also check WP Rocket settings for possible conflicts
