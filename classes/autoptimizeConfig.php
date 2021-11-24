@@ -389,20 +389,19 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
 <tr valign="top">
 <th scope="row"><?php _e( 'CDN Base URL', 'autoptimize' ); ?></th>
 <?php
-$cdn_by_imgopt = '';
-$placeholder   = '';
-
-if ( true === autoptimizeImages::imgopt_active() && true === has_filter( 'autoptimize_filter_base_cdnurl' ) ) {
-    $cdn_by_imgopt = 'disabled';
-    $placeholder   = 'placeholder="' . __( 'The CDN has automatically been set to make use of the image optimization CDN.', 'autoptimize' ) . ' "';
+if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'autoptimize_filter_cdn_set_by_imgopt', false ) ) {
+    // cdn set by imgopt, not to be changealbe in the settings.
+    $cdn_editable    = 'disabled';
+    $cdn_placeholder = 'placeholder="' . __( 'The CDN has automatically been set to make use of the image optimization CDN.', 'autoptimize' ) . ' "';
+    $cdn_description = '';
+} else {
+    $cdn_editable    = '';
+    $cdn_placeholder = 'placeholder="' . __( 'example: //cdn.yoursite.com/', 'autoptimize' ) . ' "';
+    $cdn_description = __( 'Enter your CDN root URL to enable CDN for Autoptimized files. The URL can be http, https or protocol-relative. This is not needed for Cloudflare.', 'autoptimize' );    
 }
 ?>
-<td><label><input id="cdn_url" type="text" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" <?php echo $placeholder . $cdn_by_imgopt; ?> value="<?php echo esc_url( autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' ), array( 'http', 'https' ) ); ?>" /><br />
-<?php
-if ( empty( $cdn_by_imgopt ) ) {
-    _e( 'Enter your CDN root URL to enable CDN for Autoptimized files. The URL can be http, https or protocol-relative (e.g. <code>//cdn.example.com/</code>). This is not needed for Cloudflare.', 'autoptimize' );
-}
-?>
+<td><label><input id="cdn_url" type="text" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" <?php echo $cdn_placeholder . $cdn_editable; ?> value="<?php echo esc_url( autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' ), array( 'http', 'https' ) ); ?>" /><br />
+<?php echo $cdn_description; ?>
 </label></td>
 </tr>
 </table>
