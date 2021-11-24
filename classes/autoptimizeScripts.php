@@ -486,7 +486,7 @@ class autoptimizeScripts extends autoptimizeBase
      * @param string $tag Script node & child(ren).
      * @return bool
      */
-    public function should_aggregate( $tag )
+    public static function should_aggregate( $tag )
     {
         if ( empty( $tag ) ) {
             return false;
