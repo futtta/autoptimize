@@ -1371,7 +1371,11 @@ class autoptimizeImages
         static $launch_status = null;
 
         if ( null === $launch_status ) {
-            $avail_imgopt  = $this->options['availabilities']['extra_imgopt'];
+            $avail_imgopt = '';
+            if ( is_array( $this->options ) && array_key_exists( 'availabilities', $this->options ) && is_array( $this->options['availabilities'] ) && array_key_exists( 'extra_imgopt', $this->options['availabilities'] ) ) {
+                $avail_imgopt = $this->options['availabilities']['extra_imgopt'];
+            }
+
             $magic_number  = intval( substr( md5( parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ), 0, 3 ), 16 );
             $has_launched  = autoptimizeOptionWrapper::get_option( 'autoptimize_imgopt_launched', '' );
             $launch_status = false;
