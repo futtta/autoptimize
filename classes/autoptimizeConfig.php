@@ -997,8 +997,9 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
                 $_meta_value = false;
             }
         }
-        
-        if ( ! empty( $_meta_value ) && is_array( $_meta_value ) && array_key_exists( $optim, $_meta_value ) && $_meta_value[$optim] !== 'on' ) {
+
+        // If autoptimize_post_optimize !== 'on' then always return false as all is off.
+        if ( ! empty( $_meta_value ) && is_array( $_meta_value ) && ( ( array_key_exists( 'autoptimize_post_optimize', $_meta_value ) && 'on' !== $_meta_value['autoptimize_post_optimize'] ) || ( array_key_exists( $optim, $_meta_value ) && 'on' !== $_meta_value[$optim] ) ) ) {
             return false;
         } else {
             return true;
