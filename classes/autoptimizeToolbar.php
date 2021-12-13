@@ -17,7 +17,12 @@ class autoptimizeToolbar
         }
 
         // Load admin toolbar feature once WordPress, all plugins, and the theme are fully loaded and instantiated.
-        add_action( 'wp_loaded', array( $this, 'load_toolbar' ) );
+        if ( is_admin() ) {
+            add_action( 'wp_loaded', array( $this, 'load_toolbar' ) );
+        } else {
+            // to avoid AMP complaining about the AMP conditional being checked too early.
+            add_action( 'wp', array( $this, 'load_toolbar' ) );
+        }
     }
 
     public function load_toolbar()
