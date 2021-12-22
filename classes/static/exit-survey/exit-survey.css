@@ -50,6 +50,15 @@ tr[data-slug="autoptimize"] span.deactivate{
     max-height: 150px;
 }
 
+.ao-feedback .popup--form input[type=text] {
+    width: 100%;
+    margin: 10px 0 0;
+}
+
+.ao-feedback .popup--form p.last-attempt {
+    display: none;
+}
+
 .ao-feedback li {
     display: flex;
     align-items: center;

@@ -46,12 +46,14 @@ class autoptimizeExitSurvey
                         <label for="ao_feedback5">
                             I don't see a performance improvement.
                         </label>
+                        <p class="last-attempt">Autoptimize does not do page caching, so you might have to install e.g. KeyCDN Cache Enabler or WP Super Cache. Feel free to create a topic on <a href="https://wordpress.org/support/plugin/autoptimize/#new-topic-0" target="_blank">the support forum here</a> to get pointers on how get the most out of Autoptimize!</p>
                     </li>
                     <li ao-option-id="6">
                         <input type="radio" name="ao-deactivate-option" id="ao_feedback6">
                         <label for="ao_feedback6">
                             It broke my site.
                         </label>
+                        <p class="last-attempt">Almost all problems can be fixed with the right configuration, have a look at <a href="https://wordpress.org/plugins/autoptimize/#faq" target="_blank">the FAQ</a> or create a topic on <a href="https://wordpress.org/support/plugin/autoptimize/#new-topic-0" target="_blank">the support forum here</a>!</p>
                     <li ao-option-id="4">
                         <input type="radio" name="ao-deactivate-option" id="ao_feedback4">
                         <label for="ao_feedback4">
@@ -67,13 +69,20 @@ class autoptimizeExitSurvey
                         <label for="ao_feedback999">
                             Other (please specify below) </label>
                         <textarea width="100%" rows="2" name="comments" placeholder="What can we do better?"></textarea></li>
+                    <hr />
+                    <li ao-option-id="998">
+                        <label for="ao_feedback998">
+                            If you want to be contacted about your experience with Autoptimize, leave your email here (we don't ever spam).
+                        </label>
+                        <input type="email" name="ao-deactivate-option" id="ao_feedback998" placeholder="mymail@domain.xyz">
+                    </li>
                 </ul>
             </div><!--/.popup--body-->
             <div class="popup--footer">
                 <div class="actions">
                     <a href="#" class="info-disclosure-link">What info do we collect?</a>
                     <div class="info-disclosure-content"><p>Below is a detailed view of all data that Optimizing Matters will receive if
-                            you fill in this survey. Email address or IP addresses will not be sent.</p>
+                            you fill in this survey. Your email address is only shared if you explicitly fill it in, your IP addres is never sent.</p>
                         <ul>
                             <li><strong>Plugin version </strong> <code id="ao_plugin_version"> <?php echo AUTOPTIMIZE_PLUGIN_VERSION ?> </code></li>
                             <li><strong>Current website:</strong> <code> <?php echo trailingslashit(get_site_url()) ?> </code></li>
