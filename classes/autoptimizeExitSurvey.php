@@ -72,7 +72,7 @@ class autoptimizeExitSurvey
                     <hr />
                     <li ao-option-id="998">
                         <label for="ao_feedback998">
-                            If you want to be contacted about your experience with Autoptimize, leave your email here (we don't ever spam).
+                            If you want to be contacted about your experience with Autoptimize, leave your email here (we won't spam).
                         </label>
                         <input type="email" name="ao-deactivate-option" id="ao_feedback998" placeholder="mymail@domain.xyz">
                     </li>
@@ -94,7 +94,12 @@ class autoptimizeExitSurvey
                                name="ao-deactivate-no"
                                id="ao-deactivate-no"
                                class="button"
-                               value="Skip &amp; Deactivate">
+                               value="Just Deactivate">
+                        <input type="submit"
+                               name="ao-deactivate-cancel"
+                               id="ao-deactivate-cancel"
+                               class="button"
+                               value="Cancel">
                         <input type="submit"
                                name="ao-deactivate-yes"
                                id="ao-deactivate-yes"

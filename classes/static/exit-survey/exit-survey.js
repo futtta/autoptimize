@@ -54,6 +54,13 @@
             }
         });
 
+        $('#ao_uninstall_feedback_popup #ao-deactivate-cancel').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $('#ao_uninstall_feedback_popup ').removeClass('active');
+            $('body').removeClass('ao-feedback-open');
+        });
+
         $('#ao_uninstall_feedback_popup #ao-deactivate-yes').on('click', function (e) {
             e.preventDefault();
             e.stopPropagation();

@@ -50,7 +50,7 @@ tr[data-slug="autoptimize"] span.deactivate{
     max-height: 150px;
 }
 
-.ao-feedback .popup--form input[type=text] {
+.ao-feedback .popup--form input[type=email] {
     width: 100%;
     margin: 10px 0 0;
 }
@@ -120,6 +120,10 @@ tr[data-slug="autoptimize"] span.deactivate{
 .ao-feedback .buttons {
     display: flex;
     width: 100%;
+}
+
+.ao-feedback .buttons input:nth-child(2) {
+    margin: auto;
 }
 
 .ao-feedback .buttons input:last-child {
