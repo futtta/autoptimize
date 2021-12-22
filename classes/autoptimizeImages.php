@@ -869,7 +869,7 @@ class autoptimizeImages
     }
 
     public function add_lazyload_js_footer() {
-        if ( false === autoptimizeMain::should_buffer() ) {
+        if ( false === autoptimizeMain::should_buffer() || autoptimizeMain::is_amp_markup('') ) {
             return;
         }
 
