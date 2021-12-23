@@ -325,6 +325,12 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.9.4 =
+* Fix for 2 AMP compatibility issues (toolbar JS & lazyload JS).
+* Fix for PHP notice in autoptimizeImages.php.
+* Improvements to the exit survey.
+* Enjoy the end-of-year celebrations, there are great Autoptimize things to come in 2022! ;-)
+
 = 2.9.3 =
 * Improvement: add logic to autoptimize_404_handler.php to differentiate between different multisite sites.
 * Improvement: remove the different feeds (and all JS to switch between them) on the settings-page, keeping only the "Autoptimize news".
