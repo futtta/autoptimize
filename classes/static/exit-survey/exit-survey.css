@@ -50,9 +50,14 @@ tr[data-slug="autoptimize"] span.deactivate{
     max-height: 150px;
 }
 
-.ao-feedback .popup--form input[type=email] {
+.ao-feedback .popup--form input[type='email'] {
     width: 100%;
     margin: 10px 0 0;
+}
+
+.ao-feedback .popup--form input[type='email']:invalid {
+    color:red;
+    border-color:red;
 }
 
 .ao-feedback .popup--form p.last-attempt {
