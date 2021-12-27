@@ -2434,6 +2434,7 @@ MARKUP;
         $opts                                        = autoptimizeImages::fetch_options();
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '1';
+        $opts['autoptimize_imgopt_number_field_7']   = '1';
 
         $markup = <<<MARKUP
 <picture><source srcset="$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><img src="$siteurl/wp-content/image.jpg"/></picture>
