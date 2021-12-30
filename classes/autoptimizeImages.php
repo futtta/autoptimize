@@ -52,10 +52,10 @@ class autoptimizeImages
         // get service availability and add it to the options-array.
         $value['availabilities'] = autoptimizeOptionWrapper::get_option( 'autoptimize_service_availablity' );
 
-        if ( empty( $value['availabilities'] || ! is_array( $value['availabilities'] ) ) ) {
+        if ( empty( $value['availabilities'] ) || ! is_array( $value['availabilities'] ) ) {
             $value['availabilities'] = null;
 
-            if ( autoptimizeImages::imgopt_active() ) {
+            if ( true === autoptimizeImages::imgopt_active() ) {
                 $value['availabilities'] = autoptimizeUtils::check_service_availability( true );
             }
 
