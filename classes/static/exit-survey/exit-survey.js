@@ -33,13 +33,25 @@
                 radio.parent().find('textarea').on('keyup', function (e) {
                     if ($(this).val().length === 0) {
                         $('#ao_uninstall_feedback_popup #ao-deactivate-yes').attr('disabled', 'disabled');
-                    } else {
+                    } else if ( $('#ao_feedback998')[0].checkValidity() == true ) {
                         $('#ao_uninstall_feedback_popup #ao-deactivate-yes').removeAttr('disabled');
                     }
                 });
             } else {
-                $('#ao_uninstall_feedback_popup #ao-deactivate-yes').removeAttr('disabled');
+                if ( $('#ao_feedback998')[0].checkValidity() == true ) {
+                    $('#ao_uninstall_feedback_popup #ao-deactivate-yes').removeAttr('disabled');
+                }
                 $(this).siblings('p.last-attempt').show();
+            }
+        });
+
+        $('#ao_feedback998').on('keyup', function (e) {
+            email_node = $(this);
+            email_val = email_node.val();
+            if ( email_val.length > 0 && email_node[0].checkValidity() == false ) {
+                $('#ao_uninstall_feedback_popup #ao-deactivate-yes').attr('disabled', 'disabled');
+            } else if ( $( '#ao_uninstall_feedback_popup input[name="ao-deactivate-option"]:checked' ).length > 0 ) {
+                $('#ao_uninstall_feedback_popup #ao-deactivate-yes').removeAttr('disabled');
             }
         });
 
@@ -75,16 +87,17 @@
             if( selectedOption.attr("id") === "ao_feedback999" ){
                 reason = 'Other: ' + selectedOption.parent().find('textarea').val().trim()
             }else{
-                reason = selectedOption.parent().find('label').text().trim()
+                reason = selectedOption.parent().find('label').attr('data-reason').trim()
             }
 
             var data = {
                 'url': modal_data.home,
                 'reason': reason,
-                'type': 'wordpress',
-                'version' : $('#ao_plugin_version').text().trim(),
+                'type': 'WP ' + $('#core_version').text().trim(),
+                'version' : 'AO ' + $('#ao_plugin_version').text().trim(),
                 'email': $('#ao_feedback998').val().trim(),
             };
+
             $.ajax({
                 type: 'POST',
                 url: atob( modal_data.dest ),
