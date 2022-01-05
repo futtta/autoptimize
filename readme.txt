@@ -325,6 +325,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.9.5 =
+* Better fix for PHP notice in autoptimizeImages.php.
+* Further improvements to the exit survey.
+
 = 2.9.4 =
 * Fix for 2 AMP compatibility issues (toolbar JS & lazyload JS).
 * Fix for PHP notice in autoptimizeImages.php.
