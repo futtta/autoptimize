@@ -817,6 +817,9 @@ class autoptimizeCache
                     'timeout' => 5,
                     )
             );
+        } elseif ( class_exists( 'RaidboxesNginxCacheFunctions' ) ) {
+            $rb_cache_helper = new RaidboxesNginxCacheFunctions();
+            $rb_cache_helper->purge_cache();
         } elseif ( defined('NGINX_HELPER_BASENAME') ) {
             do_action( 'rt_nginx_helper_purge_all' );
         } elseif ( file_exists( WP_CONTENT_DIR . '/wp-cache-config.php' ) && function_exists( 'prune_super_cache' ) ) {
