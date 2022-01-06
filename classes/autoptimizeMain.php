@@ -559,8 +559,15 @@ class autoptimizeMain
 
     public static function on_uninstall()
     {
+        // clear the cache.
         autoptimizeCache::clearall();
+        
+        // remove postmeta if active.
+        if ( autoptimizeConfig::is_ao_meta_settings_active() ) {
+            delete_post_meta_by_key( 'ao_post_optimize' );
+        }
 
+        // remove all options.
         $delete_options = array(
             'autoptimize_cache_clean',
             'autoptimize_cache_nogzip',
