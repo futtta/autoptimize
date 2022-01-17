@@ -669,7 +669,7 @@ abstract class autoptimizeBase
             'js/jquery/jquery.js',
         );
         foreach ( $minified_variants as $ending ) {
-            if ( autoptimizeUtils::str_ends_in( $filepath, $ending ) ) {
+            if ( autoptimizeUtils::str_ends_in( $filepath, $ending ) && true === apply_filters( 'autoptimize_filter_base_prepare_exclude_minified', true ) ) {
                 return false;
             }
         }
