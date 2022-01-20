@@ -486,7 +486,7 @@ class autoptimizeStyles extends autoptimizeBase
     private function check_datauri_exclude_list( $url )
     {
         static $exclude_list = null;
-        $no_datauris         = array();
+        static $no_datauris  = array();
 
         // Again, skip doing certain stuff repeatedly when loop-called.
         if ( null === $exclude_list ) {
