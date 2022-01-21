@@ -63,6 +63,11 @@ function drawQueueTable(queue) {
         dbtn      = false;
         hbtn      = false;
 
+        // don't list jobs that don't have a type, they are irrelevant and this also avoids "type.replace is not a function".
+        if ( type == false ) {
+            return;
+        }
+
         // Prepare job statuses
         if (keys.jqstat === 'NEW') {
             // Status: NEW (N, sort order 1)
