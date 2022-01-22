@@ -215,15 +215,64 @@ class autoptimizeCriticalCSSSettingsAjax {
         }
 
         // Init array, get options and prepare the raw object.
-        $settings               = array();
-        $settings['rules']      = get_option( 'autoptimize_ccss_rules' );
-        $settings['additional'] = get_option( 'autoptimize_ccss_additional' );
-        $settings['viewport']   = get_option( 'autoptimize_ccss_viewport' );
-        $settings['finclude']   = get_option( 'autoptimize_ccss_finclude' );
-        $settings['rtimelimit'] = get_option( 'autoptimize_ccss_rtimelimit' );
-        $settings['noptimize']  = get_option( 'autoptimize_ccss_noptimize' );
-        $settings['debug']      = get_option( 'autoptimize_ccss_debug' );
-        $settings['key']        = get_option( 'autoptimize_ccss_key' );
+        $settings                        = array();
+        
+        // CCSS settings.
+        $settings['ccss']['rules']       = get_option( 'autoptimize_ccss_rules' );
+        $settings['ccss']['additional']  = get_option( 'autoptimize_ccss_additional' );
+        $settings['ccss']['viewport']    = get_option( 'autoptimize_ccss_viewport' );
+        $settings['ccss']['finclude']    = get_option( 'autoptimize_ccss_finclude' );
+        $settings['ccss']['rtimelimit']  = get_option( 'autoptimize_ccss_rtimelimit' );
+        $settings['ccss']['noptimize']   = get_option( 'autoptimize_ccss_noptimize' );
+        $settings['ccss']['debug']       = get_option( 'autoptimize_ccss_debug' );
+        $settings['ccss']['key']         = get_option( 'autoptimize_ccss_key' );
+        $settings['ccss']['deferjquery'] = get_option( 'autoptimize_ccss_deferjquery' );
+        $settings['ccss']['domain']      = get_option( 'autoptimize_ccss_domain' );
+        $settings['ccss']['forcepath']   = get_option( 'autoptimize_ccss_forcepath' );
+        $settings['ccss']['loggedin']    = get_option( 'autoptimize_ccss_loggedin' );
+        $settings['ccss']['rlimit']      = get_option( 'autoptimize_ccss_rlimit' );
+        $settings['ccss']['unloadccss']  = get_option( 'autoptimize_ccss_unloadccss' );
+        
+        // JS settings.
+        $settings['js']['root']                = get_option( 'autoptimize_js' );
+        $settings['js']['aggregate']           = get_option( 'autoptimize_js_aggregate' );
+        $settings['js']['defer_not_aggregate'] = get_option( 'autoptimize_js_defer_not_aggregate' );
+        $settings['js']['defer_inline']        = get_option( 'autoptimize_js_defer_inline' );
+        $settings['js']['exclude']             = get_option( 'autoptimize_js_exclude' );
+        $settings['js']['forcehead']           = get_option( 'autoptimize_js_forcehead' );
+        $settings['js']['justhead']            = get_option( 'autoptimize_js_justhead' );
+        $settings['js']['trycatch']            = get_option( 'autoptimize_js_trycatch' );
+        $settings['js']['include_inline']      = get_option( 'autoptimize_js_include_inline');
+
+        // CSS settings.
+        $settings['css']['root']           = get_option( 'autoptimize_css' );
+        $settings['css']['aggregate']      = get_option( 'autoptimize_css_aggregate' );
+        $settings['css']['datauris']       = get_option( 'autoptimize_css_datauris' );
+        $settings['css']['justhead']       = get_option( 'autoptimize_css_justhead' );
+        $settings['css']['defer']          = get_option( 'autoptimize_css_defer' );
+        $settings['css']['defer_inline']   = get_option( 'autoptimize_css_defer_inline' );
+        $settings['css']['inline']         = get_option( 'autoptimize_css_inline' );
+        $settings['css']['exclude']        = get_option( 'autoptimize_css_exclude' );
+        $settings['css']['include_inline'] = get_option( 'autoptimize_css_include_inline' );
+
+        // Others.
+        $settings['other']['autoptimize_imgopt_settings']         = get_option( 'autoptimize_imgopt_settings' );
+        $settings['other']['autoptimize_extra_settings']          = get_option( 'autoptimize_extra_settings' );
+        $settings['other']['autoptimize_cache_fallback']          = get_option( 'autoptimize_cache_fallback' );
+        $settings['other']['autoptimize_cache_nogzip']            = get_option( 'autoptimize_cache_nogzip' );
+        $settings['other']['autoptimize_cdn_url']                 = get_option( 'autoptimize_cdn_url' );
+        $settings['other']['autoptimize_enable_meta_ao_settings'] = get_option( 'autoptimize_enable_meta_ao_settings' );
+        $settings['other']['autoptimize_enable_site_config']      = get_option( 'autoptimize_enable_site_config' );
+        $settings['other']['autoptimize_html']                    = get_option( 'autoptimize_html' );
+        $settings['other']['autoptimize_html_keepcomments']       = get_option( 'autoptimize_html_keepcomments' );
+        $settings['other']['autoptimize_minify_excluded']         = get_option( 'autoptimize_minify_excluded' );
+        $settings['other']['autoptimize_optimize_checkout']       = get_option( 'autoptimize_optimize_checkout' );
+        $settings['other']['autoptimize_optimize_logged']         = get_option( 'autoptimize_optimize_logged' );
+
+        if ( defined( 'AO_PRO_VERSION' ) ) {
+            $settings['pro']['boosters']  = get_option( 'autoptimize_pro_boosters' );
+            $settings['pro']['pagecache'] = get_option( 'autoptimize_pro_pagecache' );
+        }
 
         // Initialize error flag.
         $error = true;
@@ -238,7 +287,7 @@ class autoptimizeCriticalCSSSettingsAjax {
         }
 
         // Prepare archive.
-        $zipfile = AO_CCSS_DIR . date( 'Ymd-H\hi' ) . '_ao_ccss_settings.zip';
+        $zipfile = AO_CCSS_DIR . str_replace( array('.', '/'), '_', parse_url( AUTOPTIMIZE_WP_SITE_URL, PHP_URL_HOST ) ) . '_' . date( 'Ymd-H\hi' ) . '_ao_ccss_settings.zip';
         $file    = pathinfo( $zipfile, PATHINFO_BASENAME );
         $zip     = new ZipArchive();
         $ret     = $zip->open( $zipfile, ZipArchive::CREATE );
@@ -287,7 +336,7 @@ class autoptimizeCriticalCSSSettingsAjax {
             // create tmp dir with hard guess name in AO_CCSS_DIR.
             $_secret_dir     = wp_hash( uniqid( md5( AUTOPTIMIZE_CACHE_URL ), true ) );
             $_import_tmp_dir = trailingslashit( AO_CCSS_DIR . $_secret_dir );
-            mkdir( $_import_tmp_dir );
+            mkdir( $_import_tmp_dir, 0774, true );
 
             // Save file to that tmp directory but give it our own name to prevent directory traversal risks when using original name.
             $zipfile = $_import_tmp_dir . uniqid( 'import_settings-', true ) . '.zip';
@@ -320,15 +369,52 @@ class autoptimizeCriticalCSSSettingsAjax {
                     // Get settings and turn them into an object.
                     $settings = json_decode( file_get_contents( $importfile ), true );
 
-                    // Update options.
-                    update_option( 'autoptimize_ccss_rules', $settings['rules'] );
-                    update_option( 'autoptimize_ccss_additional', $settings['additional'] );
-                    update_option( 'autoptimize_ccss_viewport', $settings['viewport'] );
-                    update_option( 'autoptimize_ccss_finclude', $settings['finclude'] );
-                    update_option( 'autoptimize_ccss_rtimelimit', $settings['rtimelimit'] );
-                    update_option( 'autoptimize_ccss_noptimize', $settings['noptimize'] );
-                    update_option( 'autoptimize_ccss_debug', $settings['debug'] );
-                    update_option( 'autoptimize_ccss_key', $settings['key'] );
+                    // Update options from settings, but only for known options.
+                    // CCSS.
+                    foreach ( array( 'rules', 'additional', 'viewport', 'finclude', 'rtimelimit', 'noptimize', 'debug', 'key', 'deferjquery', 'domain', 'forcepath', 'loggedin', 'rlimit', 'unloadccss' ) as $ccss_setting ) {
+                        if ( false === array_key_exists( 'ccss', $settings ) || false === array_key_exists( $ccss_setting, $settings['ccss'] ) ) {
+                            continue;
+                        } else {
+                            update_option( 'autoptimize_ccss_' . $ccss_setting, $settings['ccss'][$ccss_setting] );
+                        }
+                    }
+
+                    // JS.
+                    foreach ( array( 'root', 'aggregate', 'defer_not_aggregate', 'defer_inline', 'exclude', 'forcehead', 'trycatch', 'include_inline' ) as $js_setting ) {
+                        if ( false === array_key_exists( 'js', $settings ) || false === array_key_exists( $js_setting, $settings['js'] ) ) {
+                            continue;
+                        } else if ( 'root' === $js_setting ) {
+                            update_option( 'autoptimize_js', $settings['js']['root'] );
+                        } else {
+                            update_option( 'autoptimize_js_' . $js_setting, $settings['js'][$js_setting] );
+                        }
+                    }
+
+                    // CSS.
+                    foreach ( array( 'root', 'aggregate', 'datauris', 'justhead', 'defer', 'defer_inline', 'inline', 'exclude', 'include_inline' ) as $css_setting ) {
+                        if ( false === array_key_exists( 'css', $settings ) || false === array_key_exists( $css_setting, $settings['css'] ) ) {
+                            continue;
+                        } else if ( 'root' === $css_setting ) {
+                            update_option( 'autoptimize_css', $settings['css']['root'] );
+                        } else {
+                            update_option( 'autoptimize_css_' . $css_setting, $settings['css'][$css_setting] );
+                        }
+                    }
+
+                    // Other.
+                    foreach ( array( 'autoptimize_imgopt_settings', 'autoptimize_extra_settings', 'autoptimize_cache_fallback', 'autoptimize_cache_nogzip', 'autoptimize_cdn_url', 'autoptimize_enable_meta_ao_settings', 'autoptimize_enable_site_config', 'autoptimize_html', 'autoptimize_html_keepcomments', 'autoptimize_minify_excluded', 'autoptimize_optimize_checkout', 'autoptimize_optimize_logged' ) as $other_setting ) {
+                        if ( false === array_key_exists( 'other', $settings ) || false === array_key_exists( $other_setting, $settings['other'] ) ) {
+                            continue;
+                        } else {
+                            update_option( $other_setting, $settings['other'][$other_setting] );
+                        }
+                    }                    
+
+                    // AO Pro.
+                    if ( defined( 'AO_PRO_VERSION' ) && array_key_exists( 'pro', $settings ) ) {
+                        update_option( 'autoptimize_pro_boosters', $settings['pro']['boosters'] );
+                        update_option( 'autoptimize_pro_pagecache', $settings['pro']['pagecache'] );
+                    }
                 } else {
                     // Settings file doesn't exist, update error flag.
                     $error = 'settings file does not exist';
