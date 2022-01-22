@@ -59,6 +59,7 @@ class autoptimizeMain
 
         add_action( 'autoptimize_setup_done', array( $this, 'version_upgrades_check' ) );
         add_action( 'autoptimize_setup_done', array( $this, 'check_cache_and_run' ) );
+        add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_compat' ), 10 );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_ao_extra' ), 15 );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_admin_only_trinkets' ), 20 );
         add_action( 'autoptimize_setup_done', array( $this, 'maybe_run_criticalcss' ), 11 );
@@ -230,6 +231,14 @@ class autoptimizeMain
     {
         if ( autoptimizeCache::do_fallback() ) {
             add_action( 'template_redirect', array( 'autoptimizeCache', 'wordpress_notfound_fallback' ) );
+        }
+    }
+
+    public function maybe_run_ao_compat()
+    {
+        // Loads the compatibility-class to ensure more out-of-the-box compatibility with big players.
+        if ( apply_filters( 'autoptimize_filter_init_compatibility', true ) ) {
+             new autoptimizeCompatibility();
         }
     }
 
