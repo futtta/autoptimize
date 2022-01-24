@@ -382,12 +382,12 @@ class autoptimizeCache
      */
     public static function clearall( $propagate = true )
     {
-        if ( defined( 'ET_CORE_VERSION' ) ) {
+        if ( defined( 'ET_CORE_VERSION' ) && 'Divi' === get_template() ) {
             // see https://blog.futtta.be/2018/11/17/warning-divi-purging-autoptimizes-cache/ .
             $dbt    = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 2 );
             $caller = isset( $dbt[1]['function'] ) ? $dbt[1]['function'] : null;
             if ( $caller === 'et_core_clear_wp_cache' ) {
-                _doing_it_wrong( 'autoptimizeCache::clearall', 'Divi devs: please don\'t clear Autoptimize\'s cache, it is unneeded and can break sites', 'AO 2.9.6' );
+                _doing_it_wrong( 'autoptimizeCache::clearall', 'Divi devs: please don\'t clear Autoptimize\'s cache, it is unneeded and can break sites. You can contact me at futtta@gmail.com to discuss.', 'Autoptimize 2.9.6' );
                 return false;
             }
         }
