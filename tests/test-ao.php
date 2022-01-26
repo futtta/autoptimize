@@ -311,7 +311,7 @@ MARKUP;
 <script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}2d6e668fad0726747cb413ac61486ee0.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}25005c741b772697d2cd174b0292c858.js"></script></body>
 </html>
 MARKUP;
 
@@ -380,7 +380,7 @@ MARKUP;
 <script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}2d6e668fad0726747cb413ac61486ee0.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}25005c741b772697d2cd174b0292c858.js"></script></body>
 </html>
 MARKUP;
 
@@ -449,7 +449,7 @@ MARKUP;
 <script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}2d6e668fad0726747cb413ac61486ee0.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}25005c741b772697d2cd174b0292c858.js"></script></body>
 </html>
 MARKUP;
 
@@ -518,7 +518,7 @@ MARKUP;
 <script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
 <script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}2d6e668fad0726747cb413ac61486ee0.js"></script></body>
+<script defer src="$cdnurl/${subfolder}${jspart}25005c741b772697d2cd174b0292c858.js"></script></body>
 </html>
 MARKUP;
 
