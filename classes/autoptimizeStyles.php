@@ -215,6 +215,9 @@ class autoptimizeStyles extends autoptimizeBase
         // forcefully exclude CSS with data-noptimize attrib.
         $this->dontmove[] = 'data-noptimize';
 
+        // forcefully exclude inline CSS with ".wp-container-" which due to the random-ish nature busts AO's cache continuously.
+        $this->dontmove[] = '.wp-container-';
+
         // Should we defer css?
         // value: true / false.
         $this->defer = $options['defer'];
