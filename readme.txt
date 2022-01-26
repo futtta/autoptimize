@@ -321,6 +321,14 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 2.9.6 =
+* new: compatibility logic for "edit with elementor", "revolution slider" and for non-aggregated inline JS requiring jQuery even if not excluded (= auto-exclude of jQuery)
+* fix: stop Divi from unneeded clearing Autoptimize's cache which (see https://blog.futtta.be/2018/11/17/warning-divi-purging-autoptimizes-cache/)
+* misc smaller fixes/ improvements, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
+
+= 2.9.5.1 =
+* fix for CSS cache growing too fast when inline CSS with variable selectors from WordPress 5.9 comment blocks is aggregated.
+
 = 2.9.5 =
 * Better fix for PHP notice in autoptimizeImages.php.
 * Further improvements to the exit survey.
