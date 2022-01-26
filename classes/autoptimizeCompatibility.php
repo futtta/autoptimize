@@ -34,7 +34,7 @@ class autoptimizeCompatibility
         }
         
         // revslider; jQuery should not be deferred + exclude all revslider JS.
-        if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && true == $this->revslider_compat_helper() && apply_filters( 'autoptimize_filter_compatibility_revslider_active', true ) ) {
+        if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && true == $this->inline_js_config_checker() && apply_filters( 'autoptimize_filter_compatibility_revslider_active', true ) ) {
             add_filter( 'autoptimize_filter_js_exclude', function( $js_excl, $html ) {
                 $revslider_excl = 'revslider, setREVStartSize, jquery.min.js';
                 if ( false !== strpos( $html, 'setREVStartSize' ) ) {
@@ -45,21 +45,35 @@ class autoptimizeCompatibility
                     $js_excl .= ',' . $revslider_excl;
                 }
                 return $js_excl;
-            }, 10, 2 );
+            }, 11, 2 );
         }
         
-        // stop divi from purging cache -> likely in autoptimizeCache.php instead.
+        // exclude jQuery if inline JS is found that requires jQuery.
+        if ( $this->inline_js_config_checker() && false === strpos( $this->conf->get( 'autoptimize_js_exclude' ), 'jquery.min.js' ) && apply_filters( 'autoptimize_filter_compatibility_inline_jquery', true ) ) {
+            add_filter( 'autoptimize_filter_js_exclude', function( $js_excl, $html ) {
+                if ( preg_match( '/<script[^>]*>[^<]*(jQuery|\$)\([^<]*<\/script>/Usm', $html ) ) {
+                    if ( is_array( $js_excl ) ) {
+                        $js_excl = implode( ',', $js_excl );
+                    }
+                    
+                    if ( false === strpos( $js_excl, 'jquery.min.js' ) ) {
+                        $js_excl .= ', jquery.min.js';
+                    }
+                }
+                return $js_excl;
+            }, 12, 2 );
+        }
     }
     
-    public function revslider_compat_helper() {
+    public function inline_js_config_checker() {
         if ( ( $this->conf->get( 'autoptimize_js_aggregate' ) || apply_filters( 'autoptimize_filter_js_dontaggregate', false ) ) && apply_filters( 'autoptimize_js_include_inline', $this->conf->get( 'autoptimize_js_include_inline' ) ) ) {
-            // if all files including inline JS are aggregated we don't need to exclude revslider stuff.
+            // if all files and also inline JS are aggregated we don't have to worry about inline JS.
             return false;
         } else if ( apply_filters( 'autoptimize_filter_js_defer_not_aggregate', $this->conf->get( 'autoptimize_js_defer_not_aggregate' ) ) && apply_filters( 'autoptimize_js_filter_defer_inline', $this->conf->get( 'autoptimize_js_defer_inline' ) ) ) {
-            // and when not aggregating but deferring all excluding is not needed either.
+            // and when not aggregating but deferring all including inline JS, then all is OK too.
             return false;
         }
-        // in all other cases we need to exclude the revslider stuff.
+        // in all other cases we need to pay attention to inline JS requiring src'ed JS to be available.
         return true;
     }
 }
