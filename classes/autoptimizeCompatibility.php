@@ -16,7 +16,7 @@ class autoptimizeCompatibility
      */
     public function __construct()
     {
-        if ( ! is_admin() ) {
+        if ( ! is_admin() && ! defined( 'DOING_CRON' ) ) {
             $this->conf = autoptimizeConfig::instance();
             $this->run();
         }
@@ -63,6 +63,8 @@ class autoptimizeCompatibility
                 return $js_excl;
             }, 12, 2 );
         }
+        
+        // something to make JS-based blocks work OOTB?
     }
     
     public function inline_js_config_checker() {
