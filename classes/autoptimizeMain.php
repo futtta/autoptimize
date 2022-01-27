@@ -236,8 +236,17 @@ class autoptimizeMain
 
     public function maybe_run_ao_compat()
     {
-        // Loads the compatibility-class to ensure more out-of-the-box compatibility with big players.
-        if ( apply_filters( 'autoptimize_filter_init_compatibility', true ) ) {
+        // Condtionally loads the compatibility-class to ensure more out-of-the-box compatibility with big players.
+        $_run_compat = true;
+
+        if ( autoptimizeOptionWrapper::get_option( 'autoptimize_installed_before_compatibility', false ) ) {
+            // If AO was already running before Compatibility logic was added, don't run compat by default 
+            // because it can be assumed everything works and we want to avoid (perf) regressions that 
+            // could occur due to compatibility code.
+            $_run_compat = false;
+        }
+
+        if ( apply_filters( 'autoptimize_filter_init_compatibility', $_run_compat ) ) {
              new autoptimizeCompatibility();
         }
     }
@@ -632,6 +641,7 @@ class autoptimizeMain
             'autoptimize_ccss_deferjquery',
             'autoptimize_ccss_domain',
             'autoptimize_ccss_unloadccss',
+            'autoptimize_installed_before_compatibility',
         );
 
         if ( ! is_multisite() ) {
