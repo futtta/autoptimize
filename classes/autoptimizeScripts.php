@@ -434,6 +434,7 @@ class autoptimizeScripts extends autoptimizeBase
                         $code            = preg_replace( '/(?:^\\s*<!--\\s*|\\s*(?:\\/\\/)?\\s*-->\\s*$)/', '', $code );
                         $this->scripts[] = 'INLINE;' . $code;
                     } else {
+                        $_inline_dontmove = array_values( array_diff( $this->dontmove, array( 'nonce', 'post_id' ) ) );
                         if ( false === $this->defer_inline ) {
                             // Can we move this?
                             $autoptimize_js_moveable = apply_filters( 'autoptimize_js_moveable', '', $tag );
@@ -446,7 +447,7 @@ class autoptimizeScripts extends autoptimizeBase
                             } else {
                                 $tag = '';
                             }
-                        } elseif ( str_replace( $this->dontmove, '', $tag ) === $tag ) {
+                        } else if ( str_replace( $_inline_dontmove, '', $tag ) === $tag ) {
                             // defer inline JS by base64 encoding it.
                             preg_match( '#<script.*>(.*)</script>#Usmi', $tag, $match );
                             $new_tag       = '<script defer src="data:text/javascript;base64,' . base64_encode( $match[1] ) . '"></script>';
