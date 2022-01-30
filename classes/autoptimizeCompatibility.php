@@ -33,7 +33,7 @@ class autoptimizeCompatibility
             add_filter( 'autoptimize_filter_js_noptimize', '__return_true' );
         }
         
-        // revslider; jQuery should not be deferred + exclude all revslider JS.
+        // Revslider; jQuery should not be deferred + exclude all revslider JS.
         if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && true == $this->inline_js_config_checker() && apply_filters( 'autoptimize_filter_compatibility_revslider_active', true ) ) {
             add_filter( 'autoptimize_filter_js_exclude', function( $js_excl, $html ) {
                 $revslider_excl = 'revslider, setREVStartSize, window.RSIW, window.RS_MODULES, jquery.min.js';
@@ -48,8 +48,8 @@ class autoptimizeCompatibility
             }, 11, 2 );
         }
         
-        // revslider; remove revslider JS if no slides in HTML.
-        if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && apply_filters( 'autoptimize_filter_compatibility_revslider_remover_active', true ) ) {
+        // Revslider; remove revslider JS if no slides in HTML for non-logged in users.
+        if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && false === is_user_logged_in() && apply_filters( 'autoptimize_filter_compatibility_revslider_remover_active', true ) ) {
             add_filter( 'autoptimize_filter_js_removables', function( $to_remove, $html ) {
                 if ( false === strpos( $html, '<rs-slides>') ) {
                     $to_remove .= 'plugins/revslider, setREVStartSize, window.RSIW, window.RS_MODULES';
@@ -59,7 +59,7 @@ class autoptimizeCompatibility
             }, 11, 2 ); 
         }
         
-        // exclude jQuery if inline JS is found that requires jQuery.
+        // Exclude jQuery if inline JS is found that requires jQuery.
         if ( $this->inline_js_config_checker() && false === strpos( $this->conf->get( 'autoptimize_js_exclude' ), 'jquery.min.js' ) && apply_filters( 'autoptimize_filter_compatibility_inline_jquery', true ) ) {
             add_filter( 'autoptimize_filter_js_exclude', function( $js_excl, $html ) {
                 if ( preg_match( '/<script[^>]*>[^<]*(jQuery|\$)\([^<]*<\/script>/Usm', $html ) ) {
@@ -75,8 +75,26 @@ class autoptimizeCompatibility
             }, 12, 2 );
         }
         
-        // something to make those pesky JS-based blocks work OOTB?
-        
+        // Make JS-based Gutenberg blocks work OOTB.
+        if ( $this->inline_js_config_checker() && apply_filters( 'autoptimize_filter_compatibility_gutenberg_js', true ) ) {
+            add_filter( 'autoptimize_filter_js_exclude', function( $js_excl, $html ) {
+                if ( false !== strpos( $html, 'wp.i18n' ) || false !== strpos( $html, 'wp.apiFetch' ) || false !== strpos( $html, 'window.lodash' ) ) {
+                    if ( is_array( $js_excl ) ) {
+                        $js_excl = implode( ',', $js_excl );
+                    }
+                    
+                    if ( false === strpos( $js_excl, 'jquery.min.js' ) ) {
+                        $js_excl .= ', jquery.min.js';
+                    }
+                    
+                    if ( false === strpos( $js_excl, 'wp-includes/js/dist' ) ) {
+                        $js_excl .= ', wp-includes/js/dist';
+                    }
+                }
+                return $js_excl;
+            }, 13, 2 );
+        }
+
         // CF7 compat + remove
     }
     
