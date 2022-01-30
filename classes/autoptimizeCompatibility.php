@@ -36,8 +36,8 @@ class autoptimizeCompatibility
         // revslider; jQuery should not be deferred + exclude all revslider JS.
         if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && true == $this->inline_js_config_checker() && apply_filters( 'autoptimize_filter_compatibility_revslider_active', true ) ) {
             add_filter( 'autoptimize_filter_js_exclude', function( $js_excl, $html ) {
-                $revslider_excl = 'revslider, setREVStartSize, jquery.min.js';
-                if ( false !== strpos( $html, 'setREVStartSize' ) ) {
+                $revslider_excl = 'revslider, setREVStartSize, window.RSIW, window.RS_MODULES, jquery.min.js';
+                if ( false !== strpos( $html, '<rs-slides>' ) ) {
                     if ( is_array( $js_excl ) ) {
                         $js_excl = implode( ',', $js_excl );
                     }
@@ -46,6 +46,17 @@ class autoptimizeCompatibility
                 }
                 return $js_excl;
             }, 11, 2 );
+        }
+        
+        // revslider; remove revslider JS if no slides in HTML.
+        if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && apply_filters( 'autoptimize_filter_compatibility_revslider_remover_active', true ) ) {
+            add_filter( 'autoptimize_filter_js_removables', function( $to_remove, $html ) {
+                if ( false === strpos( $html, '<rs-slides>') ) {
+                    $to_remove .= 'plugins/revslider, setREVStartSize, window.RSIW, window.RS_MODULES';
+                }
+                
+                return $to_remove;
+            }, 11, 2 ); 
         }
         
         // exclude jQuery if inline JS is found that requires jQuery.
@@ -64,7 +75,9 @@ class autoptimizeCompatibility
             }, 12, 2 );
         }
         
-        // something to make JS-based blocks work OOTB?
+        // something to make those pesky JS-based blocks work OOTB?
+        
+        // CF7 compat + remove
     }
     
     public function inline_js_config_checker() {
