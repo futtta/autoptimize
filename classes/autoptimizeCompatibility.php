@@ -99,14 +99,21 @@ class autoptimizeCompatibility
     }
     
     public function inline_js_config_checker() {
-        if ( ( $this->conf->get( 'autoptimize_js_aggregate' ) || apply_filters( 'autoptimize_filter_js_dontaggregate', false ) ) && apply_filters( 'autoptimize_js_include_inline', $this->conf->get( 'autoptimize_js_include_inline' ) ) ) {
-            // if all files and also inline JS are aggregated we don't have to worry about inline JS.
-            return false;
-        } else if ( apply_filters( 'autoptimize_filter_js_defer_not_aggregate', $this->conf->get( 'autoptimize_js_defer_not_aggregate' ) ) && apply_filters( 'autoptimize_js_filter_defer_inline', $this->conf->get( 'autoptimize_js_defer_inline' ) ) ) {
-            // and when not aggregating but deferring all including inline JS, then all is OK too.
-            return false;
+        static $inline_js_flagged = null;
+        
+        if ( null === $inline_js_flagged ) {
+            if ( ( $this->conf->get( 'autoptimize_js_aggregate' ) || apply_filters( 'autoptimize_filter_js_dontaggregate', false ) ) && apply_filters( 'autoptimize_js_include_inline', $this->conf->get( 'autoptimize_js_include_inline' ) ) ) {
+                // if all files and also inline JS are aggregated we don't have to worry about inline JS.
+                $inline_js_flagged = false;
+            } else if ( apply_filters( 'autoptimize_filter_js_defer_not_aggregate', $this->conf->get( 'autoptimize_js_defer_not_aggregate' ) ) && apply_filters( 'autoptimize_js_filter_defer_inline', $this->conf->get( 'autoptimize_js_defer_inline' ) ) ) {
+                // and when not aggregating but deferring all including inline JS, then all is OK too.
+                $inline_js_flagged = false;
+            }
+
+            // in all other cases we need to pay attention to inline JS requiring src'ed JS to be available.
+            $inline_js_flagged = true;
         }
-        // in all other cases we need to pay attention to inline JS requiring src'ed JS to be available.
-        return true;
+        
+        return $inline_js_flagged;
     }
 }
