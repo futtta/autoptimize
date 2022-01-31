@@ -374,7 +374,7 @@ class autoptimizeMain
 
             // And make sure pagebuilder previews don't get optimized HTML/ JS/ CSS/ ...
             if ( false === $ao_noptimize ) {
-                $_qs_pagebuilders = array( 'tve', 'elementor-preview', 'fl_builder', 'vc_action', 'et_fb', 'bt-beaverbuildertheme', 'ct_builder', 'fb-edit', 'siteorigin_panels_live_editor' );
+                $_qs_pagebuilders = array( 'tve', 'elementor-preview', 'fl_builder', 'vc_action', 'et_fb', 'bt-beaverbuildertheme', 'ct_builder', 'fb-edit', 'siteorigin_panels_live_editor', 'preview' );
                 foreach ( $_qs_pagebuilders as $_pagebuilder ) {
                     if ( array_key_exists( $_pagebuilder, $_GET ) ) {
                         $ao_noptimize = true;
