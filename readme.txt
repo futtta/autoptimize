@@ -321,8 +321,9 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
-= 2.9.6 =
-* new: compatibility logic for "edit with elementor", "revolution slider" and for non-aggregated inline JS requiring jQuery even if not excluded (= auto-exclude of jQuery)
+= 3.0.0 =
+* new: compatibility logic for "edit with elementor", "revolution slider", for non-aggregated inline JS requiring jQuery even if not excluded (= auto-exclude of jQuery) and JS-heave WordPress blocks (Gutenberg)
+* improvement: defer inline now also allowed if inline JS contains nonce or post_id.
 * fix: stop Divi from unneeded clearing Autoptimize's cache which (see https://blog.futtta.be/2018/11/17/warning-divi-purging-autoptimizes-cache/)
 * misc smaller fixes/ improvements, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
 

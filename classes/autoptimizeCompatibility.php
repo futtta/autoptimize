@@ -94,8 +94,6 @@ class autoptimizeCompatibility
                 return $js_excl;
             }, 13, 2 );
         }
-
-        // CF7 compat + remove
     }
     
     public function inline_js_config_checker() {
