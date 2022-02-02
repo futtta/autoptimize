@@ -322,8 +322,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 3.0.0 =
+* fundamental change for new installations: by default Autoptimize will not aggregate JS/ CSS any more (HTTP/2 is ubiquitous and there are other advantages to not aggregating esp. re. inline JS/ CSS and dependancies)
 * new: compatibility logic for "edit with elementor", "revolution slider", for non-aggregated inline JS requiring jQuery even if not excluded (= auto-exclude of jQuery) and JS-heave WordPress blocks (Gutenberg)
 * improvement: defer inline now also allowed if inline JS contains nonce or post_id.
+* improvement: settings export/ import on critical CSS tab now takes into account all Autoptimize settings, not just the critical CSS ones.
 * fix: stop Divi from unneeded clearing Autoptimize's cache which (see https://blog.futtta.be/2018/11/17/warning-divi-purging-autoptimizes-cache/)
 * misc smaller fixes/ improvements, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
 
