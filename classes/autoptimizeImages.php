@@ -726,13 +726,17 @@ class autoptimizeImages
         $_max_width = apply_filters( 'autoptimize_filter_imgopt_max_width', 4999 );
         if ( $width > $_max_width ) {
             $_width = $_max_width;
-            $height = $_width / $width * $height;
+            if ( ! empty( $height ) && is_int( $height ) ) {
+                $height = $_width / $width * $height;
+            }
             $width  = $_width;
         }
         $_max_height = apply_filters( 'autoptimize_filter_imgopt_max_height', 4999 );
         if ( $height > $_max_height ) {
             $_height = $_max_height;
-            $width   = $_height / $height * $width;
+            if ( ! empty( $width ) && is_int( $width ) ) {
+                $width   = $_height / $height * $width;
+            }
             $height  = $_height;
         }
 
