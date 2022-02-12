@@ -121,7 +121,7 @@ class autoptimizeCriticalCSSSettings {
                 $mkdirresult = autoptimizeCriticalCSSBase::create_ao_ccss_dir();
 
                 // Warn if we could not create those files.
-                if ( ( true !== $mkdirresult ) {
+                if ( ( true !== $mkdirresult ) ) {
                     ?>
                     <div class="notice-error notice"><p>
                     <?php
