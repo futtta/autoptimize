@@ -646,6 +646,7 @@ class autoptimizeCache
             $_fallback_php_contents = file_get_contents( AUTOPTIMIZE_PLUGIN_DIR . 'config/' . $_fallback_filename );
             $_fallback_php_contents = str_replace( '<?php exit;', '<?php', $_fallback_php_contents );
             $_fallback_php_contents = str_replace( '<!--ao-cache-dir-->', AUTOPTIMIZE_CACHE_DIR, $_fallback_php_contents );
+            $_fallback_php_contents = str_replace( '<!--ao-cachefile-prefix-->', AUTOPTIMIZE_CACHEFILE_PREFIX, $_fallback_php_contents );
             if ( is_multisite() ) {
                 $_fallback_php_contents = str_replace( '$multisite = false;', '$multisite = true;', $_fallback_php_contents );
             }
