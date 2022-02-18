@@ -529,7 +529,7 @@ MARKUP;
     /**
      * @dataProvider provider_test_rewrite_markup_with_cdn
      */
-    function test_rewrite_markup_with_cdn( $input, $expected )
+    function test_rewrite_markup_with_cdn_classic_aggregate( $input, $expected )
     {
         add_filter( 'autoptimize_filter_css_aggregate', '__return_true');
         add_filter( 'autoptimize_css_include_inline', '__return_true' );
@@ -538,6 +538,10 @@ MARKUP;
         $actual = $this->ao->end_buffering( $input );
 
         $this->assertEquals( $expected, $actual );
+
+        remove_all_filters( 'autoptimize_filter_css_aggregate' );
+        remove_all_filters( 'autoptimize_css_include_inline' );
+        remove_all_filters( 'autoptimize_filter_js_aggregate' );
     }
 
     public function provider_test_rewrite_markup_with_cdn()
@@ -839,6 +843,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
         $actual   = $this->ao->should_buffer( $doing_tests = true );
 
         $this->assertEquals( $expected, $actual );
+
+        remove_all_filters( 'autoptimize_filter_noptimize' );
     }
 
     public function test_does_buffering_when_ao_noptimize_filter_is_false()
@@ -851,6 +857,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
         $actual   = $this->ao->should_buffer( $doing_tests = true );
 
         $this->assertEquals( $expected, $actual );
+
+        remove_all_filters( 'autoptimize_filter_noptimize' );
     }
 
     public function test_ignores_ao_noptimize_qs_when_instructed()
@@ -877,6 +885,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
         });
 
         $this->ao->should_buffer( $doing_tests = true );
+
+        remove_all_filters( 'autoptimize_filter_honor_qs_noptimize' );
+        remove_all_filters( 'autoptimize_filter_noptimize' );
     }
 
     public function test_wpengine_cache_flush()
@@ -900,6 +911,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
         });
 
         autoptimizeCache::flushPageCache();
+
+        remove_all_filters( 'autoptimize_flush_wpengine_methods' );
     }
 
     /**
@@ -936,6 +949,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
         });
 
         autoptimizeCache::flushPageCache();
+
+        remove_all_filters( 'autoptimize_flush_wpengine_aggressive' );
+        remove_all_filters( 'autoptimize_flush_wpengine_methods' );
     }
 
     /**
@@ -1125,6 +1141,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
         add_filter( 'autoptimize_filter_base_cdnurl', $without_ssl );
         $actual_without_ssl = $mock->url_replace_cdn( $test_link );
         $this->assertEquals( $expected_without_ssl, $actual_without_ssl );
+
+        remove_all_filters( 'autoptimize_filter_base_cdnurl' );
     }
 
     public function provider_cssmin_issues()
@@ -1358,6 +1376,9 @@ CSS;
         $css_actual     = $instance->rewrite_assets( $fixurls_result );
 
         $this->assertEquals( $css_expected, $css_actual );
+
+        remove_all_filters( 'autoptimize_filter_css_datauri_image' );
+        remove_all_filters( 'autoptimize_filter_css_is_datauri_candidate' );
     }
 
     /**
@@ -1439,6 +1460,9 @@ CSS;
         $instance->setOption( 'datauris', true );
         $css_actual = $instance->rewrite_assets( $css_orig );
         $this->assertEquals( $css_expected, $css_actual );
+
+        remove_all_filters( 'autoptimize_filter_css_is_datauri_candidate' );
+        remove_all_filters( 'autoptimize_filter_css_datauri_image' );
     }
 
     /**
@@ -1564,6 +1588,8 @@ CSS;
         $css_actual_fonts_cdn = $instance->rewrite_assets( $css_in );
 
         $this->assertEquals( $css_expected_fonts_cdn, $css_actual_fonts_cdn );
+
+        remove_all_filters( 'autoptimize_filter_css_fonts_cdn' );
     }
 
     /**
@@ -1750,7 +1776,7 @@ HTML;
         $options = [
             'autoptimizeStyles' => $this->getAoStylesDefaultOptions(),
         ];
-        
+
         $options['autoptimizeStyles']['aggregate'] = true;
         $options['autoptimizeStyles']['include_inline'] = true;
 
@@ -1859,7 +1885,7 @@ HTML;
         */
     }
 
-    public function test_inline_and_defer_markup()
+    public function test_inline_and_defer_markup_classic_aggregate()
     {
         add_filter( 'autoptimize_filter_css_aggregate', '__return_true');
         add_filter( 'autoptimize_css_include_inline', '__return_true' );
@@ -1876,6 +1902,9 @@ HTML;
 
         remove_all_filters( 'autoptimize_filter_css_defer' );
         remove_all_filters( 'autoptimize_filter_css_defer_inline' );
+        remove_all_filters( 'autoptimize_filter_css_aggregate' );
+        remove_all_filters( 'autoptimize_css_include_inline' );
+        remove_all_filters( 'autoptimize_filter_js_aggregate' );
     }
 
     public function test_js_aggregation_decision_and_dontaggregate_filter()
@@ -2090,6 +2119,8 @@ MARKUP;
         $instance->minify();
         $actual2 = $instance->getcontent();
         $this->assertEquals( $expected2, $actual2 );
+
+        remove_all_filters( 'autoptimize_html_minify_inline_js_css' );
     }
 
     public function test_html_minify_html_comments_inside_script_blocks_old_school_pattern()
@@ -2120,6 +2151,8 @@ MARKUP;
         $instance->minify();
         $actual = $instance->getcontent();
         $this->assertEquals( $expected, $actual );
+
+        remove_all_filters( 'autoptimize_html_minify_inline_js_css' );
     }
 
     public function test_html_minify_html_comments_inside_script_blocks_old_school_pattern_untouched()
@@ -2382,7 +2415,7 @@ MARKUP;
         $actual = $instance->filter_optimize_images( $markup );
         $this->assertEquals( $expected, $actual );
     }
-    
+
     /**
      * Test image optimization in autoptimizeImages.php with one excluded image.
      *
