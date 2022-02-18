@@ -83,7 +83,7 @@ class autoptimizeHTML extends autoptimizeBase
         }
 
         // Optionally minify inline JS & CSS.
-        if ( apply_filters( 'autoptimize_html_minify_inline_js_css', true ) ) {
+        if ( apply_filters( 'autoptimize_html_minify_inline_js_css', true ) && false === $this->keepcomments ) {
             if ( false != autoptimizeOptionWrapper::get_option( 'autoptimize_js' ) && false != autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_js_optimize' ) && true !== apply_filters( 'autoptimize_filter_js_noptimize', false, $this->content ) ) {
                 $options['jsMinifier']  = 'JSMin::minify';
             }
