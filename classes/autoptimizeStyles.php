@@ -854,7 +854,6 @@ class autoptimizeStyles extends autoptimizeBase
             $thiscss_nocomments = preg_replace( '#/\*.*\*/#Us', '', $thiscss );
             while ( preg_match_all( '#@import +(?:url)?(?:(?:\((["\']?)(?:[^"\')]+)\1\)|(["\'])(?:[^"\']+)\2)(?:[^,;"\']+(?:,[^,;"\']+)*)?)(?:;)#mi', $thiscss_nocomments, $matches ) ) {
                 foreach ( $matches[0] as $import ) {
-error_log($import);
                     if ( $this->isremovable( $import, $this->cssremovables ) ) {
                         $thiscss   = str_replace( $import, '', $thiscss );
                         $import_ok = true;
