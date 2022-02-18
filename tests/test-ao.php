@@ -2075,7 +2075,7 @@ MARKUP;
         $this->assertEquals( $expected2, $actual2 );
     }
 
-    public function test_html_minify_remove_html_comments_inside_script_blocks()
+    public function test_html_minify_remove_html_comments_inside_script_blocks_classic_no_minify_inline()
     {
         // Default case, html comments removed (keepcomments = false).
         $markup1   = <<<MARKUP
@@ -2123,7 +2123,7 @@ MARKUP;
         remove_all_filters( 'autoptimize_html_minify_inline_js_css' );
     }
 
-    public function test_html_minify_html_comments_inside_script_blocks_old_school_pattern()
+    public function test_html_minify_html_comments_inside_script_blocks_old_school_pattern_classic_no_minify_inline()
     {
         $markup = <<<MARKUP
 <script>
