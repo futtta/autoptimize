@@ -49,6 +49,7 @@ class AOTest extends WP_UnitTestcase
         return [
             'aggregate'           => $conf->get( 'autoptimize_js_aggregate' ),
             'defer_not_aggregate' => $conf->get( 'autoptimize_js_defer_not_aggregate' ),
+            'defer_inline'        => $conf->get( 'autoptimize_js_defer_inline' ),
             'justhead'            => $conf->get( 'autoptimize_js_justhead' ),
             'forcehead'           => $conf->get( 'autoptimize_js_forcehead' ),
             'trycatch'            => $conf->get( 'autoptimize_js_trycatch' ),
@@ -530,6 +531,10 @@ MARKUP;
      */
     function test_rewrite_markup_with_cdn( $input, $expected )
     {
+        add_filter( 'autoptimize_filter_css_aggregate', '__return_true');
+        add_filter( 'autoptimize_css_include_inline', '__return_true' );
+        add_filter( 'autoptimize_filter_js_aggregate', '__return_true' );
+
         $actual = $this->ao->end_buffering( $input );
 
         $this->assertEquals( $expected, $actual );
@@ -1745,6 +1750,9 @@ HTML;
         $options = [
             'autoptimizeStyles' => $this->getAoStylesDefaultOptions(),
         ];
+        
+        $options['autoptimizeStyles']['aggregate'] = true;
+        $options['autoptimizeStyles']['include_inline'] = true;
 
         $instance = new autoptimizeStyles( $in );
         $instance->read( $options['autoptimizeStyles'] );
@@ -1784,6 +1792,9 @@ HTML;
         $options = [
             'autoptimizeStyles' => $this->getAoStylesDefaultOptions(),
         ];
+
+        $options['autoptimizeStyles']['aggregate'] = true;
+        $options['autoptimizeStyles']['include_inline'] = true;
 
         $instance = new autoptimizeStyles( $in );
         $instance->read( $options['autoptimizeStyles'] );
@@ -1850,8 +1861,11 @@ HTML;
 
     public function test_inline_and_defer_markup()
     {
+        add_filter( 'autoptimize_filter_css_aggregate', '__return_true');
+        add_filter( 'autoptimize_css_include_inline', '__return_true' );
         add_filter( 'autoptimize_filter_css_defer', '__return_true' );
         add_filter( 'autoptimize_filter_css_defer_inline', '__return_true' );
+        add_filter( 'autoptimize_filter_js_aggregate', '__return_true' );
 
         $actual = $this->ao->end_buffering( $this->get_test_markup() );
         if ( is_multisite() ) {
@@ -1870,6 +1884,7 @@ HTML;
 
         // Aggregating: true by default.
         $scripts = new autoptimizeScripts( '' );
+        $opts['aggregate'] = true;
         $scripts->read( $opts );
         $this->assertTrue( $scripts->aggregating() );
 
@@ -2056,6 +2071,8 @@ MARKUP;
 var a = "b";</script>
 MARKUP;
 
+        add_filter( 'autoptimize_html_minify_inline_js_css', '__return_false' );
+
         $options = [
             'autoptimizeHTML' => [
                 'keepcomments' => false,
@@ -2089,6 +2106,8 @@ MARKUP;
 <script>// invisible for old browsers
 var a = "z";</script>
 MARKUP;
+
+        add_filter( 'autoptimize_html_minify_inline_js_css', '__return_false' );
 
         $options = [
             'autoptimizeHTML' => [
