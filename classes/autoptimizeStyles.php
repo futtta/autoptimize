@@ -198,6 +198,8 @@ class autoptimizeStyles extends autoptimizeBase
         if ( $this->aggregate && apply_filters( 'autoptimize_filter_css_dontaggregate', false ) ) {
             $this->aggregate = false;
         }
+        // and the filter that should have been there to begin with.
+        $this->aggregate = apply_filters( 'autoptimize_filter_css_aggregate', $this->aggregate );
 
         // include inline?
         if ( apply_filters( 'autoptimize_css_include_inline', $options['include_inline'] ) ) {
