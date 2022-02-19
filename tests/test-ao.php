@@ -2123,6 +2123,49 @@ MARKUP;
         remove_all_filters( 'autoptimize_html_minify_inline_js_css' );
     }
 
+    public function test_html_minify_remove_html_comments_inside_script_blocks_minify_inline()
+    {
+        // Default case, html comments removed (keepcomments = false) with minify inline
+        // JS minifier does not correctly handle <!-- whatever --> in inline JS though, so test case tweaked.
+        $markup1   = <<<MARKUP
+<script>
+var a = "b";
+// End Support AJAX add to cart
+</script>
+MARKUP;
+        $expected1 = <<<MARKUP
+<script>var a="b";</script>
+MARKUP;
+
+        $markup2   = <<<MARKUP
+<script>
+// End Support AJAX add to cart
+var a = "b";
+</script>
+MARKUP;
+        $expected2 = <<<MARKUP
+<script>var a="b";</script>
+MARKUP;
+
+        $options = [
+            'autoptimizeHTML' => [
+                'keepcomments' => false,
+            ],
+        ];
+
+        $instance = new autoptimizeHTML( $markup1 );
+        $instance->read( $options['autoptimizeHTML'] );
+        $instance->minify();
+        $actual = $instance->getcontent();
+        $this->assertEquals( $expected1, $actual );
+
+        $instance = new autoptimizeHTML( $markup2 );
+        $instance->read( $options['autoptimizeHTML'] );
+        $instance->minify();
+        $actual2 = $instance->getcontent();
+        $this->assertEquals( $expected2, $actual2 );
+    }
+
     public function test_html_minify_html_comments_inside_script_blocks_old_school_pattern_classic_no_minify_inline()
     {
         $markup = <<<MARKUP
@@ -2155,6 +2198,33 @@ MARKUP;
         remove_all_filters( 'autoptimize_html_minify_inline_js_css' );
     }
 
+    public function test_html_minify_html_comments_inside_script_blocks_old_school_pattern_minify_inline()
+    {
+        $markup = <<<MARKUP
+<script>
+<!-- // invisible for old browsers
+var a = "z";
+// -->
+</script>
+MARKUP;
+
+        $expected = <<<MARKUP
+<script>var a="z";</script>
+MARKUP;
+
+        $options = [
+            'autoptimizeHTML' => [
+                'keepcomments' => false,
+            ],
+        ];
+
+        $instance = new autoptimizeHTML( $markup );
+        $instance->read( $options['autoptimizeHTML'] );
+        $instance->minify();
+        $actual = $instance->getcontent();
+        $this->assertEquals( $expected, $actual );
+    }
+
     public function test_html_minify_html_comments_inside_script_blocks_old_school_pattern_untouched()
     {
         $markup = <<<MARKUP
@@ -2174,6 +2244,53 @@ MARKUP;
         $options = [
             'autoptimizeHTML' => [
                 'keepcomments' => true,
+            ],
+        ];
+
+        $instance = new autoptimizeHTML( $markup );
+        $instance->read( $options['autoptimizeHTML'] );
+        $instance->minify();
+        $actual = $instance->getcontent();
+        $this->assertEquals( $expected, $actual );
+    }
+
+    public function test_html_minify_inline()
+    {
+        $markup = <<<MARKUP
+<html><head><script>
+	(function() {
+			var request, b = document.body, c = 'className', cs = 'customize-support', rcs = new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');
+
+				request = true;
+	
+			b[c] = b[c].replace( rcs, ' ' );
+			// The customizer requires postMessage and CORS (if the site is cross domain).
+			b[c] += ( window.postMessage && request ? ' ' : ' no-' ) + cs;
+		}());
+</script><title>whatever</title>
+<style>
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+MARKUP;
+
+        $expected = <<<MARKUP
+<html><head><script>(function(){var request,b=document.body,c='className',cs='customize-support',rcs=new RegExp('(^|\s+)(no-)?'+cs+'(\s+|$)');request=true;b[c]=b[c].replace(rcs,' ');b[c]+=(window.postMessage&&request?' ':' no-')+cs;}());</script><title>whatever</title><style>img.wp-smiley,img.emoji{display:inline !important;border:none !important;box-shadow:none !important;height:1em !important;width:1em !important;margin:0 .07em !important;vertical-align:-.1em !important;background:0 0 !important;padding:0 !important}</style>
+MARKUP;
+
+        $options = [
+            'autoptimizeHTML' => [
+                'keepcomments' => false,
             ],
         ];
 
