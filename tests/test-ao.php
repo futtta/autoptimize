@@ -2301,6 +2301,71 @@ MARKUP;
         $this->assertEquals( $expected, $actual );
     }
 
+    public function test_html_keep_comments_no_minify_inline()
+    {
+        $markup = <<<MARKUP
+<script>
+	(function() {
+			var request, b = document.body, c = 'className', cs = 'customize-support', rcs = new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');
+
+				request = true;
+
+			b[c] = b[c].replace( rcs, ' ' );
+			// The customizer requires postMessage and CORS (if the site is cross domain).
+			b[c] += ( window.postMessage && request ? ' ' : ' no-' ) + cs;
+		}());
+</script><style>
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+MARKUP;
+
+        $expected = <<<MARKUP
+<script>(function() {
+			var request, b = document.body, c = 'className', cs = 'customize-support', rcs = new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');
+
+				request = true;
+
+			b[c] = b[c].replace( rcs, ' ' );
+			// The customizer requires postMessage and CORS (if the site is cross domain).
+			b[c] += ( window.postMessage && request ? ' ' : ' no-' ) + cs;
+		}());</script><style>img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}</style>
+MARKUP;
+
+        $options = [
+            'autoptimizeHTML' => [
+                'keepcomments' => true,
+            ],
+        ];
+
+        $instance = new autoptimizeHTML( $markup );
+        $instance->read( $options['autoptimizeHTML'] );
+        $instance->minify();
+        $actual = $instance->getcontent();
+        $this->assertEquals( $expected, $actual );
+    }
+
     public function test_utils_mbstring_availabilty_overriding()
     {
         $orig     = autoptimizeUtils::mbstring_available();
