@@ -187,6 +187,11 @@ class autoptimizeExtra
         if ( ! empty( $options['autoptimize_extra_text_field_7'] ) || has_filter( 'autoptimize_filter_extra_tobepreloaded' ) ) {
             add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_preload' ), 10, 2 );
         }
+        
+        // Remove global styles.
+        if ( ! empty( $options['autoptimize_extra_checkbox_field_8'] ) ) {
+            $this->disable_global_styles();
+        }
     }
 
     public function filter_remove_emoji_dns_prefetch( $urls, $relation_type )
@@ -445,6 +450,12 @@ class autoptimizeExtra
 
         return autoptimizeUtils::substr_replace( $in, $preload_output . $preload_inject, $position, strlen( $preload_inject ) );
     }
+    
+    public function disable_global_styles()
+    {
+        remove_action( 'wp_enqueue_scripts', 'wp_enqueue_global_styles' );
+        remove_action( 'wp_footer', 'wp_enqueue_global_styles', 1 );
+    }
 
     public function admin_menu()
     {
@@ -522,6 +533,12 @@ class autoptimizeExtra
                 <th scope="row"><?php _e( 'Remove query strings from static resources', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_0]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_0'] ) && '1' === $options['autoptimize_extra_checkbox_field_0'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Removing query strings (or more specifically the <code>ver</code> parameter) will not improve load time, but might improve performance scores.', 'autoptimize' ); ?></label>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e( 'Remove global styles', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_8]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_8'] ) && '1' === $options['autoptimize_extra_checkbox_field_8'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'WordPress 5.9 introduced global styles to improve easy styling of block-based site, but which can add a significant amount of inline CSS, making the HTML bulkier. If you are sure your site can do without those "global styles", you can disable them here.', 'autoptimize' ); ?></label>
                 </td>
             </tr>
             <tr>
