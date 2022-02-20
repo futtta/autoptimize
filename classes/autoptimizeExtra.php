@@ -538,7 +538,7 @@ class autoptimizeExtra
             <tr>
                 <th scope="row"><?php _e( 'Remove global styles', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_8]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_8'] ) && '1' === $options['autoptimize_extra_checkbox_field_8'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'WordPress 5.9 introduced global styles to improve easy styling of block-based site, but which can add a significant amount of inline CSS, making the HTML bulkier. If you are sure your site can do without those "global styles", you can disable them here.', 'autoptimize' ); ?></label>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_8]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_8'] ) && '1' === $options['autoptimize_extra_checkbox_field_8'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'WordPress 5.9 introduced global styles to improve easy styling of block-based site, but which can add a significant amount of inline CSS and SVG, making the HTML bulkier. If you are sure your site can do without those "global styles", you can disable them here.', 'autoptimize' ); ?></label>
                 </td>
             </tr>
             <tr>
