@@ -184,7 +184,7 @@ class autoptimizeExtra
         }
 
         // Preload!
-        if ( ! empty( $options['autoptimize_extra_text_field_7'] ) || has_filter( 'autoptimize_filter_extra_tobepreloaded' ) ) {
+        if ( ! empty( $options['autoptimize_extra_text_field_7'] ) || has_filter( 'autoptimize_filter_extra_tobepreloaded' ) || ! empty( autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_preload' ) ) ) {
             add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_preload' ), 10, 2 );
         }
         
@@ -407,6 +407,15 @@ class autoptimizeExtra
         if ( array_key_exists( 'autoptimize_extra_text_field_7', $options ) ) {
             $preloads = array_filter( array_map( 'trim', explode( ',', wp_strip_all_tags( $options['autoptimize_extra_text_field_7'] ) ) ) );
         }
+        
+        if ( false === autoptimizeImages::imgopt_active() && false === autoptimizeImages::should_lazyload_wrapper() ) {
+            // only do this here if imgopt/ lazyload are not active?
+            $metabox_preloads = array_filter( array_map( 'trim', explode( ',', wp_strip_all_tags( autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_preload' ) ) ) ) );
+            if ( ! empty( $metabox_preloads ) ) {
+                $preloads = array_merge( $preloads, $metabox_preloads );
+            }
+        }
+
         $preloads = apply_filters( 'autoptimize_filter_extra_tobepreloaded', $preloads );
 
         // immediately return if nothing to be preloaded.
@@ -417,6 +426,9 @@ class autoptimizeExtra
         // iterate through array and add preload link to tmp string.
         $preload_output = '';
         foreach ( $preloads as $preload ) {
+            if ( $preload !== filter_var( $preload, FILTER_VALIDATE_URL ) ) {
+                continue;
+            }
             $preload     = esc_url_raw( $preload );
             $crossorigin = '';
             $preload_as  = '';
@@ -444,11 +456,15 @@ class autoptimizeExtra
         }
         $preload_output = apply_filters( 'autoptimize_filter_extra_preload_output', $preload_output );
 
+        return $this->inject_preloads( $preload_output, $in );
+    }
+    
+    public static function inject_preloads( $preloads, $html ) {
         // add string to head (before first link node by default).
         $preload_inject = apply_filters( 'autoptimize_filter_extra_preload_inject', '<link' );
-        $position       = autoptimizeUtils::strpos( $in, $preload_inject );
+        $position       = autoptimizeUtils::strpos( $html, $preload_inject );
 
-        return autoptimizeUtils::substr_replace( $in, $preload_output . $preload_inject, $position, strlen( $preload_inject ) );
+        return autoptimizeUtils::substr_replace( $html, $preloads . $preload_inject, $position, strlen( $preload_inject ) );
     }
     
     public function disable_global_styles()

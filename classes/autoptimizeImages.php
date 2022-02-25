@@ -784,6 +784,7 @@ class autoptimizeImages
     {
         // only used is image optimization is NOT active but lazyload is.
         $to_replace = array();
+        $to_preload = '';
 
         // hide (no)script tags to avoid nesting noscript tags (as lazyloaded images add noscript).
         $out = autoptimizeBase::replace_contents_with_marker_if_exists(
@@ -793,11 +794,18 @@ class autoptimizeImages
             $in
         );
 
-        // extract img tags and add lazyload attribs.
+        $metabox_preloads = array_filter( array_map( 'trim', explode( ',', wp_strip_all_tags( autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_preload' ) ) ) ) );
+
+        // extract img tags and add lazyload attribs/ add preloads.
         if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $out, $matches ) ) {
             foreach ( $matches[0] as $tag ) {
                 if ( $this->should_lazyload( $out ) ) {
                     $to_replace[ $tag ] = $this->add_lazyload( $tag );
+                }
+                
+                // and check if image needs to be prelaoded.
+                if ( ! empty( $metabox_preloads ) && str_replace( $metabox_preloads, '', $tag ) !== $tag ) {
+                    $to_preload .= $this->create_img_preload_tag( $tag );
                 }
             }
             $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $out );
@@ -814,6 +822,17 @@ class autoptimizeImages
             'SCRIPT',
             $out
         );
+
+        if ( ! empty( $metabox_preload ) && empty( $to_preload ) ) {
+            // the preload was not in an img tag, so adding a non-responsive preload instead.
+            foreach( $metabox_preload as $img_preload ) {
+                $to_preload .= '<link rel="preload" href="' . $img_preload . '" as="image">' ;
+            }
+        }
+
+        if ( ! empty( $to_preload ) ) {
+            $out = autoptimizeExtra::inject_preloads( $to_preload, $out );
+        }
 
         return $out;
     }
@@ -899,6 +918,22 @@ class autoptimizeImages
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_cssoutput', '<noscript><style>.lazyload{display:none;}</style></noscript>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $type_js . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $type_js . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
+    }
+    
+    public static function create_img_preload_tag( $tag ) {
+        // rewrite img tag to link preload img.
+        $_from = array( '<img ', ' src=', ' sizes=', ' srcset=' );
+        $_to   = array( '<link rel="preload" as="image" ', ' href=', ' imagesizes=', ' imagesrcset=' );
+        $tag   = str_replace( $_from, $_to, $tag );
+        
+        // and remove title, alt, class and id.
+        $tag = preg_replace( '/ ((?:title|alt|class|id)=".*")/Um', '', $tag );
+        if ( $tag !== str_replace( array(' title=', ' class=', ' alt=', ' id=' ), '', $tag ) ) {
+            // 2nd regex pass if still title/ class/ alt in case single quotes were used iso doubles.
+            $tag = preg_replace( '/ ((?:title|alt|class|id)=\'.*\')/Um', '', $tag );
+        }
+
+        return $tag;
     }
 
     public static function get_cdn_url() {

@@ -113,6 +113,13 @@ class autoptimizeMetabox
                  <?php _e( 'Lazyload images?', 'autoptimize' ); ?>
             </label>
         </p>
+        <p class="ao_meta_sub" style="<?php echo $_ao_meta_sub_opacity ?>">
+            <label for="autoptimize_post_preload">
+                 <?php _e( 'LCP Image to preload', 'autoptimize' ); ?>
+            </label>
+            <input type="text" id="autoptimize_post_preload" name="ao_post_preload">
+        </p>
+        <p>&nbsp;</p>
         <p>
             <?php
             // Get path + check if button should be enabled or disabled.
@@ -229,11 +236,13 @@ class autoptimizeMetabox
 
       // OK, we can have a look at the actual data now.
       // Sanitize user input.
-      foreach ( array( 'ao_post_optimize', 'ao_post_js_optimize', 'ao_post_css_optimize', 'ao_post_ccss', 'ao_post_lazyload' ) as $opti_type ) {
-          if ( isset( $_POST[$opti_type] ) ) {
-              $ao_meta_result[$opti_type] = 'on';
-          } else {
+      foreach ( array( 'ao_post_optimize', 'ao_post_js_optimize', 'ao_post_css_optimize', 'ao_post_ccss', 'ao_post_lazyload', 'ao_post_preload' ) as $opti_type ) {
+          if ( ! isset( $_POST[$opti_type] ) ) {
               $ao_meta_result[$opti_type] = '';
+          } else if ( 'on' === $_POST[$opti_type] ) {
+              $ao_meta_result[$opti_type] = 'on';
+          } else if ( in_array( $opti_type, array( 'ao_post_preload' ) ) ) {
+              $ao_meta_result[$opti_type] = $_POST[$opti_type];
           }
       }
 
@@ -285,6 +294,7 @@ class autoptimizeMetabox
             'ao_post_css_optimize' => 'on',
             'ao_post_ccss'         => 'on',
             'ao_post_lazyload'     => 'on',
+            'ao_post_preload'      => '',
         );
         return $ao_metabox_defaults;
     }

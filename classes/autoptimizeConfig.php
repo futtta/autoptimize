@@ -1026,10 +1026,33 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             }
         }
 
-        // If autoptimize_post_optimize !== 'on' then always return false as all is off.
-        if ( ! empty( $_meta_value ) && is_array( $_meta_value ) && ( ( array_key_exists( 'autoptimize_post_optimize', $_meta_value ) && 'on' !== $_meta_value['autoptimize_post_optimize'] ) || ( array_key_exists( $optim, $_meta_value ) && 'on' !== $_meta_value[$optim] ) ) ) {
+        // If autoptimize_post_optimize !== 'on' (except for ao_post_preload, which can have other values) then always return false as all is off.
+        // fixme: need unit tests to ensure below logic is sane!
+        if ( empty( $_meta_value ) || ! is_array( $_meta_value ) ) {
+            // no metabox values so all optimizations are a go.
+            if ( in_array( $optim, array( 'ao_post_preload' ) ) ) {
+                // but make sure to return false for text input.
+                return false;
+            }
+            return true;
+        } else if ( array_key_exists( 'ao_post_optimize', $_meta_value ) && 'on' !== $_meta_value['ao_post_optimize'] ) {
+            // ao entirely off for this page.
+            return false; 
+        } else if ( array_key_exists( $optim, $_meta_value ) && empty( $_meta_value[$optim] ) ) {
+            // sub-optimization off for this page.
+            return false;
+        } else if ( array_key_exists( $optim, $_meta_value ) && 'on' === $_meta_value[$optim] ) {
+            // sub-optimization is explictly on.
+            return true;
+        } else if ( array_key_exists( $optim, $_meta_value ) && in_array( $optim, array( 'ao_post_preload' ) ) && ! empty( $_meta_value[$optim] ) ) {
+            // a non-bool metabox optimization (currently only preload field), return value instead of bool.
+            return $_meta_value[$optim];
+        } else if ( in_array( $optim, array( 'ao_post_preload' ) ) && ( ! array_key_exists( $optim, $_meta_value ) || empty( $_meta_value[$optim] ) ) ) {
+            // a non-bool metabox optimization not found or empty, so returning false.
             return false;
         } else {
+            // when in doubt "go" for optimization, but this should never happen.
+            error_log( 'AO metabox logic fallback; well, how did I get here? Maybe this helps: ' . json_encode( $_meta_value ) );
             return true;
         }
     }
