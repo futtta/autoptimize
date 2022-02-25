@@ -573,6 +573,9 @@ class autoptimizeImages
             );
         }
 
+        // get img preloads as set in post metabox.
+        $metabox_preloads = array_filter( array_map( 'trim', explode( ',', wp_strip_all_tags( autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_preload' ) ) ) ) );
+
         // extract img tags.
         if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
             foreach ( $matches[0] as $tag ) {
@@ -656,6 +659,11 @@ class autoptimizeImages
                 if ( $tag !== $orig_tag ) {
                     $to_replace[ $orig_tag ] = $tag;
                 }
+                
+                // and check if image needs to be prelaoded.
+                if ( ! empty( $metabox_preloads ) && str_replace( $metabox_preloads, '', $tag ) !== $tag ) {
+                    $to_preload .= $this->create_img_preload_tag( $tag );
+                }
             }
         }
 
@@ -700,6 +708,17 @@ class autoptimizeImages
             $out = $this->process_bgimage( $out );
         } else {
             $out = $this->process_picture_tag( $out, true, false );
+        }
+
+        if ( ! empty( $metabox_preload ) && empty( $to_preload ) ) {
+            // the preload was not in an img tag, so adding a non-responsive preload instead.
+            foreach( $metabox_preload as $img_preload ) {
+                $to_preload .= '<link rel="preload" href="' . $img_preload . '" as="image">' ;
+            }
+        }
+
+        if ( ! empty( $to_preload ) ) {
+            $out = autoptimizeExtra::inject_preloads( $to_preload, $out );
         }
 
         return $out;
@@ -794,6 +813,7 @@ class autoptimizeImages
             $in
         );
 
+        // get img preloads as set in post metabox.
         $metabox_preloads = array_filter( array_map( 'trim', explode( ',', wp_strip_all_tags( autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_preload' ) ) ) ) );
 
         // extract img tags and add lazyload attribs/ add preloads.
@@ -927,10 +947,10 @@ class autoptimizeImages
         $tag   = str_replace( $_from, $_to, $tag );
         
         // and remove title, alt, class and id.
-        $tag = preg_replace( '/ ((?:title|alt|class|id)=".*")/Um', '', $tag );
+        $tag = preg_replace( '/ ((?:title|alt|class|id|loading)=".*")/Um', '', $tag );
         if ( $tag !== str_replace( array(' title=', ' class=', ' alt=', ' id=' ), '', $tag ) ) {
             // 2nd regex pass if still title/ class/ alt in case single quotes were used iso doubles.
-            $tag = preg_replace( '/ ((?:title|alt|class|id)=\'.*\')/Um', '', $tag );
+            $tag = preg_replace( '/ ((?:title|alt|class|id|loading)=\'.*\')/Um', '', $tag );
         }
 
         return $tag;
