@@ -562,6 +562,7 @@ class autoptimizeImages
          * filter for critical CSS.
          */
         $to_replace = array();
+        $to_preload = '';
 
         // hide noscript tags to avoid nesting noscript tags (as lazyloaded images add noscript).
         if ( $this->should_lazyload() ) {
@@ -710,9 +711,9 @@ class autoptimizeImages
             $out = $this->process_picture_tag( $out, true, false );
         }
 
-        if ( ! empty( $metabox_preload ) && empty( $to_preload ) ) {
+        if ( ! empty( $metabox_preloads ) && empty( $to_preload ) ) {
             // the preload was not in an img tag, so adding a non-responsive preload instead.
-            foreach( $metabox_preload as $img_preload ) {
+            foreach( $metabox_preloads as $img_preload ) {
                 $to_preload .= '<link rel="preload" href="' . $img_preload . '" as="image">' ;
             }
         }
@@ -843,9 +844,9 @@ class autoptimizeImages
             $out
         );
 
-        if ( ! empty( $metabox_preload ) && empty( $to_preload ) ) {
+        if ( ! empty( $metabox_preloads ) && empty( $to_preload ) ) {
             // the preload was not in an img tag, so adding a non-responsive preload instead.
-            foreach( $metabox_preload as $img_preload ) {
+            foreach( $metabox_preloads as $img_preload ) {
                 $to_preload .= '<link rel="preload" href="' . $img_preload . '" as="image">' ;
             }
         }
