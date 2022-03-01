@@ -451,8 +451,15 @@ class autoptimizeScripts extends autoptimizeBase
                             }
                         } else if ( str_replace( $_inline_dontmove, '', $tag ) === $tag ) {
                             // defer inline JS by base64 encoding it.
-                            preg_match( '#<script.*>(.*)</script>#Usmi', $tag, $match );
-                            $new_tag       = '<script defer src="data:text/javascript;base64,' . base64_encode( $match[1] ) . '"></script>';
+                            // preg_match( '#<script.*>(.*)</script>#Usmi', $tag, $match );
+                            preg_match( '#<script(?:[^>](?!id=))*\s*(?:id=(["\'])([^"\']+)\1)*+[^>]*+>(.*?)<\/script>#is', $tag, $match );
+                            if ( $match[2] ) {
+                                $_id = 'id="' . $match[2] . '" ';
+                            } else {
+                                $_id = '';
+                            }
+
+                            $new_tag       = '<script defer ' . $_id . 'src="data:text/javascript;base64,' . base64_encode( $match[3] ) . '"></script>';
                             $this->content = str_replace( $tag, $new_tag, $this->content );
                             $tag           = '';
                         } else {
