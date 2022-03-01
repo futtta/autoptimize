@@ -77,6 +77,10 @@ abstract class autoptimizeBase
     {
         $url = apply_filters( 'autoptimize_filter_cssjs_alter_url', $url );
 
+        if ( is_null( $url ) ) {
+            return false;
+        }
+
         if ( false !== strpos( $url, '%' ) ) {
             $url = urldecode( $url );
         }
