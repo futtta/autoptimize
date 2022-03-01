@@ -1,6 +1,5 @@
 language: php
 dist: bionic
-sudo: false
 
 notifications:
   email:
@@ -17,22 +16,27 @@ php:
   - 7.2
   - 7.3
   - 7.4
+  - 8.1.0
 
 env:
-  - WP_VERSION=latest WP_MULTISITE=0 CUSTOM_CONSTANTS=0
-
-matrix:
-  include:
-    - php: 7.3
-      env: WP_VERSION=latest WP_MULTISITE=1 CUSTOM_CONSTANTS=1
-    - php: 7.3
-      env: WP_VERSION=latest WP_MULTISITE=0 CUSTOM_CONSTANTS=1
+  global:
+    - WP_VERSION=latest
+  jobs:
+    - CUSTOM_CONSTANTS=0 WP_MULTISITE=0
+    - CUSTOM_CONSTANTS=1
+    - WP_MULTISITE=1
+    - CUSTOM_CONSTANTS=1 WP_MULTISITE=1
 
 install:
     # flags to pass to install
-    - flags="--ansi --prefer-dist --no-interaction --optimize-autoloader --no-progress"
-    # install dependencies using system provided composer binary
-    - composer install $flags
+  - flags="--ansi --prefer-dist --no-interaction --optimize-autoloader --no-progress"
+
+  # php 8.1.0 compat
+  - if [ "$TRAVIS_PHP_VERSION" == "8.1.0" ]; then rm composer.lock; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "8.1.0" ]; then composer require --no-interaction --dev phpunit/phpunit:9.3; fi
+
+  # install dependencies using system provided composer binary
+  - composer install $flags
 
 before_script:
   # install wp tests infra

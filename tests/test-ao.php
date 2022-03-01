@@ -105,7 +105,7 @@ class AOTest extends WP_UnitTestcase
     /**
      * Runs before each test method.
      */
-    public function setUp()
+    public function setUp() : void
     {
         $this->ao = new autoptimizeMain( AUTOPTIMIZE_PLUGIN_VERSION, AUTOPTIMIZE_PLUGIN_FILE );
 
@@ -115,7 +115,7 @@ class AOTest extends WP_UnitTestcase
     /**
      * Runs after each test method.
      */
-    public function tearDown()
+    public function tearDown() : void
     {
         // Making sure certain filters are removed after each test to ensure isolation.
         $filter_tags = array(
@@ -2013,15 +2013,15 @@ HTML;
         $url = $styles->minify_single( $pathname, $cache_miss = true );
 
         // Minified url filename + its pointed to cdn.
-        $this->assertContains( AUTOPTIMIZE_CACHE_CHILD_DIR, $url );
-        $this->assertContains( '/autoptimize_single_', $url );
-        $this->assertContains( $styles->cdn_url, $url );
+        $this->assertStringContainsString( AUTOPTIMIZE_CACHE_CHILD_DIR, $url );
+        $this->assertStringContainsString( '/autoptimize_single_', $url );
+        $this->assertStringContainsString( $styles->cdn_url, $url );
 
         // Actual minified css contents are minified and cdn-ed.
         $path     = $styles->getpath( $url );
         $contents = file_get_contents( $path );
-        $this->assertContains( $styles->cdn_url, $contents );
-        $this->assertContains( '.bg{background:url(' . $styles->cdn_url, $contents );
+        $this->assertStringContainsString( $styles->cdn_url, $contents );
+        $this->assertStringContainsString( '.bg{background:url(' . $styles->cdn_url, $contents );
     }
 
     public function test_ao_partners_instantiation_without_explicit_include()
@@ -2387,7 +2387,13 @@ MARKUP;
         $this->assertSame( 2, autoptimizeUtils::strlen( "\x00\xFF", 'CP850' ) );
         $this->assertSame( 3, autoptimizeUtils::strlen( '한국어' ) );
 
-        $this->assertFalse( @autoptimizeUtils::strpos( 'abc', '' ) );
+        # https://php.watch/versions/8.0/string-function-empty-needles
+        if ( version_compare( PHP_VERSION, '8.0.0', '>=' ) ) {
+            $this->assertEmpty( @autoptimizeUtils::strpos( 'abc', '' ) );
+        } else {
+            $this->assertFalse( @autoptimizeUtils::strpos( 'abc', '' ) );
+        }
+
         $this->assertFalse( @autoptimizeUtils::strpos( 'abc', 'a', -1 ) );
         $this->assertFalse( autoptimizeUtils::strpos( 'abc', 'd' ) );
         $this->assertFalse( autoptimizeUtils::strpos( 'abc', 'a', 3 ) );

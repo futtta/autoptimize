@@ -332,7 +332,7 @@ class JSMin {
                 $c = $this->input[$this->inputIndex];
                 $this->inputIndex += 1;
             } else {
-                $c = null;
+                return $c;
             }
         }
         if (ord($c) >= self::ORD_SPACE || $c === "\n" || $c === null) {
