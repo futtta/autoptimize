@@ -23,7 +23,7 @@ class autoptimizeCriticalCSSEnqueue {
         if ( 'nokey' == $key['status'] || 'invalid' == $key['status'] ) {
             $enqueue = false;
             $this->criticalcss->log( "Job queuing is not available: no valid API key found.", 3 );
-        } elseif ( ! empty( $hash ) && ( is_user_logged_in() || is_feed() || is_404() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $self->ao_ccss_ua() || false === apply_filters( 'autoptimize_filter_ccss_enqueue_should_enqueue', true ) ) ) {
+        } elseif ( ! empty( $hash ) && ( is_user_logged_in() || is_feed() || is_404() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $this->ao_ccss_ua() || false === apply_filters( 'autoptimize_filter_ccss_enqueue_should_enqueue', true ) ) ) {
             $enqueue = false;
             $this->criticalcss->log( "Job queuing is not available for WordPress's logged in users, feeds, error pages, ajax calls or calls from criticalcss.com itself.", 3 );
         } elseif ( empty( $hash ) && empty( $path ) || ( ( 'is_single' !== $type ) && ( 'is_page' !== $type ) ) ) {
@@ -42,7 +42,7 @@ class autoptimizeCriticalCSSEnqueue {
             // Get request path and page type, and initialize the queue update flag.
             if ( ! empty( $hash ) ) {
                 $req_orig = $_SERVER['REQUEST_URI'];
-                $req_type = $self->ao_ccss_get_type();
+                $req_type = $this->ao_ccss_get_type();
             } elseif ( ! empty( $path ) ) {
                 $req_orig = $path;
                 if ( $path === '/' ) {
@@ -146,7 +146,7 @@ class autoptimizeCriticalCSSEnqueue {
                 if ( ! array_key_exists( $req_path, $queue ) ) {
                     // This is a NEW job
                     // Merge job into the queue.
-                    $queue[ $req_path ] = $self->ao_ccss_define_job(
+                    $queue[ $req_path ] = $this->ao_ccss_define_job(
                         $req_path,
                         $target_rule,
                         $req_type,
@@ -177,7 +177,7 @@ class autoptimizeCriticalCSSEnqueue {
                     } elseif ( 'NEW' != $queue[ $req_path ]['jqstat'] && 'JOB_QUEUED' != $queue[ $req_path ]['jqstat'] && 'JOB_ONGOING' != $queue[ $req_path ]['jqstat'] ) {
                         // Allow requeuing jobs that are not NEW, JOB_QUEUED or JOB_ONGOING
                         // Merge new job keeping some previous job values.
-                        $queue[ $req_path ] = $self->ao_ccss_define_job(
+                        $queue[ $req_path ] = $this->ao_ccss_define_job(
                             $req_path,
                             $target_rule,
                             $req_type,
