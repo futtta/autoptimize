@@ -8,14 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class autoptimizeCriticalCSSSettingsAjax {
-    public function __construct()
-    {
-        // fetch all options at once and populate them individually explicitely as globals.
-        $all_options = autoptimizeCriticalCSSBase::fetch_options();
-        foreach ( $all_options as $_option => $_value ) {
-            global ${$_option};
-            ${$_option} = $_value;
-        }
+    public function __construct() {
+        $this->criticalcss = autoptimize()->criticalcss();
         $this->run();
     }
 
@@ -88,7 +82,7 @@ class autoptimizeCriticalCSSSettingsAjax {
             $critcsscontents = stripslashes( $_POST['critcsscontents'] );
 
             // If there is content and it's valid, write the file.
-            if ( $critcsscontents && autoptimizeCriticalCSSCore::ao_ccss_check_contents( $critcsscontents ) ) {
+            if ( $critcsscontents && $this->criticalcss->check_contents( $critcsscontents ) ) {
                 // Set file path and status.
                 $critcssfile = AO_CCSS_DIR . strip_tags( $_POST['critcssfile'] );
                 $status      = file_put_contents( $critcssfile, $critcsscontents, LOCK_EX );
@@ -216,7 +210,7 @@ class autoptimizeCriticalCSSSettingsAjax {
 
         // Init array, get options and prepare the raw object.
         $settings                        = array();
-        
+
         // CCSS settings.
         $settings['ccss']['rules']       = get_option( 'autoptimize_ccss_rules' );
         $settings['ccss']['additional']  = get_option( 'autoptimize_ccss_additional' );
@@ -232,7 +226,7 @@ class autoptimizeCriticalCSSSettingsAjax {
         $settings['ccss']['loggedin']    = get_option( 'autoptimize_ccss_loggedin' );
         $settings['ccss']['rlimit']      = get_option( 'autoptimize_ccss_rlimit' );
         $settings['ccss']['unloadccss']  = get_option( 'autoptimize_ccss_unloadccss' );
-        
+
         // JS settings.
         $settings['js']['root']                = get_option( 'autoptimize_js' );
         $settings['js']['aggregate']           = get_option( 'autoptimize_js_aggregate' );
@@ -356,7 +350,7 @@ class autoptimizeCriticalCSSSettingsAjax {
             } else {
                 $error = 'could not extract';
             }
-            
+
             // and remove temp. dir with all contents (the import-zipfile).
             $this->rrmdir( $_import_tmp_dir );
 
@@ -408,7 +402,7 @@ class autoptimizeCriticalCSSSettingsAjax {
                         } else {
                             update_option( $other_setting, $settings['other'][$other_setting] );
                         }
-                    }                    
+                    }
 
                     // AO Pro.
                     if ( defined( 'AO_PRO_VERSION' ) && array_key_exists( 'pro', $settings ) ) {
@@ -439,7 +433,7 @@ class autoptimizeCriticalCSSSettingsAjax {
         // Close ajax request.
         wp_die();
     }
-    
+
     public function ao_ccss_queuerunner_callback() {
         check_ajax_referer( 'ao_ccss_queuerunner_nonce', 'ao_ccss_queuerunner_nonce' );
 
@@ -456,7 +450,7 @@ class autoptimizeCriticalCSSSettingsAjax {
             }
         } else {
             $response['code'] = '500';
-            $response['msg']  = 'Not allowed';                        
+            $response['msg']  = 'Not allowed';
         }
 
         // Dispatch respose.
@@ -529,7 +523,7 @@ class autoptimizeCriticalCSSSettingsAjax {
             return true;
         }
     }
-    
+
     public function rrmdir( $path ) {
         // recursively remove a directory as found on
         // https://andy-carter.com/blog/recursively-remove-a-directory-in-php.

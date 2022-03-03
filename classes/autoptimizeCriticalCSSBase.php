@@ -16,6 +16,41 @@ class autoptimizeCriticalCSSBase {
      */
     protected $filepath = null;
 
+    /**
+     * Critical CSS options
+     *
+     * @var array
+     */
+    protected $_options = null;
+
+    /**
+     * Core object
+     *
+     * @var object
+     */
+    protected $_core = null;
+
+    /**
+     * Cron object
+     *
+     * @var object
+     */
+    protected $_cron = null;
+
+    /**
+     * Settings object
+     *
+     * @var object
+     */
+    protected $_settings = null;
+
+    /**
+     * Enqueue object
+     *
+     * @var object
+     */
+    protected $_enqueue = null;
+
     public function __construct()
     {
         // define constant, but only once.
@@ -51,19 +86,9 @@ class autoptimizeCriticalCSSBase {
         }
 
         $this->filepath = __FILE__;
-
-        $this->setup();
-        $this->load_requires();
     }
 
-    public function setup()
-    {
-        // get all options.
-        $all_options = $this->fetch_options();
-        foreach ( $all_options as $option => $value ) {
-            ${$option} = $value;
-        }
-
+    public function setup() {
         // make sure the 10 minutes cron schedule is added.
         add_filter( 'cron_schedules', array( $this, 'ao_ccss_interval' ) );
 
@@ -71,10 +96,11 @@ class autoptimizeCriticalCSSBase {
         $this->check_upgrade();
 
         // make sure ao_ccss_queue is scheduled OK if an API key is set.
-        if ( isset( $ao_ccss_key ) && ! empty( $ao_ccss_key ) && ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
+        $key = $this->get_option( 'key' );
+        if ( ! empty( $key ) && ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
             wp_schedule_event( time(), apply_filters( 'ao_ccss_queue_schedule', 'ao_ccss' ), 'ao_ccss_queue' );
         }
-        
+
         // check/ create AO_CCSS_DIR.
         if ( ! file_exists( AO_CCSS_DIR ) ) {
             $this->create_ao_ccss_dir();
@@ -83,78 +109,151 @@ class autoptimizeCriticalCSSBase {
 
     public function load_requires() {
         // Required libs, core is always needed.
-        $criticalcss_core = new autoptimizeCriticalCSSCore();
+        $this->_core = new autoptimizeCriticalCSSCore();
 
         if ( defined( 'WP_CLI' ) || defined( 'DOING_CRON' ) || is_admin() ) {
             // TODO: also include if overridden somehow to force queue processing to be executed?
-            $criticalcss_cron = new autoptimizeCriticalCSSCron();
+            $this->_cron = new autoptimizeCriticalCSSCron();
         }
 
         if ( is_admin() ) {
-            $criticalcss_settings = new autoptimizeCriticalCSSSettings();
+            $this->_settings = new autoptimizeCriticalCSSSettings();
         } else {
             // enqueuing only done when not wp-admin.
-            $criticalcss_enqueue = new autoptimizeCriticalCSSEnqueue();
+            $this->_enqueue = new autoptimizeCriticalCSSEnqueue();
         }
     }
 
-    public static function fetch_options() {
-        static $autoptimize_ccss_options = null;
+    /**
+     * Log a message via CCSS Core object
+     *
+     * @param string $msg
+     * @param int $lvl
+     *
+     * @return void
+     */
+    public function log( $msg, $lvl ) {
+        return $this->_core->ao_ccss_log( $msg, $lvl );
+    }
 
-        if ( null === $autoptimize_ccss_options ) {
-            // not cached yet, fetching from WordPress options.
-            $autoptimize_ccss_options['ao_css_defer']          = autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer' );
-            $autoptimize_ccss_options['ao_css_defer_inline']   = autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer_inline' );
-            $autoptimize_ccss_options['ao_ccss_rules_raw']     = get_option( 'autoptimize_ccss_rules', false );
-            $autoptimize_ccss_options['ao_ccss_additional']    = get_option( 'autoptimize_ccss_additional' );
-            $autoptimize_ccss_options['ao_ccss_queue_raw']     = get_option( 'autoptimize_ccss_queue', false );
-            $autoptimize_ccss_options['ao_ccss_viewport']      = get_option( 'autoptimize_ccss_viewport', false );
-            $autoptimize_ccss_options['ao_ccss_finclude']      = get_option( 'autoptimize_ccss_finclude', false );
-            $autoptimize_ccss_options['ao_ccss_rtimelimit']    = get_option( 'autoptimize_ccss_rtimelimit', '30' );
-            $autoptimize_ccss_options['ao_ccss_noptimize']     = get_option( 'autoptimize_ccss_noptimize', false );
-            $autoptimize_ccss_options['ao_ccss_debug']         = get_option( 'autoptimize_ccss_debug', false );
-            $autoptimize_ccss_options['ao_ccss_key']           = apply_filters( 'autoptimize_filter_ccss_key', get_option( 'autoptimize_ccss_key' ) );
-            $autoptimize_ccss_options['ao_ccss_keyst']         = get_option( 'autoptimize_ccss_keyst' );
-            $autoptimize_ccss_options['ao_ccss_loggedin']      = get_option( 'autoptimize_ccss_loggedin', '1' );
-            $autoptimize_ccss_options['ao_ccss_forcepath']     = get_option( 'autoptimize_ccss_forcepath', '1' );
-            $autoptimize_ccss_options['ao_ccss_servicestatus'] = get_option( 'autoptimize_service_availablity' );
-            $autoptimize_ccss_options['ao_ccss_deferjquery']   = get_option( 'autoptimize_ccss_deferjquery', false );
-            $autoptimize_ccss_options['ao_ccss_domain']        = get_option( 'autoptimize_ccss_domain' );
-            $autoptimize_ccss_options['ao_ccss_unloadccss']    = get_option( 'autoptimize_ccss_unloadccss', false );
+    /**
+     * Get viewport from CCSS Core object
+     *
+     * @return array
+     */
+    public function viewport() {
+        return $this->_core->ao_ccss_viewport();
+    }
 
-            if ( strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'http' ) === false && strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'uggc' ) === 0 ) {
-                $autoptimize_ccss_options['ao_ccss_domain'] = str_rot13( $autoptimize_ccss_options['ao_ccss_domain'] );
-            } elseif ( strpos( $autoptimize_ccss_options['ao_ccss_domain'], 'http' ) !== false ) {
-                // not rot13'ed yet, do so now (goal; avoid migration plugins change the bound domain).
-                update_option( 'autoptimize_ccss_domain', str_rot13( $autoptimize_ccss_options['ao_ccss_domain'] ) );
-            }
 
-            // Setup the rules array.
-            if ( empty( $autoptimize_ccss_options['ao_ccss_rules_raw'] ) ) {
-                $autoptimize_ccss_options['ao_ccss_rules']['paths'] = array();
-                $autoptimize_ccss_options['ao_ccss_rules']['types'] = array();
-            } else {
-                $autoptimize_ccss_options['ao_ccss_rules'] = json_decode( $autoptimize_ccss_options['ao_ccss_rules_raw'], true );
-            }
+    /**
+     * Check CCSS contents from Core object
+     *
+     * @param string $ccss
+     *
+     * @return bool
+     */
+    public function check_contents( $ccss ) {
+        return $this->_core->ao_ccss_check_contents( $ccss );
+    }
 
-            // Setup the queue array.
-            if ( empty( $autoptimize_ccss_options['ao_ccss_queue_raw'] ) ) {
-                $autoptimize_ccss_options['ao_ccss_queue'] = array();
-            } else {
-                $autoptimize_ccss_options['ao_ccss_queue'] = json_decode( $autoptimize_ccss_options['ao_ccss_queue_raw'], true );
-            }
+    public function key_status( $render ) {
+        return $this->_core->ao_ccss_key_status( $render );
+    }
 
-            // Override API key if constant is defined.
-            if ( defined( 'AUTOPTIMIZE_CRITICALCSS_API_KEY' ) ) {
-                $autoptimize_ccss_options['ao_ccss_key'] = AUTOPTIMIZE_CRITICALCSS_API_KEY;
-            }
+    /**
+     * Run enqueue in CCSS Enqueue object
+     */
+    public function enqueue( $hash = '', $path = '', $type = 'is_page' ) {
+        return $this->_enqueue->ao_ccss_enqueue( $hash = '', $path = '', $type = 'is_page' );
+    }
+
+    /**
+     * Check auto-rules in CCSS Settings object
+     */
+    public function has_autorules() {
+        return $this->_settings->ao_ccss_has_autorules();
+    }
+
+    /**
+     * Get a Critical CSS option
+     *
+     * @param string $name The option name
+     *
+     * @return mixed
+     */
+    public function get_option( $name ) {
+        if ( is_null( $this->_options ) ) {
+            $this->fetch_options();
         }
 
-        return $autoptimize_ccss_options;
+        if ( isset( $this->_options[ $name ] ) ) {
+            return $this->_options[ $name ];
+        }
+
+        return null;
+    }
+
+    protected function fetch_options() {
+        if ( ! is_null( $this->_options ) ) {
+            return $this->_options;
+        }
+
+        $this->_options = array(
+            'css_defer'         => autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer' ),
+            'css_defer_inline'  => autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer_inline' ),
+            'rules_raw'     => get_option( 'autoptimize_ccss_rules', false ),
+            'additional'    => get_option( 'autoptimize_ccss_additional' ),
+            'queue_raw'     => get_option( 'autoptimize_ccss_queue', false ),
+            'viewport'      => get_option( 'autoptimize_ccss_viewport', false ),
+            'finclude'      => get_option( 'autoptimize_ccss_finclude', false ),
+            'rtimelimit'    => get_option( 'autoptimize_ccss_rtimelimit', '30' ),
+            'noptimize'     => get_option( 'autoptimize_ccss_noptimize', false ),
+            'debug'         => get_option( 'autoptimize_ccss_debug', false ),
+            'key'           => apply_filters( 'autoptimize_filter_ccss_key', get_option( 'autoptimize_ccss_key' ) ),
+            'keyst'         => get_option( 'autoptimize_ccss_keyst' ),
+            'loggedin'      => get_option( 'autoptimize_ccss_loggedin', '1' ),
+            'forcepath'     => get_option( 'autoptimize_ccss_forcepath', '1' ),
+            'servicestatus' => get_option( 'autoptimize_service_availablity' ),
+            'deferjquery'   => get_option( 'autoptimize_ccss_deferjquery', false ),
+            'domain'        => get_option( 'autoptimize_ccss_domain' ),
+            'unloadccss'    => get_option( 'autoptimize_ccss_unloadccss', false ),
+        );
+
+        if ( strpos( $this->_options['domain'], 'http' ) === false && strpos( $this->_options['domain'], 'uggc' ) === 0 ) {
+            $this->_options['domain'] = str_rot13( $this->_options['domain'] );
+        } elseif ( strpos( $this->_options['domain'], 'http' ) !== false ) {
+            // not rot13'ed yet, do so now (goal; avoid migration plugins change the bound domain).
+            update_option( 'autoptimize_ccss_domain', str_rot13( $this->_options['domain'] ) );
+        }
+
+        // Setup the rules array.
+        if ( empty( $this->_options['rules_raw'] ) ) {
+            $this->_options['rules'] = array(
+                'paths' => array(),
+                'types' => array(),
+            );
+        } else {
+            $this->_options['rules'] = json_decode( $this->_options['rules_raw'], true );
+        }
+
+        // Setup the queue array.
+        if ( empty( $this->_options['queue_raw'] ) ) {
+            $this->_options['queue'] = array();
+        } else {
+            $this->_options['queue'] = json_decode( $this->_options['queue_raw'], true );
+        }
+
+        // Override API key if constant is defined.
+        if ( defined( 'AUTOPTIMIZE_CRITICALCSS_API_KEY' ) ) {
+            $this->_options['key'] = AUTOPTIMIZE_CRITICALCSS_API_KEY;
+        }
+
+        return $this->_options;
     }
 
     public function on_upgrade() {
-        global $ao_ccss_key;
+        $key = $this->get_option( 'key' );
 
         // Create the cache directory if it doesn't exist already.
         if ( ! file_exists( AO_CCSS_DIR ) ) {
@@ -162,12 +261,12 @@ class autoptimizeCriticalCSSBase {
         }
 
         // Create a scheduled event for the queue.
-        if ( isset( $ao_ccss_key ) && ! empty( $ao_ccss_key ) && ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
+        if ( ! empty( $key ) && ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
             wp_schedule_event( time(), apply_filters( 'ao_ccss_queue_schedule', 'ao_ccss' ), 'ao_ccss_queue' );
         }
 
         // Create a scheduled event for log maintenance.
-        if ( isset( $ao_ccss_key ) && ! empty( $ao_ccss_key ) && ! wp_next_scheduled( 'ao_ccss_maintenance' ) ) {
+        if ( ! empty( $key ) && ! wp_next_scheduled( 'ao_ccss_maintenance' ) ) {
             wp_schedule_event( time(), 'twicedaily', 'ao_ccss_maintenance' );
         }
     }
@@ -193,7 +292,7 @@ class autoptimizeCriticalCSSBase {
             } else {
                 $inttxt = $intsec . ' second(s)';
             }
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Using custom WP-Cron interval of ' . $inttxt, 3 );
+            $this->log( 'Using custom WP-Cron interval of ' . $inttxt, 3 );
         }
 
         // Attach interval to schedule.
@@ -203,10 +302,11 @@ class autoptimizeCriticalCSSBase {
         );
         return $schedules;
     }
-    
-    public static function create_ao_ccss_dir() {
+
+    public function create_ao_ccss_dir() {
         // Make sure dir to write ao_ccss exists and is writable.
         if ( ! is_dir( AO_CCSS_DIR ) ) {
+            // TODO: use wp_mkdir_p()
             $mkdirresp = @mkdir( AO_CCSS_DIR, 0775, true ); // @codingStandardsIgnoreLine
         } else {
             $mkdirresp = true;
@@ -218,7 +318,7 @@ class autoptimizeCriticalCSSBase {
         } else {
             $fileresp = true;
         }
-        
+
         if ( true === $fileresp && true === $mkdirresp ) {
             return true;
         } else {

@@ -8,7 +8,8 @@
  */
 function ao_ccss_render_queue() {
     // Attach required arrays.
-    global $ao_ccss_queue;
+    $criticalcss = autoptimize()->criticalcss();
+    $ao_ccss_queue = $criticalcss->get_option( 'queue' );
 
     // Prepare the queue object.
     if ( empty( $ao_ccss_queue ) ) {
@@ -25,7 +26,7 @@ function ao_ccss_render_queue() {
                 <span class="toggle-indicator dashicons dashicons-arrow-up dashicons-arrow-down"></span>
             </button>
             <?php
-            if ( autoptimizeCriticalCSSSettings::ao_ccss_has_autorules() ) {
+            if ( $criticalcss->has_autorules() ) {
                 $_queue_visibility = 'hidden';
             } else {
                 $_queue_visibility = 'visible';
