@@ -131,6 +131,17 @@ class autoptimizeCriticalCSSSettings {
                     <?php
                 }
 
+                // Check if CSS optimization is on.
+                if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_css' ) ) {
+                    ?>
+                    <div class="notice-info notice"><p>
+                    <?php
+                    _e( "To be able to use Critical CSS you will have to enable CSS optimization on Autoptimize's main settings page.", 'autoptimize' );
+                    ?>
+                    </p></div>
+                    <?php
+                }
+
                 // Check for "inline & defer CSS" being active in Autoptimize.
                 if ( ! empty( $ao_ccss_key ) && ! $ao_css_defer ) {
                     if ( empty( $ao_ccss_keyst ) ) {
