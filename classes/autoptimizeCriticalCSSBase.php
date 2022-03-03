@@ -145,7 +145,6 @@ class autoptimizeCriticalCSSBase {
         return $this->_core->ao_ccss_viewport();
     }
 
-
     /**
      * Check CCSS contents from Core object
      *
@@ -157,15 +156,31 @@ class autoptimizeCriticalCSSBase {
         return $this->_core->ao_ccss_check_contents( $ccss );
     }
 
+    /**
+     * Get key status from Core object
+     *
+     * @param bool $render
+     *
+     * @return array
+     */
     public function key_status( $render ) {
         return $this->_core->ao_ccss_key_status( $render );
+    }
+
+    /**
+     * Return valid types from core object
+     *
+     * @return array
+     */
+    public function get_types() {
+        return $this->_core->get_types();
     }
 
     /**
      * Run enqueue in CCSS Enqueue object
      */
     public function enqueue( $hash = '', $path = '', $type = 'is_page' ) {
-        return $this->_enqueue->ao_ccss_enqueue( $hash = '', $path = '', $type = 'is_page' );
+        return $this->_enqueue->ao_ccss_enqueue( $hash, $path, $type );
     }
 
     /**

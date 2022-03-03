@@ -10,7 +10,7 @@ function ao_ccss_render_rules() {
     // Attach required arrays.
     $criticalcss = autoptimize()->criticalcss();
     $ao_ccss_rules = $criticalcss->get_option( 'rules' );
-    $ao_ccss_types = $criticalcss->get_option( 'types' );
+    $ao_ccss_types = $criticalcss->get_types();
 ?>
     <ul id="rules-panel">
         <li class="itemDetail">

@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class autoptimizeCriticalCSSCore {
+    protected $_types = null;
+
     public function __construct() {
         $this->criticalcss = autoptimize()->criticalcss();
         $this->run();
@@ -57,8 +59,7 @@ class autoptimizeCriticalCSSCore {
 
         // Add an array with default WordPress's conditional tags
         // NOTE: these tags are sorted.
-        global $ao_ccss_types;
-        $ao_ccss_types = $this->get_ao_ccss_core_types();
+        $this->_types = $this->get_ao_ccss_core_types();
 
         // Extend conditional tags on plugin initalization.
         add_action( apply_filters( 'autoptimize_filter_ccss_extend_types_hook', 'init' ), array( $this, 'ao_ccss_extend_types' ) );
@@ -70,8 +71,6 @@ class autoptimizeCriticalCSSCore {
     public function ao_ccss_frontend( $inlined ) {
         // Apply CriticalCSS to frontend pages
         // Attach types and settings arrays.
-        global $ao_ccss_types; // TODO: Seems generated on the go.
-
         $rules = $this->criticalcss->get_option( 'rules' );
         $additional = $this->criticalcss->get_option( 'additional' );
         $loggedin = $this->criticalcss->get_option( 'loggedin' );
@@ -107,11 +106,11 @@ class autoptimizeCriticalCSSCore {
             // Check for a valid CriticalCSS based on conditional tags to return its contents.
             if ( ! empty( $rules['types'] ) && 'none' !== $no_ccss ) {
                 // order types-rules by the order of the original $ao_ccss_types array so as not to depend on the order in which rules were added.
-                $rules['types'] = array_replace( array_intersect_key( array_flip( $ao_ccss_types ), $rules['types'] ), $rules['types'] );
+                $rules['types'] = array_replace( array_intersect_key( array_flip( $this->_types ), $rules['types'] ), $rules['types'] );
                 $is_front_page          = is_front_page();
 
                 foreach ( $rules['types'] as $type => $rule ) {
-                    if ( in_array( $type, $ao_ccss_types ) && file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
+                    if ( in_array( $type, $this->_types ) && file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
                         $_ccss_contents = file_get_contents( AO_CCSS_DIR . $rule['file'] );
                         if ( $is_front_page && 'is_front_page' == $type ) {
                             if ( 'none' != $_ccss_contents ) {
@@ -208,14 +207,22 @@ class autoptimizeCriticalCSSCore {
         return str_replace( '</body>', $_unloadccss_js . '</body>', $html_in );
     }
 
+    /**
+     * Get the types array.
+     *
+     * @return array|null
+     */
+    public function get_types() {
+        return $this->_types;
+    }
+
     public function ao_ccss_extend_types() {
         // Extend contidional tags
         // Attach the conditional tags array.
-        global $ao_ccss_types; // TODO: non-global.
 
         // in some cases $ao_ccss_types is empty and/or not an array, this should work around that problem.
-        if ( empty( $ao_ccss_types ) || ! is_array( $ao_ccss_types ) ) {
-            $ao_ccss_types = get_ao_ccss_core_types();
+        if ( empty( $this->_types ) || ! is_array( $this->_types ) ) {
+            $this->_types = $this->get_ao_ccss_core_types();
             $this->ao_ccss_log( 'Empty types array in extend, refetching array with core conditionals.', 3 );
         }
 
@@ -229,7 +236,7 @@ class autoptimizeCriticalCSSCore {
             'and'
         );
         foreach ( $cpts as $cpt ) {
-            array_unshift( $ao_ccss_types, 'custom_post_' . $cpt );
+            array_unshift( $this->_types, 'custom_post_' . $cpt );
         }
 
         // Templates.
@@ -240,12 +247,12 @@ class autoptimizeCriticalCSSCore {
             set_transient( 'autoptimize_ccss_page_templates', $templates, HOUR_IN_SECONDS );
         }
         foreach ( $templates as $tplfile => $tplname ) {
-            array_unshift( $ao_ccss_types, 'template_' . $tplfile );
+            array_unshift( $this->_types, 'template_' . $tplfile );
         }
 
         // bbPress tags.
         if ( function_exists( 'is_bbpress' ) ) {
-            $ao_ccss_types = array_merge(
+            $this->_types = array_merge(
                 array(
                     'bbp_is_bbpress',
                     'bbp_is_favorites',
@@ -271,13 +278,13 @@ class autoptimizeCriticalCSSCore {
                     'bbp_is_topics_created',
                     'bbp_is_user_home',
                     'bbp_is_user_home_edit',
-                ), $ao_ccss_types
+                ), $this->_types
             );
         }
 
         // BuddyPress tags.
         if ( function_exists( 'is_buddypress' ) ) {
-            $ao_ccss_types = array_merge(
+            $this->_types = array_merge(
                 array(
                     'bp_is_activation_page',
                     'bp_is_activity',
@@ -313,25 +320,25 @@ class autoptimizeCriticalCSSCore {
                     'bp_is_user',
                     'bp_is_user_profile',
                     'bp_is_wire',
-                ), $ao_ccss_types
+                ), $this->_types
             );
         }
 
         // Easy Digital Downloads (EDD) tags.
         if ( function_exists( 'edd_is_checkout' ) ) {
-            $ao_ccss_types = array_merge(
+            $this->_types = array_merge(
                 array(
                     'edd_is_checkout',
                     'edd_is_failed_transaction_page',
                     'edd_is_purchase_history_page',
                     'edd_is_success_page',
-                ), $ao_ccss_types
+                ), $this->_types
             );
         }
 
         // WooCommerce tags.
         if ( class_exists( 'WooCommerce' ) ) {
-            $ao_ccss_types = array_merge(
+            $this->_types = array_merge(
                 array(
                     'woo_is_account_page',
                     'woo_is_cart',
@@ -342,32 +349,27 @@ class autoptimizeCriticalCSSCore {
                     'woo_is_shop',
                     'woo_is_wc_endpoint_url',
                     'woo_is_woocommerce',
-                ), $ao_ccss_types
+                ), $this->_types
             );
         }
     }
 
     public function get_ao_ccss_core_types() {
-        global $ao_ccss_types; // TODO: non-global
-        if ( empty( $ao_ccss_types ) || ! is_array( $ao_ccss_types ) ) {
-            return array(
-                'is_404',
-                'is_archive',
-                'is_author',
-                'is_category',
-                'is_front_page',
-                'is_home',
-                'is_page',
-                'is_post',
-                'is_search',
-                'is_attachment',
-                'is_single',
-                'is_sticky',
-                'is_paged',
-            );
-        } else {
-            return $ao_ccss_types;
-        }
+        return array(
+            'is_404',
+            'is_archive',
+            'is_author',
+            'is_category',
+            'is_front_page',
+            'is_home',
+            'is_page',
+            'is_post',
+            'is_search',
+            'is_attachment',
+            'is_single',
+            'is_sticky',
+            'is_paged',
+        );
     }
 
     public function ao_ccss_key_status( $render ) {
@@ -397,7 +399,7 @@ class autoptimizeCriticalCSSCore {
         } elseif ( $key && ! $key_status ) {
             // Key exists but it has no valid status yet
             // Perform key validation.
-            $key_check = $self->ao_ccss_key_validation( $key );
+            $key_check = $this->ao_ccss_key_validation( $key );
 
             // Key is valid, set valid status.
             if ( $key_check ) {

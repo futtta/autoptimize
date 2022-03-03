@@ -210,7 +210,7 @@ class autoptimizeCriticalCSSEnqueue {
     public function ao_ccss_get_type() {
         // Get the type of a page
         // Attach the conditional tags array.
-        $types = $this->criticalcss->get_option( 'types' );
+        $types = $this->criticalcss->get_types();
         $forcepath = $this->criticalcss->get_option( 'forcepath' );
 
         // By default, a page type is false.

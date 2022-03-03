@@ -319,10 +319,10 @@ class autoptimizeCriticalCSSCron {
                 if ( $update ) {
                     if ( ! $deljob ) {
                         // Update properties of a NEW or PENDING job...
-                        $ao_ccss_queue[ $path ] = $jprops;
+                        $queue[ $path ] = $jprops;
                     } else {
                         // ...or remove the DONE job.
-                        unset( $ao_ccss_queue[ $path ] );
+                        unset( $queue[ $path ] );
                         $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> is DONE and was removed from the queue', 3 );
                     }
 
@@ -660,7 +660,7 @@ class autoptimizeCriticalCSSCron {
                 return $filename;
             }
         } else {
-            $this->criticalcss->( 'Critical CSS received did not pass content check', 2 );
+            $this->criticalcss->log( 'Critical CSS received did not pass content check', 2 );
             return $filename;
         }
 
