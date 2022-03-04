@@ -537,7 +537,7 @@ class autoptimizeCriticalCSSCore {
     public function ao_ccss_viewport() {
         // Get viewport size
         // Attach viewport option.
-        $viewport = $this->criticalcss->get_option( 'noptimize' );
+        $viewport = $this->criticalcss->get_option( 'viewport' );
 
         return array(
             'w' => ! empty( $viewport['w'] ) ? $viewport['w'] : '',
