@@ -180,6 +180,11 @@ class autoptimizeCriticalCSSBase {
      * Run enqueue in CCSS Enqueue object
      */
     public function enqueue( $hash = '', $path = '', $type = 'is_page' ) {
+        // Enqueue is sometimes required on wp-admin requests, load it just-in-time.
+        if ( is_null( $this->_enqueue ) ) {
+            $this->_enqueue = new autoptimizeCriticalCSSEnqueue();
+        }
+
         return $this->_enqueue->ao_ccss_enqueue( $hash, $path, $type );
     }
 

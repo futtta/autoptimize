@@ -17,7 +17,7 @@ function ao_ccss_render_adv() {
     $ao_ccss_forcepath = $criticalcss->get_option( 'forcepath' );
     $ao_ccss_deferjquery = $criticalcss->get_option( 'deferjquery' );
     $ao_ccss_domain = $criticalcss->get_option( 'domain' );
-    $ao_ccss_unloadccss = $criticalcss->get_option( 'unloadcss' );
+    $ao_ccss_unloadccss = $criticalcss->get_option( 'unloadccss' );
 
     // In case domain is not set yet (done in cron.php).
     if ( empty( $ao_ccss_domain ) ) {
