@@ -736,6 +736,7 @@ class autoptimizeCriticalCSSCron {
             $rules[ $trule[0] ][ $trule[1] ] = $rule;
             $rules_raw = json_encode( $rules );
             update_option( 'autoptimize_ccss_rules', $rules_raw );
+            $this->criticalcss->flush_options();
             $this->criticalcss->log( 'Target rule <' . $srule . '> of type <' . $rtype . '> was ' . $action . ' for job id <' . $ljid . '>', 3 );
         } else {
             $this->criticalcss->log( 'No rule action required', 3 );

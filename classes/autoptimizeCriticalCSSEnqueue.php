@@ -200,6 +200,7 @@ class autoptimizeCriticalCSSEnqueue {
                 // Persist the job to the queue and return.
                 $queue_raw = json_encode( $queue );
                 update_option( 'autoptimize_ccss_queue', $queue_raw, false );
+                $this->criticalcss->flush_options();
                 return true;
             } else {
                 // Or just return false if no job was added.

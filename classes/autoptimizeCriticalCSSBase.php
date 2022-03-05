@@ -214,6 +214,10 @@ class autoptimizeCriticalCSSBase {
         return null;
     }
 
+    public function flush_options() {
+        $this->_options = null;
+    }
+
     protected function fetch_options() {
         if ( ! is_null( $this->_options ) ) {
             return $this->_options;
