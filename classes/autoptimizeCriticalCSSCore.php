@@ -9,94 +9,92 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class autoptimizeCriticalCSSCore {
-    public function __construct()
-    {
-        // fetch all options at once and populate them individually explicitely as globals.
-        $all_options = autoptimizeCriticalCSSBase::fetch_options();
-        foreach ( $all_options as $_option => $_value ) {
-            global ${$_option};
-            ${$_option} = $_value;
-        }
+    protected $_types = null;
 
+    public function __construct() {
+        $this->criticalcss = autoptimize()->criticalcss();
         $this->run();
     }
 
     public function run() {
-        global $ao_css_defer;
-        global $ao_ccss_deferjquery;
-        global $ao_ccss_key;
-        global $ao_ccss_unloadccss;
+        $key = $this->criticalcss->get_option( 'key' );
+        $css_defer = $this->criticalcss->get_option( 'css_defer' );
+        $deferjquery = $this->criticalcss->get_option( 'deferjquery' );
+        $unloadccss = $this->criticalcss->get_option( 'unloadccss' );
 
-        // add all filters to do CCSS if key present.
-        if ( $ao_css_defer && isset( $ao_ccss_key ) && ! empty( $ao_ccss_key ) ) {
-            // Set AO behavior: disable minification to avoid double minifying and caching.
-            add_filter( 'autoptimize_filter_css_critcss_minify', '__return_false' );
-            add_filter( 'autoptimize_filter_css_defer_inline', array( $this, 'ao_ccss_frontend' ), 10, 1 );
-
-            // Add the action to enqueue jobs for CriticalCSS cron.
-            add_action( 'autoptimize_action_css_hash', array( 'autoptimizeCriticalCSSEnqueue', 'ao_ccss_enqueue' ), 10, 1 );
-
-            // conditionally add the filter to defer jquery and others but only if not done so in autoptimizeScripts.
-            $_native_defer = false;
-            if ( 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_js_defer_not_aggregate' ) && 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_js_defer_inline' ) ) {
-                $_native_defer = true;
-            }
-            if ( $ao_ccss_deferjquery && ! $_native_defer ) {
-                add_filter( 'autoptimize_html_after_minify', array( $this, 'ao_ccss_defer_jquery' ), 11, 1 );
-            }
-
-            // conditionally add filter to unload the CCSS.
-            if ( $ao_ccss_unloadccss ) {
-                add_filter( 'autoptimize_html_after_minify', array( $this, 'ao_ccss_unloadccss' ), 12, 1 );
-            }
-
-            // Order paths by length, as longest ones have greater priority in the rules.
-            if ( ! empty( $ao_ccss_rules['paths'] ) ) {
-                $keys = array_map( 'strlen', array_keys( $ao_ccss_rules['paths'] ) );
-                array_multisort( $keys, SORT_DESC, $ao_ccss_rules['paths'] );
-            }
-
-            // Add an array with default WordPress's conditional tags
-            // NOTE: these tags are sorted.
-            global $ao_ccss_types;
-            $ao_ccss_types = $this->get_ao_ccss_core_types();
-
-            // Extend conditional tags on plugin initalization.
-            add_action( apply_filters( 'autoptimize_filter_ccss_extend_types_hook', 'init' ), array( $this, 'ao_ccss_extend_types' ) );
-
-            // When autoptimize cache is cleared, also clear transient cache for page templates.
-            add_action( 'autoptimize_action_cachepurged', array( 'autoptimizeCriticalCSSCore', 'ao_ccss_clear_page_tpl_cache' ), 10, 0 );
+        if ( ! $css_defer || empty( $key ) ) {
+            return;
         }
+
+        // add all filters to do CCSS
+        // Set AO behavior: disable minification to avoid double minifying and caching.
+        add_filter( 'autoptimize_filter_css_critcss_minify', '__return_false' );
+        add_filter( 'autoptimize_filter_css_defer_inline', array( $this, 'ao_ccss_frontend' ), 10, 1 );
+
+        // Add the action to enqueue jobs for CriticalCSS cron.
+        add_action( 'autoptimize_action_css_hash', array( $this->criticalcss, 'enqueue' ), 10, 1 );
+
+        // conditionally add the filter to defer jquery and others but only if not done so in autoptimizeScripts.
+        $_native_defer = false;
+        if ( 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_js_defer_not_aggregate' ) && 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_js_defer_inline' ) ) {
+            $_native_defer = true;
+        }
+        if ( $deferjquery && ! $_native_defer ) {
+            add_filter( 'autoptimize_html_after_minify', array( $this, 'ao_ccss_defer_jquery' ), 11, 1 );
+        }
+
+        // conditionally add filter to unload the CCSS.
+        if ( $unloadccss ) {
+            add_filter( 'autoptimize_html_after_minify', array( $this, 'ao_ccss_unloadccss' ), 12, 1 );
+        }
+
+        // Order paths by length, as longest ones have greater priority in the rules.
+        $rules = $this->criticalcss->get_option( 'rules' );
+        if ( ! empty( $rules['paths'] ) ) {
+            $keys = array_map( 'strlen', array_keys( $rules['paths'] ) );
+            array_multisort( $keys, SORT_DESC, $rules['paths'] );
+            // TODO: Not sure what we're doing here. Sorted the $keys,
+            // but they don't seem to be used anywhere.
+        }
+
+        // Add an array with default WordPress's conditional tags
+        // NOTE: these tags are sorted.
+        $this->_types = $this->get_ao_ccss_core_types();
+
+        // Extend conditional tags on plugin initalization.
+        add_action( apply_filters( 'autoptimize_filter_ccss_extend_types_hook', 'init' ), array( $this, 'ao_ccss_extend_types' ) );
+
+        // When autoptimize cache is cleared, also clear transient cache for page templates.
+        add_action( 'autoptimize_action_cachepurged', array( $this, 'ao_ccss_clear_page_tpl_cache' ), 10, 0 );
     }
 
     public function ao_ccss_frontend( $inlined ) {
         // Apply CriticalCSS to frontend pages
         // Attach types and settings arrays.
-        global $ao_ccss_types;
-        global $ao_ccss_rules;
-        global $ao_ccss_additional;
-        global $ao_ccss_loggedin;
-        global $ao_ccss_debug;
-        global $ao_ccss_keyst;
+        $rules = $this->criticalcss->get_option( 'rules' );
+        $additional = $this->criticalcss->get_option( 'additional' );
+        $loggedin = $this->criticalcss->get_option( 'loggedin' );
+        $debug = $this->criticalcss->get_option( 'debug' );
+        $keyst = $this->criticalcss->get_option( 'keyst' );
 
         $no_ccss = '';
-        $ao_ccss_additional = autoptimizeStyles::sanitize_css( $ao_ccss_additional );
+        $additional = autoptimizeStyles::sanitize_css( $additional );
 
         // Only if keystatus is OK and option to add CCSS for logged on users is on or user is not logged in.
-        if ( ( $ao_ccss_keyst && 2 == $ao_ccss_keyst ) && ( $ao_ccss_loggedin || ! is_user_logged_in() ) ) {
+        if ( ( $keyst && 2 == $keyst ) && ( $loggedin || ! is_user_logged_in() ) ) {
             // Check for a valid CriticalCSS based on path to return its contents.
             $req_path = strtok( $_SERVER['REQUEST_URI'], '?' );
-            if ( ! empty( $ao_ccss_rules['paths'] ) ) {
-                foreach ( $ao_ccss_rules['paths'] as $path => $rule ) {
+            if ( ! empty( $rules['paths'] ) ) {
+                foreach ( $rules['paths'] as $path => $rule ) {
                     // explicit match OR partial match if MANUAL rule.
                     if ( $req_path == $path || urldecode( $req_path ) == $path || ( apply_filters( 'autoptimize_filter_ccss_core_path_partial_match', true ) && false == $rule['hash'] && false != $rule['file'] && strpos( $req_path, str_replace( site_url(), '', $path ) ) !== false ) ) {
                         if ( file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
                             $_ccss_contents = file_get_contents( AO_CCSS_DIR . $rule['file'] );
                             if ( 'none' != $_ccss_contents ) {
-                                if ( $ao_ccss_debug ) {
+                                if ( $debug ) {
                                     $_ccss_contents = '/* PATH: ' . $path . ' hash: ' . $rule['hash'] . ' file: ' . $rule['file'] . ' */ ' . $_ccss_contents;
                                 }
-                                return apply_filters( 'autoptimize_filter_ccss_core_ccss', $_ccss_contents . $ao_ccss_additional );
+                                return apply_filters( 'autoptimize_filter_ccss_core_ccss', $_ccss_contents . $additional );
                             } else {
                                 $no_ccss = 'none';
                             }
@@ -106,30 +104,30 @@ class autoptimizeCriticalCSSCore {
             }
 
             // Check for a valid CriticalCSS based on conditional tags to return its contents.
-            if ( ! empty( $ao_ccss_rules['types'] ) && 'none' !== $no_ccss ) {
+            if ( ! empty( $rules['types'] ) && 'none' !== $no_ccss ) {
                 // order types-rules by the order of the original $ao_ccss_types array so as not to depend on the order in which rules were added.
-                $ao_ccss_rules['types'] = array_replace( array_intersect_key( array_flip( $ao_ccss_types ), $ao_ccss_rules['types'] ), $ao_ccss_rules['types'] );
+                $rules['types'] = array_replace( array_intersect_key( array_flip( $this->_types ), $rules['types'] ), $rules['types'] );
                 $is_front_page          = is_front_page();
 
-                foreach ( $ao_ccss_rules['types'] as $type => $rule ) {
-                    if ( in_array( $type, $ao_ccss_types ) && file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
+                foreach ( $rules['types'] as $type => $rule ) {
+                    if ( in_array( $type, $this->_types ) && file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
                         $_ccss_contents = file_get_contents( AO_CCSS_DIR . $rule['file'] );
                         if ( $is_front_page && 'is_front_page' == $type ) {
                             if ( 'none' != $_ccss_contents ) {
-                                if ( $ao_ccss_debug ) {
+                                if ( $debug ) {
                                     $_ccss_contents = '/* TYPES: ' . $type . ' hash: ' . $rule['hash'] . ' file: ' . $rule['file'] . ' */ ' . $_ccss_contents;
                                 }
-                                return apply_filters( 'autoptimize_filter_ccss_core_ccss', $_ccss_contents . $ao_ccss_additional );
+                                return apply_filters( 'autoptimize_filter_ccss_core_ccss', $_ccss_contents . $additional );
                             } else {
                                 $no_ccss = 'none';
                             }
                         } elseif ( strpos( $type, 'custom_post_' ) === 0 && ! $is_front_page ) {
                             if ( get_post_type( get_the_ID() ) === substr( $type, 12 ) ) {
                                 if ( 'none' != $_ccss_contents ) {
-                                    if ( $ao_ccss_debug ) {
+                                    if ( $debug ) {
                                         $_ccss_contents = '/* TYPES: ' . $type . ' hash: ' . $rule['hash'] . ' file: ' . $rule['file'] . ' */ ' . $_ccss_contents;
                                     }
-                                    return apply_filters( 'autoptimize_filter_ccss_core_ccss', $_ccss_contents . $ao_ccss_additional );
+                                    return apply_filters( 'autoptimize_filter_ccss_core_ccss', $_ccss_contents . $additional );
                                 } else {
                                     $no_ccss = 'none';
                                 }
@@ -137,10 +135,10 @@ class autoptimizeCriticalCSSCore {
                         } elseif ( 0 === strpos( $type, 'template_' ) && ! $is_front_page ) {
                             if ( is_page_template( substr( $type, 9 ) ) ) {
                                 if ( 'none' != $_ccss_contents ) {
-                                    if ( $ao_ccss_debug ) {
+                                    if ( $debug ) {
                                         $_ccss_contents = '/* TYPES: ' . $type . ' hash: ' . $rule['hash'] . ' file: ' . $rule['file'] . ' */ ' . $_ccss_contents;
                                     }
-                                    return apply_filters( 'autoptimize_filter_ccss_core_ccss', $_ccss_contents . $ao_ccss_additional );
+                                    return apply_filters( 'autoptimize_filter_ccss_core_ccss', $_ccss_contents . $additional );
                                 } else {
                                     $no_ccss = 'none';
                                 }
@@ -151,10 +149,10 @@ class autoptimizeCriticalCSSCore {
                             $type = str_replace( array( 'woo_', 'bp_', 'bbp_', 'edd_' ), '', $type );
                             if ( function_exists( $type ) && call_user_func( $type ) ) {
                                 if ( 'none' != $_ccss_contents ) {
-                                    if ( $ao_ccss_debug ) {
+                                    if ( $debug ) {
                                         $_ccss_contents = '/* TYPES: ' . $type . ' hash: ' . $rule['hash'] . ' file: ' . $rule['file'] . ' */ ' . $_ccss_contents;
                                     }
-                                    return apply_filters( 'autoptimize_filter_ccss_core_ccss', $_ccss_contents . $ao_ccss_additional );
+                                    return apply_filters( 'autoptimize_filter_ccss_core_ccss', $_ccss_contents . $additional );
                                 } else {
                                     $no_ccss = 'none';
                                 }
@@ -168,7 +166,7 @@ class autoptimizeCriticalCSSCore {
         // Finally, inline the default CriticalCSS if any or else the entire CSS for the page
         // This also applies to logged in users if the option to add CCSS for logged in users has been disabled.
         if ( ! empty( $inlined ) && 'none' !== $no_ccss ) {
-            return apply_filters( 'autoptimize_filter_ccss_core_ccss', $inlined . $ao_ccss_additional );
+            return apply_filters( 'autoptimize_filter_ccss_core_ccss', $inlined . $additional );
         } else {
             add_filter( 'autoptimize_filter_css_inline', '__return_true' );
             return;
@@ -176,9 +174,10 @@ class autoptimizeCriticalCSSCore {
     }
 
     public function ao_ccss_defer_jquery( $in ) {
-        global $ao_ccss_loggedin;
+        $loggedin = $this->criticalcss->get_option( 'loggedin' );
+
         // defer all linked and inline JS.
-        if ( ( ! is_user_logged_in() || $ao_ccss_loggedin ) && preg_match_all( '#<script.*>(.*)</script>#Usmi', $in, $matches, PREG_SET_ORDER ) ) {
+        if ( ( ! is_user_logged_in() || $loggedin ) && preg_match_all( '#<script.*>(.*)</script>#Usmi', $in, $matches, PREG_SET_ORDER ) ) {
             foreach ( $matches as $match ) {
                 if ( str_replace( apply_filters( 'autoptimize_filter_ccss_core_defer_exclude', array( 'data-noptimize="1"', 'data-cfasync="false"', 'data-pagespeed-no-defer' ) ), '', $match[0] ) !== $match[0] ) {
                     // do not touch JS with noptimize/ cfasync/ pagespeed-no-defer flags.
@@ -208,15 +207,23 @@ class autoptimizeCriticalCSSCore {
         return str_replace( '</body>', $_unloadccss_js . '</body>', $html_in );
     }
 
+    /**
+     * Get the types array.
+     *
+     * @return array|null
+     */
+    public function get_types() {
+        return $this->_types;
+    }
+
     public function ao_ccss_extend_types() {
         // Extend contidional tags
         // Attach the conditional tags array.
-        global $ao_ccss_types;
 
         // in some cases $ao_ccss_types is empty and/or not an array, this should work around that problem.
-        if ( empty( $ao_ccss_types ) || ! is_array( $ao_ccss_types ) ) {
-            $ao_ccss_types = get_ao_ccss_core_types();
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Empty types array in extend, refetching array with core conditionals.', 3 );
+        if ( empty( $this->_types ) || ! is_array( $this->_types ) ) {
+            $this->_types = $this->get_ao_ccss_core_types();
+            $this->ao_ccss_log( 'Empty types array in extend, refetching array with core conditionals.', 3 );
         }
 
         // Custom Post Types.
@@ -229,7 +236,7 @@ class autoptimizeCriticalCSSCore {
             'and'
         );
         foreach ( $cpts as $cpt ) {
-            array_unshift( $ao_ccss_types, 'custom_post_' . $cpt );
+            array_unshift( $this->_types, 'custom_post_' . $cpt );
         }
 
         // Templates.
@@ -240,12 +247,12 @@ class autoptimizeCriticalCSSCore {
             set_transient( 'autoptimize_ccss_page_templates', $templates, HOUR_IN_SECONDS );
         }
         foreach ( $templates as $tplfile => $tplname ) {
-            array_unshift( $ao_ccss_types, 'template_' . $tplfile );
+            array_unshift( $this->_types, 'template_' . $tplfile );
         }
 
         // bbPress tags.
         if ( function_exists( 'is_bbpress' ) ) {
-            $ao_ccss_types = array_merge(
+            $this->_types = array_merge(
                 array(
                     'bbp_is_bbpress',
                     'bbp_is_favorites',
@@ -271,13 +278,13 @@ class autoptimizeCriticalCSSCore {
                     'bbp_is_topics_created',
                     'bbp_is_user_home',
                     'bbp_is_user_home_edit',
-                ), $ao_ccss_types
+                ), $this->_types
             );
         }
 
         // BuddyPress tags.
         if ( function_exists( 'is_buddypress' ) ) {
-            $ao_ccss_types = array_merge(
+            $this->_types = array_merge(
                 array(
                     'bp_is_activation_page',
                     'bp_is_activity',
@@ -313,25 +320,25 @@ class autoptimizeCriticalCSSCore {
                     'bp_is_user',
                     'bp_is_user_profile',
                     'bp_is_wire',
-                ), $ao_ccss_types
+                ), $this->_types
             );
         }
 
         // Easy Digital Downloads (EDD) tags.
         if ( function_exists( 'edd_is_checkout' ) ) {
-            $ao_ccss_types = array_merge(
+            $this->_types = array_merge(
                 array(
                     'edd_is_checkout',
                     'edd_is_failed_transaction_page',
                     'edd_is_purchase_history_page',
                     'edd_is_success_page',
-                ), $ao_ccss_types
+                ), $this->_types
             );
         }
 
         // WooCommerce tags.
         if ( class_exists( 'WooCommerce' ) ) {
-            $ao_ccss_types = array_merge(
+            $this->_types = array_merge(
                 array(
                     'woo_is_account_page',
                     'woo_is_cart',
@@ -342,42 +349,34 @@ class autoptimizeCriticalCSSCore {
                     'woo_is_shop',
                     'woo_is_wc_endpoint_url',
                     'woo_is_woocommerce',
-                ), $ao_ccss_types
+                ), $this->_types
             );
         }
     }
 
     public function get_ao_ccss_core_types() {
-        global $ao_ccss_types;
-        if ( empty( $ao_ccss_types ) || ! is_array( $ao_ccss_types ) ) {
-            return array(
-                'is_404',
-                'is_archive',
-                'is_author',
-                'is_category',
-                'is_front_page',
-                'is_home',
-                'is_page',
-                'is_post',
-                'is_search',
-                'is_attachment',
-                'is_single',
-                'is_sticky',
-                'is_paged',
-            );
-        } else {
-            return $ao_ccss_types;
-        }
+        return array(
+            'is_404',
+            'is_archive',
+            'is_author',
+            'is_category',
+            'is_front_page',
+            'is_home',
+            'is_page',
+            'is_post',
+            'is_search',
+            'is_attachment',
+            'is_single',
+            'is_sticky',
+            'is_paged',
+        );
     }
 
-    public static function ao_ccss_key_status( $render ) {
+    public function ao_ccss_key_status( $render ) {
         // Provide key status
         // Get key and key status.
-        global $ao_ccss_key;
-        global $ao_ccss_keyst;
-        $self       = new self();
-        $key        = $ao_ccss_key;
-        $key_status = $ao_ccss_keyst;
+        $key = $this->criticalcss->get_option( 'key' );
+        $key_status = $this->criticalcss->get_option( 'keyst' );
 
         // Prepare returned variables.
         $key_return = array();
@@ -400,7 +399,7 @@ class autoptimizeCriticalCSSCore {
         } elseif ( $key && ! $key_status ) {
             // Key exists but it has no valid status yet
             // Perform key validation.
-            $key_check = $self->ao_ccss_key_validation( $key );
+            $key_check = $this->ao_ccss_key_validation( $key );
 
             // Key is valid, set valid status.
             if ( $key_check ) {
@@ -442,14 +441,14 @@ class autoptimizeCriticalCSSCore {
     }
 
     public function ao_ccss_key_validation( $key ) {
-        global $ao_ccss_noptimize;
+        $noptimize = $this->criticalcss->get_option( 'noptimize' );
 
         // POST a dummy job to criticalcss.com to check for key validation
         // Prepare home URL for the request.
         $src_url = get_home_url();
 
         // Avoid AO optimizations if required by config or avoid lazyload if lazyload is active in AO.
-        if ( ! empty( $ao_ccss_noptimize ) ) {
+        if ( ! empty( $noptimize ) ) {
             $src_url .= '?ao_noptirocket=1';
         } elseif ( class_exists( 'autoptimizeImages', false ) && autoptimizeImages::should_lazyload_wrapper() ) {
             $src_url .= '?ao_nolazy=1';
@@ -487,14 +486,14 @@ class autoptimizeCriticalCSSCore {
             // Response is OK.
             // Set key status as valid and log key check.
             update_option( 'autoptimize_ccss_keyst', 2 );
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: API key is valid, updating key status', 3 );
+            $this->ao_ccss_log( 'criticalcss.com: API key is valid, updating key status', 3 );
 
             // extract job-id from $body and put it in the queue as a P job
             // but only if no jobs and no rules!
-            global $ao_ccss_queue;
-            global $ao_ccss_rules;
+            $queue = $this->criticalcss->get_option( 'queue' );
+            $rules = $this->criticalcss->get_option( 'rules' );
 
-            if ( 0 == count( $ao_ccss_queue ) && 0 == count( $ao_ccss_rules['types'] ) && 0 == count( $ao_ccss_rules['paths'] ) ) {
+            if ( 0 == count( $queue ) && 0 == count( $rules['types'] ) && 0 == count( $rules['paths'] ) ) {
                 if ( 'JOB_QUEUED' == $body['job']['status'] || 'JOB_ONGOING' == $body['job']['status'] ) {
                     $jprops['ljid']     = 'firstrun';
                     $jprops['rtarget']  = 'types|is_front_page';
@@ -508,10 +507,10 @@ class autoptimizeCriticalCSSCore {
                     $jprops['jvstat']   = null;
                     $jprops['jctime']   = microtime( true );
                     $jprops['jftime']   = null;
-                    $ao_ccss_queue['/'] = $jprops;
-                    $ao_ccss_queue_raw  = json_encode( $ao_ccss_queue );
-                    update_option( 'autoptimize_ccss_queue', $ao_ccss_queue_raw, false );
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'Created P job for is_front_page based on API key check response.', 3 );
+                    $queue['/'] = $jprops;
+                    $queue_raw  = json_encode( $queue );
+                    update_option( 'autoptimize_ccss_queue', $queue_raw, false );
+                    $this->ao_ccss_log( 'Created P job for is_front_page based on API key check response.', 3 );
                 }
             }
             return true;
@@ -519,55 +518,41 @@ class autoptimizeCriticalCSSCore {
             // Response is unauthorized
             // Set key status as invalid and log key check.
             update_option( 'autoptimize_ccss_keyst', 1 );
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: API key is invalid, updating key status', 3 );
+            $this->ao_ccss_log( 'criticalcss.com: API key is invalid, updating key status', 3 );
             return false;
         } else {
             // Response unkown
             // Log key check attempt.
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: could not check API key status, this is a service error, body follows if any...', 2 );
+            $this->ao_ccss_log( 'criticalcss.com: could not check API key status, this is a service error, body follows if any...', 2 );
             if ( ! empty( $body ) ) {
-                autoptimizeCriticalCSSCore::ao_ccss_log( print_r( $body, true ), 2 );
+                $this->ao_ccss_log( print_r( $body, true ), 2 );
             }
             if ( is_wp_error( $req ) ) {
-                autoptimizeCriticalCSSCore::ao_ccss_log( $req->get_error_message(), 2 );
+                $this->ao_ccss_log( $req->get_error_message(), 2 );
             }
             return false;
         }
     }
 
-    public static function ao_ccss_viewport() {
+    public function ao_ccss_viewport() {
         // Get viewport size
         // Attach viewport option.
-        global $ao_ccss_viewport;
+        $viewport = $this->criticalcss->get_option( 'viewport' );
 
-        // Prepare viewport array.
-        $viewport = array();
-
-        // Viewport Width.
-        if ( ! empty( $ao_ccss_viewport['w'] ) ) {
-            $viewport['w'] = $ao_ccss_viewport['w'];
-        } else {
-            $viewport['w'] = '';
-        }
-
-        // Viewport Height.
-        if ( ! empty( $ao_ccss_viewport['h'] ) ) {
-            $viewport['h'] = $ao_ccss_viewport['h'];
-        } else {
-            $viewport['h'] = '';
-        }
-
-        return $viewport;
+        return array(
+            'w' => ! empty( $viewport['w'] ) ? $viewport['w'] : '',
+            'h' => ! empty( $viewport['h'] ) ? $viewport['h'] : '',
+        );
     }
 
-    public static function ao_ccss_check_contents( $ccss ) {
+    public function ao_ccss_check_contents( $ccss ) {
         // Perform basic exploit avoidance and CSS validation.
         if ( ! empty( $ccss ) ) {
             // Try to avoid code injection.
             $blocklist = array( '#!/', 'function(', '<script', '<?php' );
             foreach ( $blocklist as $blocklisted ) {
                 if ( strpos( $ccss, $blocklisted ) !== false ) {
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'Critical CSS received contained blocklisted content.', 2 );
+                    $this->ao_ccss_log( 'Critical CSS received contained blocklisted content.', 2 );
                     return false;
                 }
             }
@@ -576,7 +561,7 @@ class autoptimizeCriticalCSSCore {
             $needlist = array( '{', '}', ':' );
             foreach ( $needlist as $needed ) {
                 if ( false === strpos( $ccss, $needed ) && 'none' !== $ccss ) {
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'Critical CSS received did not seem to contain real CSS.', 2 );
+                    $this->ao_ccss_log( 'Critical CSS received did not seem to contain real CSS.', 2 );
                     return false;
                 }
             }
@@ -586,10 +571,10 @@ class autoptimizeCriticalCSSCore {
         return true;
     }
 
-    public static function ao_ccss_log( $msg, $lvl ) {
+    public function ao_ccss_log( $msg, $lvl ) {
         // Commom logging facility
         // Attach debug option.
-        global $ao_ccss_debug;
+        $debug = $this->criticalcss->get_option( 'debug' );
 
         // Prepare log levels, where accepted $lvl are:
         // 1: II (for info)
@@ -606,7 +591,7 @@ class autoptimizeCriticalCSSCore {
                 break;
             case 3:
                 // Output debug messages only if debug mode is enabled.
-                if ( $ao_ccss_debug ) {
+                if ( $debug ) {
                     $level = 'DD';
                 }
                 break;
@@ -625,9 +610,8 @@ class autoptimizeCriticalCSSCore {
         }
     }
 
-    public static function ao_ccss_clear_page_tpl_cache() {
+    public function ao_ccss_clear_page_tpl_cache() {
         // Clears transient cache for page templates.
         delete_transient( 'autoptimize_ccss_page_templates' );
     }
-
 }

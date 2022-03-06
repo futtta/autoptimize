@@ -9,14 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class autoptimizeCriticalCSSCron {
-    public function __construct()
-    {
-        // fetch all options at once and populate them individually explicitely as globals.
-        $all_options = autoptimizeCriticalCSSBase::fetch_options();
-        foreach ( $all_options as $_option => $_value ) {
-            global ${$_option};
-            ${$_option} = $_value;
-        }
+    public function __construct() {
+        $this->criticalcss = autoptimize()->criticalcss();
 
         // Add queue control to a registered event.
         add_action( 'ao_ccss_queue', array( $this, 'ao_ccss_queue_control' ) );
@@ -26,10 +20,11 @@ class autoptimizeCriticalCSSCron {
 
     public function ao_ccss_queue_control() {
         // The queue execution backend.
-        global $ao_ccss_key;
-        if ( ! isset( $ao_ccss_key ) || empty( $ao_ccss_key ) ) {
+        $key = $this->criticalcss->get_option( 'key' );
+
+        if ( empty( $key ) ) {
             // no key set, not processing the queue!
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'No key set, so not processing queue.', 3 );
+            $this->criticalcss->log( 'No key set, so not processing queue.', 3 );
             return;
         }
 
@@ -56,7 +51,7 @@ class autoptimizeCriticalCSSCron {
             if ( $qdobj ) {
                 if ( 1 === $qdobj['enable'] ) {
                     $queue_debug = true;
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'Queue operating in debug mode with the following settings: <' . $qdobj_raw . '>', 3 );
+                    $this->criticalcss->log( 'Queue operating in debug mode with the following settings: <' . $qdobj_raw . '>', 3 );
                 }
             }
         }
@@ -76,30 +71,30 @@ class autoptimizeCriticalCSSCron {
         if ( ! $queue_lock ) {
 
             // Log queue start and create the lock file.
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Queue control started', 3 );
+            $this->criticalcss->log( 'Queue control started', 3 );
             if ( touch( AO_CCSS_LOCK ) ) {
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'Queue control locked', 3 );
+                $this->criticalcss->log( 'Queue control locked', 3 );
             }
 
             // Attach required variables.
-            global $ao_ccss_queue;
-            global $ao_ccss_rtimelimit;
+            $queue = $this->criticalcss->get_option( 'queue' );
+            $rtimelimit = $this->criticalcss->get_option( 'rtimelimit' );
 
             // Initialize counters.
-            if ( $ao_ccss_rtimelimit == 0 ) {
+            if ( $rtimelimit == 0 ) {
                 // no time limit set, let's go with 1000 seconds.
-                $ao_ccss_rtimelimit = 1000;
+                $rtimelimit = 1000;
             }
-            $mt = time() + $ao_ccss_rtimelimit; // maxtime queue processing can run.
+            $mt = time() + $rtimelimit; // maxtime queue processing can run.
             $jc = 1; // job count number.
             $jr = 1; // jobs requests number.
-            $jt = count( $ao_ccss_queue ); // number of jobs in queue.
+            $jt = count( $queue ); // number of jobs in queue.
 
             // Sort queue by ascending job status (e.g. ERROR, JOB_ONGOING, JOB_QUEUED, NEW...).
-            array_multisort( array_column( $ao_ccss_queue, 'jqstat' ), $ao_ccss_queue ); // @codingStandardsIgnoreLine
+            array_multisort( array_column( $queue, 'jqstat' ), $queue ); // @codingStandardsIgnoreLine
 
             // Iterates over the entire queue.
-            foreach ( $ao_ccss_queue as $path => $jprops ) {
+            foreach ( $queue as $path => $jprops ) {
                 // Prepare flags and target rule.
                 $update      = false;
                 $deljob      = false;
@@ -108,13 +103,13 @@ class autoptimizeCriticalCSSCron {
                 $trule       = explode( '|', $jprops['rtarget'] );
 
                 // Log job count.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'Processing job ' . $jc . ' of ' . $jt . ' with id <' . $jprops['ljid'] . '> and status <' . $jprops['jqstat'] . '>', 3 );
+                $this->criticalcss->log( 'Processing job ' . $jc . ' of ' . $jt . ' with id <' . $jprops['ljid'] . '> and status <' . $jprops['jqstat'] . '>', 3 );
 
                 // Process NEW jobs.
                 if ( 'NEW' == $jprops['jqstat'] ) {
 
                     // Log the new job.
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'Found NEW job with local ID <' . $jprops['ljid'] . '>, starting its queue processing', 3 );
+                    $this->criticalcss->log( 'Found NEW job with local ID <' . $jprops['ljid'] . '>, starting its queue processing', 3 );
 
                     // Compare job and rule hashes (if any).
                     $hash = $this->ao_ccss_diff_hashes( $jprops['ljid'], $jprops['hash'], $jprops['hashes'], $jprops['rtarget'] );
@@ -124,7 +119,7 @@ class autoptimizeCriticalCSSCron {
                         if ( $jr > 2 ) {
                             // we already posted 2 jobs to criticalcss.com, don't post more this run
                             // but we can keep on processing the queue to keep it tidy.
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Holding off on generating request for job with local ID <' . $jprops['ljid'] . '>, maximum number of POSTS reached.', 3 );
+                            $this->criticalcss->log( 'Holding off on generating request for job with local ID <' . $jprops['ljid'] . '>, maximum number of POSTS reached.', 3 );
                             continue;
                         }
 
@@ -141,7 +136,7 @@ class autoptimizeCriticalCSSCron {
                             // Update job properties.
                             $jprops['jid']    = $apireq['job']['id'];
                             $jprops['jqstat'] = $apireq['job']['status'];
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> generate request successful, remote id <' . $jprops['jid'] . '>, status now is <' . $jprops['jqstat'] . '>', 3 );
+                            $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> generate request successful, remote id <' . $jprops['jid'] . '>, status now is <' . $jprops['jqstat'] . '>', 3 );
                         } elseif ( 'STATUS_JOB_BAD' == $apireq['job']['status'] ) {
                             // ERROR: concurrent requests
                             // Update job properties.
@@ -154,7 +149,7 @@ class autoptimizeCriticalCSSCron {
                             }
                             $jprops['jvstat'] = 'NONE';
                             $jprops['jftime'] = microtime( true );
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Concurrent requests when processing job id <' . $jprops['ljid'] . '>, job status is now <' . $jprops['jqstat'] . '>', 3 );
+                            $this->criticalcss->log( 'Concurrent requests when processing job id <' . $jprops['ljid'] . '>, job status is now <' . $jprops['jqstat'] . '>', 3 );
                         } elseif ( 'INVALID_JWT_TOKEN' == $apireq['errorCode'] ) {
                             // ERROR: key validation
                             // Update job properties.
@@ -162,7 +157,7 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jrstat'] = $apireq['error'];
                             $jprops['jvstat'] = 'NONE';
                             $jprops['jftime'] = microtime( true );
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'API key validation error when processing job id <' . $jprops['ljid'] . '>, job status is now <' . $jprops['jqstat'] . '>', 3 );
+                            $this->criticalcss->log( 'API key validation error when processing job id <' . $jprops['ljid'] . '>, job status is now <' . $jprops['jqstat'] . '>', 3 );
                         } elseif ( empty( $apireq ) ) {
                             // ERROR: no response
                             // Update job properties.
@@ -170,7 +165,7 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jrstat'] = 'NONE';
                             $jprops['jvstat'] = 'NONE';
                             $jprops['jftime'] = microtime( true );
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> request has no response, status now is <' . $jprops['jqstat'] . '>', 3 );
+                            $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> request has no response, status now is <' . $jprops['jqstat'] . '>', 3 );
                         } else {
                             // UNKNOWN: unhandled generate exception
                             // Update job properties.
@@ -178,15 +173,15 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jrstat'] = 'NONE';
                             $jprops['jvstat'] = 'NONE';
                             $jprops['jftime'] = microtime( true );
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> generate request has an UNKNOWN condition, status now is <' . $jprops['jqstat'] . '>, check log messages above for more information', 2 );
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job response was: ' . json_encode( $apireq ), 3 );
+                            $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> generate request has an UNKNOWN condition, status now is <' . $jprops['jqstat'] . '>, check log messages above for more information', 2 );
+                            $this->criticalcss->log( 'Job response was: ' . json_encode( $apireq ), 3 );
                         }
                     } else {
                         // SUCCESS: Job hash is equal to a previous one, so it's done
                         // Update job status and finish time.
                         $jprops['jqstat'] = 'JOB_DONE';
                         $jprops['jftime'] = microtime( true );
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> requires no further processing, status now is <' . $jprops['jqstat'] . '>', 3 );
+                        $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> requires no further processing, status now is <' . $jprops['jqstat'] . '>', 3 );
                     }
 
                     // Set queue update flag.
@@ -195,7 +190,7 @@ class autoptimizeCriticalCSSCron {
                 } elseif ( 'JOB_QUEUED' == $jprops['jqstat'] || 'JOB_ONGOING' == $jprops['jqstat'] ) {
                     // Process QUEUED and ONGOING jobs
                     // Log the pending job.
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'Found PENDING job with local ID <' . $jprops['ljid'] . '>, continuing its queue processing', 3 );
+                    $this->criticalcss->log( 'Found PENDING job with local ID <' . $jprops['ljid'] . '>, continuing its queue processing', 3 );
 
                     // Dispatch the job result request and increment request count.
                     $apireq = $this->ao_ccss_api_results( $jprops['jid'], $queue_debug, $qdobj['htcode'] );
@@ -219,7 +214,7 @@ class autoptimizeCriticalCSSCron {
                         // Process a PENDING job
                         // Update job properties.
                         $jprops['jqstat'] = $apireq['status'];
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . '> unchanged', 3 );
+                        $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . '> unchanged', 3 );
                     } elseif ( 'JOB_DONE' == $apireq['status'] ) {
                         // Process a DONE job
                         // New resultStatus from ccss.com "HTML_404", consider as "GOOD" for now.
@@ -236,7 +231,7 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jvstat'] = $apireq['validationStatus'];
                             $jprops['jftime'] = microtime( true );
                             $rule_update      = true;
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . '>, file saved <' . $jprops['file'] . '>', 3 );
+                            $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . '>, file saved <' . $jprops['file'] . '>', 3 );
                         } elseif ( 'GOOD' == $apireq['resultStatus'] && ( 'BAD' == $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' == $apireq['validationStatus'] ) ) {
                             // SUCCESS: GOOD job with BAD or SCREENSHOT_WARN_BLANK validation
                             // Update job properties.
@@ -247,9 +242,9 @@ class autoptimizeCriticalCSSCron {
                             if ( apply_filters( 'autoptimize_filter_ccss_save_review_rules', true ) ) {
                                 $jprops['file']   = $this->ao_ccss_save_file( $apireq['css'], $trule, true );
                                 $rule_update      = true;
-                                autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file saved <' . $jprops['file'] . '> but requires REVIEW', 3 );
+                                $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file saved <' . $jprops['file'] . '> but requires REVIEW', 3 );
                             } else {
-                                autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file not saved because it required REVIEW.', 3 );
+                                $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file not saved because it required REVIEW.', 3 );
                             }
                         } elseif ( 'GOOD' != $apireq['resultStatus'] && ( 'GOOD' != $apireq['validationStatus'] || 'WARN' != $apireq['validationStatus'] || 'BAD' != $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' != $apireq['validationStatus'] ) ) {
                             // ERROR: no GOOD, WARN or BAD results
@@ -258,9 +253,9 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jrstat'] = $apireq['resultStatus'];
                             $jprops['jvstat'] = $apireq['validationStatus'];
                             $jprops['jftime'] = microtime( true );
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful but job FAILED, status now is <' . $jprops['jqstat'] . '>', 3 );
+                            $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful but job FAILED, status now is <' . $jprops['jqstat'] . '>', 3 );
                             $apireq['css'] = '/* critical css removed for DEBUG logging purposes */';
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job response was: ' . json_encode( $apireq ), 3 );
+                            $this->criticalcss->log( 'Job response was: ' . json_encode( $apireq ), 3 );
                         } else {
                             // UNKNOWN: unhandled JOB_DONE exception
                             // Update job properties.
@@ -268,9 +263,9 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jrstat'] = $apireq['resultStatus'];
                             $jprops['jvstat'] = $apireq['validationStatus'];
                             $jprops['jftime'] = microtime( true );
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful but job is UNKNOWN, status now is <' . $jprops['jqstat'] . '>', 2 );
+                            $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful but job is UNKNOWN, status now is <' . $jprops['jqstat'] . '>', 2 );
                             $apireq['css'] = '/* critical css removed for DEBUG logging purposes */';
-                            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job response was: ' . json_encode( $apireq ), 3 );
+                            $this->criticalcss->log( 'Job response was: ' . json_encode( $apireq ), 3 );
                         }
                     } elseif ( 'JOB_FAILED' == $apireq['job']['status'] || 'STATUS_JOB_BAD' == $apireq['job']['status'] ) {
                         // ERROR: failed job
@@ -283,7 +278,7 @@ class autoptimizeCriticalCSSCron {
                         }
                         $jprops['jvstat'] = 'NONE';
                         $jprops['jftime'] = microtime( true );
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful but job FAILED, status now is <' . $jprops['jqstat'] . '>', 3 );
+                        $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful but job FAILED, status now is <' . $jprops['jqstat'] . '>', 3 );
                     } elseif ( 'This css no longer exists. Please re-generate it.' == $apireq['error'] ) {
                         // ERROR: CSS doesn't exist
                         // Update job properties.
@@ -291,7 +286,7 @@ class autoptimizeCriticalCSSCron {
                         $jprops['jrstat'] = $apireq['error'];
                         $jprops['jvstat'] = 'NONE';
                         $jprops['jftime'] = microtime( true );
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request successful but job FAILED, status now is <' . $jprops['jqstat'] . '>', 3 );
+                        $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful but job FAILED, status now is <' . $jprops['jqstat'] . '>', 3 );
                     } elseif ( empty( $apireq ) ) {
                         // ERROR: no response
                         // Update job properties.
@@ -299,7 +294,7 @@ class autoptimizeCriticalCSSCron {
                         $jprops['jrstat'] = 'NONE';
                         $jprops['jvstat'] = 'NONE';
                         $jprops['jftime'] = microtime( true );
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> request has no response, status now is <' . $jprops['jqstat'] . '>', 3 );
+                        $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> request has no response, status now is <' . $jprops['jqstat'] . '>', 3 );
                     } else {
                         // UNKNOWN: unhandled results exception
                         // Update job properties.
@@ -307,7 +302,7 @@ class autoptimizeCriticalCSSCron {
                         $jprops['jrstat'] = 'NONE';
                         $jprops['jvstat'] = 'NONE';
                         $jprops['jftime'] = microtime( true );
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> result request has an UNKNOWN condition, status now is <' . $jprops['jqstat'] . '>, check log messages above for more information', 2 );
+                        $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request has an UNKNOWN condition, status now is <' . $jprops['jqstat'] . '>, check log messages above for more information', 2 );
                     }
 
                     // Set queue update flag.
@@ -324,31 +319,31 @@ class autoptimizeCriticalCSSCron {
                 if ( $update ) {
                     if ( ! $deljob ) {
                         // Update properties of a NEW or PENDING job...
-                        $ao_ccss_queue[ $path ] = $jprops;
+                        $queue[ $path ] = $jprops;
                     } else {
                         // ...or remove the DONE job.
-                        unset( $ao_ccss_queue[ $path ] );
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> is DONE and was removed from the queue', 3 );
+                        unset( $queue[ $path ] );
+                        $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> is DONE and was removed from the queue', 3 );
                     }
 
                     // Update queue object.
-                    $ao_ccss_queue_raw = json_encode( $ao_ccss_queue );
-                    update_option( 'autoptimize_ccss_queue', $ao_ccss_queue_raw, false );
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'Queue updated by job id <' . $jprops['ljid'] . '>', 3 );
+                    $queue_raw = json_encode( $queue );
+                    update_option( 'autoptimize_ccss_queue', $queue_raw, false );
+                    $this->criticalcss->log( 'Queue updated by job id <' . $jprops['ljid'] . '>', 3 );
 
                     // Update target rule.
                     if ( $rule_update ) {
                         $this->ao_ccss_rule_update( $jprops['ljid'], $jprops['rtarget'], $jprops['file'], $jprops['hash'] );
-                        autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $jprops['ljid'] . '> updated the target rule <' . $jprops['rtarget'] . '>', 3 );
+                        $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> updated the target rule <' . $jprops['rtarget'] . '>', 3 );
                     }
                 } else {
                     // Or log no queue action.
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'Nothing to do on this job', 3 );
+                    $this->criticalcss->log( 'Nothing to do on this job', 3 );
                 }
 
                 // Break the loop if request time limit is (almost exceeded).
                 if ( time() > $mt ) {
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'The time limit of ' . $ao_ccss_rtimelimit . ' seconds was exceeded, queue control must finish now', 3 );
+                    $this->criticalcss->log( 'The time limit of ' . $rtimelimit . ' seconds was exceeded, queue control must finish now', 3 );
                     break;
                 }
 
@@ -359,13 +354,13 @@ class autoptimizeCriticalCSSCron {
             // Remove the lock file and log the queue end.
             if ( file_exists( AO_CCSS_LOCK ) ) {
                 unlink( AO_CCSS_LOCK );
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'Queue control unlocked', 3 );
+                $this->criticalcss->log( 'Queue control unlocked', 3 );
             }
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Queue control finished', 3 );
+            $this->criticalcss->log( 'Queue control finished', 3 );
 
             // Log that queue is locked.
         } else {
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Queue is already running, skipping the attempt to run it again', 3 );
+            $this->criticalcss->log( 'Queue is already running, skipping the attempt to run it again', 3 );
         }
     }
 
@@ -376,7 +371,7 @@ class autoptimizeCriticalCSSCron {
             // Job with a single hash
             // Set job hash.
             $hash = $hashes[0];
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> updated with SINGLE hash <' . $hash . '>', 3 );
+            $this->criticalcss->log( 'Job id <' . $ljid . '> updated with SINGLE hash <' . $hash . '>', 3 );
         } else {
             // Job with multiple hashes
             // Loop through hashes to concatenate them.
@@ -387,52 +382,52 @@ class autoptimizeCriticalCSSCron {
 
             // Set job hash.
             $hash = md5( $nhash );
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> updated with a COMPOSITE hash <' . $hash . '>', 3 );
+            $this->criticalcss->log( 'Job id <' . $ljid . '> updated with a COMPOSITE hash <' . $hash . '>', 3 );
         }
 
         // STEP 2: compare job to existing jobs to prevent double submission for same type+hash.
-        global $ao_ccss_queue;
+        $queue = $this->criticalcss->get_option( 'queue' );
 
-        foreach ( $ao_ccss_queue as $queue_item ) {
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Comparing <' . $rule . $hash . '> with <' . $queue_item['rtarget'] . $queue_item['hash'] . '>', 3 );
+        foreach ( $queue as $queue_item ) {
+            $this->criticalcss->log( 'Comparing <' . $rule . $hash . '> with <' . $queue_item['rtarget'] . $queue_item['hash'] . '>', 3 );
             if ( $queue_item['hash'] == $hash && $queue_item['rtarget'] == $rule && in_array( $queue_item['jqstat'], array( 'JOB_QUEUED', 'JOB_ONGOING', 'JOB_DONE' ) ) ) {
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> matches the already pending job <' . $queue_item['ljid'] . '>', 3 );
+                $this->criticalcss->log( 'Job id <' . $ljid . '> matches the already pending job <' . $queue_item['ljid'] . '>', 3 );
                 return false;
             }
         }
 
         // STEP 3: compare job and existing rule (if any) hashes
         // Attach required arrays.
-        global $ao_ccss_rules;
+        $rules = $this->criticalcss->get_option( 'rules' );
 
         // Prepare rule variables.
         $trule = explode( '|', $rule );
-        $srule = $ao_ccss_rules[ $trule[0] ][ $trule[1] ];
-        
+        $srule = $rules[ $trule[0] ][ $trule[1] ];
+
         // If hash is empty, set it to now for a "forced job".
-        if ( empty( $hash  )  ) {     
+        if ( empty( $hash ) ) {
             $hash = 'new';
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> had no hash, assuming forced job so setting hash to new', 3   );  
+            $this->criticalcss->log( 'Job id <' . $ljid . '> had no hash, assuming forced job so setting hash to new', 3 );
         }
 
         // Check if a MANUAL rule exist and return false.
         if ( ! empty( $srule ) && ( 0 == $srule['hash'] && 0 != $srule['file'] ) ) {
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> matches the MANUAL rule <' . $trule[0] . '|' . $trule[1] . '>', 3 );
+            $this->criticalcss->log( 'Job id <' . $ljid . '> matches the MANUAL rule <' . $trule[0] . '|' . $trule[1] . '>', 3 );
             return false;
         } elseif ( ! empty( $srule ) ) {
             // Check if an AUTO rule exist.
             if ( $hash === $srule['hash'] && is_file( AO_CCSS_DIR . $srule['file'] ) && 0 != filesize( AO_CCSS_DIR . $srule['file'] ) ) {
                 // Check if job hash matches rule, if the CCSS file exists said file is not empty and return FALSE is so.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> with hash <' . $hash . '> MATCH the one in rule <' . $trule[0] . '|' . $trule[1] . '>', 3 );
+                $this->criticalcss->log( 'Job id <' . $ljid . '> with hash <' . $hash . '> MATCH the one in rule <' . $trule[0] . '|' . $trule[1] . '>', 3 );
                 return false;
             } else {
                 // Or return the new hash if they differ.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> with hash <' . $hash . '> DOES NOT MATCH the one in rule <' . $trule[0] . '|' . $trule[1] . '> or rule\'s CCSS file was invalid.', 3 );
+                $this->criticalcss->log( 'Job id <' . $ljid . '> with hash <' . $hash . '> DOES NOT MATCH the one in rule <' . $trule[0] . '|' . $trule[1] . '> or rule\'s CCSS file was invalid.', 3 );
                 return $hash;
             }
         } else {
             // Return the hash for a job that has no rule yet.
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Job id <' . $ljid . '> with hash <' . $hash . '> has no rule yet', 3 );
+            $this->criticalcss->log( 'Job id <' . $ljid . '> with hash <' . $hash . '> has no rule yet', 3 );
             return $hash;
         }
     }
@@ -440,14 +435,11 @@ class autoptimizeCriticalCSSCron {
     public function ao_ccss_api_generate( $path, $debug, $dcode ) {
         // POST jobs to criticalcss.com and return responses
         // Get key and key status.
-        global $ao_ccss_key;
-        global $ao_ccss_keyst;
-        $key        = $ao_ccss_key;
-        $key_status = $ao_ccss_keyst;
+        $key = $this->criticalcss->get_option( 'key' );
+        $key_status = $this->criticalcss->get_option( 'keyst' );
+        $noptimize = $this->criticalcss->get_option( 'noptimize' );
 
         // Prepare full URL to request.
-        global $ao_ccss_noptimize;
-
         $site_host = get_site_url();
         $site_path = parse_url( $site_host, PHP_URL_PATH );
 
@@ -458,20 +450,20 @@ class autoptimizeCriticalCSSCron {
         // Logic to bind to one domain to avoid site clones of sites would
         // automatically begin spawning requests to criticalcss.com which has
         // a per domain cost.
-        global $ao_ccss_domain;
-        if ( empty( $ao_ccss_domain ) ) {
+        $domain = $this->criticalcss->get_option( 'domain' );
+        if ( empty( $domain ) ) {
             // first request being done, update option to allow future requests are only allowed if from same domain.
             update_option( 'autoptimize_ccss_domain', str_rot13( $site_host ) );
-        } elseif ( trim( $ao_ccss_domain, '\'"' ) !== 'none' && parse_url( $site_host, PHP_URL_HOST ) !== parse_url( $ao_ccss_domain, PHP_URL_HOST ) && apply_filters( 'autoptimize_filter_ccss_bind_domain', true ) ) {
+        } elseif ( trim( $domain, '\'"' ) !== 'none' && parse_url( $site_host, PHP_URL_HOST ) !== parse_url( $domain, PHP_URL_HOST ) && apply_filters( 'autoptimize_filter_ccss_bind_domain', true ) ) {
             // not the same domain, log as error and return without posting to criticalcss.com.
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Request for domain ' . $site_host . ' does not match bound domain ' . $ao_ccss_domain . ' so not proceeding.', 2 );
+            $this->criticalcss->log( 'Request for domain ' . $site_host . ' does not match bound domain ' . $domain . ' so not proceeding.', 2 );
             return false;
         }
 
         $src_url = $site_host . $path;
 
         // Avoid AO optimizations if required by config or avoid lazyload if lazyload is active in AO.
-        if ( ! empty( $ao_ccss_noptimize ) ) {
+        if ( ! empty( $noptimize ) ) {
             $src_url .= '?ao_noptirocket=1';
         } elseif ( ( class_exists( 'autoptimizeImages', false ) && autoptimizeImages::should_lazyload_wrapper() ) || apply_filters( 'autoptimize_filter_ccss_enforce_nolazy', false ) ) {
             $src_url .= '?ao_nolazy=1';
@@ -486,15 +478,15 @@ class autoptimizeCriticalCSSCron {
         $body['aocssv'] = AO_CCSS_VER;
 
         // Prepare and add viewport size to the body if available.
-        $viewport = autoptimizeCriticalCSSCore::ao_ccss_viewport();
+        $viewport = $this->criticalcss->viewport();
         if ( ! empty( $viewport['w'] ) && ! empty( $viewport['h'] ) ) {
             $body['width']  = $viewport['w'];
             $body['height'] = $viewport['h'];
         }
 
         // Prepare and add forceInclude to the body if available.
-        global $ao_ccss_finclude;
-        $finclude = $this->ao_ccss_finclude( $ao_ccss_finclude );
+        $finclude = $this->criticalcss->get_option( 'finclude' );
+        $finclude = $this->ao_ccss_finclude( $finclude );
         if ( ! empty( $finclude ) ) {
             $body['forceInclude'] = $finclude;
         }
@@ -504,7 +496,7 @@ class autoptimizeCriticalCSSCron {
 
         // Body must be json and log it.
         $body = json_encode( $body );
-        autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: POST generate request body is ' . $body, 3 );
+        $this->criticalcss->log( 'criticalcss.com: POST generate request body is ' . $body, 3 );
 
         // Prepare the request.
         $url  = esc_url_raw( AO_CCSS_API . 'generate?aover=' . AO_CCSS_VER );
@@ -533,42 +525,42 @@ class autoptimizeCriticalCSSCron {
             // Workaround criticalcss.com non-RESTful reponses.
             if ( 'JOB_QUEUED' == $body['job']['status'] || 'JOB_ONGOING' == $body['job']['status'] || 'STATUS_JOB_BAD' == $body['job']['status'] ) {
                 // Log successful and return encoded request body.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied successfully', 3 );
+                $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied successfully', 3 );
 
                 // This code also means the key is valid, so cache key status for 24h if not already cached.
                 if ( ( ! $key_status || 2 != $key_status ) && $key ) {
                     update_option( 'autoptimize_ccss_keyst', 2 );
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: API key is valid, updating key status', 3 );
+                    $this->criticalcss->log( 'criticalcss.com: API key is valid, updating key status', 3 );
                 }
 
                 // Return the request body.
                 return $body;
             } else {
                 // Log successful requests with invalid reponses.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied with code <' . $code . '> and an UNKNOWN error condition, body follows...', 2 );
-                autoptimizeCriticalCSSCore::ao_ccss_log( print_r( $body, true ), 2 );
+                $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied with code <' . $code . '> and an UNKNOWN error condition, body follows...', 2 );
+                $this->criticalcss->log( print_r( $body, true ), 2 );
                 return $body;
             }
         } else {
             // Response code is anything else.
             // Log failed request with a valid response code and return body.
             if ( $code ) {
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied with error code <' . $code . '>, body follows...', 2 );
-                autoptimizeCriticalCSSCore::ao_ccss_log( print_r( $body, true ), 2 );
+                $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied with error code <' . $code . '>, body follows...', 2 );
+                $this->criticalcss->log( print_r( $body, true ), 2 );
 
                 if ( 401 == $code ) {
                     // If request is unauthorized, also clear key status.
                     update_option( 'autoptimize_ccss_keyst', 1 );
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: API key is invalid, updating key status', 3 );
+                    $this->criticalcss->log( 'criticalcss.com: API key is invalid, updating key status', 3 );
                 }
 
                 // Return the request body.
                 return $body;
             } else {
                 // Log failed request with no response and return false.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: POST generate request for path <' . $src_url . '> has no response, this could be a service timeout', 2 );
+                $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> has no response, this could be a service timeout', 2 );
                 if ( is_wp_error( $req ) ) {
-                    autoptimizeCriticalCSSCore::ao_ccss_log( $req->get_error_message(), 2 );
+                    $this->criticalcss->log( $req->get_error_message(), 2 );
                 }
 
                 return false;
@@ -579,8 +571,7 @@ class autoptimizeCriticalCSSCron {
     public function ao_ccss_api_results( $jobid, $debug, $dcode ) {
         // GET jobs from criticalcss.com and return responses
         // Get key.
-        global $ao_ccss_key;
-        $key = $ao_ccss_key;
+        $key = $this->criticalcss->get_option( 'key' );
 
         // Prepare the request.
         $url  = AO_CCSS_API . 'results?resultId=' . $jobid;
@@ -607,36 +598,36 @@ class autoptimizeCriticalCSSCron {
             if ( is_array( $body ) && ( array_key_exists( 'status', $body ) || array_key_exists( 'job', $body ) ) && ( 'JOB_QUEUED' == $body['status'] || 'JOB_ONGOING' == $body['status'] || 'JOB_DONE' == $body['status'] || 'JOB_FAILED' == $body['status'] || 'JOB_UNKNOWN' == $body['status'] || 'STATUS_JOB_BAD' == $body['job']['status'] ) ) {
                 // Workaround criticalcss.com non-RESTful reponses
                 // Log successful and return encoded request body.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: GET results request for remote job id <' . $jobid . '> replied successfully', 3 );
+                $this->criticalcss->log( 'criticalcss.com: GET results request for remote job id <' . $jobid . '> replied successfully', 3 );
                 return $body;
             } elseif ( is_array( $body ) && ( array_key_exists( 'error', $body ) && 'This css no longer exists. Please re-generate it.' == $body['error'] ) ) {
                 // Handle no CSS reply
                 // Log no CSS error and return encoded request body.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: GET results request for remote job id <' . $jobid . '> replied successfully but the CSS for it does not exist anymore', 3 );
+                $this->criticalcss->log( 'criticalcss.com: GET results request for remote job id <' . $jobid . '> replied successfully but the CSS for it does not exist anymore', 3 );
                 return $body;
             } else {
                 // Log failed request and return false.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: GET results request for remote job id <' . $jobid . '> replied with code <' . $code . '> and an UNKNOWN error condition, body follows...', 2 );
-                autoptimizeCriticalCSSCore::ao_ccss_log( print_r( $body, true ), 2 );
+                $this->criticalcss->log( 'criticalcss.com: GET results request for remote job id <' . $jobid . '> replied with code <' . $code . '> and an UNKNOWN error condition, body follows...', 2 );
+                $this->criticalcss->log( print_r( $body, true ), 2 );
                 return false;
             }
         } else {
             // Response code is anything else
             // Log failed request with a valid response code and return body.
             if ( $code ) {
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: GET results request for remote job id <' . $jobid . '> replied with error code <' . $code . '>, body follows...', 2 );
-                autoptimizeCriticalCSSCore::ao_ccss_log( print_r( $body, true ), 2 );
+                $this->criticalcss->log( 'criticalcss.com: GET results request for remote job id <' . $jobid . '> replied with error code <' . $code . '>, body follows...', 2 );
+                $this->criticalcss->log( print_r( $body, true ), 2 );
                 if ( 401 == $code ) {
                     // If request is unauthorized, also clear key status.
                     update_option( 'autoptimize_ccss_keyst', 1 );
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: API key is invalid, updating key status', 3 );
+                    $this->criticalcss->log( 'criticalcss.com: API key is invalid, updating key status', 3 );
                 }
 
                 // Return the request body.
                 return $body;
             } else {
                 // Log failed request with no response and return false.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'criticalcss.com: GET results request for remote job id <' . $jobid . '> has no response, this could be a service timeout', 2 );
+                $this->criticalcss->log( 'criticalcss.com: GET results request for remote job id <' . $jobid . '> has no response, this could be a service timeout', 2 );
                 return false;
             }
         }
@@ -655,31 +646,31 @@ class autoptimizeCriticalCSSCron {
         $filename = false;
         $content  = $ccss;
 
-        if ( autoptimizeCriticalCSSCore::ao_ccss_check_contents( $content ) ) {
+        if ( $this->criticalcss->check_contents( $content ) ) {
             // Sanitize content, set filename and try to save file.
             $file     = AO_CCSS_DIR . 'ccss_' . md5( $ccss . $target[1] ) . $rmark . '.css';
             $status   = file_put_contents( $file, $content, LOCK_EX );
             $filename = pathinfo( $file, PATHINFO_BASENAME );
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Critical CSS file for the rule <' . $target[0] . '|' . $target[1] . '> was saved as <' . $filename . '>, size in bytes is <' . $status . '>', 3 );
+            $this->criticalcss->log( 'Critical CSS file for the rule <' . $target[0] . '|' . $target[1] . '> was saved as <' . $filename . '>, size in bytes is <' . $status . '>', 3 );
 
             if ( ! $status ) {
                 // If file has not been saved, reset filename.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'Critical CSS file <' . $filename . '> could not be not saved', 2 );
+                $this->criticalcss->log( 'Critical CSS file <' . $filename . '> could not be not saved', 2 );
                 $filename = false;
                 return $filename;
             }
         } else {
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Critical CSS received did not pass content check', 2 );
+            $this->criticalcss->log( 'Critical CSS received did not pass content check', 2 );
             return $filename;
         }
 
         // Remove old critical CSS if a previous one existed in the rule and if that file exists in filesystem
         // NOTE: out of scope critical CSS file removal (issue #5)
         // Attach required arrays.
-        global $ao_ccss_rules;
+        $rules = $this->criticalcss->get_option( 'rules' );
 
         // Prepare rule variables.
-        $srule   = $ao_ccss_rules[ $target[0] ][ $target[1] ];
+        $srule   = $rules[ $target[0] ][ $target[1] ];
         $oldfile = $srule['file'];
 
         if ( $oldfile && $oldfile !== $filename ) {
@@ -687,7 +678,7 @@ class autoptimizeCriticalCSSCron {
             if ( file_exists( $delfile ) ) {
                 $unlinkst = unlink( $delfile );
                 if ( $unlinkst ) {
-                    autoptimizeCriticalCSSCore::ao_ccss_log( 'A previous critical CSS file <' . $oldfile . '> was removed for the rule <' . $target[0] . '|' . $target[1] . '>', 3 );
+                    $this->criticalcss->log( 'A previous critical CSS file <' . $oldfile . '> was removed for the rule <' . $target[0] . '|' . $target[1] . '>', 3 );
                 }
             }
         }
@@ -699,11 +690,11 @@ class autoptimizeCriticalCSSCron {
     public function ao_ccss_rule_update( $ljid, $srule, $file, $hash ) {
         // Update or create a rule
         // Attach required arrays.
-        global $ao_ccss_rules;
+        $rules = $this->criticalcss->get_option( 'rules' );
 
         // Prepare rule variables.
         $trule  = explode( '|', $srule );
-        $rule   = $ao_ccss_rules[ $trule[0] ][ $trule[1] ];
+        $rule   = $rules[ $trule[0] ][ $trule[1] ];
         $action = false;
         $rtype  = '';
 
@@ -736,18 +727,19 @@ class autoptimizeCriticalCSSCron {
                 $rtype        = 'AUTO';
             } else {
                 // Log that no rule was created.
-                autoptimizeCriticalCSSCore::ao_ccss_log( 'Exception, no AUTO rule created', 3 );
+                $this->criticalcss->log( 'Exception, no AUTO rule created', 3 );
             }
         }
 
         if ( $action ) {
             // If a rule creation/update is required, persist updated rules object.
-            $ao_ccss_rules[ $trule[0] ][ $trule[1] ] = $rule;
-            $ao_ccss_rules_raw                       = json_encode( $ao_ccss_rules );
-            update_option( 'autoptimize_ccss_rules', $ao_ccss_rules_raw );
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Target rule <' . $srule . '> of type <' . $rtype . '> was ' . $action . ' for job id <' . $ljid . '>', 3 );
+            $rules[ $trule[0] ][ $trule[1] ] = $rule;
+            $rules_raw = json_encode( $rules );
+            update_option( 'autoptimize_ccss_rules', $rules_raw );
+            $this->criticalcss->flush_options();
+            $this->criticalcss->log( 'Target rule <' . $srule . '> of type <' . $rtype . '> was ' . $action . ' for job id <' . $ljid . '>', 3 );
         } else {
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'No rule action required', 3 );
+            $this->criticalcss->log( 'No rule action required', 3 );
         }
     }
 
@@ -811,10 +803,11 @@ class autoptimizeCriticalCSSCron {
         }
 
         // Queue cleaning.
-        global $ao_ccss_queue;
+        $queue = $this->criticalcss->get_option( 'queue' );
+
         $queue_purge_threshold = 100;
         $queue_purge_age       = 24 * 60 * 60;
-        $queue_length          = count( $ao_ccss_queue );
+        $queue_length          = count( $queue );
         $timestamp_yesterday   = microtime( true ) - $queue_purge_age;
         $remove_old_new        = false;
         $queue_altered         = false;
@@ -823,23 +816,23 @@ class autoptimizeCriticalCSSCron {
             $remove_old_new = true;
         }
 
-        foreach ( $ao_ccss_queue as $path => $job ) {
+        foreach ( $queue as $path => $job ) {
             if ( ( $remove_old_new && 'NEW' == $job['jqstat'] && $job['jctime'] < $timestamp_yesterday ) || in_array( $job['jqstat'], array( 'JOB_FAILED', 'STATUS_JOB_BAD', 'NO_CSS', 'NO_RESPONSE' ) ) ) {
-                unset( $ao_ccss_queue[ $path ] );
+                unset( $queue[ $path ] );
                 $queue_altered = true;
             }
         }
 
         // save queue to options!
         if ( $queue_altered ) {
-            $ao_ccss_queue_raw = json_encode( $ao_ccss_queue );
-            update_option( 'autoptimize_ccss_queue', $ao_ccss_queue_raw, false );
-            autoptimizeCriticalCSSCore::ao_ccss_log( 'Queue cleaning done.', 3 );
+            $queue_raw = json_encode( $queue );
+            update_option( 'autoptimize_ccss_queue', $queue_raw, false );
+            $this->criticalcss->log( 'Queue cleaning done.', 3 );
         }
 
         // re-check key if invalid.
-        global $ao_ccss_keyst;
-        if ( 1 == $ao_ccss_keyst ) {
+        $keyst = $this->criticalcss->get_option( 'keyst' );
+        if ( 1 == $keyst ) {
             $this->ao_ccss_api_generate( '', '', '' );
         }
     }

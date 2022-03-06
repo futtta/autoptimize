@@ -15,8 +15,8 @@ class autoptimizeCriticalCSSSettings {
      */
     private $settings_screen_do_remote_http = true;
 
-    public function __construct()
-    {
+    public function __construct() {
+        $this->criticalcss = autoptimize()->criticalcss();
         $this->settings_screen_do_remote_http = apply_filters( 'autoptimize_settingsscreen_remotehttp', $this->settings_screen_do_remote_http );
         $this->run();
     }
@@ -100,12 +100,21 @@ class autoptimizeCriticalCSSSettings {
         require_once( 'critcss-inc/admin_settings_adv.php' );
         require_once( 'critcss-inc/admin_settings_explain.php' );
 
-        // fetch all options at once and populate them individually explicitely as globals.
-        $all_options = autoptimizeCriticalCSSBase::fetch_options();
-        foreach ( $all_options as $_option => $_value ) {
-            global ${$_option};
-            ${$_option} = $_value;
-        }
+        $ao_ccss_key = $this->criticalcss->get_option( 'key' );
+        $ao_ccss_keyst = $this->criticalcss->get_option( 'keyst' );
+        $ao_css_defer = $this->criticalcss->get_option( 'css_defer' );
+        $ao_ccss_deferjquery = $this->criticalcss->get_option( 'deferjquery' );
+        $ao_ccss_queue = $this->criticalcss->get_option( 'queue' );
+        $ao_ccss_servicestatus = $this->criticalcss->get_option( 'servicestatus' );
+        $ao_ccss_rules_raw = $this->criticalcss->get_option( 'rules_raw' );
+        $ao_ccss_queue_raw = $this->criticalcss->get_option( 'queue_raw' );
+        $ao_ccss_finclude = $this->criticalcss->get_option( 'finclude' );
+        $ao_ccss_rtimelimit = $this->criticalcss->get_option( 'rtimelimit' );
+        $ao_ccss_debug = $this->criticalcss->get_option( 'debug' );
+        $ao_ccss_noptimize = $this->criticalcss->get_option( 'noptimize' );
+        $ao_css_defer_inline = $this->criticalcss->get_option( 'css_defer_inline' );
+        $ao_ccss_loggedin = $this->criticalcss->get_option( 'loggedin' );
+        $ao_ccss_forcepath = $this->criticalcss->get_option( 'forcepath' );
         ?>
         <script>document.title = "Autoptimize: <?php _e( 'Critical CSS', 'autoptimize' ); ?> " + document.title;</script>
         <div class="wrap">
@@ -118,7 +127,7 @@ class autoptimizeCriticalCSSSettings {
                 // Print AO settings tabs.
                 echo autoptimizeConfig::ao_admin_tabs();
 
-                $mkdirresult = autoptimizeCriticalCSSBase::create_ao_ccss_dir();
+                $mkdirresult = $this->criticalcss->create_ao_ccss_dir();
 
                 // Warn if we could not create those files.
                 if ( ( true !== $mkdirresult ) ) {
@@ -282,7 +291,7 @@ class autoptimizeCriticalCSSSettings {
                     settings_fields( 'ao_ccss_options_group' );
 
                     // Get API key status.
-                    $key = autoptimizeCriticalCSSCore::ao_ccss_key_status( true );
+                    $key = $this->criticalcss->key_status( true );
 
                     if ( $this->is_multisite_network_admin() ) {
                         ?>
@@ -310,7 +319,7 @@ class autoptimizeCriticalCSSSettings {
                             ao_ccss_render_explain();
 
                             // Get viewport size.
-                            $viewport = autoptimizeCriticalCSSCore::ao_ccss_viewport();
+                            $viewport = $this->criticalcss->viewport();
 
                             // Add hidden fields.
                             echo "<input class='hidden' name='autoptimize_ccss_rules' value='" . $ao_ccss_rules_raw . "'>";
@@ -376,11 +385,11 @@ class autoptimizeCriticalCSSSettings {
         }
     }
 
-    public static function ao_ccss_has_autorules() {
+    public function ao_ccss_has_autorules() {
         static $_has_auto_rules = null;
 
         if ( null === $_has_auto_rules ) {
-            global $ao_ccss_rules;
+            $ao_ccss_rules = $this->criticalcss->get_option( 'rules' );
             $_has_auto_rules = false;
             if ( ! empty( $ao_ccss_rules ) ) {
                 foreach ( array( 'types', 'paths' ) as $_typat ) {
@@ -401,7 +410,7 @@ class autoptimizeCriticalCSSSettings {
         return $_has_auto_rules;
     }
 
-    public static function is_multisite_network_admin() {
+    public function is_multisite_network_admin() {
         static $_multisite_network_admin = null;
 
         if ( null === $_multisite_network_admin ) {

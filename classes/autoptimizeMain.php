@@ -28,6 +28,13 @@ class autoptimizeMain
     protected $filepath = null;
 
     /**
+     * Critical CSS base object
+     *
+     * @var object
+     */
+    protected $_criticalcss = null;
+
+    /**
      * Constructor.
      *
      * @param string $version Version.
@@ -219,11 +226,18 @@ class autoptimizeMain
         }
     }
 
+    public function criticalcss()
+    {
+        return $this->_criticalcss;
+    }
+
     public function maybe_run_criticalcss()
     {
         // Loads criticalcss if the power-up is not active and if the filter returns true.
         if ( apply_filters( 'autoptimize_filter_criticalcss_active', true ) && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
-            new autoptimizeCriticalCSSBase();
+            $this->_criticalcss = new autoptimizeCriticalCSSBase();
+            $this->_criticalcss->setup();
+            $this->_criticalcss->load_requires();
         }
     }
 
@@ -240,8 +254,8 @@ class autoptimizeMain
         $_run_compat = true;
 
         /* if ( autoptimizeOptionWrapper::get_option( 'autoptimize_installed_before_compatibility', false ) ) {
-            // If AO was already running before Compatibility logic was added, don't run compat by default 
-            // because it can be assumed everything works and we want to avoid (perf) regressions that 
+            // If AO was already running before Compatibility logic was added, don't run compat by default
+            // because it can be assumed everything works and we want to avoid (perf) regressions that
             // could occur due to compatibility code.
             $_run_compat = false;
         } */
@@ -579,7 +593,7 @@ class autoptimizeMain
     {
         // clear the cache.
         autoptimizeCache::clearall();
-        
+
         // remove postmeta if active.
         if ( autoptimizeConfig::is_ao_meta_settings_active() ) {
             delete_post_meta_by_key( 'ao_post_optimize' );
