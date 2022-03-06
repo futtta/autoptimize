@@ -342,7 +342,7 @@ class autoptimizeCriticalCSSSettingsAjax {
                 // loop through all files in the zipfile.
                 for ($i = 0; $i < $zip->numFiles; $i++) {
                     // but only extract known good files.
-                    if ( preg_match('/^settings\.json$|^ccss_[a-z0-9]{32}\.css$/', $zip->getNameIndex( $i ) ) > 0 ) {
+                    if ( preg_match('/^settings\.json$|^\.\/ccss_[a-z0-9]{32}\.css$/', $zip->getNameIndex( $i ) ) > 0 ) {
                         $zip->extractTo( AO_CCSS_DIR, $zip->getNameIndex( $i ) );
                     }
                 }
