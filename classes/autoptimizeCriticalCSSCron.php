@@ -131,7 +131,23 @@ class autoptimizeCriticalCSSCron {
                         $jr++;
 
                         // NOTE: All the following conditions maps to the ones in admin_settings_queue.js.php.
-                        if ( 'JOB_QUEUED' == $apireq['job']['status'] || 'JOB_ONGOING' == $apireq['job']['status'] ) {
+                        if ( empty( $apireq ) ) {
+                            // ERROR: no response
+                            // Update job properties.
+                            $jprops['jqstat'] = 'NO_RESPONSE';
+                            $jprops['jrstat'] = 'NONE';
+                            $jprops['jvstat'] = 'NONE';
+                            $jprops['jftime'] = microtime( true );
+                            $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> request has no response, status now is <' . $jprops['jqstat'] . '>', 3 );
+                        } elseif ( array_key_exists( 'errorCode', $apireq ) && 'INVALID_JWT_TOKEN' == $apireq['errorCode'] ) {
+                            // ERROR: key validation
+                            // Update job properties.
+                            $jprops['jqstat'] = $apireq['errorCode'];
+                            $jprops['jrstat'] = $apireq['error'];
+                            $jprops['jvstat'] = 'NONE';
+                            $jprops['jftime'] = microtime( true );
+                            $this->criticalcss->log( 'API key validation error when processing job id <' . $jprops['ljid'] . '>, job status is now <' . $jprops['jqstat'] . '>', 3 );
+                        } elseif ( array_key_exists( 'job', $apireq ) && 'JOB_QUEUED' == $apireq['job']['status'] || 'JOB_ONGOING' == $apireq['job']['status'] ) {
                             // SUCCESS: request has a valid result.
                             // Update job properties.
                             $jprops['jid']    = $apireq['job']['id'];
@@ -150,22 +166,6 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jvstat'] = 'NONE';
                             $jprops['jftime'] = microtime( true );
                             $this->criticalcss->log( 'Concurrent requests when processing job id <' . $jprops['ljid'] . '>, job status is now <' . $jprops['jqstat'] . '>', 3 );
-                        } elseif ( 'INVALID_JWT_TOKEN' == $apireq['errorCode'] ) {
-                            // ERROR: key validation
-                            // Update job properties.
-                            $jprops['jqstat'] = $apireq['errorCode'];
-                            $jprops['jrstat'] = $apireq['error'];
-                            $jprops['jvstat'] = 'NONE';
-                            $jprops['jftime'] = microtime( true );
-                            $this->criticalcss->log( 'API key validation error when processing job id <' . $jprops['ljid'] . '>, job status is now <' . $jprops['jqstat'] . '>', 3 );
-                        } elseif ( empty( $apireq ) ) {
-                            // ERROR: no response
-                            // Update job properties.
-                            $jprops['jqstat'] = 'NO_RESPONSE';
-                            $jprops['jrstat'] = 'NONE';
-                            $jprops['jvstat'] = 'NONE';
-                            $jprops['jftime'] = microtime( true );
-                            $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> request has no response, status now is <' . $jprops['jqstat'] . '>', 3 );
                         } else {
                             // UNKNOWN: unhandled generate exception
                             // Update job properties.
@@ -402,7 +402,11 @@ class autoptimizeCriticalCSSCron {
 
         // Prepare rule variables.
         $trule = explode( '|', $rule );
-        $srule = $rules[ $trule[0] ][ $trule[1] ];
+        if ( is_array( $trule ) && ! empty( $trule ) && array_key_exists( $trule[1], $rules ) ) {
+            $srule = $rules[ $trule[0] ][ $trule[1] ];
+        } else {
+            $srule = '';
+        }
 
         // If hash is empty, set it to now for a "forced job".
         if ( empty( $hash ) ) {
@@ -665,20 +669,21 @@ class autoptimizeCriticalCSSCron {
         }
 
         // Remove old critical CSS if a previous one existed in the rule and if that file exists in filesystem
-        // NOTE: out of scope critical CSS file removal (issue #5)
         // Attach required arrays.
         $rules = $this->criticalcss->get_option( 'rules' );
 
-        // Prepare rule variables.
-        $srule   = $rules[ $target[0] ][ $target[1] ];
-        $oldfile = $srule['file'];
+        // Only proceed if the rule already existed.
+        if ( array_key_exists( $target[1], $rules[ $target[0] ] ) ) {
+            $srule   = $rules[ $target[0] ][ $target[1] ];
+            $oldfile = $srule['file'];
 
-        if ( $oldfile && $oldfile !== $filename ) {
-            $delfile = AO_CCSS_DIR . $oldfile;
-            if ( file_exists( $delfile ) ) {
-                $unlinkst = unlink( $delfile );
-                if ( $unlinkst ) {
-                    $this->criticalcss->log( 'A previous critical CSS file <' . $oldfile . '> was removed for the rule <' . $target[0] . '|' . $target[1] . '>', 3 );
+            if ( $oldfile && $oldfile !== $filename ) {
+                $delfile = AO_CCSS_DIR . $oldfile;
+                if ( file_exists( $delfile ) ) {
+                    $unlinkst = unlink( $delfile );
+                    if ( $unlinkst ) {
+                        $this->criticalcss->log( 'A previous critical CSS file <' . $oldfile . '> was removed for the rule <' . $target[0] . '|' . $target[1] . '>', 3 );
+                    }
                 }
             }
         }
@@ -694,22 +699,26 @@ class autoptimizeCriticalCSSCron {
 
         // Prepare rule variables.
         $trule  = explode( '|', $srule );
-        $rule   = $rules[ $trule[0] ][ $trule[1] ];
+        if ( array_key_exists( $trule[1], $rules[$trule[1]] ) ) {
+            $rule = $rules[ $trule[0] ][ $trule[1] ];
+        } else {
+            $rule = '';
+        }
         $action = false;
         $rtype  = '';
 
-        if ( 0 === $rule['hash'] && 0 !== $rule['file'] ) {
+        if ( is_array( $rule ) && 0 === $rule['hash'] && 0 !== $rule['file'] ) {
             // manual rule, don't ever overwrite.
             $action = 'NOT UPDATED';
             $rtype  = 'MANUAL';
-        } elseif ( 0 === $rule['hash'] && 0 === $rule['file'] ) {
+        } elseif ( is_array( $rule ) && 0 === $rule['hash'] && 0 === $rule['file'] ) {
             // If this is an user created AUTO rule with no hash and file yet, update its hash and filename
             // Set rule hash, file and action flag.
             $rule['hash'] = $hash;
             $rule['file'] = $file;
             $action       = 'UPDATED';
             $rtype        = 'AUTO';
-        } elseif ( 0 !== $rule['hash'] && ctype_alnum( $rule['hash'] ) ) {
+        } elseif ( is_array( $rule ) &&  0 !== $rule['hash'] && ctype_alnum( $rule['hash'] ) ) {
             // If this is an genuine AUTO rule, update its hash and filename
             // Set rule hash, file and action flag.
             $rule['hash'] = $hash;
