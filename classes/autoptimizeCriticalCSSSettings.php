@@ -145,7 +145,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     <div class="notice-info notice"><p>
                     <?php
-                    _e( "To be able to use Critical CSS you will have to enable CSS optimization on Autoptimize's main settings page.", 'autoptimize' );
+                    _e( 'To be able to use Critical CSS you will have to enable CSS optimization on the main Autoptimize settings page.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
