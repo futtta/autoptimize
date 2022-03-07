@@ -1051,9 +1051,9 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             // a non-bool metabox optimization not found or empty, so returning false.
             return false;
         } else {
-            // when in doubt "go" for optimization, but this should never happen.
+            // when in doubt "go" for optimization, but this should never happen?
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'AO metabox logic fallback; well, how did I get here? Maybe this helps: ' . json_encode( $_meta_value ) );
+                error_log( 'AO metabox logic fallback; well, how did I get here? Maybe this helps: looking for ' . $optim . ' in ' . json_encode( $_meta_value ) );
             }
             return true;
         }
