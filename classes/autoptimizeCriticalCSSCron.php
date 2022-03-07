@@ -699,7 +699,7 @@ class autoptimizeCriticalCSSCron {
 
         // Prepare rule variables.
         $trule  = explode( '|', $srule );
-        if ( array_key_exists( $trule[1], $rules[$trule[1]] ) ) {
+        if ( array_key_exists( $trule[1], $rules[$trule[0]] ) ) {
             $rule = $rules[ $trule[0] ][ $trule[1] ];
         } else {
             $rule = '';
