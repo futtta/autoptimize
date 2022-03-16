@@ -100,19 +100,20 @@ class autoptimizeCriticalCSSSettings {
         require_once( 'critcss-inc/admin_settings_adv.php' );
         require_once( 'critcss-inc/admin_settings_explain.php' );
 
-        $ao_ccss_key = $this->criticalcss->get_option( 'key' );
-        $ao_ccss_keyst = $this->criticalcss->get_option( 'keyst' );
-        $ao_css_defer = $this->criticalcss->get_option( 'css_defer' );
-        $ao_ccss_deferjquery = $this->criticalcss->get_option( 'deferjquery' );
-        $ao_ccss_queue = $this->criticalcss->get_option( 'queue' );
+        $ao_ccss_key           = $this->criticalcss->get_option( 'key' );
+        $ao_ccss_keyst         = $this->criticalcss->get_option( 'keyst' );
+        $ao_css_defer          = $this->criticalcss->get_option( 'css_defer' );
+        $ao_ccss_deferjquery   = $this->criticalcss->get_option( 'deferjquery' );
+        $ao_ccss_queue         = $this->criticalcss->get_option( 'queue' );
+        $ao_ccss_rules         = $this->criticalcss->get_option( 'rules' );
         $ao_ccss_servicestatus = $this->criticalcss->get_option( 'servicestatus' );
-        $ao_ccss_finclude = $this->criticalcss->get_option( 'finclude' );
-        $ao_ccss_rtimelimit = $this->criticalcss->get_option( 'rtimelimit' );
-        $ao_ccss_debug = $this->criticalcss->get_option( 'debug' );
-        $ao_ccss_noptimize = $this->criticalcss->get_option( 'noptimize' );
-        $ao_css_defer_inline = $this->criticalcss->get_option( 'css_defer_inline' );
-        $ao_ccss_loggedin = $this->criticalcss->get_option( 'loggedin' );
-        $ao_ccss_forcepath = $this->criticalcss->get_option( 'forcepath' );
+        $ao_ccss_finclude      = $this->criticalcss->get_option( 'finclude' );
+        $ao_ccss_rtimelimit    = $this->criticalcss->get_option( 'rtimelimit' );
+        $ao_ccss_debug         = $this->criticalcss->get_option( 'debug' );
+        $ao_ccss_noptimize     = $this->criticalcss->get_option( 'noptimize' );
+        $ao_css_defer_inline   = $this->criticalcss->get_option( 'css_defer_inline' );
+        $ao_ccss_loggedin      = $this->criticalcss->get_option( 'loggedin' );
+        $ao_ccss_forcepath     = $this->criticalcss->get_option( 'forcepath' );
         ?>
         <script>document.title = "Autoptimize: <?php _e( 'Critical CSS', 'autoptimize' ); ?> " + document.title;</script>
         <div class="wrap">
@@ -312,8 +313,12 @@ class autoptimizeCriticalCSSSettings {
                             // Render advanced panel.
                             ao_ccss_render_adv();
                         } else {
-                            // Render rules section for manual rules.
-                            ao_ccss_render_rules();
+                            if ( apply_filters( 'autoptimize_filter_ccss_rules_without_api', true ) ) {
+                                // Render rules section for manual rules.
+                                ao_ccss_render_rules();
+                            } else {
+                                echo "<input class='hidden' name='autoptimize_ccss_queue' value='" . json_encode( $ao_ccss_rules, JSON_FORCE_OBJECT ) . "'>";
+                            }
 
                             // But if key is other than valid, add hidden fields to persist settings when submitting form
                             // Show explanation of why and how to get a API key.
