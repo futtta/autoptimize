@@ -106,8 +106,6 @@ class autoptimizeCriticalCSSSettings {
         $ao_ccss_deferjquery = $this->criticalcss->get_option( 'deferjquery' );
         $ao_ccss_queue = $this->criticalcss->get_option( 'queue' );
         $ao_ccss_servicestatus = $this->criticalcss->get_option( 'servicestatus' );
-        $ao_ccss_rules_raw = $this->criticalcss->get_option( 'rules_raw' );
-        $ao_ccss_queue_raw = $this->criticalcss->get_option( 'queue_raw' );
         $ao_ccss_finclude = $this->criticalcss->get_option( 'finclude' );
         $ao_ccss_rtimelimit = $this->criticalcss->get_option( 'rtimelimit' );
         $ao_ccss_debug = $this->criticalcss->get_option( 'debug' );
@@ -325,17 +323,16 @@ class autoptimizeCriticalCSSSettings {
                             $viewport = $this->criticalcss->viewport();
 
                             // Add hidden fields.
-                            // echo "<input class='hidden' name='autoptimize_ccss_rules' value='" . $ao_ccss_rules_raw . "'>";
-                            echo "<input class='hidden' name='autoptimize_ccss_queue' value='" . $ao_ccss_queue_raw . "'>";
-                            echo '<input class="hidden" name="autoptimize_ccss_viewport[w]" value="' . $viewport['w'] . '">';
-                            echo '<input class="hidden" name="autoptimize_ccss_viewport[h]" value="' . $viewport['h'] . '">';
+                            echo "<input class='hidden' name='autoptimize_ccss_queue' value='" . json_encode( $ao_ccss_queue, JSON_FORCE_OBJECT ) . "'>";
+                            echo '<input class="hidden" name="autoptimize_ccss_viewport[w]" value="' . esc_attr( $viewport['w'] ) . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_viewport[h]" value="' . esc_attr( $viewport['h'] ) . '">';
                             echo '<input class="hidden" name="autoptimize_ccss_finclude" value="' . esc_attr( $ao_ccss_finclude ) . '">';
-                            echo '<input class="hidden" name="autoptimize_ccss_rtimelimit" value="' . $ao_ccss_rtimelimit . '">';
-                            echo '<input class="hidden" name="autoptimize_ccss_debug" value="' . $ao_ccss_debug . '">';
-                            echo '<input class="hidden" name="autoptimize_ccss_noptimize" value="' . $ao_ccss_noptimize . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_rtimelimit" value="' . esc_attr( $ao_ccss_rtimelimit ) . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_debug" value="' . esc_attr( $ao_ccss_debug ) . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_noptimize" value="' . esc_attr( $ao_ccss_noptimize ) . '">';
                             echo '<input class="hidden" name="autoptimize_css_defer_inline" value="' . esc_attr( $ao_css_defer_inline ) . '">';
-                            echo '<input class="hidden" name="autoptimize_ccss_loggedin" value="' . $ao_ccss_loggedin . '">';
-                            echo '<input class="hidden" name="autoptimize_ccss_forcepath" value="' . $ao_ccss_forcepath . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_loggedin" value="' . esc_attr( $ao_ccss_loggedin ). '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_forcepath" value="' . esc_attr( $ao_ccss_forcepath ) . '">';
                         }
                         // Render key panel unconditionally.
                         ao_ccss_render_key( $ao_ccss_key, $key['status'], $key['stmsg'], $key['msg'], $key['color'] );
