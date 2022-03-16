@@ -341,6 +341,7 @@ class autoptimizeCriticalCSSBase {
         // Let interval be configurable.
         if ( ! defined( 'AO_CCSS_DEBUG_INTERVAL' ) ) {
             $intsec = 600;
+            $inttxt = '10 minutes';
         } else {
             $intsec = AO_CCSS_DEBUG_INTERVAL;
             if ( $intsec >= 120 ) {
@@ -354,7 +355,7 @@ class autoptimizeCriticalCSSBase {
         // Attach interval to schedule.
         $schedules['ao_ccss'] = array(
             'interval' => $intsec,
-            'display'  => __( 'Autoptimize CriticalCSS' ),
+            'display'  => __( 'Every ' . $inttxt . ' (Autoptimize Crit. CSS)' ),
         );
         return $schedules;
     }
