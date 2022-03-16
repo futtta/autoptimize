@@ -89,16 +89,33 @@ class autoptimizeCriticalCSSBase {
     }
 
     public function setup() {
-        // make sure the 10 minutes cron schedule is added.
-        add_filter( 'cron_schedules', array( $this, 'ao_ccss_interval' ) );
-
         // check if we need to upgrade.
         $this->check_upgrade();
 
-        // make sure ao_ccss_queue is scheduled OK if an API key is set.
-        $key = $this->get_option( 'key' );
-        if ( ! empty( $key ) && ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
-            wp_schedule_event( time(), apply_filters( 'ao_ccss_queue_schedule', 'ao_ccss' ), 'ao_ccss_queue' );
+        // add/ remove scheduled jobs.
+        if ( $this->is_api_active() ) {
+            if ( ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
+                // make sure the 10 minutes cron schedule is added.
+                add_filter( 'cron_schedules', array( $this, 'ao_ccss_interval' ) );
+
+                // make sure ao_ccss_queue is scheduled OK if an API key is active.
+                wp_schedule_event( time(), apply_filters( 'ao_ccss_queue_schedule', 'ao_ccss' ), 'ao_ccss_queue' );
+            }
+
+            if ( ! wp_next_scheduled( 'ao_ccss_maintenance' ) ) {
+                // and schedule maintenance job.
+                wp_schedule_event( time(), 'twicedaily', 'ao_ccss_maintenance' );
+            }
+        } else {
+            if ( wp_next_scheduled( 'ao_ccss_queue' ) ) {
+                wp_clear_scheduled_hook( 'ao_ccss_queue' );
+            }
+
+            if ( wp_next_scheduled( 'ao_ccss_maintenance' ) ) {
+                wp_clear_scheduled_hook( 'ao_ccss_maintenance' );
+            }
+
+            // fixme; if key is set but api not active, do a scheduled daily key-check?
         }
 
         // check/ create AO_CCSS_DIR.
@@ -111,15 +128,15 @@ class autoptimizeCriticalCSSBase {
         // Required libs, core is always needed.
         $this->_core = new autoptimizeCriticalCSSCore();
 
-        if ( defined( 'WP_CLI' ) || defined( 'DOING_CRON' ) || is_admin() ) {
+        if ( ( defined( 'WP_CLI' ) || defined( 'DOING_CRON' ) || is_admin() ) && $this->is_api_active() ) {
             // TODO: also include if overridden somehow to force queue processing to be executed?
             $this->_cron = new autoptimizeCriticalCSSCron();
         }
 
         if ( is_admin() ) {
             $this->_settings = new autoptimizeCriticalCSSSettings();
-        } else {
-            // enqueuing only done when not wp-admin.
+        } else if ( $this->is_api_active() ) {
+            // enqueuing only done when not wp-admin and when API is active.
             $this->_enqueue = new autoptimizeCriticalCSSEnqueue();
         }
     }
@@ -181,7 +198,7 @@ class autoptimizeCriticalCSSBase {
      */
     public function enqueue( $hash = '', $path = '', $type = 'is_page' ) {
         // Enqueue is sometimes required on wp-admin requests, load it just-in-time.
-        if ( is_null( $this->_enqueue ) ) {
+        if ( is_null( $this->_enqueue ) && $this->is_api_active() ) {
             $this->_enqueue = new autoptimizeCriticalCSSEnqueue();
         }
 
@@ -285,12 +302,12 @@ class autoptimizeCriticalCSSBase {
         }
 
         // Create a scheduled event for the queue.
-        if ( ! empty( $key ) && ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
+        if ( $this->is_api_active() && ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
             wp_schedule_event( time(), apply_filters( 'ao_ccss_queue_schedule', 'ao_ccss' ), 'ao_ccss_queue' );
         }
 
         // Create a scheduled event for log maintenance.
-        if ( ! empty( $key ) && ! wp_next_scheduled( 'ao_ccss_maintenance' ) ) {
+        if ( $this->is_api_active() && ! wp_next_scheduled( 'ao_ccss_maintenance' ) ) {
             wp_schedule_event( time(), 'twicedaily', 'ao_ccss_maintenance' );
         }
     }
@@ -348,5 +365,37 @@ class autoptimizeCriticalCSSBase {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Helper function to determine if there is an active API key.
+     *
+     * @return bool
+     */
+    public function is_api_active() {
+        // using options instead of more complex $this->key_status (which gave some dependancy issues ... ;-) ).
+        $ao_ccss_key   = $this->get_option( 'key' );
+        $ao_ccss_keyst = $this->get_option( 'keyst' );
+
+        if ( ! empty( $ao_ccss_key ) && $ao_ccss_keyst && 2 == $ao_ccss_keyst ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Helper function to determine if a rule is MANUAL.
+     *
+     * @param array $rule
+     *
+     * @return bool
+     */
+    public function is_rule_manual( $rule ) {
+        if ( is_array( $rule ) && false == $rule['hash'] && false != $rule['file'] ) {
+            return true;
+        }
+
+        return false;
     }
 }

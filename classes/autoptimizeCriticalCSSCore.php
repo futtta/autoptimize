@@ -17,12 +17,11 @@ class autoptimizeCriticalCSSCore {
     }
 
     public function run() {
-        $key = $this->criticalcss->get_option( 'key' );
-        $css_defer = $this->criticalcss->get_option( 'css_defer' );
+        $css_defer   = $this->criticalcss->get_option( 'css_defer' );
         $deferjquery = $this->criticalcss->get_option( 'deferjquery' );
-        $unloadccss = $this->criticalcss->get_option( 'unloadccss' );
+        $unloadccss  = $this->criticalcss->get_option( 'unloadccss' );
 
-        if ( ! $css_defer || empty( $key ) ) {
+        if ( ! $css_defer ) {
             return;
         }
 
@@ -32,7 +31,9 @@ class autoptimizeCriticalCSSCore {
         add_filter( 'autoptimize_filter_css_defer_inline', array( $this, 'ao_ccss_frontend' ), 10, 1 );
 
         // Add the action to enqueue jobs for CriticalCSS cron.
-        add_action( 'autoptimize_action_css_hash', array( $this->criticalcss, 'enqueue' ), 10, 1 );
+        if ( $this->criticalcss->is_api_active() ) {
+            add_action( 'autoptimize_action_css_hash', array( $this->criticalcss, 'enqueue' ), 10, 1 );
+        }
 
         // conditionally add the filter to defer jquery and others but only if not done so in autoptimizeScripts.
         $_native_defer = false;
@@ -71,23 +72,21 @@ class autoptimizeCriticalCSSCore {
     public function ao_ccss_frontend( $inlined ) {
         // Apply CriticalCSS to frontend pages
         // Attach types and settings arrays.
-        $rules = $this->criticalcss->get_option( 'rules' );
+        $rules      = $this->criticalcss->get_option( 'rules' );
         $additional = $this->criticalcss->get_option( 'additional' );
-        $loggedin = $this->criticalcss->get_option( 'loggedin' );
-        $debug = $this->criticalcss->get_option( 'debug' );
-        $keyst = $this->criticalcss->get_option( 'keyst' );
-
-        $no_ccss = '';
+        $loggedin   = $this->criticalcss->get_option( 'loggedin' );
+        $debug      = $this->criticalcss->get_option( 'debug' );
+        $no_ccss    = '';
         $additional = autoptimizeStyles::sanitize_css( $additional );
 
         // Only if keystatus is OK and option to add CCSS for logged on users is on or user is not logged in.
-        if ( ( $keyst && 2 == $keyst ) && ( $loggedin || ! is_user_logged_in() ) ) {
+        if ( $loggedin || ! is_user_logged_in() ) {
             // Check for a valid CriticalCSS based on path to return its contents.
             $req_path = strtok( $_SERVER['REQUEST_URI'], '?' );
             if ( ! empty( $rules['paths'] ) ) {
                 foreach ( $rules['paths'] as $path => $rule ) {
                     // explicit match OR partial match if MANUAL rule.
-                    if ( $req_path == $path || urldecode( $req_path ) == $path || ( apply_filters( 'autoptimize_filter_ccss_core_path_partial_match', true ) && false == $rule['hash'] && false != $rule['file'] && strpos( $req_path, str_replace( site_url(), '', $path ) ) !== false ) ) {
+                    if ( ( $this->criticalcss->is_api_active() || $this->criticalcss->is_rule_manual( $rule ) ) && ( $req_path == $path || urldecode( $req_path ) == $path || ( apply_filters( 'autoptimize_filter_ccss_core_path_partial_match', true ) && false == $rule['hash'] && false != $rule['file'] && strpos( $req_path, str_replace( site_url(), '', $path ) ) !== false ) ) ) {
                         if ( file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
                             $_ccss_contents = file_get_contents( AO_CCSS_DIR . $rule['file'] );
                             if ( 'none' != $_ccss_contents ) {
@@ -107,10 +106,10 @@ class autoptimizeCriticalCSSCore {
             if ( ! empty( $rules['types'] ) && 'none' !== $no_ccss ) {
                 // order types-rules by the order of the original $ao_ccss_types array so as not to depend on the order in which rules were added.
                 $rules['types'] = array_replace( array_intersect_key( array_flip( $this->_types ), $rules['types'] ), $rules['types'] );
-                $is_front_page          = is_front_page();
+                $is_front_page  = is_front_page();
 
                 foreach ( $rules['types'] as $type => $rule ) {
-                    if ( in_array( $type, $this->_types ) && file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
+                    if ( ( $this->criticalcss->is_api_active() || $this->criticalcss->is_rule_manual( $rule ) ) && in_array( $type, $this->_types ) && file_exists( AO_CCSS_DIR . $rule['file'] ) ) {
                         $_ccss_contents = file_get_contents( AO_CCSS_DIR . $rule['file'] );
                         if ( $is_front_page && 'is_front_page' == $type ) {
                             if ( 'none' != $_ccss_contents ) {
@@ -121,7 +120,7 @@ class autoptimizeCriticalCSSCore {
                             } else {
                                 $no_ccss = 'none';
                             }
-                        } elseif ( strpos( $type, 'custom_post_' ) === 0 && ! $is_front_page ) {
+                        } elseif ( ( $this->criticalcss->is_api_active() || $this->criticalcss->is_rule_manual( $rule ) ) && strpos( $type, 'custom_post_' ) === 0 && ! $is_front_page ) {
                             if ( get_post_type( get_the_ID() ) === substr( $type, 12 ) ) {
                                 if ( 'none' != $_ccss_contents ) {
                                     if ( $debug ) {
@@ -132,7 +131,7 @@ class autoptimizeCriticalCSSCore {
                                     $no_ccss = 'none';
                                 }
                             }
-                        } elseif ( 0 === strpos( $type, 'template_' ) && ! $is_front_page ) {
+                        } elseif ( ( $this->criticalcss->is_api_active() || $this->criticalcss->is_rule_manual( $rule ) ) && 0 === strpos( $type, 'template_' ) && ! $is_front_page ) {
                             if ( is_page_template( substr( $type, 9 ) ) ) {
                                 if ( 'none' != $_ccss_contents ) {
                                     if ( $debug ) {
@@ -143,7 +142,7 @@ class autoptimizeCriticalCSSCore {
                                     $no_ccss = 'none';
                                 }
                             }
-                        } elseif ( ! $is_front_page ) {
+                        } elseif ( ( $this->criticalcss->is_api_active() || $this->criticalcss->is_rule_manual( $rule ) ) && ! $is_front_page ) {
                             // all "normal" conditional tags, core + woo + buddypress + edd + bbpress
                             // but we have to remove the prefix for the non-core ones for them to function.
                             $type = str_replace( array( 'woo_', 'bp_', 'bbp_', 'edd_' ), '', $type );

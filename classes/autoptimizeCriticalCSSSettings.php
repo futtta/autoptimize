@@ -314,6 +314,9 @@ class autoptimizeCriticalCSSSettings {
                             // Render advanced panel.
                             ao_ccss_render_adv();
                         } else {
+                            // Render rules section for manual rules.
+                            ao_ccss_render_rules();
+
                             // But if key is other than valid, add hidden fields to persist settings when submitting form
                             // Show explanation of why and how to get a API key.
                             ao_ccss_render_explain();
@@ -322,7 +325,7 @@ class autoptimizeCriticalCSSSettings {
                             $viewport = $this->criticalcss->viewport();
 
                             // Add hidden fields.
-                            echo "<input class='hidden' name='autoptimize_ccss_rules' value='" . $ao_ccss_rules_raw . "'>";
+                            // echo "<input class='hidden' name='autoptimize_ccss_rules' value='" . $ao_ccss_rules_raw . "'>";
                             echo "<input class='hidden' name='autoptimize_ccss_queue' value='" . $ao_ccss_queue_raw . "'>";
                             echo '<input class="hidden" name="autoptimize_ccss_viewport[w]" value="' . $viewport['w'] . '">';
                             echo '<input class="hidden" name="autoptimize_ccss_viewport[h]" value="' . $viewport['h'] . '">';

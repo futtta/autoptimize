@@ -55,6 +55,15 @@ function drawTable(critCssArray) {
             hash=nv.hash;
             file=nv.file;
             filest=nv.file;
+            auto_style = '';
+            <?php
+                $criticalcss = new autoptimizeCriticalCSSBase();
+                if ( $criticalcss->is_api_active() ){
+                    ?>api_active = 1;<?php
+                } else {
+                    ?>api_active = 0;<?php
+                }
+            ?>
             if (file == 0) {
                 file='<?php _e( 'To be fetched from criticalcss.com in the next queue run...', 'autoptimize' ); ?>';
             }
@@ -64,6 +73,9 @@ function drawTable(critCssArray) {
             } else {
                 type='<?php _e( 'AUTO', 'autoptimize' ); ?>';
                 typeClass = 'auto';
+                if ( api_active != 1 ) {
+                    auto_style = ' style="opacity:.5;" '
+                }
             }
             if (file && typeof file == 'string') {
                 rmark_find=file.split('_');
@@ -76,8 +88,11 @@ function drawTable(critCssArray) {
             } else {
                 target = i.replace(/(woo_|template_|custom_post_|edd_|bp_|bbp_)/,'');
             }
-            jQuery("#rules-list").append("<tr class='rule "+k+"Rule'><td class='type'><span class='badge " + typeClass + "'>" + type + "</span></td><td class='target'>" + target + "</td><td class='file'>" + file + "</td><td class='btn edit'><span class=\"button-secondary\" id=\"" + nodeId + "_edit\"><?php _e( 'Edit', 'autoptimize' ); ?></span></td><td class='btn delete'><span class=\"button-secondary\" id=\"" + nodeId + "_remove\"><?php _e( 'Remove', 'autoptimize' ); ?></span></td></tr>");
-            jQuery("#" + nodeId + "_edit").click(function(){addEditRow(this.id);});
+
+            jQuery("#rules-list").append("<tr " + auto_style + "class='rule "+k+"Rule'><td class='type'><span class='badge " + typeClass + "'>" + type + "</span></td><td class='target'>" + target + "</td><td class='file'>" + file + "</td><td class='btn edit'><span class=\"button-secondary\" id=\"" + nodeId + "_edit\"><?php _e( 'Edit', 'autoptimize' ); ?></span></td><td class='btn delete'><span class=\"button-secondary\" id=\"" + nodeId + "_remove\"><?php _e( 'Remove', 'autoptimize' ); ?></span></td></tr>");
+            if ( typeClass == 'manual' || api_active == 1 ) {
+                jQuery("#" + nodeId + "_edit").click(function(){addEditRow(this.id);});
+            }
             jQuery("#" + nodeId + "_remove").click(function(){confirmRemove(this.id);});
         })
     });

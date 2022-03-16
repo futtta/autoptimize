@@ -102,6 +102,7 @@ function ao_ccss_render_adv() {
                             </p>
                         </td>
                     </tr>
+                    <?php if ( 1 == $ao_ccss_deferjquery ) { ?>
                     <tr>
                         <th scope="row">
                             <?php _e( 'Defer jQuery and other non-aggregated JS-files? (deprecated)', 'autoptimize' ); ?>
@@ -114,6 +115,7 @@ function ao_ccss_render_adv() {
                             </p>
                         </td>
                     </tr>
+                    <?php } ?>
                     <tr>
                         <th scope="row">
                             <?php _e( 'Unload critical CSS after page load?', 'autoptimize' ); ?>

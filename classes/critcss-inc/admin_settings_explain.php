@@ -20,13 +20,13 @@ function ao_ccss_render_explain() {
 
             // get the HTML with the explanation of what critical CSS is.
             if ( apply_filters( 'autoptimize_settingsscreen_remotehttp', true ) ) {
-                $ccss_explanation = get_transient( 'ao_ccss_explain' );
+                $ccss_explanation = get_transient( 'ao3_ccss_explain' );
                 if ( empty( $ccss_explanation ) ) {
-                    $ccss_expl_resp = wp_remote_get( 'https://misc.optimizingmatters.com/autoptimize_ccss_explain_i18n.html?ao_ver=' . AUTOPTIMIZE_PLUGIN_VERSION );
+                    $ccss_expl_resp = wp_remote_get( 'https://misc.optimizingmatters.com/autoptimize_ccss_explain_ao30_i18n.html?ao_ver=' . AUTOPTIMIZE_PLUGIN_VERSION );
                     if ( ! is_wp_error( $ccss_expl_resp ) ) {
                         if ( '200' == wp_remote_retrieve_response_code( $ccss_expl_resp ) ) {
                             $ccss_explanation = wp_kses_post( wp_remote_retrieve_body( $ccss_expl_resp ) );
-                            set_transient( 'ao_ccss_explain', $ccss_explanation, WEEK_IN_SECONDS );
+                            set_transient( 'ao3_ccss_explain', $ccss_explanation, WEEK_IN_SECONDS );
                         }
                     }
                 }
