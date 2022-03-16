@@ -711,7 +711,7 @@ class autoptimizeMain
 
     public static function remove_cronjobs() {
         // Remove scheduled events.
-        foreach ( array( 'ao_cachechecker', 'ao_ccss_queue', 'ao_ccss_maintenance' ) as $_event ) {
+        foreach ( array( 'ao_cachechecker', 'ao_ccss_queue', 'ao_ccss_maintenance', 'ao_ccss_keychecker' ) as $_event ) {
             if ( wp_get_schedule( $_event ) ) {
                 wp_clear_scheduled_hook( $_event );
             }

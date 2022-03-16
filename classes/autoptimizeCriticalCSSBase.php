@@ -86,6 +86,9 @@ class autoptimizeCriticalCSSBase {
         }
 
         $this->filepath = __FILE__;
+        
+        // Add keychecker action for scheduled use.
+        add_action( 'ao_ccss_keychecker', array( $this, 'ao_ccss_check_key' ) );
     }
 
     public function setup() {
@@ -106,6 +109,11 @@ class autoptimizeCriticalCSSBase {
                 // and schedule maintenance job.
                 wp_schedule_event( time(), 'twicedaily', 'ao_ccss_maintenance' );
             }
+            
+            if ( wp_next_scheduled( 'ao_ccss_keychecker' ) ) {
+                // api is active now, no need to check key as it is checked by using the API.
+                wp_clear_scheduled_hook( 'ao_ccss_keychecker' );
+            }
         } else {
             if ( wp_next_scheduled( 'ao_ccss_queue' ) ) {
                 wp_clear_scheduled_hook( 'ao_ccss_queue' );
@@ -115,7 +123,14 @@ class autoptimizeCriticalCSSBase {
                 wp_clear_scheduled_hook( 'ao_ccss_maintenance' );
             }
 
-            // fixme; if key is set but api not active, do a scheduled daily key-check?
+            // add keychecker logic if api is not active but we have a key so maybe this is a temporary issue, check if key is OK daily.
+            $ao_ccss_key   = $this->get_option( 'key' );
+            if ( ! empty( $ao_ccss_key ) && ! wp_next_scheduled( 'ao_ccss_keychecker' ) ) {
+                wp_schedule_event( time(), 'twicedaily', 'ao_ccss_keychecker' );
+            } else if ( empty( $ao_ccss_key ) && wp_next_scheduled( 'ao_ccss_keychecker' ) ) {
+                // edge case: we had a inactive key that was checked daily, but it is now removed, so remove keychecker from schedule.
+                wp_clear_scheduled_hook( 'ao_ccss_keychecker' );
+            }
         }
 
         // check/ create AO_CCSS_DIR.
@@ -129,7 +144,7 @@ class autoptimizeCriticalCSSBase {
         $this->_core = new autoptimizeCriticalCSSCore();
 
         if ( ( defined( 'WP_CLI' ) || defined( 'DOING_CRON' ) || is_admin() ) && $this->is_api_active() ) {
-            // TODO: also include if overridden somehow to force queue processing to be executed?
+            // cron only initiated when doing cron (or wp_cli or is_amdin) and when we have an active API key.
             $this->_cron = new autoptimizeCriticalCSSCron();
         }
 
@@ -397,5 +412,17 @@ class autoptimizeCriticalCSSBase {
         }
 
         return false;
+    }
+
+    /**
+     * Scheduled action to check an inactive key. Not part of autoptimizeCriticalCSSCron.php
+     * to allow us to only load the main cron logic if we have an active key to begin with.
+     *
+     */    
+    public function ao_ccss_check_key() {
+        $ao_ccss_key = $this->get_option( 'key' );
+        $_result = $this->_core->ao_ccss_key_validation( $ao_ccss_key );
+        $_resmsg = ( true === $_result) ? 'ok' : 'nok';
+        $this->log( 'Inactive key checked, result was ' . $_resmsg, 3 );
     }
 }
