@@ -923,7 +923,14 @@ class autoptimizeImages
             $noptimize_flag = ' data-noptimize="1"';
         }
 
-        $lazysizes_js = plugins_url( 'external/js/lazysizes.min.js?ao_version=' . AUTOPTIMIZE_PLUGIN_VERSION, __FILE__ );
+        $_extra = autoptimizeOptionWrapper::get_option( 'autoptimize_extra_settings', '' );
+        if ( is_array( $_extra ) && array_key_exists( 'autoptimize_extra_checkbox_field_0', $_extra ) && ! empty( $_extra['autoptimize_extra_checkbox_field_0'] ) ) {
+            // if "remove query strings" is active in "extra", then let's be consistant and not add one ourselves? :)
+            $lazysizes_js = plugins_url( 'external/js/lazysizes.min.js', __FILE__ );
+        } else {
+            $lazysizes_js = plugins_url( 'external/js/lazysizes.min.js?ao_version=' . AUTOPTIMIZE_PLUGIN_VERSION, __FILE__ );
+        }
+
         $cdn_url      = $this->get_cdn_url();
         if ( ! empty( $cdn_url ) ) {
             $cdn_url      = rtrim( $cdn_url, '/' );

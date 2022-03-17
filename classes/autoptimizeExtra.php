@@ -117,6 +117,8 @@ class autoptimizeExtra
     {
         if ( strpos( $src, '?ver=' ) ) {
             $src = remove_query_arg( 'ver', $src );
+        } else if ( strpos( $src, '?v=' ) ) {
+            $src = remove_query_arg( 'v', $src );
         }
 
         return $src;
