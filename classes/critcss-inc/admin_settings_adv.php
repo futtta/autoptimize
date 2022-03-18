@@ -9,15 +9,15 @@
 function ao_ccss_render_adv() {
     $criticalcss = autoptimize()->criticalcss();
 
-    $ao_ccss_debug = $criticalcss->get_option( 'debug' );
-    $ao_ccss_finclude = $criticalcss->get_option( 'finclude' );
-    $ao_ccss_rtimelimit = $criticalcss->get_option( 'rtimelimit' );
-    $ao_ccss_noptimize = $criticalcss->get_option( 'noptimize' );
-    $ao_ccss_loggedin = $criticalcss->get_option( 'loggedin' );
-    $ao_ccss_forcepath = $criticalcss->get_option( 'forcepath' );
-    $ao_ccss_deferjquery = $criticalcss->get_option( 'deferjquery' );
-    $ao_ccss_domain = $criticalcss->get_option( 'domain' );
-    $ao_ccss_unloadccss = $criticalcss->get_option( 'unloadccss' );
+    $ao_ccss_debug       = esc_attr( $criticalcss->get_option( 'debug' ) );
+    $ao_ccss_finclude    = esc_textarea( $criticalcss->get_option( 'finclude' ) );
+    $ao_ccss_rtimelimit  = esc_attr( $criticalcss->get_option( 'rtimelimit' ) );
+    $ao_ccss_noptimize   = esc_attr( $criticalcss->get_option( 'noptimize' ) );
+    $ao_ccss_loggedin    = esc_attr( $criticalcss->get_option( 'loggedin' ) );
+    $ao_ccss_forcepath   = esc_attr( $criticalcss->get_option( 'forcepath' ) );
+    $ao_ccss_deferjquery = esc_attr( $criticalcss->get_option( 'deferjquery' ) );
+    $ao_ccss_domain      = esc_attr( $criticalcss->get_option( 'domain' ) );
+    $ao_ccss_unloadccss  = esc_attr( $criticalcss->get_option( 'unloadccss' ) );
 
     // In case domain is not set yet (done in cron.php).
     if ( empty( $ao_ccss_domain ) ) {
