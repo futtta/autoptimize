@@ -329,6 +329,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * new: no API needed any more to create manual critical CSS rules. 
 * new: "disable global styles" option on the "Extra" tab.
 * new: compatibility logic for "edit with elementor", "revolution slider", for non-aggregated inline JS requiring jQuery even if not excluded (= auto-exclude of jQuery) and JS-heavy WordPress blocks (Gutenberg)
+* new: configure an image to be preloaded on a per page/ post basis for better LCP.
 * improvement: defer inline now also allowed if inline JS contains nonce or post_id.
 * improvement: settings export/ import on critical CSS tab now takes into account all Autoptimize settings, not just the critical CSS ones.
 * technical improvement: all criticalCSS classes were refactored, removing use of global variables.
