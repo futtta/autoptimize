@@ -1021,7 +1021,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             global $wp_query;
             if ( isset( $wp_query ) && ( is_page() || is_single() ) ) {
                 $_meta_value = get_post_meta( get_the_ID(), 'ao_post_optimize', true );
-            } else {
+            } else if ( isset( $wp_query ) ) {
                 $_meta_value = false;
             }
         }
