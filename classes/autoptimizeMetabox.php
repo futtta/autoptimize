@@ -64,7 +64,7 @@ class autoptimizeMetabox
         </p>
         <?php
         $_ao_meta_js_style = '';
-        if ( 'on' !== get_option( 'autoptimize_js', false ) ) {
+        if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_js', false ) ) {
             $_ao_meta_js_style = 'display:none;';
         }
         echo '<p class="ao_meta_sub" style="' . $_ao_meta_sub_opacity . $_ao_meta_js_style . '">';
@@ -76,7 +76,7 @@ class autoptimizeMetabox
         </p>
         <?php
         $_ao_meta_css_style = '';
-        if ( 'on' !== get_option( 'autoptimize_css', false ) ) {
+        if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_css', false ) ) {
             $_ao_meta_css_style = 'display:none;';
         }
         echo '<p class="ao_meta_sub" style="' . $_ao_meta_sub_opacity . $_ao_meta_css_style . '">';
@@ -88,7 +88,7 @@ class autoptimizeMetabox
         </p>
         <?php
         $_ao_meta_ccss_style = '';
-        if ( 'on' !== get_option( 'autoptimize_css_defer', false ) ) {
+        if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer', false ) || 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_css', false ) ) {
             $_ao_meta_ccss_style = 'display:none;';
         }
         if ( 'on' !== $ao_opt_value['ao_post_css_optimize'] ) {
@@ -117,7 +117,7 @@ class autoptimizeMetabox
             <label for="autoptimize_post_preload">
                  <?php _e( 'LCP Image to preload', 'autoptimize' ); ?>
             </label>
-            <input type="text" id="autoptimize_post_preload" name="ao_post_preload">
+            <input type="text" id="autoptimize_post_preload" name="ao_post_preload" value="<?php echo esc_attr( $ao_opt_value['ao_post_preload'] ) ?>">
         </p>
         <p>&nbsp;</p>
         <p>
@@ -139,7 +139,7 @@ class autoptimizeMetabox
             }
 
             // if CSS opt and inline & defer are on and if we have a slug, the button can be active.
-            if ( false !== $_slug && 'on' === get_option( 'autoptimize_css', false ) && 'on' === get_option( 'autoptimize_css_defer', false ) && ! empty( apply_filters( 'autoptimize_filter_ccss_key', get_option( 'autoptimize_ccss_key', false ) ) ) && '2' === get_option( 'autoptimize_ccss_keyst', false ) ) {
+            if ( false !== $_slug && 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_css', false ) && 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer', false ) && ! empty( apply_filters( 'autoptimize_filter_ccss_key', autoptimizeOptionWrapper::get_option( 'autoptimize_ccss_key', false ) ) ) && '2' === autoptimizeOptionWrapper::get_option( 'autoptimize_ccss_keyst', false ) ) {
                 $_generate_disabled = false;
             }
             ?>
