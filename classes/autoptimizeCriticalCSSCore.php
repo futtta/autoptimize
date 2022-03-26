@@ -458,12 +458,12 @@ class autoptimizeCriticalCSSCore {
         // Prepare the request.
         $url  = esc_url_raw( AO_CCSS_API . 'generate' );
         $args = array(
-            'headers' => array(
+            'headers' => apply_filters( 'autoptimize_ccss_cron_api_generate_headers', array(
                 'User-Agent'    => 'Autoptimize v' . AO_CCSS_VER,
                 'Content-type'  => 'application/json; charset=utf-8',
                 'Authorization' => 'JWT ' . $key,
                 'Connection'    => 'close',
-            ),
+            ) ),
             // Body must be JSON.
             'body'    => json_encode(
                 apply_filters( 'autoptimize_ccss_cron_api_generate_body',
