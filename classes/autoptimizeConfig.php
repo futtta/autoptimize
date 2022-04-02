@@ -335,7 +335,7 @@ _e( 'Inline "above the fold CSS" while loading the main autoptimized CSS only af
 echo ' ';
 $critcss_settings_url = get_admin_url( null, 'options-general.php?page=ao_critcss' );
 // translators: links "autoptimize critical CSS" tab.
-echo sprintf( __( 'This can be fully automated for different types of pages on the %s tab.', 'autoptimize' ), '<a href="' . $critcss_settings_url . '">CriticalCSS</a>' );
+echo sprintf( __( 'You can manually create rules for different types of pages or have this done fully automated on the %s tab.', 'autoptimize' ), '<a href="' . $critcss_settings_url . '">CriticalCSS</a>' );
 ?>
 </label></td>
 </tr>
