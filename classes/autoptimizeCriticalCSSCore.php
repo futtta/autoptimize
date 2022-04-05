@@ -356,16 +356,15 @@ class autoptimizeCriticalCSSCore {
     public function get_ao_ccss_core_types() {
         return array(
             'is_404',
-            'is_archive',
-            'is_author',
-            'is_category',
             'is_front_page',
             'is_home',
             'is_page',
-            'is_post',
+            'is_single',
+            'is_category',
+            'is_author',
+            'is_archive',
             'is_search',
             'is_attachment',
-            'is_single',
             'is_sticky',
             'is_paged',
         );
