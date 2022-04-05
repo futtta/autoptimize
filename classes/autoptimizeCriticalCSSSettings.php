@@ -140,11 +140,11 @@ class autoptimizeCriticalCSSSettings {
                 }
 
                 // Check if CSS optimization is on.
-                if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_css' ) ) {
+                if ( 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_css' ) || 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_css_defer' ) ) {
                     ?>
                     <div class="notice-info notice"><p>
                     <?php
-                    _e( 'To be able to use Critical CSS you will have to enable CSS optimization on the main Autoptimize settings page.', 'autoptimize' );
+                    _e( 'To be able to use Critical CSS you will have to enable CSS optimization and make sure "eliminate render-blocking CSS" is active on the main Autoptimize settings page.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php

@@ -11,6 +11,10 @@ function ao_ccss_render_rules() {
     $criticalcss = autoptimize()->criticalcss();
     $ao_ccss_rules = $criticalcss->get_option( 'rules' );
     $ao_ccss_types = $criticalcss->get_types();
+    
+    if ( empty( $ao_ccss_types ) || ! is_array( $ao_ccss_types ) ) {
+        $ao_ccss_types = array( 'No conditionals, check CSS optimization settings.' );
+    }
 ?>
     <ul id="rules-panel">
         <li class="itemDetail">
