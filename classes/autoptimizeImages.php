@@ -653,6 +653,11 @@ class autoptimizeImages
                     // then call add_lazyload-function with lpiq placeholder if set.
                     $tag = $this->add_lazyload( $tag, $placeholder );
                 }
+                
+                // add decoding="async" behind filter, not sure if I'll make it default true yet.
+                if ( true === apply_filters( 'autoptimize_filter_imgopt_add_decoding', true ) && false === strpos( $tag, ' decoding=' ) ) {
+                    $tag = str_replace( '<img ', '<img decoding="async" ', $tag );
+                }
 
                 $tag = apply_filters( 'autoptimize_filter_imgopt_tag_postopt' , $tag );
 
