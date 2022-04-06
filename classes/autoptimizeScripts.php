@@ -436,7 +436,8 @@ class autoptimizeScripts extends autoptimizeBase
                         $code            = preg_replace( '/(?:^\\s*<!--\\s*|\\s*(?:\\/\\/)?\\s*-->\\s*$)/', '', $code );
                         $this->scripts[] = 'INLINE;' . $code;
                     } else {
-                        $_inline_dontmove = array_values( array_diff( $this->dontmove, array( 'nonce', 'post_id' ) ) );
+                        $_inline_deferable = apply_filters( 'autoptimize_filters_js_inline_deferable', array( 'nonce', 'post_id', 'syntaxhighlighter' ) );
+                        $_inline_dontmove  = array_values( array_diff( $this->dontmove, $_inline_deferable ) );
                         if ( false === $this->defer_inline ) {
                             // Can we move this?
                             $autoptimize_js_moveable = apply_filters( 'autoptimize_js_moveable', '', $tag );
