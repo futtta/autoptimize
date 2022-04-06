@@ -474,6 +474,11 @@ class autoptimizeExtra
         remove_action( 'wp_enqueue_scripts', 'wp_enqueue_global_styles' );
         remove_action( 'wp_footer', 'wp_enqueue_global_styles', 1 );
         remove_action( 'wp_body_open', 'wp_global_styles_render_svg_filters' );
+
+        add_action( 'wp_enqueue_scripts', function(){
+            wp_dequeue_style( 'wp-block-library' );
+            wp_dequeue_style( 'wp-block-library-theme' );
+        });
     }
 
     public function admin_menu()
@@ -555,9 +560,9 @@ class autoptimizeExtra
                 </td>
             </tr>
             <tr>
-                <th scope="row"><?php _e( 'Remove global styles', 'autoptimize' ); ?></th>
+                <th scope="row"><?php _e( 'Remove WordPress block CSS', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_8]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_8'] ) && '1' === $options['autoptimize_extra_checkbox_field_8'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'WordPress 5.9 introduced global styles to improve easy styling of block-based site, but which can add a significant amount of inline CSS and SVG, making the HTML bulkier. If you are sure your site can do without those "global styles", you can disable them here.', 'autoptimize' ); ?></label>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_8]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_8'] ) && '1' === $options['autoptimize_extra_checkbox_field_8'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'WordPress adds block CSS and global styles to improve easy styling of block-based sites, but which can add a significant amount of CSS and SVG. If you are sure your site can do without the block CSS and "global styles", you can disable them here.', 'autoptimize' ); ?></label>
                 </td>
             </tr>
             <tr>
