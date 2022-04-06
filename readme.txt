@@ -327,7 +327,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 = 3.0.0 =
 * fundamental change for new installations: by default Autoptimize will not aggregate JS/ CSS any more (HTTP/2 is ubiquitous and there are other advantages to not aggregating esp. re. inline JS/ CSS and dependancies)
 * new: no API needed any more to create manual critical CSS rules. 
-* new: "disable global styles" option on the "Extra" tab.
+* new: "Remove WordPress blocks CSS" option on the "Extra" tab to remove block- and global styles (and SVG).
 * new: compatibility logic for "edit with elementor", "revolution slider", for non-aggregated inline JS requiring jQuery even if not excluded (= auto-exclude of jQuery) and JS-heavy WordPress blocks (Gutenberg)
 * new: configure an image to be preloaded on a per page/ post basis for better LCP.
 * improvement: defer inline now also allowed if inline JS contains nonce or post_id.
