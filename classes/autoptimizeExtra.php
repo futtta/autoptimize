@@ -475,10 +475,12 @@ class autoptimizeExtra
         remove_action( 'wp_footer', 'wp_enqueue_global_styles', 1 );
         remove_action( 'wp_body_open', 'wp_global_styles_render_svg_filters' );
 
-        add_action( 'wp_enqueue_scripts', function(){
-            wp_dequeue_style( 'wp-block-library' );
-            wp_dequeue_style( 'wp-block-library-theme' );
-        });
+        if ( true === apply_filters( 'autoptimize_filter_extra_global_styles_and_block_css', true ) ) {
+            add_action( 'wp_enqueue_scripts', function(){
+                wp_dequeue_style( 'wp-block-library' );
+                wp_dequeue_style( 'wp-block-library-theme' );
+            });
+        }
     }
 
     public function admin_menu()
