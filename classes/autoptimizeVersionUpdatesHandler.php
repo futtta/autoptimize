@@ -60,7 +60,7 @@ class autoptimizeVersionUpdatesHandler
             case '2.8':
                 // nothing
             case '2.9':
-                if ( version_compare( autoptimizeOptionWrapper::get_option( 'autoptimize_version', 'none' ), '2.9.6', 'lt' ) ) {
+                if ( version_compare( autoptimizeOptionWrapper::get_option( 'autoptimize_version', 'none' ), '2.9.999', 'lt' ) ) {
                     $this->upgrade_from_2_9_before_compatibility();
                 }
                 $major_update = false;
