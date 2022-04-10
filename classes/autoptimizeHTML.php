@@ -84,7 +84,7 @@ class autoptimizeHTML extends autoptimizeBase
 
         // Optionally minify inline JS & CSS.
         if ( apply_filters( 'autoptimize_html_minify_inline_js_css', true ) && false === $this->keepcomments ) {
-            if ( false != autoptimizeOptionWrapper::get_option( 'autoptimize_js' ) && false != autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_js_optimize' ) && true !== apply_filters( 'autoptimize_filter_js_noptimize', false, $this->content ) ) {
+            if ( false != autoptimizeOptionWrapper::get_option( 'autoptimize_js' ) && false != autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_js_optimize' ) && true !== apply_filters( 'autoptimize_filter_js_noptimize', false, $this->content ) && false === strpos( $this->content, 'text/template' ) ) {
                 $options['jsMinifier']  = 'JSMin::minify';
             }
             if ( false != autoptimizeOptionWrapper::get_option( 'autoptimize_css' ) && false != autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_css_optimize' ) && true !== apply_filters( 'autoptimize_filter_css_noptimize', false, $this->content ) ) {
