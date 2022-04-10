@@ -324,6 +324,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.0.1 =
+* fix for minification of inline script with type text/template breaking the template (e.g. ninja forms), hat tip to @bobsled.
+* fix for regression in import of CSS-files where e.g. fontawesome CSS was broken due to being escaped again with help of @bobsled, thanks man!
+
 = 3.0.0 =
 * fundamental change for new installations: by default Autoptimize will not aggregate JS/ CSS any more (HTTP/2 is ubiquitous and there are other advantages to not aggregating esp. re. inline JS/ CSS and dependancies)
 * new: no API needed any more to create manual critical CSS rules. 
