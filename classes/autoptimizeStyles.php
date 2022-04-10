@@ -873,7 +873,7 @@ class autoptimizeStyles extends autoptimizeBase
                             }
 
                             if ( ! empty( $code ) ) {
-                                $tmp_thiscss = str_replace( $import, $code, $thiscss );
+                                $tmp_thiscss = str_replace( $import, stripcslashes( $code ), $thiscss );
                                 if ( ! empty( $tmp_thiscss ) ) {
                                     $thiscss   = $tmp_thiscss;
                                     $import_ok = true;
