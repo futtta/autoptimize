@@ -2152,6 +2152,7 @@ MARKUP;
                 'keepcomments' => false,
             ],
         ];
+        add_filter( 'autoptimize_html_minify_inline_js_css', '__return_true');
 
         $instance = new autoptimizeHTML( $markup1 );
         $instance->read( $options['autoptimizeHTML'] );
@@ -2217,6 +2218,7 @@ MARKUP;
                 'keepcomments' => false,
             ],
         ];
+        add_filter( 'autoptimize_html_minify_inline_js_css', '__return_true');
 
         $instance = new autoptimizeHTML( $markup );
         $instance->read( $options['autoptimizeHTML'] );
@@ -2293,6 +2295,7 @@ MARKUP;
                 'keepcomments' => false,
             ],
         ];
+        add_filter( 'autoptimize_html_minify_inline_js_css', '__return_true');
 
         $instance = new autoptimizeHTML( $markup );
         $instance->read( $options['autoptimizeHTML'] );

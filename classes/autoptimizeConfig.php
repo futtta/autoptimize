@@ -378,7 +378,7 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
 <tr class="html_sub" valign="top">
 <th scope="row"><?php _e( 'Keep HTML comments?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_html_keepcomments" <?php echo $conf->get( 'autoptimize_html_keepcomments' ) ? 'checked="checked" ' : ''; ?>/>
-<?php _e( 'Enable this if you want HTML comments to remain in the page or if you want the inline CSS/ JS not to be minified.', 'autoptimize' ); ?></label></td>
+<?php _e( 'Enable this if you want HTML comments to remain in the page.', 'autoptimize' ); ?></label></td>
 </tr>
 </table>
 </li>
