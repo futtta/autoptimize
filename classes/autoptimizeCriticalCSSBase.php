@@ -97,10 +97,10 @@ class autoptimizeCriticalCSSBase {
 
         // add/ remove scheduled jobs.
         if ( $this->is_api_active() ) {
-            if ( ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
-                // make sure the 10 minutes cron schedule is added.
-                add_filter( 'cron_schedules', array( $this, 'ao_ccss_interval' ) );
+            // make sure the 10 minutes cron schedule is added.
+            add_filter( 'cron_schedules', array( $this, 'ao_ccss_interval' ) );
 
+            if ( ! wp_next_scheduled( 'ao_ccss_queue' ) ) {
                 // make sure ao_ccss_queue is scheduled OK if an API key is active.
                 wp_schedule_event( time(), apply_filters( 'ao_ccss_queue_schedule', 'ao_ccss' ), 'ao_ccss_queue' );
             }
