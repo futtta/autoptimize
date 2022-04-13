@@ -1013,6 +1013,10 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     public static function get_post_meta_ao_settings( $optim ) {
         if ( ! autoptimizeConfig::is_ao_meta_settings_active() ) {
             // Per page/post settings not active, so always return true (as in; can be optimized).
+            if ( in_array( $optim, array( 'ao_post_preload' ) ) ) {
+                // but make sure to return false for text input.
+                return false;
+            }
             return true;
         }
 
