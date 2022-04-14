@@ -233,8 +233,13 @@ class autoptimizeMain
 
     public function maybe_run_criticalcss()
     {
-        // Loads criticalcss if the power-up is not active and if the filter returns true.
-        if ( apply_filters( 'autoptimize_filter_criticalcss_active', true ) && ! autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
+        // time to deactivate the old critical CSS powerup, this part can go away later.
+        if ( autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) {
+            deactivate_plugins( 'autoptimize-criticalcss/ao_criticss_aas.php', true );
+        }
+
+        // Loads criticalcss if the filter returns true.
+        if ( apply_filters( 'autoptimize_filter_criticalcss_active', true ) ) {
             $this->_criticalcss = new autoptimizeCriticalCSSBase();
             $this->_criticalcss->setup();
             $this->_criticalcss->load_requires();
