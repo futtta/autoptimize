@@ -228,7 +228,11 @@ class autoptimizeMain
 
     public function criticalcss()
     {
-        return $this->_criticalcss;
+        if ( apply_filters( 'autoptimize_filter_criticalcss_active', true ) ) {
+            return $this->_criticalcss;
+        } else {
+            return false;
+        }
     }
 
     public function maybe_run_criticalcss()
