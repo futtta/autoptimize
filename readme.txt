@@ -324,6 +324,11 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.0.3 =
+* fix for images being preloaded without this being configured when lazyload is on and per page/post settings are off.
+* ensure critical CSS schedule is always known.
+* when deferring non-aggregated JS, make the optimatization exclusions take the full script-tag into account instead of just the src URL.
+
 = 3.0.2 =
 * rollback automatic "minify inline CSS/ JS" which broke more then expected, this will come back as a separate default off option later and can now be enabled with a simple filter: `add_filter( 'autoptimize_html_minify_inline_js_css', '__return_true');` .
 * fix for "Call to undefined method autoptimizeOptionWrapper::delete_option()" in autoptimizeVersionUpdatesHandler.php
