@@ -117,7 +117,14 @@ class autoptimizeMetabox
             <label for="autoptimize_post_preload">
                  <?php _e( 'LCP Image to preload', 'autoptimize' ); ?>
             </label>
-            <input type="text" id="autoptimize_post_preload" name="ao_post_preload" value="<?php echo esc_attr( $ao_opt_value['ao_post_preload'] ) ?>">
+            <?php
+                if ( is_array( $ao_opt_value ) && array_key_exists( 'ao_post_preload', $ao_opt_value ) ) {
+                    $_preload_img = esc_attr( $ao_opt_value['ao_post_preload'] );
+                } else {
+                    $_preload_img = '';
+                }
+            ?>
+            <input type="text" id="autoptimize_post_preload" name="ao_post_preload" value="<?php echo $_preload_img ?>">
         </p>
         <p>&nbsp;</p>
         <p>
