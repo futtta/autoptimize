@@ -564,8 +564,8 @@ class autoptimizeImages
         $to_replace = array();
         $to_preload = '';
 
-        // hide noscript tags to avoid nesting noscript tags (as lazyloaded images add noscript).
-        if ( $this->should_lazyload() ) {
+        // hide (no)script tags to avoid replacing (and potentially breaking) images in script tags.
+        if ( apply_filters( 'autoptimize_filter_imgopt_hide_script', true ) || $this->should_lazyload() ) {
             $in = autoptimizeBase::replace_contents_with_marker_if_exists(
                 'SCRIPT',
                 '<script',
@@ -703,17 +703,20 @@ class autoptimizeImages
             );
         }
 
-        // lazyload: restore noscript tags + lazyload picture source tags and bgimage.
+        // lazyload picture source tags and bgimage.
         if ( $this->should_lazyload() ) {
-            $out = autoptimizeBase::restore_marked_content(
-                'SCRIPT',
-                $out
-            );
-
             $out = $this->process_picture_tag( $out, true, true );
             $out = $this->process_bgimage( $out );
         } else {
             $out = $this->process_picture_tag( $out, true, false );
+        }
+
+        // restore (no)script tags.
+        if ( apply_filters( 'autoptimize_filter_imgopt_hide_script', true ) || $this->should_lazyload() ) {
+            $out = autoptimizeBase::restore_marked_content(
+                'SCRIPT',
+                $out
+            );
         }
 
         if ( ! empty( $metabox_preloads ) && is_array( $metabox_preloads ) && empty( $to_preload ) && false !== apply_filters( 'autoptimize_filter_imgopt_dopreloads', true ) ) {
