@@ -55,7 +55,7 @@ class autoptimizeExitSurvey
                         <label for="ao_feedback6" data-reason="broke site">
                             <?php _e( 'It broke my site.', 'autoptimize' ); ?>
                         </label>
-                        <p class="last-attempt"><?php _e( 'Almost all problems can be fixed with the right configuration, have a look at <a href="https://wordpress.org/plugins/autoptimize/#faq" target="_blank">the FAQ</a> or create a topic on <a href="https://wordpress.org/support/plugin/autoptimize/#new-topic-0" target="_blank">the support forum here</a>!', 'autoptimize' ); ?></p>
+                        <p class="last-attempt"><?php _e( 'Ouch, sorry about that! But almost all problems can be fixed with the right configuration, have a look at <a href="https://blog.futtta.be/2022/05/05/what-to-do-when-autoptimize-breaks-your-site/" target="_blank">this short troubleshooting howto</a> or create a topic on <a href="https://wordpress.org/support/plugin/autoptimize/#new-topic-0" target="_blank">the support forum here</a>!', 'autoptimize' ); ?></p>
                     <li ao-option-id="4">
                         <input type="radio" name="ao-deactivate-option" id="ao_feedback4">
                         <label for="ao_feedback4" data-reason="found better">
