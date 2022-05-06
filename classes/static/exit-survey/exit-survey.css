@@ -19,20 +19,22 @@ tr[data-slug="autoptimize"] span.deactivate{
 
 .ao-feedback .popup--header h5 {
     margin: 0;
-    font-size: 13px;
+    font-size: 16px;
     padding: 10px 15px;
     color: #222;
-    font-weight: 600;
+    font-weight: 900;
     text-align: left;
 }
 
 .ao-feedback .popup--body {
     padding: 15px;
+    padding-top: 5px;
 }
 
 .ao-feedback .popup--form {
     margin: 0;
     font-size: 13px;
+    padding-top: 10px;
 }
 
 .ao-feedback .popup--form input[type="radio"] {

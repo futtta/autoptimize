@@ -39,9 +39,10 @@ class autoptimizeExitSurvey
 
         <div class="ao-plugin-uninstall-feedback-popup ao-feedback" id="ao_uninstall_feedback_popup" data-modal="<?php echo base64_encode( json_encode( $data ) ) ?>">
             <div class="popup--header">
-                <h5><?php _e( 'Sorry to see you go, we would appreciate if you let us know why you\'re deactivating Autoptimize!', 'autoptimize' ); ?></h5>
+                <h5><?php _e( 'Sorry to see you go!', 'autoptimize' ); ?></h5>
             </div><!--/.popup--header-->
             <div class="popup--body">
+                <p><strong><?php _e( 'We would appreciate if you let us know why you\'re deactivating Autoptimize!', 'autoptimize' ); ?></strong></p>
                 <ul class="popup--form">
                     <li ao-option-id="5">
                         <input type="radio" name="ao-deactivate-option" id="ao_feedback5">
@@ -73,10 +74,11 @@ class autoptimizeExitSurvey
                         <textarea width="100%" rows="2" name="comments" placeholder="What can we do better?"></textarea></li>
                     <hr />
                     <li ao-option-id="998">
-                        <label for="ao_feedback998" data-reason="other detail">
-                            <?php _e( 'If you want to be contacted about or get help with Autoptimize, leave your email here (we never spam).', 'autoptimize' ); ?>
+                        <label for="ao_feedback_email_toggle" data-reason="other detail">
+                            <input type="checkbox" id="ao_feedback_email_toggle" name="ao_feedback_email_toggle" onchange="jQuery('#ao_feedback998').toggle();"/>
+                            <?php _e( 'I would like be contacted about my experience with Autoptimize.', 'autoptimize' ); ?>
                         </label>
-                        <input type="email" name="ao-deactivate-option" id="ao_feedback998" placeholder="mymail@domain.xyz">
+                        <input type="email" name="ao-deactivate-option" id="ao_feedback998" placeholder="mymail@domain.xyz" class="hidden">
                     </li>
                 </ul>
             </div><!--/.popup--body-->
