@@ -3,7 +3,7 @@ Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, images, core web vitals, lazy-load, pagespeed, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 5.6
 Stable tag: 3.0.3
 
@@ -323,6 +323,12 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 3.0.4 =
+* fix for "undefined array key ao_post_preload” on post/ page edit screens
+* fix for image optimization altering inline JS that contains an `<img` tag if lazyload is not active
+* improvements to exit survey
+* confirmed working with WordPress 6.0
 
 = 3.0.3 =
 * fix for images being preloaded without this being configured when lazyload is on and per page/post settings are off.
