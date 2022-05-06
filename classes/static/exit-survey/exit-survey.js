@@ -72,6 +72,10 @@
             $('#ao_uninstall_feedback_popup ').removeClass('active');
             $('body').removeClass('ao-feedback-open');
         });
+        
+        $('#ao_feedback_email_toggle').on('click', function (e) {
+            $('#ao_feedback998').toggle();
+        });
 
         $('#ao_uninstall_feedback_popup #ao-deactivate-yes').on('click', function (e) {
             e.preventDefault();

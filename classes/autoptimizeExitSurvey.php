@@ -70,12 +70,13 @@ class autoptimizeExitSurvey
                     <li ao-option-id="999">
                         <input type="radio" name="ao-deactivate-option" id="ao_feedback999">
                         <label for="ao_feedback999" data-reason="other">
-                            <?php _e( 'Other (please specify below)', 'autoptimize' ); ?> </label>
+                            <?php _e( 'Other (please specify below)', 'autoptimize' ); ?>
+                        </label>
                         <textarea width="100%" rows="2" name="comments" placeholder="What can we do better?"></textarea></li>
                     <hr />
                     <li ao-option-id="998">
                         <label for="ao_feedback_email_toggle" data-reason="other detail">
-                            <input type="checkbox" id="ao_feedback_email_toggle" name="ao_feedback_email_toggle" onchange="jQuery('#ao_feedback998').toggle();"/>
+                            <input type="checkbox" id="ao_feedback_email_toggle" name="ao_feedback_email_toggle" />
                             <?php _e( 'I would like be contacted about my experience with Autoptimize.', 'autoptimize' ); ?>
                         </label>
                         <input type="email" name="ao-deactivate-option" id="ao_feedback998" placeholder="mymail@domain.xyz" class="hidden">
