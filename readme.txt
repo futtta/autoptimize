@@ -324,6 +324,11 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.1.0 =
+* new HTML sub-option: "minify inline CSS/ JS" (off by default).
+* bugfix: "defer inline JS" of very large chunks of inline JS could cause server errors (PCRE crash actually) so not deferring if string is more then 200000 characters (filter available).
+* some other minor changes/ improvements, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
+
 = 3.0.4 =
 * fix for "undefined array key ao_post_preload” on post/ page edit screens
 * fix for image optimization altering inline JS that contains an `<img` tag if lazyload is not active
