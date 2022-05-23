@@ -376,6 +376,11 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
 <td><input type="checkbox" id="autoptimize_html" name="autoptimize_html" <?php echo $conf->get( 'autoptimize_html' ) ? 'checked="checked" ' : ''; ?>/></td>
 </tr>
 <tr class="html_sub" valign="top">
+<th scope="row"><?php _e( 'Also minify inline JS/ CSS?', 'autoptimize' ); ?></th>
+<td><label class="cb_label"><input type="checkbox" name="autoptimize_html_minify_inline" <?php echo $conf->get( 'autoptimize_html_minify_inline' ) ? 'checked="checked" ' : ''; ?>/>
+<?php _e( 'Enable this if you want inline JS or CSS to be minified as well.', 'autoptimize' ); ?></label></td>
+</tr>
+<tr class="html_sub" valign="top">
 <th scope="row"><?php _e( 'Keep HTML comments?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_html_keepcomments" <?php echo $conf->get( 'autoptimize_html_keepcomments' ) ? 'checked="checked" ' : ''; ?>/>
 <?php _e( 'Enable this if you want HTML comments to remain in the page.', 'autoptimize' ); ?></label></td>
@@ -738,6 +743,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     public function registersettings() {
         register_setting( 'autoptimize', 'autoptimize_html' );
         register_setting( 'autoptimize', 'autoptimize_html_keepcomments' );
+        register_setting( 'autoptimize', 'autoptimize_html_minify_inline' );
         register_setting( 'autoptimize', 'autoptimize_enable_site_config' );
         register_setting( 'autoptimize', 'autoptimize_js' );
         register_setting( 'autoptimize', 'autoptimize_js_aggregate' );
@@ -802,6 +808,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         static $config = array(
             'autoptimize_html'                      => 0,
             'autoptimize_html_keepcomments'         => 0,
+            'autoptimize_html_minify_inline'        => 0,
             'autoptimize_enable_site_config'        => 1,
             'autoptimize_js'                        => 0,
             'autoptimize_js_aggregate'              => 0,

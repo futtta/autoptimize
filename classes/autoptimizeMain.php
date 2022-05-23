@@ -558,7 +558,8 @@ class autoptimizeMain
                 'minify_excluded' => $conf->get( 'autoptimize_minify_excluded' ),
             ),
             'autoptimizeHTML'    => array(
-                'keepcomments' => $conf->get( 'autoptimize_html_keepcomments' ),
+                'keepcomments'  => $conf->get( 'autoptimize_html_keepcomments' ),
+                'minify_inline' => $conf->get( 'autoptimize_html_minify_inline' ),
             ),
         );
 
@@ -618,6 +619,7 @@ class autoptimizeMain
             'autoptimize_css_exclude',
             'autoptimize_html',
             'autoptimize_html_keepcomments',
+            'autoptimize_html_minify_inline',
             'autoptimize_enable_site_config',
             'autoptimize_enable_meta_ao_settings',
             'autoptimize_js',

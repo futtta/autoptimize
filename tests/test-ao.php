@@ -2058,7 +2058,8 @@ MARKUP;
         // When keepcomments is true.
         $options = [
             'autoptimizeHTML' => [
-                'keepcomments' => true,
+                'keepcomments'  => true,
+                'minify_inline' => false,
             ],
         ];
 
@@ -2100,11 +2101,10 @@ MARKUP;
 var a = "b";</script>
 MARKUP;
 
-        add_filter( 'autoptimize_html_minify_inline_js_css', '__return_false' );
-
         $options = [
             'autoptimizeHTML' => [
-                'keepcomments' => false,
+                'keepcomments'  => false,
+                'minify_inline' => false,
             ],
         ];
 
@@ -2149,10 +2149,10 @@ MARKUP;
 
         $options = [
             'autoptimizeHTML' => [
-                'keepcomments' => false,
+                'keepcomments'  => false,
+                'minify_inline' => true,
             ],
         ];
-        add_filter( 'autoptimize_html_minify_inline_js_css', '__return_true');
 
         $instance = new autoptimizeHTML( $markup1 );
         $instance->read( $options['autoptimizeHTML'] );
@@ -2182,11 +2182,10 @@ MARKUP;
 var a = "z";</script>
 MARKUP;
 
-        add_filter( 'autoptimize_html_minify_inline_js_css', '__return_false' );
-
         $options = [
             'autoptimizeHTML' => [
-                'keepcomments' => false,
+                'keepcomments'  => false,
+                'minify_inline' => false,
             ],
         ];
 
@@ -2215,10 +2214,10 @@ MARKUP;
 
         $options = [
             'autoptimizeHTML' => [
-                'keepcomments' => false,
+                'keepcomments'  => false,
+                'minify_inline' => true,
             ],
         ];
-        add_filter( 'autoptimize_html_minify_inline_js_css', '__return_true');
 
         $instance = new autoptimizeHTML( $markup );
         $instance->read( $options['autoptimizeHTML'] );
@@ -2245,7 +2244,8 @@ MARKUP;
 
         $options = [
             'autoptimizeHTML' => [
-                'keepcomments' => true,
+                'keepcomments'  => true,
+                'minify_inline' => false,
             ],
         ];
 
@@ -2292,10 +2292,10 @@ MARKUP;
 
         $options = [
             'autoptimizeHTML' => [
-                'keepcomments' => false,
+                'keepcomments'  => false,
+                'minify_inline' => true,
             ],
         ];
-        add_filter( 'autoptimize_html_minify_inline_js_css', '__return_true');
 
         $instance = new autoptimizeHTML( $markup );
         $instance->read( $options['autoptimizeHTML'] );
@@ -2358,7 +2358,8 @@ MARKUP;
 
         $options = [
             'autoptimizeHTML' => [
-                'keepcomments' => true,
+                'keepcomments'  => true,
+                'minify_inline' => false,
             ],
         ];
 
