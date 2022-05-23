@@ -70,6 +70,11 @@ class autoptimizeCompatibility
                     if ( false === strpos( $js_excl, 'jquery.min.js' ) ) {
                         $js_excl .= ', jquery.min.js';
                     }
+
+                    // also exclude jquery.js if for whatever reason that is still used.
+                    if ( false === strpos( $js_excl, 'jquery.js' ) ) {
+                        $js_excl .= ', jquery.js';
+                    }
                 }
                 return $js_excl;
             }, 12, 2 );
@@ -86,7 +91,7 @@ class autoptimizeCompatibility
                     if ( false === strpos( $js_excl, 'jquery.min.js' ) ) {
                         $js_excl .= ', jquery.min.js';
                     }
-                    
+
                     if ( false === strpos( $js_excl, 'wp-includes/js/dist' ) ) {
                         $js_excl .= ', wp-includes/js/dist';
                     }
