@@ -450,9 +450,8 @@ class autoptimizeScripts extends autoptimizeBase
                             } else {
                                 $tag = '';
                             }
-                        } else if ( str_replace( $_inline_dontmove, '', $tag ) === $tag ) {
-                            // defer inline JS by base64 encoding it.
-                            // preg_match( '#<script.*>(.*)</script>#Usmi', $tag, $match );
+                        } else if ( str_replace( $_inline_dontmove, '', $tag ) === $tag && strlen( $tag ) < apply_filters( 'autoptimize_filter_script_defer_inline_maxsize', 200000 ) ) {
+                            // defer inline JS by base64 encoding it but only if string is not ridiculously huge (to avoid issues with below regex mainly).
                             preg_match( '#<script(?:[^>](?!id=))*\s*(?:id=(["\'])([^"\']+)\1)*+[^>]*+>(.*?)<\/script>#is', $tag, $match );
                             if ( $match[2] ) {
                                 $_id = 'id="' . $match[2] . '" ';
