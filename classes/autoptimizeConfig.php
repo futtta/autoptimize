@@ -446,7 +446,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
 <li class="itemDetail">
 <h2 class="itemTitle"><?php _e( 'Misc Options', 'autoptimize' ); ?></h2>
 <table class="form-table">
-    <tr valign="top" >
+    <tr valign="top">
     <th scope="row"><?php _e( 'Save aggregated script/css as static files?', 'autoptimize' ); ?></th>
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_nogzip" <?php echo $conf->get( 'autoptimize_cache_nogzip') ? 'checked="checked" ' : ''; ?>/>
     <?php _e( 'By default files saved are static css/js, uncheck this option if your webserver doesn\'t properly handle the compression and expiry.', 'autoptimize' ); ?></label></td>
@@ -490,6 +490,13 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_enable_meta_ao_settings" <?php echo $conf->get( 'autoptimize_enable_meta_ao_settings' ) ? 'checked="checked" ' : ''; ?>/>
     <?php _e( 'Add a "metabox" to the post/ page edit screen allowing different optimizations to be turned off on a per post/ page level?', 'autoptimize' ); ?></label></td>
     </tr>
+    <?php } ?>
+    <?php if ( false !== (bool) autoptimizeOptionWrapper::get_option( 'autoptimize_installed_before_compatibility', false ) ) { ?>
+    <tr valign="top">
+    <th scope="row"><?php _e( 'Disable extra compatibilty logic?', 'autoptimize' ); ?></th>
+    <td><label class="cb_label"><input type="checkbox" name="autoptimize_installed_before_compatibility" checked="checked" />
+    <?php _e( 'In Autoptimize 3.0 extra compatibiity logic was added (e.g. for Gutenberg blocks, Revolution Slider, jQuery-heavy plugins, ...), but if you had Autoptimize installed already before the update to 3.0, this compatibility code was disabled. <strong>Untick this option to enable the compatibility logic.</strong>', 'autoptimize' ); ?></label></td>
+    </tr>        
     <?php } ?>
 </table>
 </li>
@@ -771,6 +778,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         register_setting( 'autoptimize', 'autoptimize_minify_excluded' );
         register_setting( 'autoptimize', 'autoptimize_cache_fallback' );
         register_setting( 'autoptimize', 'autoptimize_enable_meta_ao_settings' );
+        register_setting( 'autoptimize', 'autoptimize_installed_before_compatibility' );
     }
 
     public function setmeta( $links, $file = null )
@@ -806,35 +814,36 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     public static function get_defaults()
     {
         static $config = array(
-            'autoptimize_html'                      => 0,
-            'autoptimize_html_keepcomments'         => 0,
-            'autoptimize_html_minify_inline'        => 0,
-            'autoptimize_enable_site_config'        => 1,
-            'autoptimize_js'                        => 0,
-            'autoptimize_js_aggregate'              => 0,
-            'autoptimize_js_defer_not_aggregate'    => 1,
-            'autoptimize_js_defer_inline'           => 1,
-            'autoptimize_js_exclude'                => '', // 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.min.js',
-            'autoptimize_js_trycatch'               => 0,
-            'autoptimize_js_justhead'               => 0,
-            'autoptimize_js_include_inline'         => 0,
-            'autoptimize_js_forcehead'              => 0,
-            'autoptimize_css'                       => 0,
-            'autoptimize_css_aggregate'             => 0,
-            'autoptimize_css_exclude'               => '', // admin-bar.min.css, dashicons.min.css, wp-content/cache/, wp-content/uploads/',
-            'autoptimize_css_justhead'              => 0,
-            'autoptimize_css_include_inline'        => 0,
-            'autoptimize_css_defer'                 => 0,
-            'autoptimize_css_defer_inline'          => '',
-            'autoptimize_css_inline'                => 0,
-            'autoptimize_css_datauris'              => 0,
-            'autoptimize_cdn_url'                   => '',
-            'autoptimize_cache_nogzip'              => 1,
-            'autoptimize_optimize_logged'           => 1,
-            'autoptimize_optimize_checkout'         => 0,
-            'autoptimize_minify_excluded'           => 1,
-            'autoptimize_cache_fallback'            => 1,
-            'autoptimize_enable_meta_ao_settings'   => 1,
+            'autoptimize_html'                           => 0,
+            'autoptimize_html_keepcomments'              => 0,
+            'autoptimize_html_minify_inline'             => 0,
+            'autoptimize_enable_site_config'             => 1,
+            'autoptimize_js'                             => 0,
+            'autoptimize_js_aggregate'                   => 0,
+            'autoptimize_js_defer_not_aggregate'         => 1,
+            'autoptimize_js_defer_inline'                => 1,
+            'autoptimize_js_exclude'                     => '', // 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.min.js',
+            'autoptimize_js_trycatch'                    => 0,
+            'autoptimize_js_justhead'                    => 0,
+            'autoptimize_js_include_inline'              => 0,
+            'autoptimize_js_forcehead'                   => 0,
+            'autoptimize_css'                            => 0,
+            'autoptimize_css_aggregate'                  => 0,
+            'autoptimize_css_exclude'                    => '', // admin-bar.min.css, dashicons.min.css, wp-content/cache/, wp-content/uploads/',
+            'autoptimize_css_justhead'                   => 0,
+            'autoptimize_css_include_inline'             => 0,
+            'autoptimize_css_defer'                      => 0,
+            'autoptimize_css_defer_inline'               => '',
+            'autoptimize_css_inline'                     => 0,
+            'autoptimize_css_datauris'                   => 0,
+            'autoptimize_cdn_url'                        => '',
+            'autoptimize_cache_nogzip'                   => 1,
+            'autoptimize_optimize_logged'                => 1,
+            'autoptimize_optimize_checkout'              => 0,
+            'autoptimize_minify_excluded'                => 1,
+            'autoptimize_cache_fallback'                 => 1,
+            'autoptimize_enable_meta_ao_settings'        => 1,
+            'autoptimize_installed_before_compatibility' => 0,
         );
 
         return $config;
