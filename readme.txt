@@ -39,7 +39,7 @@ HTTP/2 is a great step forward for sure, reducing the impact of multiple request
 
 = Will this work with my blog? =
 
-Although Autoptimize comes without any warranties, it will in general work flawlessly if you configure it correctly. See "Troubleshooting" below for info on how to configure in case of problems. If you want you can [test Autoptimize on a new free dummy site, curtisy of tastewp.com](https://demo.tastewp.com/autoptimize).
+Although Autoptimize comes without any warranties, it will in general work flawlessly if you configure it correctly. See "Troubleshooting" below for info on how to configure in case of problems. If you want you can [test Autoptimize on a new free dummy site, courtesy of tastewp.com](https://demo.tastewp.com/autoptimize).
 
 = Why is jquery.min.js not optimized when aggregating JavaScript? =
 
