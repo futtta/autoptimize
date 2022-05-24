@@ -495,7 +495,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     <tr valign="top">
     <th scope="row"><?php _e( 'Disable extra compatibilty logic?', 'autoptimize' ); ?></th>
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_installed_before_compatibility" checked="checked" />
-    <?php _e( 'In Autoptimize 3.0 extra compatibiity logic was added (e.g. for Gutenberg blocks, Revolution Slider, jQuery-heavy plugins, ...), but if you had Autoptimize installed already before the update to 3.0, this compatibility code was disabled. <strong>Untick this option to enable the compatibility logic.</strong>', 'autoptimize' ); ?></label></td>
+    <?php _e( 'In Autoptimize 3.0 extra compatibiity logic was added (e.g. for Gutenberg blocks, Revolution Slider, jQuery-heavy plugins, ...), but if you had Autoptimize installed already before the update to 3.0, this compatibility code was disabled. <strong>Untick this option to permanently enable the compatibility logic</strong>.', 'autoptimize' ); ?></label></td>
     </tr>        
     <?php } ?>
 </table>
