@@ -266,9 +266,9 @@ add_filter('autoptimize_filter_main_use_mbstring', '__return_true');`
 
 Check [the FAQ on the (legacy) "power-up" here](https://wordpress.org/plugins/autoptimize-criticalcss/#faq), this info will be integrated in this FAQ at a later date.
 
-= Do I still need the Critical CSS power-up when I have Autoptimize 2.7? =
+= Do I still need the Critical CSS power-up when I have Autoptimize 2.7 or higher? =
 
-When both Autoptimize 2.7 and the separate Critical CSS power-up are installed and active, the power-up will handle the critical CSS part. When you disable the power-up, the integrated critical CSS code in Autoptimize 2.7 will take over.
+No, the Critical CSS power-up is not needed any more, all functionality (and many fixes/ improvements) are now part of Autoptimize.
 
 = What does "enable 404 fallbacks" do? Why would I need this? =
 
