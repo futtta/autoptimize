@@ -415,7 +415,7 @@ class autoptimizeCriticalCSSSettings {
         return $_has_auto_rules;
     }
 
-    public function is_multisite_network_admin() {
+    public static function is_multisite_network_admin() {
         static $_multisite_network_admin = null;
 
         if ( null === $_multisite_network_admin ) {
