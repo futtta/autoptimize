@@ -306,7 +306,7 @@ class autoptimizeStyles extends autoptimizeBase
 
                     $media = apply_filters( 'autoptimize_filter_css_tagmedia', $media, $tag );
 
-                    if ( preg_match( '#<link.*href=("|\')(.*)("|\')#Usmi', $tag, $source ) ) {
+                    if ( preg_match( '#<link.*href(?:-_)?=("|\')(.*)("|\')#Usmi', $tag, $source ) ) {
                         // <link>.
                         $url  = current( explode( '?', $source[2], 2 ) );
                         $path = $this->getpath( $url );
