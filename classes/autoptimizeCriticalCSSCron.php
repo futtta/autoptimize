@@ -231,6 +231,7 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jvstat'] = $apireq['validationStatus'];
                             $jprops['jftime'] = microtime( true );
                             $rule_update      = true;
+                            do_action( 'autoptimize_action_ccss_cron_rule_saved', $jprops['rtarget'], $jprops['file'] );
                             $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . '>, file saved <' . $jprops['file'] . '>', 3 );
                         } elseif ( 'GOOD' == $apireq['resultStatus'] && ( 'BAD' == $apireq['validationStatus'] || 'SCREENSHOT_WARN_BLANK' == $apireq['validationStatus'] ) ) {
                             // SUCCESS: GOOD job with BAD or SCREENSHOT_WARN_BLANK validation
@@ -242,6 +243,7 @@ class autoptimizeCriticalCSSCron {
                             if ( apply_filters( 'autoptimize_filter_ccss_save_review_rules', true ) ) {
                                 $jprops['file']   = $this->ao_ccss_save_file( $apireq['css'], $trule, true );
                                 $rule_update      = true;
+                                do_action( 'autoptimize_action_ccss_cron_rule_saved', $jprops['rtarget'], $jprops['file'] );
                                 $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file saved <' . $jprops['file'] . '> but requires REVIEW', 3 );
                             } else {
                                 $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . ', file not saved because it required REVIEW.', 3 );
