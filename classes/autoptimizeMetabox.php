@@ -28,6 +28,8 @@ class autoptimizeMetabox
             'page',
             // add extra types e.g. product or ... ?
         );
+        
+        $screens = apply_filters( 'autoptimize_filter_metabox_screens', $screens );
 
         foreach ( $screens as $screen ) {
             add_meta_box(
