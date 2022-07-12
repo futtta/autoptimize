@@ -400,7 +400,7 @@ class autoptimizeUtils
      * Now used to show notice, might be used later on to (un)hide page caching in AO if no page cache found.
      *
      * @return bool
-     */    
+     */
     public static function find_pagecache( $disregard_transient = false ) {
         static $_found_pagecache = null;
 
@@ -441,7 +441,7 @@ class autoptimizeUtils
                         }
                     }
                 }
-                
+
                 // store in transient for 1 week if pagecache found.
                 if ( true === $_found_pagecache && true !== $disregard_transient ) {
                     set_transient( $_ao_pagecache_transient, true, WEEK_IN_SECONDS );
@@ -457,7 +457,7 @@ class autoptimizeUtils
      * Used to limit notifications to AO settings pages.
      *
      * @return bool
-     */    
+     */
     public static function is_ao_settings() {
         $_is_ao_settings = ( str_replace( array( 'autoptimize', 'autoptimize_imgopt', 'ao_critcss', 'autoptimize_extra', 'ao_partners' ), '', $_SERVER['REQUEST_URI'] ) !== $_SERVER['REQUEST_URI'] ? true : false );
         return $_is_ao_settings;

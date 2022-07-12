@@ -70,7 +70,7 @@ class autoptimizeCriticalCSSSettings {
         register_setting( 'ao_ccss_options_group', 'autoptimize_ccss_unloadccss' );
 
         // And add submenu-page.
-        add_submenu_page( null, 'Critical CSS', 'Critical CSS', 'manage_options', 'ao_critcss', array( $this, 'ao_criticalcsssettings_page' ) );
+        add_submenu_page( '', 'Critical CSS', 'Critical CSS', 'manage_options', 'ao_critcss', array( $this, 'ao_criticalcsssettings_page' ) );
     }
 
     public function admin_assets( $hook ) {

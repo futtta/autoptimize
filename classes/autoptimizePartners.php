@@ -44,7 +44,7 @@ class autoptimizePartners
     public function add_admin_menu()
     {
         if ( $this->enabled() ) {
-            add_submenu_page( null, 'AO partner', 'AO partner', 'manage_options', 'ao_partners', array( $this, 'ao_partners_page' ) );
+            add_submenu_page( '', 'AO partner', 'AO partner', 'manage_options', 'ao_partners', array( $this, 'ao_partners_page' ) );
         }
     }
 

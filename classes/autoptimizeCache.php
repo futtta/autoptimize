@@ -391,7 +391,7 @@ class autoptimizeCache
                 return false;
             }
         }
-        
+
         if ( ! self::cacheavail() ) {
             return false;
         }
@@ -823,7 +823,7 @@ class autoptimizeCache
             $_kinsta_clear_cache_url = 'https://localhost/kinsta-clear-cache-all';
             $_kinsta_response        = wp_remote_get(
                 $_kinsta_clear_cache_url,
-                array( 
+                array(
                     'sslverify' => false,
                     'timeout' => 5,
                     )

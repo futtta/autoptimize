@@ -30,7 +30,7 @@ class autoptimizeExitSurvey
 
     function render_survey_model() {
         global $wp_version;
-        
+
         $data = array(
             "home" => home_url(),
             "dest" => 'aHR0cHM6Ly9taXNjLm9wdGltaXppbmdtYXR0ZXJzLmNvbS9hb19leGl0X3N1cnZleS9pbmRleC5waHA='

@@ -62,7 +62,7 @@ class autoptimizeConfig
             }
 
             $this->settings_screen_do_remote_http = apply_filters( 'autoptimize_settingsscreen_remotehttp', $this->settings_screen_do_remote_http );
-            
+
             if ( $this->is_ao_meta_settings_active() ) {
                 $metaBox = new autoptimizeMetabox();
             }
@@ -227,7 +227,7 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
     </li>
 <?php } else { ?>
     <input type="hidden" id="autoptimize_enable_site_config" name="autoptimize_enable_site_config" value="on" />
-<?php } ?>    
+<?php } ?>
 
 <li class="itemDetail">
 <h2 class="itemTitle"><?php _e( 'JavaScript Options', 'autoptimize' ); ?></h2>
@@ -359,7 +359,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
 <?php if ( false === autoptimizeUtils::is_plugin_active( 'unusedcss/unusedcss.php' ) ) { ?>
 <tr valign="top">
 <th scope="row"><?php _e( 'Remove Unused CSS?', 'autoptimize' ); ?></th>
-<?php 
+<?php
 $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssettings&partner=rapidload';
 ?>
 <td><?php echo sprintf( __( 'If Google Pagespeed Insights detects unused CSS, consider using %s to <strong>reduce your site\'s CSS size to up to 90&#37;</strong>, resulting in a slimmer, faster site!', 'autoptimize' ), '<a href="' . $_rapidload_link . '" target="_blank">the premium Rapidload service</a>' ); ?></td>
@@ -402,7 +402,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
 } else {
     $cdn_editable    = '';
     $cdn_placeholder = 'placeholder="' . __( 'example: //cdn.yoursite.com/', 'autoptimize' ) . ' "';
-    $cdn_description = __( 'Enter your CDN root URL to enable CDN for Autoptimized files. The URL can be http, https or protocol-relative. This is not needed for Cloudflare.', 'autoptimize' );    
+    $cdn_description = __( 'Enter your CDN root URL to enable CDN for Autoptimized files. The URL can be http, https or protocol-relative. This is not needed for Cloudflare.', 'autoptimize' );
 }
 ?>
 <td><label><input id="cdn_url" type="text" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" <?php echo $cdn_placeholder . $cdn_editable; ?> value="<?php echo esc_url( autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' ), array( 'http', 'https' ) ); ?>" /><br />
@@ -496,7 +496,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     <th scope="row"><?php _e( 'Disable extra compatibilty logic?', 'autoptimize' ); ?></th>
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_installed_before_compatibility" checked="checked" />
     <?php _e( 'In Autoptimize 3.0 extra compatibiity logic was added (e.g. for Gutenberg blocks, Revolution Slider, jQuery-heavy plugins, ...), but if you had Autoptimize installed already before the update to 3.0, this compatibility code was disabled. <strong>Untick this option to permanently enable the compatibility logic</strong>.', 'autoptimize' ); ?></label></td>
-    </tr>        
+    </tr>
     <?php } ?>
 </table>
 </li>
@@ -588,7 +588,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
                 check_exclusions( "js", "off" );
             }
         });
-        
+
         jQuery( "#autoptimize_js_defer_not_aggregate" ).change(function() {
             if (this.checked && jQuery("#autoptimize_js").prop('checked')) {
                 jQuery( "#autoptimize_js_aggregate" ).prop( 'checked', false ); // uncheck "aggregate JS"
@@ -690,7 +690,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             jQuery(".js_sub:visible").fadeTo('fast',.33);
         }
     }
-    
+
     function check_exclusions( what, state ) {
         exclusion_node = 'input[name="autoptimize_' + what + '_exclude"]';
         current_exclusion = jQuery( exclusion_node ).val();
@@ -700,9 +700,9 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         } else if ( what == "css")  {
             default_exclusion = ", admin-bar.min.css, dashicons.min.css, wp-content/cache/, wp-content/uploads/";
         }
-        
+
         default_in_current = current_exclusion.indexOf(default_exclusion);
-        
+
         if ( state == "on" && default_in_current == -1 ) {
             jQuery( exclusion_node ).val( current_exclusion + default_exclusion );
         } else if ( state = "off" && current_exclusion == default_exclusion ) {
@@ -1057,7 +1057,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             return true;
         } else if ( array_key_exists( 'ao_post_optimize', $_meta_value ) && 'on' !== $_meta_value['ao_post_optimize'] ) {
             // ao entirely off for this page.
-            return false; 
+            return false;
         } else if ( array_key_exists( $optim, $_meta_value ) && empty( $_meta_value[$optim] ) ) {
             // sub-optimization off for this page.
             return false;

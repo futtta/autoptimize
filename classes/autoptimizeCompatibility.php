@@ -1,7 +1,7 @@
 <?php
 /**
  * Multiple compatibility snippets to ensure important/ stubborn plugins work out of the box.
- * 
+ *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -24,7 +24,7 @@ class autoptimizeCompatibility
 
     /**
      * Runs multiple compatibility snippets to ensure important plugins work out of the box.
-     * 
+     *
      */
     public function run()
     {
@@ -32,7 +32,7 @@ class autoptimizeCompatibility
         if ( defined( 'ELEMENTOR_VERSION' ) && is_user_logged_in() && current_user_can( 'edit_posts' ) && apply_filters( 'autoptimize_filter_compatibility_editelementor_active', true ) ) {
             add_filter( 'autoptimize_filter_js_noptimize', '__return_true' );
         }
-        
+
         // Revslider; jQuery should not be deferred + exclude all revslider JS.
         if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && true == $this->inline_js_config_checker() && apply_filters( 'autoptimize_filter_compatibility_revslider_active', true ) ) {
             add_filter( 'autoptimize_filter_js_exclude', function( $js_excl = '', $html = '' ) {
@@ -41,24 +41,24 @@ class autoptimizeCompatibility
                     if ( is_array( $js_excl ) ) {
                         $js_excl = implode( ',', $js_excl );
                     }
-                    
+
                     $js_excl .= ',' . $revslider_excl;
                 }
                 return $js_excl;
             }, 11, 2 );
         }
-        
+
         // Revslider; remove revslider JS if no slides in HTML for non-logged in users.
         if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && false === is_user_logged_in() && apply_filters( 'autoptimize_filter_compatibility_revslider_remover_active', true ) ) {
             add_filter( 'autoptimize_filter_js_removables', function( $to_remove = '', $html = '' ) {
                 if ( ! empty( $html ) && false === strpos( $html, '<rs-slides>') ) {
                     $to_remove .= 'plugins/revslider, setREVStartSize, window.RSIW, window.RS_MODULES';
                 }
-                
+
                 return $to_remove;
-            }, 11, 2 ); 
+            }, 11, 2 );
         }
-        
+
         // Exclude jQuery if inline JS is found that requires jQuery.
         if ( $this->inline_js_config_checker() && false === strpos( $this->conf->get( 'autoptimize_js_exclude' ), 'jquery.min.js' ) && apply_filters( 'autoptimize_filter_compatibility_inline_jquery', true ) ) {
             add_filter( 'autoptimize_filter_js_exclude', function( $js_excl = '', $html = '' ) {
@@ -66,7 +66,7 @@ class autoptimizeCompatibility
                     if ( is_array( $js_excl ) ) {
                         $js_excl = implode( ',', $js_excl );
                     }
-                    
+
                     if ( false === strpos( $js_excl, 'jquery.min.js' ) ) {
                         $js_excl .= ', jquery.min.js';
                     }
@@ -79,7 +79,7 @@ class autoptimizeCompatibility
                 return $js_excl;
             }, 12, 2 );
         }
-        
+
         // Make JS-based Gutenberg blocks work OOTB.
         if ( $this->inline_js_config_checker() && apply_filters( 'autoptimize_filter_compatibility_gutenberg_js', true ) ) {
             add_filter( 'autoptimize_filter_js_exclude', function( $js_excl = '', $html = '' ) {
@@ -87,7 +87,7 @@ class autoptimizeCompatibility
                     if ( is_array( $js_excl ) ) {
                         $js_excl = implode( ',', $js_excl );
                     }
-                    
+
                     if ( false === strpos( $js_excl, 'jquery.min.js' ) ) {
                         $js_excl .= ', jquery.min.js';
                     }
@@ -100,10 +100,10 @@ class autoptimizeCompatibility
             }, 13, 2 );
         }
     }
-    
+
     public function inline_js_config_checker() {
         static $inline_js_flagged = null;
-        
+
         if ( null === $inline_js_flagged ) {
             if ( ( $this->conf->get( 'autoptimize_js_aggregate' ) || apply_filters( 'autoptimize_filter_js_dontaggregate', false ) ) && apply_filters( 'autoptimize_js_include_inline', $this->conf->get( 'autoptimize_js_include_inline' ) ) ) {
                 // if all files and also inline JS are aggregated we don't have to worry about inline JS.
@@ -116,7 +116,7 @@ class autoptimizeCompatibility
             // in all other cases we need to pay attention to inline JS requiring src'ed JS to be available.
             $inline_js_flagged = true;
         }
-        
+
         return $inline_js_flagged;
     }
 }

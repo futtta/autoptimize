@@ -189,7 +189,7 @@ class autoptimizeExtra
         if ( ! empty( $options['autoptimize_extra_text_field_7'] ) || has_filter( 'autoptimize_filter_extra_tobepreloaded' ) || ! empty( autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_preload' ) ) ) {
             add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_preload' ), 10, 2 );
         }
-        
+
         // Remove global styles.
         if ( ! empty( $options['autoptimize_extra_checkbox_field_8'] ) ) {
             $this->disable_global_styles();
@@ -409,7 +409,7 @@ class autoptimizeExtra
         if ( array_key_exists( 'autoptimize_extra_text_field_7', $options ) ) {
             $preloads = array_filter( array_map( 'trim', explode( ',', wp_strip_all_tags( $options['autoptimize_extra_text_field_7'] ) ) ) );
         }
-        
+
         if ( false === autoptimizeImages::imgopt_active() && false === autoptimizeImages::should_lazyload_wrapper() ) {
             // only do this here if imgopt/ lazyload are not active?
             $metabox_preloads = array_filter( array_map( 'trim', explode( ',', wp_strip_all_tags( autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_preload' ) ) ) ) );
@@ -460,7 +460,7 @@ class autoptimizeExtra
 
         return $this->inject_preloads( $preload_output, $in );
     }
-    
+
     public static function inject_preloads( $preloads, $html ) {
         // add string to head (before first link node by default).
         $preload_inject = apply_filters( 'autoptimize_filter_extra_preload_inject', '<link' );
@@ -468,7 +468,7 @@ class autoptimizeExtra
 
         return autoptimizeUtils::substr_replace( $html, $preloads . $preload_inject, $position, strlen( $preload_inject ) );
     }
-    
+
     public function disable_global_styles()
     {
         remove_action( 'wp_enqueue_scripts', 'wp_enqueue_global_styles' );
@@ -488,7 +488,7 @@ class autoptimizeExtra
         // no acces if multisite and not network admin and no site config allowed.
         if ( autoptimizeConfig::should_show_menu_tabs() ) {
             add_submenu_page(
-                null,
+                '',
                 'autoptimize_extra',
                 'autoptimize_extra',
                 'manage_options',
