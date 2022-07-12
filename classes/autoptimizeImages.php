@@ -653,7 +653,7 @@ class autoptimizeImages
                     // then call add_lazyload-function with lpiq placeholder if set.
                     $tag = $this->add_lazyload( $tag, $placeholder );
                 }
-                
+
                 // add decoding="async" behind filter, not sure if I'll make it default true yet.
                 if ( true === apply_filters( 'autoptimize_filter_imgopt_add_decoding', true ) && false === strpos( $tag, ' decoding=' ) ) {
                     $tag = str_replace( '<img ', '<img decoding="async" ', $tag );
@@ -665,7 +665,7 @@ class autoptimizeImages
                 if ( $tag !== $orig_tag ) {
                     $to_replace[ $orig_tag ] = $tag;
                 }
-                
+
                 // and check if image needs to be prelaoded.
                 if ( ! empty( $metabox_preloads ) && is_array( $metabox_preloads ) && str_replace( $metabox_preloads, '', $tag ) !== $tag ) {
                     $to_preload .= $this->create_img_preload_tag( $tag );
@@ -831,7 +831,7 @@ class autoptimizeImages
                 if ( $this->should_lazyload( $out ) ) {
                     $to_replace[ $tag ] = $this->add_lazyload( $tag );
                 }
-                
+
                 // and check if image needs to be prelaoded.
                 if ( ! empty( $metabox_preloads ) && is_array( $metabox_preloads ) && str_replace( $metabox_preloads, '', $tag ) !== $tag ) {
                     $to_preload .= $this->create_img_preload_tag( $tag );
@@ -955,7 +955,7 @@ class autoptimizeImages
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_jsconfig', '<script' . $type_js . $noptimize_flag . '>window.lazySizesConfig=window.lazySizesConfig||{};window.lazySizesConfig.loadMode=1;</script>' );
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $type_js . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
     }
-    
+
     public static function create_img_preload_tag( $tag ) {
         if ( false === apply_filters( 'autoptimize_filter_imgopt_dopreloads', true ) ) {
             return '';
@@ -968,7 +968,7 @@ class autoptimizeImages
         $_from = array( '<img ', ' src=', ' sizes=', ' srcset=' );
         $_to   = array( '<link rel="preload" as="image" ', ' href=', ' imagesizes=', ' imagesrcset=' );
         $tag   = str_replace( $_from, $_to, $tag );
-        
+
         // and remove title, alt, class and id.
         $tag = preg_replace( '/ ((?:title|alt|class|id|loading)=".*")/Um', '', $tag );
         if ( $tag !== str_replace( array(' title=', ' class=', ' alt=', ' id=' ), '', $tag ) ) {
@@ -1113,7 +1113,7 @@ class autoptimizeImages
         }
         return $matches[0];
     }
-    
+
     public function fix_silly_bgimg_quotes( $tag_in ) {
         // some themes/ pagebuilders wrap backgroundimages in HTML-encoded quotes (or linebreaks) which breaks imgopt/ lazyloading, this removes them.
         return trim( str_replace( array( "\r\n", '&quot;', '&#034;', '&apos;', '&#039;' ), '', $tag_in ) );
@@ -1138,7 +1138,7 @@ class autoptimizeImages
         // no acces if multisite and not network admin and no site config allowed.
         if ( autoptimizeConfig::should_show_menu_tabs() ) {
             add_submenu_page(
-                null,
+                '',
                 'autoptimize_imgopt',
                 'autoptimize_imgopt',
                 'manage_options',
