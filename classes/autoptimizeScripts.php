@@ -119,7 +119,7 @@ class autoptimizeScripts extends autoptimizeBase
      * @var bool
      */
     private $defer_not_aggregate = false;
-    
+
     /**
      * Setting; defer inline JS?
      *
@@ -220,7 +220,7 @@ class autoptimizeScripts extends autoptimizeBase
     public function read( $options )
     {
         $noptimize_js = false;
-        
+
         // If page/ post check post_meta to see if optimize is off.
         if ( false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_js_optimize' ) ) {
             $noptimize_js = true;
@@ -228,7 +228,7 @@ class autoptimizeScripts extends autoptimizeBase
 
         // And a filter to enforce JS noptimize.
         $noptimize_js = apply_filters( 'autoptimize_filter_js_noptimize', $noptimize_js, $this->content );
-        
+
         // And finally bail if noptimize_js is true.
         if ( $noptimize_js ) {
             return false;
@@ -263,12 +263,12 @@ class autoptimizeScripts extends autoptimizeBase
         }
         // and the filter that should have been there to begin with.
         $this->aggregate = apply_filters( 'autoptimize_filter_js_aggregate', $this->aggregate );
-        
+
         // Defer when not aggregating.
         if ( false === $this->aggregate && apply_filters( 'autoptimize_filter_js_defer_not_aggregate', $options['defer_not_aggregate'] ) ) {
             $this->defer_not_aggregate = true;
         }
-        
+
         // Defer inline JS?
         if ( ( true === $this->defer_not_aggregate && apply_filters( 'autoptimize_js_filter_defer_inline', $options['defer_inline'] ) ) || apply_filters( 'autoptimize_js_filter_force_defer_inline', false ) ) {
             $this->defer_inline = true;

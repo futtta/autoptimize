@@ -263,7 +263,7 @@ class autoptimizeVersionUpdatesHandler
 
     /**
      * remove CCSS request limit option + update jquery exclusion to include WordPress 5.6 jquery.min.js.
-     */    
+     */
     private function upgrade_from_2_7() {
         delete_option( 'autoptimize_ccss_rlimit' );
         $js_exclusions = get_option( 'autoptimize_js_exclude', '' );
@@ -272,9 +272,9 @@ class autoptimizeVersionUpdatesHandler
             autoptimizeOptionWrapper::update_option( 'autoptimize_js_exclude', $js_exclusions );
         }
     }
-    
+
     /**
-     * set an option to indicate the AO installation predates the compatibility logic, this way we 
+     * set an option to indicate the AO installation predates the compatibility logic, this way we
      * can avoid adding compatibility code that is likely not needed and maybe not wanted as it
      * can introduce performance regressions.
      */

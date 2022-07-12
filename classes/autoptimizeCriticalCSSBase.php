@@ -86,7 +86,7 @@ class autoptimizeCriticalCSSBase {
         }
 
         $this->filepath = __FILE__;
-        
+
         // Add keychecker action for scheduled use.
         add_action( 'ao_ccss_keychecker', array( $this, 'ao_ccss_check_key' ) );
     }
@@ -109,7 +109,7 @@ class autoptimizeCriticalCSSBase {
                 // and schedule maintenance job.
                 wp_schedule_event( time(), 'twicedaily', 'ao_ccss_maintenance' );
             }
-            
+
             if ( wp_next_scheduled( 'ao_ccss_keychecker' ) ) {
                 // api is active now, no need to check key as it is checked by using the API.
                 wp_clear_scheduled_hook( 'ao_ccss_keychecker' );
@@ -419,7 +419,7 @@ class autoptimizeCriticalCSSBase {
      * Scheduled action to check an inactive key. Not part of autoptimizeCriticalCSSCron.php
      * to allow us to only load the main cron logic if we have an active key to begin with.
      *
-     */    
+     */
     public function ao_ccss_check_key() {
         $ao_ccss_key = $this->get_option( 'key' );
         $_result = $this->_core->ao_ccss_key_validation( $ao_ccss_key );

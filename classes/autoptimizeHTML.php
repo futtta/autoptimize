@@ -48,7 +48,7 @@ class autoptimizeHTML extends autoptimizeBase
 
         // Filter to force xhtml.
         $this->forcexhtml = (bool) apply_filters( 'autoptimize_filter_html_forcexhtml', false );
-        
+
         // minify inline JS/ CSS.
         $this->minify_inline = (bool) apply_filters( 'autoptimize_html_minify_inline_js_css', $options['minify_inline'] );
 
