@@ -115,7 +115,6 @@ class autoptimizeCriticalCSSSettingsAjax {
         wp_die();
     }
 
-
     public function critcss_rm_callback() {
         // Ajax handler to delete a critical CSS from the filesystem
         // Check referer.
@@ -299,6 +298,11 @@ class autoptimizeCriticalCSSSettingsAjax {
             $zip->addGlob( AO_CCSS_DIR . '*.css', 0, $options );
             $zip->close();
         }
+        
+        // settings.json has been added to zipfile, so can be removed now.
+        if ( file_exists( $exportfile ) ) {
+            unlink( $exportfile );
+        }
 
         // Prepare response.
         if ( ! $status || $error ) {
@@ -408,6 +412,11 @@ class autoptimizeCriticalCSSSettingsAjax {
                     if ( defined( 'AO_PRO_VERSION' ) && array_key_exists( 'pro', $settings ) ) {
                         update_option( 'autoptimize_pro_boosters', $settings['pro']['boosters'] );
                         update_option( 'autoptimize_pro_pagecache', $settings['pro']['pagecache'] );
+                    }
+                    
+                    // settings.json has been imported, so can be removed now.
+                    if ( file_exists( $importfile ) ) {
+                        unlink( $importfile );
                     }
                 } else {
                     // Settings file doesn't exist, update error flag.

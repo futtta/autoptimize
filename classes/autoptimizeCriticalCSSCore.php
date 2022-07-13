@@ -547,9 +547,9 @@ class autoptimizeCriticalCSSCore {
         // Perform basic exploit avoidance and CSS validation.
         if ( ! empty( $ccss ) ) {
             // Try to avoid code injection.
-            $blocklist = array( '#!/', 'function(', '<script', '<?php' );
+            $blocklist = array( '#!/', 'function(', '<script', '<?php', '</style', ' onload=', ' onerror=', ' onmouse', ' onscroll=', ' onclick=' );
             foreach ( $blocklist as $blocklisted ) {
-                if ( strpos( $ccss, $blocklisted ) !== false ) {
+                if ( stripos( $ccss, $blocklisted ) !== false ) {
                     $this->ao_ccss_log( 'Critical CSS received contained blocklisted content.', 2 );
                     return false;
                 }
@@ -580,21 +580,20 @@ class autoptimizeCriticalCSSCore {
         // 3: DD (for debug)
         // Default: UU (for unkown).
         $level = false;
-        switch ( $lvl ) {
-            case 1:
-                $level = 'II';
-                break;
-            case 2:
-                $level = 'EE';
-                break;
-            case 3:
-                // Output debug messages only if debug mode is enabled.
-                if ( $debug ) {
+        if ( $debug ) {
+            switch ( $lvl ) {
+                case 1:
+                    $level = 'II';
+                    break;
+                case 2:
+                    $level = 'EE';
+                    break;
+                case 3:
                     $level = 'DD';
-                }
-                break;
-            default:
-                $level = 'UU';
+                    break;
+                default:
+                    $level = 'UU';
+            }
         }
 
         // Prepare and write a log message if there's a valid level.

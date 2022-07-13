@@ -84,7 +84,7 @@ function drawTable(critCssArray) {
                 }
             }
             if ( k == "paths" ) {
-                target = '<a href="<?php echo AUTOPTIMIZE_WP_SITE_URL; ?>' + i + '" target="_blank">' + i + '</a>';
+                target = '<a href="<?php echo AUTOPTIMIZE_WP_SITE_URL; ?>' + i + '" target="_blank">' + encodeURI( i ) + '</a>';
             } else {
                 target = i.replace(/(woo_|template_|custom_post_|edd_|bp_|bbp_)/,'');
             }
@@ -225,7 +225,7 @@ function addEditRow(idToEdit) {
         jQuery("#critcss_addedit_type").attr("disabled",true);
 
         if (crit_type==="paths") {
-            jQuery("#critcss_addedit_path").val(crit_key);
+            jQuery("#critcss_addedit_path").val(decodeURI(crit_key));
             jQuery("#critcss_addedit_path_wrapper").show();
             jQuery("#critcss_addedit_pagetype_wrapper").hide();
         } else {

@@ -39,6 +39,11 @@ class autoptimizeCriticalCSSSettings {
             }
 
             $criticalcss_ajax = new autoptimizeCriticalCSSSettingsAjax();
+
+            // if debug logging is off but the file is present, then remove the debug log file.
+            if ( empty( $this->criticalcss->get_option( 'debug' ) ) && file_exists( AO_CCSS_LOG ) ) {
+                unlink( AO_CCSS_LOG );
+            }
         }
     }
 
@@ -151,8 +156,7 @@ class autoptimizeCriticalCSSSettings {
                 }
 
                 // Check for "inline & defer CSS" being active in Autoptimize.
-                if ( ! empty( $ao_ccss_key ) && ! $ao_css_defer ) {
-                    if ( empty( $ao_ccss_keyst ) ) {
+                if ( ! empty( $ao_ccss_key ) && ! $ao_css_defer && empty( $ao_ccss_keyst ) ) {
                         // no keystate so likely in activation-process of CCSS, let's enable "inline & defer CSS" immediately to make things easier!
                         autoptimizeOptionWrapper::update_option( 'autoptimize_css_defer', 'on' );
                         ?>
@@ -162,16 +166,6 @@ class autoptimizeCriticalCSSSettings {
                         ?>
                         </p></div>
                         <?php
-                    } else {
-                        // we have keystate, so "inline & defer CSS" was probably disabled for troubleshooting, warn but let users continue.
-                        ?>
-                        <div class="notice-warning notice"><p>
-                        <?php
-                        _e( "Please <strong>activate the \"Eliminate render-blocking CSS\" option</strong> on Autoptimize's main settings page to ensure critical CSS is used on the front-end.", 'autoptimize' );
-                        ?>
-                        </p></div>
-                        <?php
-                    }
                 }
 
                 // check if WordPress cron is disabled and warn if so.
