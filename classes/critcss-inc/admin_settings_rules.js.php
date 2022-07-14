@@ -283,9 +283,9 @@ function addEditRow(idToEdit) {
                 rccss = jQuery("#critcss_addedit_css").val();
                 console.log('rpath: ' + rpath, 'rtype: ' + rtype, 'rccss: ' + rccss);
                 if (rpath === '' && rtype === '') {
-                    alert('<?php _e( "RULE VALIDATION ERROR!\\n\\nBased on your rule type, you SHOULD set a path or conditional tag.", 'autoptimize' ); ?>');
+                    alert('<?php _e( "Rule validation error:\\n\\nBased on your rule type, you should set a path or conditional tag.", 'autoptimize' ); ?>');
                 } else if (rtype !== '' && rccss == '') {
-                    alert('<?php _e( "RULE VALIDATION ERROR!\\n\\nType based rules REQUIRES a minified critical CSS.", 'autoptimize' ); ?>');
+                    alert('<?php _e( "Rule validation error:\\n\\nType based rules requires a minified critical CSS.", 'autoptimize' ); ?>');
                 } else if (rpath !== rpath.replace(/("|\'|<|>|\[|\]|{|}|%|\||#)/,'')) {
                     alert('<?php _e( "Path validation error:\\n\\nThe path contains characters that are not permitted, remove or encode the unsafe characters.", 'autoptimize' ); ?>');
                 } else {
