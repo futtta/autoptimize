@@ -112,7 +112,7 @@ function drawTable(critCssArray) {
                 jQuery("div.rnotice").show();
             });
         <?php
-        } else {
+        } else if ( $ao_ccss_debug ) {
         ?>
             console.log( "Autoptimize: " + rnotice + " <?php echo $_ao_ccss_review_notice_copy; ?>" );
         <?php
@@ -281,7 +281,9 @@ function addEditRow(idToEdit) {
                 rpath = jQuery("#critcss_addedit_path").val();
                 rtype = jQuery("#critcss_addedit_pagetype option:selected").val();
                 rccss = jQuery("#critcss_addedit_css").val();
+                <?php if ( $ao_ccss_debug ) { ?>
                 console.log('rpath: ' + rpath, 'rtype: ' + rtype, 'rccss: ' + rccss);
+                <?php } ?>
                 if (rpath === '' && rtype === '') {
                     alert('<?php _e( "Rule validation error:\\n\\nBased on your rule type, you should set a path or conditional tag.", 'autoptimize' ); ?>');
                 } else if (rtype !== '' && rccss == '') {
