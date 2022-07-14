@@ -119,6 +119,7 @@ class autoptimizeCriticalCSSSettings {
         $ao_css_defer_inline   = $this->criticalcss->get_option( 'css_defer_inline' );
         $ao_ccss_loggedin      = $this->criticalcss->get_option( 'loggedin' );
         $ao_ccss_forcepath     = $this->criticalcss->get_option( 'forcepath' );
+        $ao_ccss_domain        = $this->criticalcss->get_option( 'domain' );
         ?>
         <script>document.title = "Autoptimize: <?php _e( 'Critical CSS', 'autoptimize' ); ?> " + document.title;</script>
         <div class="wrap">
@@ -332,6 +333,7 @@ class autoptimizeCriticalCSSSettings {
                             echo '<input class="hidden" name="autoptimize_css_defer_inline" value="' . esc_attr( $ao_css_defer_inline ) . '">';
                             echo '<input class="hidden" name="autoptimize_ccss_loggedin" value="' . esc_attr( $ao_ccss_loggedin ). '">';
                             echo '<input class="hidden" name="autoptimize_ccss_forcepath" value="' . esc_attr( $ao_ccss_forcepath ) . '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_domain" id="autoptimize_ccss_domain" value="' . esc_attr( $ao_ccss_domain ) . '">';
                         }
                         // Render key panel unconditionally.
                         ao_ccss_render_key( $ao_ccss_key, $key['status'], $key['stmsg'], $key['msg'], $key['color'] );
