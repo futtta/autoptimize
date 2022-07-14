@@ -311,7 +311,7 @@ class autoptimizeCriticalCSSSettings {
                                 // Render rules section for manual rules.
                                 ao_ccss_render_rules();
                             } else {
-                                echo "<input class='hidden' name='autoptimize_ccss_queue' value='" . json_encode( $ao_ccss_rules, JSON_FORCE_OBJECT ) . "'>";
+                                echo "<input class='hidden' name='autoptimize_ccss_rules' value='" . json_encode( $ao_ccss_rules, JSON_FORCE_OBJECT ) . "'>";
                             }
 
                             // But if key is other than valid, add hidden fields to persist settings when submitting form
