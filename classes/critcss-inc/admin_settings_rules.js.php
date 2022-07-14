@@ -288,7 +288,7 @@ function addEditRow(idToEdit) {
                     alert('<?php _e( "Rule validation error:\\n\\nBased on your rule type, you should set a path or conditional tag.", 'autoptimize' ); ?>');
                 } else if (rtype !== '' && rccss == '') {
                     alert('<?php _e( "Rule validation error:\\n\\nType based rules requires a minified critical CSS.", 'autoptimize' ); ?>');
-                } else if (rpath !== rpath.replace(/("|\'|<|>|\[|\]|{|}|%|\||#)/,'')) {
+                } else if (rpath !== rpath.replace(/("|\'|<|>|\[|\]|{|}|\|)/,'')) {
                     alert('<?php _e( "Path validation error:\\n\\nThe path contains characters that are not permitted, remove or encode the unsafe characters.", 'autoptimize' ); ?>');
                 } else {
                     saveEditCritCss();
