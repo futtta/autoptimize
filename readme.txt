@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 3.0.4
+Stable tag: 3.1.0
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -318,8 +318,8 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 = 3.1.0 =
 * new HTML sub-option: "minify inline CSS/ JS" (off by default).
 * new Misc option: permanently allow the "do not run compatibility logic" flag to be removed (which was set for users upgrading from AO 2.9.* to AO 3.0.* as the assumption was things were working anyway).
+* security: improvements to the critical CSS settings page to fix authenticated cross site scripting issues as reported by WPScan Security.
 * bugfix: "defer inline JS" of very large chunks of inline JS could cause server errors (PCRE crash actually) so not deferring if string is more then 200000 characters (filter available).
-* bugfix: misc. improvements to the critical CSS settings page.
 * some other minor changes/ improvements/ hooks, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
 
 = 3.0.4 =

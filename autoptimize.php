@@ -3,7 +3,7 @@
  * Plugin Name: Autoptimize
  * Plugin URI: https://autoptimize.com/
  * Description: Makes your site faster by optimizing CSS, JS, Images, Google fonts and more.
- * Version: 3.1.0-beta-3
+ * Version: 3.1.1-beta-0
  * Author: Frank Goossens (futtta)
  * Author URI: https://autoptimize.com/
  * Text Domain: autoptimize
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'AUTOPTIMIZE_PLUGIN_VERSION', '3.1.0-beta-3' );
+define( 'AUTOPTIMIZE_PLUGIN_VERSION', '3.1.1-beta-0' );
 
 // plugin_dir_path() returns the trailing slash!
 define( 'AUTOPTIMIZE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
