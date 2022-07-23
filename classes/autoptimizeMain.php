@@ -391,11 +391,11 @@ class autoptimizeMain
             }
 
             // Misc. querystring paramaters that will stop AO from doing optimizations (pagebuilders +
-            // 2 generic parameters that could/ should become standard between optimization plugins?)
+            // 2 generic parameters that could/ should become standard between optimization plugins?).
             if ( false === $ao_noptimize ) {
                 $_qs_showstoppers = array( 'no_cache', 'no_optimize', 'tve', 'elementor-preview', 'fl_builder', 'vc_action', 'et_fb', 'bt-beaverbuildertheme', 'ct_builder', 'fb-edit', 'siteorigin_panels_live_editor', 'preview' );
 
-                // doing Jonathan a quick favor to allow correct unused CSS generation ;-)
+                // doing Jonathan a quick favor to allow correct unused CSS generation ;-) .
                 if ( apply_filters( 'autoptimize_filter_main_showstoppers_do_wp_rocket_a_favor', true ) ) {
                     $_qs_showstoppers[] = 'nowprocket';
                 }
@@ -742,7 +742,7 @@ class autoptimizeMain
     public static function notice_installed()
     {
         echo '<div class="updated"><p>';
-        printf( __( 'Thank you for installing and activating Autoptimize. Please configure it under %sSettings -> Autoptimize%s to start improving your site\'s performance.', 'autoptimize' ), '<a href="options-general.php?page=autoptimize">', '</a>' );
+        printf( __( 'Thank you for installing and activating Autoptimize. Please configure it under %1$sSettings -> Autoptimize%2$s to start improving your site\'s performance.', 'autoptimize' ), '<a href="options-general.php?page=autoptimize">', '</a>' );
         echo '</p></div>';
     }
 
