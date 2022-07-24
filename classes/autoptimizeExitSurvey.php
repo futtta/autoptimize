@@ -12,7 +12,7 @@ class autoptimizeExitSurvey
     function __construct() {
         global $pagenow;
 
-        if ( $pagenow != 'plugins.php' ) {
+        if ( 'plugins.php' != $pagenow ) {
             return;
         }
 
@@ -21,10 +21,7 @@ class autoptimizeExitSurvey
     }
 
     function enqueue_survey_scripts() {
-        wp_enqueue_script( 'ao_exit_survey',  plugins_url( '/static/exit-survey/exit-survey.js', __FILE__ ), array(
-            'jquery'
-        ), AUTOPTIMIZE_PLUGIN_VERSION );
-
+        wp_enqueue_script( 'ao_exit_survey', plugins_url( '/static/exit-survey/exit-survey.js', __FILE__ ), array( 'jquery' ), AUTOPTIMIZE_PLUGIN_VERSION );
         wp_enqueue_style( 'ao_exit_survey', plugins_url( '/static/exit-survey/exit-survey.css', __FILE__ ), null, AUTOPTIMIZE_PLUGIN_VERSION );
     }
 
@@ -32,12 +29,12 @@ class autoptimizeExitSurvey
         global $wp_version;
 
         $data = array(
-            "home" => home_url(),
-            "dest" => 'aHR0cHM6Ly9taXNjLm9wdGltaXppbmdtYXR0ZXJzLmNvbS9hb19leGl0X3N1cnZleS9pbmRleC5waHA='
+            'home' => home_url(),
+            'dest' => 'aHR0cHM6Ly9taXNjLm9wdGltaXppbmdtYXR0ZXJzLmNvbS9hb19leGl0X3N1cnZleS9pbmRleC5waHA=',
         );
         ?>
 
-        <div class="ao-plugin-uninstall-feedback-popup ao-feedback" id="ao_uninstall_feedback_popup" data-modal="<?php echo base64_encode( json_encode( $data ) ) ?>">
+        <div class="ao-plugin-uninstall-feedback-popup ao-feedback" id="ao_uninstall_feedback_popup" data-modal="<?php echo base64_encode( json_encode( $data ) ); ?>">
             <div class="popup--header">
                 <h5><?php _e( 'Sorry to see you go!', 'autoptimize' ); ?></h5>
             </div><!--/.popup--header-->
@@ -86,12 +83,11 @@ class autoptimizeExitSurvey
             <div class="popup--footer">
                 <div class="actions">
                     <a href="#" class="info-disclosure-link"><?php _e( 'What info do we collect?', 'autoptimize' ); ?></a>
-                    <div class="info-disclosure-content"><p><?php _e( 'Below is a detailed view of all data that Optimizing Matters will receive if
-                            you fill in this survey. Your email address is only shared if you explicitly fill it in, your IP addres is never sent.', 'autoptimize' ); ?></p>
+                    <div class="info-disclosure-content"><p><?php _e( 'Below is a detailed view of all data that Optimizing Matters will receive if you fill in this survey. Your email address is only shared if you explicitly fill it in, your IP addres is never sent.', 'autoptimize' ); ?></p>
                         <ul>
-                            <li><strong><?php _e( 'Plugin version', 'autoptimize' ); ?> </strong> <code id="ao_plugin_version"> <?php echo AUTOPTIMIZE_PLUGIN_VERSION ?> </code></li>
-                            <li><strong><?php _e( 'WordPress version', 'autoptimize' ); ?> </strong> <code id="core_version"> <?php echo $wp_version ?> </code></li>
-                            <li><strong><?php _e( 'Current website:', 'autoptimize' ); ?></strong> <code> <?php echo trailingslashit(get_site_url()) ?> </code></li>
+                            <li><strong><?php _e( 'Plugin version', 'autoptimize' ); ?> </strong> <code id="ao_plugin_version"> <?php echo AUTOPTIMIZE_PLUGIN_VERSION; ?> </code></li>
+                            <li><strong><?php _e( 'WordPress version', 'autoptimize' ); ?> </strong> <code id="core_version"> <?php echo $wp_version; ?> </code></li>
+                            <li><strong><?php _e( 'Current website:', 'autoptimize' ); ?></strong> <code> <?php echo trailingslashit( get_site_url() ); ?> </code></li>
                             <li><strong><?php _e( 'Uninstall reason', 'autoptimize' ); ?> </strong> <i> <?php _e( 'Selected reason from the above survey', 'autoptimize' ); ?> </i></li>
                         </ul>
                     </div>
@@ -117,5 +113,6 @@ class autoptimizeExitSurvey
                 </div><!--/.actions-->
             </div><!--/.popup--footer-->
         </div>
-<?php }
+        <?php
+    }
 }
