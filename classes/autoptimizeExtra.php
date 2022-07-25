@@ -513,6 +513,8 @@ class autoptimizeExtra
 
     public function options_page()
     {
+        // phpcs:disable Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace
+
         // Working with actual option values from the database here.
         // That way any saves are still processed as expected, but we can still
         // override behavior by using `new autoptimizeExtra($custom_options)` and not have that custom
