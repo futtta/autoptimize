@@ -1,7 +1,6 @@
 <?php
 /**
  * Multiple compatibility snippets to ensure important/ stubborn plugins work out of the box.
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +11,6 @@ class autoptimizeCompatibility
 {
     /**
      * Constructor.
-     *
      */
     public function __construct()
     {
@@ -24,7 +22,6 @@ class autoptimizeCompatibility
 
     /**
      * Runs multiple compatibility snippets to ensure important plugins work out of the box.
-     *
      */
     public function run()
     {
@@ -35,69 +32,89 @@ class autoptimizeCompatibility
 
         // Revslider; jQuery should not be deferred + exclude all revslider JS.
         if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && true == $this->inline_js_config_checker() && apply_filters( 'autoptimize_filter_compatibility_revslider_active', true ) ) {
-            add_filter( 'autoptimize_filter_js_exclude', function( $js_excl = '', $html = '' ) {
-                $revslider_excl = 'revslider, setREVStartSize, window.RSIW, window.RS_MODULES, jquery.min.js';
-                if ( ! empty( $html ) && false !== strpos( $html, '<rs-slides>' ) ) {
-                    if ( is_array( $js_excl ) ) {
-                        $js_excl = implode( ',', $js_excl );
-                    }
+            add_filter(
+                'autoptimize_filter_js_exclude',
+                function( $js_excl = '', $html = '' ) {
+                    $revslider_excl = 'revslider, setREVStartSize, window.RSIW, window.RS_MODULES, jquery.min.js';
+                    if ( ! empty( $html ) && false !== strpos( $html, '<rs-slides>' ) ) {
+                        if ( is_array( $js_excl ) ) {
+                            $js_excl = implode( ',', $js_excl );
+                        }
 
-                    $js_excl .= ',' . $revslider_excl;
-                }
-                return $js_excl;
-            }, 11, 2 );
+                        $js_excl .= ',' . $revslider_excl;
+                    }
+                    return $js_excl;
+                },
+                11,
+                2
+            );
         }
 
         // Revslider; remove revslider JS if no slides in HTML for non-logged in users.
         if ( defined( 'RS_REVISION' ) && $this->conf->get( 'autoptimize_js' ) && false === is_user_logged_in() && apply_filters( 'autoptimize_filter_compatibility_revslider_remover_active', true ) ) {
-            add_filter( 'autoptimize_filter_js_removables', function( $to_remove = '', $html = '' ) {
-                if ( ! empty( $html ) && false === strpos( $html, '<rs-slides>') ) {
-                    $to_remove .= 'plugins/revslider, setREVStartSize, window.RSIW, window.RS_MODULES';
-                }
+            add_filter(
+                'autoptimize_filter_js_removables',
+                function( $to_remove = '', $html = '' ) {
+                    if ( ! empty( $html ) && false === strpos( $html, '<rs-slides>' ) ) {
+                        $to_remove .= 'plugins/revslider, setREVStartSize, window.RSIW, window.RS_MODULES';
+                    }
 
-                return $to_remove;
-            }, 11, 2 );
+                    return $to_remove;
+                },
+                11,
+                2
+            );
         }
 
         // Exclude jQuery if inline JS is found that requires jQuery.
         if ( $this->inline_js_config_checker() && false === strpos( $this->conf->get( 'autoptimize_js_exclude' ), 'jquery.min.js' ) && apply_filters( 'autoptimize_filter_compatibility_inline_jquery', true ) ) {
-            add_filter( 'autoptimize_filter_js_exclude', function( $js_excl = '', $html = '' ) {
-                if ( ! empty( $html ) && preg_match( '/<script[^>]*>[^<]*(jQuery|\$)\([^<]*<\/script>/Usm', $html ) ) {
-                    if ( is_array( $js_excl ) ) {
-                        $js_excl = implode( ',', $js_excl );
-                    }
+            add_filter(
+                'autoptimize_filter_js_exclude',
+                function( $js_excl = '', $html = '' ) {
+                    if ( ! empty( $html ) && preg_match( '/<script[^>]*>[^<]*(jQuery|\$)\([^<]*<\/script>/Usm', $html ) ) {
+                        if ( is_array( $js_excl ) ) {
+                            $js_excl = implode( ',', $js_excl );
+                        }
 
-                    if ( false === strpos( $js_excl, 'jquery.min.js' ) ) {
-                        $js_excl .= ', jquery.min.js';
-                    }
+                        if ( false === strpos( $js_excl, 'jquery.min.js' ) ) {
+                            $js_excl .= ', jquery.min.js';
+                        }
 
-                    // also exclude jquery.js if for whatever reason that is still used.
-                    if ( false === strpos( $js_excl, 'jquery.js' ) ) {
-                        $js_excl .= ', jquery.js';
+                        // also exclude jquery.js if for whatever reason that is still used.
+                        if ( false === strpos( $js_excl, 'jquery.js' ) ) {
+                            $js_excl .= ', jquery.js';
+                        }
                     }
-                }
-                return $js_excl;
-            }, 12, 2 );
+                    return $js_excl;
+                },
+                12,
+                2
+            );
         }
 
         // Make JS-based Gutenberg blocks work OOTB.
         if ( $this->inline_js_config_checker() && apply_filters( 'autoptimize_filter_compatibility_gutenberg_js', true ) ) {
-            add_filter( 'autoptimize_filter_js_exclude', function( $js_excl = '', $html = '' ) {
-                if ( ! empty( $html ) && false !== strpos( $html, 'wp.i18n' ) || false !== strpos( $html, 'wp.apiFetch' ) || false !== strpos( $html, 'window.lodash' ) ) {
-                    if ( is_array( $js_excl ) ) {
-                        $js_excl = implode( ',', $js_excl );
-                    }
+            add_filter(
+                'autoptimize_filter_js_exclude',
+                function( $js_excl = '', $html = '' ) {
+                    if ( ! empty( $html ) && false !== strpos( $html, 'wp.i18n' ) || false !== strpos( $html, 'wp.apiFetch' ) || false !== strpos( $html, 'window.lodash' ) ) {
+                        if ( is_array( $js_excl ) ) {
+                            $js_excl = implode( ',', $js_excl );
+                        }
 
-                    if ( false === strpos( $js_excl, 'jquery.min.js' ) ) {
-                        $js_excl .= ', jquery.min.js';
-                    }
+                        if ( false === strpos( $js_excl, 'jquery.min.js' ) ) {
+                            $js_excl .= ', jquery.min.js';
+                        }
 
-                    if ( false === strpos( $js_excl, 'wp-includes/js/dist' ) ) {
-                        $js_excl .= ', wp-includes/js/dist';
+                        if ( false === strpos( $js_excl, 'wp-includes/js/dist' ) ) {
+                            $js_excl .= ', wp-includes/js/dist';
+                        }
                     }
-                }
-                return $js_excl;
-            }, 13, 2 );
+                    return $js_excl;
+                },
+                13,
+                2
+            );
         }
     }
 
