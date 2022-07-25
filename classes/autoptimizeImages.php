@@ -1174,6 +1174,9 @@ class autoptimizeImages
 
     public function imgopt_options_page()
     {
+        // phpcs:disable Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace
+        // phpcs:disable Generic.Formatting.DisallowMultipleStatements.SameLine
+
         // Check querystring for "refreshCacheChecker" and call cachechecker if so.
         if ( array_key_exists( 'refreshImgProvStats', $_GET ) && 1 == $_GET['refreshImgProvStats'] ) {
             $this->query_img_provider_stats( true );
