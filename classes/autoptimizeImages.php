@@ -61,7 +61,17 @@ class autoptimizeImages
 
             if ( null === $value['availabilities'] ) {
                 // We can't seem to check service availability, use mock result with imgopt status UP.
-                $_mock_settings          = array( 'extra_imgopt' => array( 'status' => 'up', 'hosts' => array( '1' => 'https://sp-ao.shortpixel.ai/' ) ), 'critcss' => array( 'status' => 'up' ) );
+                $_mock_settings = array(
+                    'extra_imgopt' => array(
+                        'status' => 'up',
+                        'hosts' => array(
+                            '1' => 'https://sp-ao.shortpixel.ai/',
+                        ),
+                    ),
+                    'critcss' => array(
+                        'status' => 'up',
+                    ),
+                );
                 $value['availabilities'] = $_mock_settings;
             }
         }
@@ -193,6 +203,10 @@ class autoptimizeImages
 
     /**
      * Disables core's native lazyload for images, not for iframes.
+     *
+     * @param bool   $flag      Incoming flag (mostly true).
+     * @param string $tag       Tag (img or iframe).
+     * @param string $context   Full context.
      *
      * @return bool
      */
@@ -546,7 +560,7 @@ class autoptimizeImages
             $height = 180;
         }
 
-        // make sure we're not trying to optimize a *.ico file
+        // make sure we're not trying to optimize a *.ico file.
         if ( strpos( $matches[1], '.ico' ) === false ) {
             return $this->replace_img_callback( $matches, $width, $height );
         } else {
@@ -580,7 +594,7 @@ class autoptimizeImages
         // extract img tags.
         if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
             foreach ( $matches[0] as $tag ) {
-                $tag = apply_filters( 'autoptimize_filter_imgopt_tag_preopt' , $tag );
+                $tag = apply_filters( 'autoptimize_filter_imgopt_tag_preopt', $tag );
 
                 $orig_tag = $tag;
                 $imgopt_w = '';
@@ -659,7 +673,7 @@ class autoptimizeImages
                     $tag = str_replace( '<img ', '<img decoding="async" ', $tag );
                 }
 
-                $tag = apply_filters( 'autoptimize_filter_imgopt_tag_postopt' , $tag );
+                $tag = apply_filters( 'autoptimize_filter_imgopt_tag_postopt', $tag );
 
                 // and add tag to array for later replacement.
                 if ( $tag !== $orig_tag ) {
@@ -721,8 +735,8 @@ class autoptimizeImages
 
         if ( ! empty( $metabox_preloads ) && is_array( $metabox_preloads ) && empty( $to_preload ) && false !== apply_filters( 'autoptimize_filter_imgopt_dopreloads', true ) ) {
             // the preload was not in an img tag, so adding a non-responsive preload instead.
-            foreach( $metabox_preloads as $img_preload ) {
-                $to_preload .= '<link rel="preload" href="' . $img_preload . '" as="image">' ;
+            foreach ( $metabox_preloads as $img_preload ) {
+                $to_preload .= '<link rel="preload" href="' . $img_preload . '" as="image">';
             }
         }
 
@@ -854,8 +868,8 @@ class autoptimizeImages
 
         if ( ! empty( $metabox_preloads ) && is_array( $metabox_preloads ) && empty( $to_preload ) && false !== apply_filters( 'autoptimize_filter_imgopt_dopreloads', true ) ) {
             // the preload was not in an img tag, so adding a non-responsive preload instead.
-            foreach( $metabox_preloads as $img_preload ) {
-                $to_preload .= '<link rel="preload" href="' . $img_preload . '" as="image">' ;
+            foreach ( $metabox_preloads as $img_preload ) {
+                $to_preload .= '<link rel="preload" href="' . $img_preload . '" as="image">';
             }
         }
 
@@ -921,7 +935,7 @@ class autoptimizeImages
     }
 
     public function add_lazyload_js_footer() {
-        if ( false === autoptimizeMain::should_buffer() || autoptimizeMain::is_amp_markup('') ) {
+        if ( false === autoptimizeMain::should_buffer() || autoptimizeMain::is_amp_markup( '' ) ) {
             return;
         }
 
@@ -933,7 +947,7 @@ class autoptimizeImages
 
         $_extra = autoptimizeOptionWrapper::get_option( 'autoptimize_extra_settings', '' );
         if ( is_array( $_extra ) && array_key_exists( 'autoptimize_extra_checkbox_field_0', $_extra ) && ! empty( $_extra['autoptimize_extra_checkbox_field_0'] ) ) {
-            // if "remove query strings" is active in "extra", then let's be consistant and not add one ourselves? :)
+            // if "remove query strings" is active in "extra", then let's be consistant and not add one ourselves :-) ?
             $lazysizes_js = plugins_url( 'external/js/lazysizes.min.js', __FILE__ );
         } else {
             $lazysizes_js = plugins_url( 'external/js/lazysizes.min.js?ao_version=' . AUTOPTIMIZE_PLUGIN_VERSION, __FILE__ );
@@ -971,7 +985,7 @@ class autoptimizeImages
 
         // and remove title, alt, class and id.
         $tag = preg_replace( '/ ((?:title|alt|class|id|loading)=".*")/Um', '', $tag );
-        if ( $tag !== str_replace( array(' title=', ' class=', ' alt=', ' id=' ), '', $tag ) ) {
+        if ( str_replace( array( ' title=', ' class=', ' alt=', ' id=' ), '', $tag ) !== $tag ) {
             // 2nd regex pass if still title/ class/ alt in case single quotes were used iso doubles.
             $tag = preg_replace( '/ ((?:title|alt|class|id|loading)=\'.*\')/Um', '', $tag );
         }
@@ -1367,10 +1381,13 @@ class autoptimizeImages
 
                 // add info on freshness + refresh link if status is not 2 (good shape).
                 if ( 2 != $_stat['Status'] ) {
-                    $_imgopt_stats_refresh_url = add_query_arg( array(
-                        'page'                => 'autoptimize_imgopt',
-                        'refreshImgProvStats' => '1',
-                    ), admin_url( 'options-general.php' ) );
+                    $_imgopt_stats_refresh_url = add_query_arg(
+                        array(
+                            'page'                => 'autoptimize_imgopt',
+                            'refreshImgProvStats' => '1',
+                        ),
+                        admin_url( 'options-general.php' )
+                    );
                     if ( $_stat && array_key_exists( 'timestamp', $_stat ) && ! empty( $_stat['timestamp'] ) ) {
                         $_imgopt_stats_last_run = __( 'based on status at ', 'autoptimize' ) . date_i18n( autoptimizeOptionWrapper::get_option( 'time_format' ), $_stat['timestamp'] );
                     } else {
@@ -1401,6 +1418,8 @@ class autoptimizeImages
 
     /**
      * Get img provider stats (used to display notice).
+     *
+     * @param bool $_refresh Should the stats be forcefully refreshed or not.
      */
     public function query_img_provider_stats( $_refresh = false ) {
         if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_1'] ) ) {
