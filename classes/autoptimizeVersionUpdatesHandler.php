@@ -58,7 +58,7 @@ class autoptimizeVersionUpdatesHandler
                 $major_update = true;
                 // No break, intentionally, so all upgrades are ran during a single request...
             case '2.8':
-                // nothing
+                // nothing.
             case '2.9':
                 if ( version_compare( autoptimizeOptionWrapper::get_option( 'autoptimize_version', 'none' ), '2.9.999', 'lt' ) ) {
                     $this->upgrade_from_2_9_before_compatibility();
@@ -262,7 +262,7 @@ class autoptimizeVersionUpdatesHandler
     }
 
     /**
-     * remove CCSS request limit option + update jquery exclusion to include WordPress 5.6 jquery.min.js.
+     * Remove CCSS request limit option + update jquery exclusion to include WordPress 5.6 jquery.min.js.
      */
     private function upgrade_from_2_7() {
         delete_option( 'autoptimize_ccss_rlimit' );
@@ -274,7 +274,7 @@ class autoptimizeVersionUpdatesHandler
     }
 
     /**
-     * set an option to indicate the AO installation predates the compatibility logic, this way we
+     * Set an option to indicate the AO installation predates the compatibility logic, this way we
      * can avoid adding compatibility code that is likely not needed and maybe not wanted as it
      * can introduce performance regressions.
      */
