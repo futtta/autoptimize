@@ -64,7 +64,7 @@ class autoptimizeConfig
             $this->settings_screen_do_remote_http = apply_filters( 'autoptimize_settingsscreen_remotehttp', $this->settings_screen_do_remote_http );
 
             if ( $this->is_ao_meta_settings_active() ) {
-                $metaBox = new autoptimizeMetabox();
+                $meta_box = new autoptimizeMetabox();
             }
         }
 
@@ -100,6 +100,8 @@ class autoptimizeConfig
 
     public function show_config()
     {
+        // phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
+        // phpcs:disable Generic.WhiteSpace.ScopeIndent.Incorrect
         $conf = self::instance();
         ?>
 <style>
@@ -435,7 +437,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             $details = ', ~' . $ao_cache_size . ' total';
         }
         // translators: Kilobytes + timestamp shown.
-        printf( __( '%1$s files, totalling %2$s (calculated at %3$s)', 'autoptimize' ), $ao_stat_arr[0], $ao_cache_size, date( 'H:i e', $ao_stat_arr[2] ) );
+        printf( __( '%1$s files, totalling %2$s (calculated at %3$s)', 'autoptimize' ), $ao_stat_arr[0], $ao_cache_size, date( 'H:i e', $ao_stat_arr[2] ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
     }
     ?>
 </td>
@@ -448,7 +450,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
 <table class="form-table">
     <tr valign="top">
     <th scope="row"><?php _e( 'Save aggregated script/css as static files?', 'autoptimize' ); ?></th>
-    <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_nogzip" <?php echo $conf->get( 'autoptimize_cache_nogzip') ? 'checked="checked" ' : ''; ?>/>
+    <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_nogzip" <?php echo $conf->get( 'autoptimize_cache_nogzip' ) ? 'checked="checked" ' : ''; ?>/>
     <?php _e( 'By default files saved are static css/js, uncheck this option if your webserver doesn\'t properly handle the compression and expiry.', 'autoptimize' ); ?></label></td>
     </tr>
     <?php
@@ -822,14 +824,14 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             'autoptimize_js_aggregate'                   => 0,
             'autoptimize_js_defer_not_aggregate'         => 1,
             'autoptimize_js_defer_inline'                => 1,
-            'autoptimize_js_exclude'                     => '', // 'wp-includes/js/dist/, wp-includes/js/tinymce/, js/jquery/jquery.min.js',
+            'autoptimize_js_exclude'                     => '',
             'autoptimize_js_trycatch'                    => 0,
             'autoptimize_js_justhead'                    => 0,
             'autoptimize_js_include_inline'              => 0,
             'autoptimize_js_forcehead'                   => 0,
             'autoptimize_css'                            => 0,
             'autoptimize_css_aggregate'                  => 0,
-            'autoptimize_css_exclude'                    => '', // admin-bar.min.css, dashicons.min.css, wp-content/cache/, wp-content/uploads/',
+            'autoptimize_css_exclude'                    => '',
             'autoptimize_css_justhead'                   => 0,
             'autoptimize_css_include_inline'             => 0,
             'autoptimize_css_defer'                      => 0,
@@ -1024,6 +1026,8 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     /**
      * Returns the post meta AO settings for reuse in different optimizers.
      *
+     * @param string $optim What optimization we need meta setting for.
+     *
      * @return bool
      */
     public static function get_post_meta_ao_settings( $optim ) {
@@ -1058,16 +1062,16 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         } else if ( array_key_exists( 'ao_post_optimize', $_meta_value ) && 'on' !== $_meta_value['ao_post_optimize'] ) {
             // ao entirely off for this page.
             return false;
-        } else if ( array_key_exists( $optim, $_meta_value ) && empty( $_meta_value[$optim] ) ) {
+        } else if ( array_key_exists( $optim, $_meta_value ) && empty( $_meta_value[ $optim ] ) ) {
             // sub-optimization off for this page.
             return false;
-        } else if ( array_key_exists( $optim, $_meta_value ) && 'on' === $_meta_value[$optim] ) {
+        } else if ( array_key_exists( $optim, $_meta_value ) && 'on' === $_meta_value[ $optim ] ) {
             // sub-optimization is explictly on.
             return true;
-        } else if ( array_key_exists( $optim, $_meta_value ) && in_array( $optim, array( 'ao_post_preload' ) ) && ! empty( $_meta_value[$optim] ) ) {
+        } else if ( array_key_exists( $optim, $_meta_value ) && in_array( $optim, array( 'ao_post_preload' ) ) && ! empty( $_meta_value[ $optim ] ) ) {
             // a non-bool metabox optimization (currently only preload field), return value instead of bool.
-            return $_meta_value[$optim];
-        } else if ( in_array( $optim, array( 'ao_post_preload' ) ) && ( ! array_key_exists( $optim, $_meta_value ) || empty( $_meta_value[$optim] ) ) ) {
+            return $_meta_value[ $optim ];
+        } else if ( in_array( $optim, array( 'ao_post_preload' ) ) && ( ! array_key_exists( $optim, $_meta_value ) || empty( $_meta_value[ $optim ] ) ) ) {
             // a non-bool metabox optimization not found or empty, so returning false.
             return false;
         } else {
