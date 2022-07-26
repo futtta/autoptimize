@@ -159,10 +159,10 @@ class autoptimizeCriticalCSSBase {
     /**
      * Log a message via CCSS Core object
      *
-     * @param string $msg
-     * @param int $lvl
+     * @param string $msg Message to log.
+     * @param int    $lvl Loglevel.
      *
-     * @return void
+     * @return empty
      */
     public function log( $msg, $lvl ) {
         return $this->_core->ao_ccss_log( $msg, $lvl );
@@ -180,7 +180,7 @@ class autoptimizeCriticalCSSBase {
     /**
      * Check CCSS contents from Core object
      *
-     * @param string $ccss
+     * @param string $ccss Critical CSS to be checked.
      *
      * @return bool
      */
@@ -191,7 +191,7 @@ class autoptimizeCriticalCSSBase {
     /**
      * Get key status from Core object
      *
-     * @param bool $render
+     * @param bool $render Indicates if key status is to be rendered.
      *
      * @return array
      */
@@ -210,6 +210,10 @@ class autoptimizeCriticalCSSBase {
 
     /**
      * Run enqueue in CCSS Enqueue object
+     *
+     * @param string $hash Hash (default empty).
+     * @param string $path Path (default empty).
+     * @param string $type (default is_page).
      */
     public function enqueue( $hash = '', $path = '', $type = 'is_page' ) {
         // Enqueue is sometimes required on wp-admin requests, load it just-in-time.
@@ -230,7 +234,7 @@ class autoptimizeCriticalCSSBase {
     /**
      * Get a Critical CSS option
      *
-     * @param string $name The option name
+     * @param string $name The option name.
      *
      * @return mixed
      */
@@ -355,7 +359,7 @@ class autoptimizeCriticalCSSBase {
         // Attach interval to schedule.
         $schedules['ao_ccss'] = array(
             'interval' => $intsec,
-            'display'  => __( 'Every ' . $inttxt . ' (Autoptimize Crit. CSS)' ),
+            'display'  => sprintf( __( 'Every %s (Autoptimize Crit. CSS)', 'autoptimize' ), $inttxt ),
         );
         return $schedules;
     }
@@ -363,7 +367,7 @@ class autoptimizeCriticalCSSBase {
     public function create_ao_ccss_dir() {
         // Make sure dir to write ao_ccss exists and is writable.
         if ( ! is_dir( AO_CCSS_DIR ) ) {
-            // TODO: use wp_mkdir_p()
+            // TODO: use wp_mkdir_p() ?
             $mkdirresp = @mkdir( AO_CCSS_DIR, 0775, true ); // @codingStandardsIgnoreLine
         } else {
             $mkdirresp = true;
@@ -403,7 +407,7 @@ class autoptimizeCriticalCSSBase {
     /**
      * Helper function to determine if a rule is MANUAL.
      *
-     * @param array $rule
+     * @param array $rule Rule to check.
      *
      * @return bool
      */
@@ -418,12 +422,11 @@ class autoptimizeCriticalCSSBase {
     /**
      * Scheduled action to check an inactive key. Not part of autoptimizeCriticalCSSCron.php
      * to allow us to only load the main cron logic if we have an active key to begin with.
-     *
      */
     public function ao_ccss_check_key() {
         $ao_ccss_key = $this->get_option( 'key' );
         $_result = $this->_core->ao_ccss_key_validation( $ao_ccss_key );
-        $_resmsg = ( true === $_result) ? 'ok' : 'nok';
+        $_resmsg = ( true === $_result ) ? 'ok' : 'nok';
         $this->log( 'Inactive key checked, result was ' . $_resmsg, 3 );
     }
 }

@@ -22,13 +22,13 @@ class autoptimizeCriticalCSSEnqueue {
         // ... which are not the ones below.
         if ( 'nokey' == $key['status'] || 'invalid' == $key['status'] ) {
             $enqueue = false;
-            $this->criticalcss->log( "Job queuing is not available: no valid API key found.", 3 );
+            $this->criticalcss->log( 'Job queuing is not available: no valid API key found.', 3 );
         } elseif ( ! empty( $hash ) && ( is_user_logged_in() || is_feed() || is_404() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $this->ao_ccss_ua() || false === apply_filters( 'autoptimize_filter_ccss_enqueue_should_enqueue', true ) ) ) {
             $enqueue = false;
-            $this->criticalcss->log( "Job queuing is not available for WordPress's logged in users, feeds, error pages, ajax calls or calls from criticalcss.com itself.", 3 );
+            $this->criticalcss->log( 'Job queuing is not available for WordPress\'s logged in users, feeds, error pages, ajax calls or calls from criticalcss.com itself.', 3 );
         } elseif ( empty( $hash ) && empty( $path ) || ( ( 'is_single' !== $type ) && ( 'is_page' !== $type ) ) ) {
             $enqueue = false;
-            $this->criticalcss->log( "Forced job queuing failed, no path or not right type", 3 );
+            $this->criticalcss->log( 'Forced job queuing failed, no path or not right type', 3 );
         }
 
         if ( ! $enqueue ) {
@@ -48,7 +48,7 @@ class autoptimizeCriticalCSSEnqueue {
             $req_type = $this->ao_ccss_get_type();
         } elseif ( ! empty( $path ) ) {
             $req_orig = $path;
-            if ( $path === '/' ) {
+            if ( '/' === $path ) {
                 $req_type = 'is_front_page';
             } else {
                 $req_type = $type;
@@ -63,7 +63,7 @@ class autoptimizeCriticalCSSEnqueue {
         if ( apply_filters( 'autoptimize_filter_ccss_coreenqueue_honor_lang', false ) && strpos( $req_orig, 'lang=' ) !== false ) {
             $req_params = strtok( '?' );
             parse_str( $req_params, $req_params_arr );
-            if ( array_key_exists( 'lang', $req_params_arr ) && !empty( $req_params_arr['lang'] ) ) {
+            if ( array_key_exists( 'lang', $req_params_arr ) && ! empty( $req_params_arr['lang'] ) ) {
                 $req_path .= '?lang=' . $req_params_arr['lang'];
             }
         }
@@ -128,7 +128,7 @@ class autoptimizeCriticalCSSEnqueue {
             // Should we switch to path-base AUTO-rules? Conditions:
             // 1. forcepath option has to be enabled (off by default)
             // 2. request type should be (by default, but filterable) one of is_page (removed for now: woo_is_product or woo_is_product_category).
-            if ( ( $forcepath && in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) ) || apply_filters( 'autoptimize_filter_ccss_coreenqueue_ignorealltypes', false ) || empty( $hash )) {
+            if ( ( $forcepath && in_array( $req_type, apply_filters( 'autoptimize_filter_ccss_coreenqueue_forcepathfortype', array( 'is_page' ) ) ) ) || apply_filters( 'autoptimize_filter_ccss_coreenqueue_ignorealltypes', false ) || empty( $hash ) ) {
                 if ( '/' !== $req_path ) {
                     $target_rule = 'paths|' . $req_path;
                 } else {

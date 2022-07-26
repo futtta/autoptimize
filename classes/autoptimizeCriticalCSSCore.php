@@ -9,6 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class autoptimizeCriticalCSSCore {
+    /**
+     * Critical CSS page types.
+     *
+     * @var array
+     */
     protected $_types = null;
 
     public function __construct() {
@@ -277,7 +282,8 @@ class autoptimizeCriticalCSSCore {
                     'bbp_is_topics_created',
                     'bbp_is_user_home',
                     'bbp_is_user_home_edit',
-                ), $this->_types
+                ),
+                $this->_types
             );
         }
 
@@ -319,7 +325,8 @@ class autoptimizeCriticalCSSCore {
                     'bp_is_user',
                     'bp_is_user_profile',
                     'bp_is_wire',
-                ), $this->_types
+                ),
+                $this->_types
             );
         }
 
@@ -331,7 +338,8 @@ class autoptimizeCriticalCSSCore {
                     'edd_is_failed_transaction_page',
                     'edd_is_purchase_history_page',
                     'edd_is_success_page',
-                ), $this->_types
+                ),
+                $this->_types
             );
         }
 
@@ -348,7 +356,8 @@ class autoptimizeCriticalCSSCore {
                     'woo_is_shop',
                     'woo_is_wc_endpoint_url',
                     'woo_is_woocommerce',
-                ), $this->_types
+                ),
+                $this->_types
             );
         }
     }
@@ -457,15 +466,19 @@ class autoptimizeCriticalCSSCore {
         // Prepare the request.
         $url  = esc_url_raw( AO_CCSS_API . 'generate' );
         $args = array(
-            'headers' => apply_filters( 'autoptimize_ccss_cron_api_generate_headers', array(
-                'User-Agent'    => 'Autoptimize v' . AO_CCSS_VER,
-                'Content-type'  => 'application/json; charset=utf-8',
-                'Authorization' => 'JWT ' . $key,
-                'Connection'    => 'close',
-            ) ),
+            'headers' => apply_filters(
+                'autoptimize_ccss_cron_api_generate_headers',
+                array(
+                    'User-Agent'    => 'Autoptimize v' . AO_CCSS_VER,
+                    'Content-type'  => 'application/json; charset=utf-8',
+                    'Authorization' => 'JWT ' . $key,
+                    'Connection'    => 'close',
+                )
+            ),
             // Body must be JSON.
             'body'    => json_encode(
-                apply_filters( 'autoptimize_ccss_cron_api_generate_body',
+                apply_filters(
+                    'autoptimize_ccss_cron_api_generate_body',
                     array(
                         'url'    => $src_url,
                         'aff'    => 1,
@@ -600,7 +613,7 @@ class autoptimizeCriticalCSSCore {
         if ( $level ) {
 
             // Prepare message.
-            $message = date( 'c' ) . ' - [' . $level . '] ' . htmlentities( $msg ) . '<br>';
+            $message = date( 'c' ) . ' - [' . $level . '] ' . htmlentities( $msg ) . '<br>'; // @codingStandardsIgnoreLine
 
             // Write message to log file.
             error_log( $message, 3, AO_CCSS_LOG );

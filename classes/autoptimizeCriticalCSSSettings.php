@@ -160,10 +160,10 @@ class autoptimizeCriticalCSSSettings {
                 if ( ! empty( $ao_ccss_key ) && ! $ao_css_defer && empty( $ao_ccss_keyst ) ) {
                         // no keystate so likely in activation-process of CCSS, let's enable "inline & defer CSS" immediately to make things easier!
                         autoptimizeOptionWrapper::update_option( 'autoptimize_css_defer', 'on' );
-                        ?>
+                    ?>
                         <div class="notice-info notice"><p>
                         <?php
-                        _e( "The \"Eliminate render-blocking CSS\" option was activated to allow critical CSS to be used.", 'autoptimize' );
+                        _e( 'The "Eliminate render-blocking CSS" option was activated to allow critical CSS to be used.', 'autoptimize' );
                         ?>
                         </p></div>
                         <?php
@@ -266,8 +266,8 @@ class autoptimizeCriticalCSSSettings {
                 }
 
                 // warn if too many rules (based on length of ao_ccss_rules option) as that might cause issues at e.g. wpengine
-                // see https://wpengine.com/support/database-optimization-best-practices/#Autoloaded_Data
-                $_raw_rules_length = strlen( get_option( 'autoptimize_ccss_rules', '') );
+                // see https://wpengine.com/support/database-optimization-best-practices/#Autoloaded_Data .
+                $_raw_rules_length = strlen( get_option( 'autoptimize_ccss_rules', '' ) );
                 if ( $_raw_rules_length > apply_filters( 'autoptimize_ccss_rules_length_warning', 500000 ) ) {
                     ?>
                     <div class="notice-warning notice"><p>
@@ -331,7 +331,7 @@ class autoptimizeCriticalCSSSettings {
                             echo '<input class="hidden" name="autoptimize_ccss_debug" value="' . esc_attr( $ao_ccss_debug ) . '">';
                             echo '<input class="hidden" name="autoptimize_ccss_noptimize" value="' . esc_attr( $ao_ccss_noptimize ) . '">';
                             echo '<input class="hidden" name="autoptimize_css_defer_inline" value="' . esc_attr( $ao_css_defer_inline ) . '">';
-                            echo '<input class="hidden" name="autoptimize_ccss_loggedin" value="' . esc_attr( $ao_ccss_loggedin ). '">';
+                            echo '<input class="hidden" name="autoptimize_ccss_loggedin" value="' . esc_attr( $ao_ccss_loggedin ) . '">';
                             echo '<input class="hidden" name="autoptimize_ccss_forcepath" value="' . esc_attr( $ao_ccss_forcepath ) . '">';
                             echo '<input class="hidden" name="autoptimize_ccss_domain" id="autoptimize_ccss_domain" value="' . esc_attr( $ao_ccss_domain ) . '">';
                         }
@@ -357,7 +357,7 @@ class autoptimizeCriticalCSSSettings {
                     });
                 }
                 </script>
-                <form id="importSettingsForm"<?php if ( $this->is_multisite_network_admin() ) { echo ' class="hidden"'; } ?>>
+                <form id="importSettingsForm"<?php if ( $this->is_multisite_network_admin() ) { echo ' class="hidden"'; } // @codingStandardsIgnoreLine ?>>
                     <span id="exportSettings" class="button-secondary"><?php _e( 'Export Settings', 'autoptimize' ); ?></span>
                     <input class="button-secondary" id="importSettings" type="button" value="<?php _e( 'Import Settings', 'autoptimize' ); ?>" onclick="upload();return false;" />
                     <input class="button-secondary" id="settingsfile" name="settingsfile" type="file" />
@@ -369,14 +369,14 @@ class autoptimizeCriticalCSSSettings {
         if ( ! $this->is_multisite_network_admin() ) {
             // Include debug panel if debug mode is enable.
             if ( $ao_ccss_debug ) {
-            ?>
+                ?>
                 <div id="debug">
                     <?php
                     // Include debug panel.
                     include( 'critcss-inc/admin_settings_debug.php' );
                     ?>
                 </div><!-- /#debug -->
-            <?php
+                <?php
             }
             echo '<script>';
             include( 'critcss-inc/admin_settings_rules.js.php' );
