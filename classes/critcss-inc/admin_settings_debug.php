@@ -7,26 +7,32 @@
 global $wpdb;
 
 // Query AO's options.
-$ao_options = $wpdb->get_results('
-  SELECT option_name  AS name,
-         option_value AS value
-  FROM ' . $wpdb->options . '
-  WHERE option_name LIKE "autoptimize_%%"
-  ORDER BY name
-', ARRAY_A);
+$ao_options = $wpdb->get_results(
+    '
+    SELECT option_name  AS name,
+    option_value AS value
+    FROM ' . $wpdb->options . '
+    WHERE option_name LIKE "autoptimize_%%"
+    ORDER BY name
+    ',
+    ARRAY_A
+);
 
 // Query AO's transients.
-$ao_trans = $wpdb->get_results('
-  SELECT option_name  AS name,
-         option_value AS value
-  FROM ' . $wpdb->options . '
-  WHERE option_name LIKE "_transient_autoptimize_%%"
-     OR option_name LIKE "_transient_timeout_autoptimize_%%"
-', ARRAY_A);
+$ao_trans = $wpdb->get_results(
+    '
+    SELECT option_name  AS name,
+    option_value AS value
+    FROM ' . $wpdb->options . '
+    WHERE option_name LIKE "_transient_autoptimize_%%"
+    OR option_name LIKE "_transient_timeout_autoptimize_%%"
+    ',
+    ARRAY_A
+);
 
 // Render debug panel if there's something to show.
 if ( $ao_options || $ao_trans ) {
-?>
+    ?>
 <!-- BEGIN: Settings Debug -->
 <ul>
     <li class="itemDetail">
@@ -35,12 +41,12 @@ if ( $ao_options || $ao_trans ) {
         <?php
         // Render options.
         if ( $ao_options ) {
-        ?>
+            ?>
             <h4><?php _e( 'Options', 'autoptimize' ); ?>:</h4>
             <table class="form-table debug">
             <?php
             foreach ( $ao_options as $option ) {
-            ?>
+                ?>
                 <tr>
                     <th scope="row">
                         <?php echo $option['name']; ?>
@@ -60,7 +66,7 @@ if ( $ao_options || $ao_trans ) {
                         ?>
                     </td>
                 </tr>
-            <?php
+                <?php
             }
             ?>
             </table>
@@ -77,5 +83,5 @@ if ( $ao_options || $ao_trans ) {
     </li>
 </ul>
 <!-- END: Settings Debug -->
-<?php
+    <?php
 }

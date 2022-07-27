@@ -57,12 +57,12 @@ function drawTable(critCssArray) {
             filest=nv.file;
             auto_style = '';
             <?php
-                $criticalcss = new autoptimizeCriticalCSSBase();
-                if ( $criticalcss->is_api_active() ){
-                    ?>api_active = 1;<?php
-                } else {
-                    ?>api_active = 0;<?php
-                }
+            $criticalcss = new autoptimizeCriticalCSSBase();
+            if ( $criticalcss->is_api_active() ) {
+                echo 'api_active = 1;' . "\n";
+            } else {
+                echo 'api_active = 0;' . "\n";
+            }
             ?>
             if (file == 0) {
                 file='<?php _e( 'To be fetched from criticalcss.com in the next queue run...', 'autoptimize' ); ?>';
@@ -100,22 +100,22 @@ function drawTable(critCssArray) {
         // R rules were found, show a notice!
         // and add some JS magic to ensure the notice works as a notice, but is shown inline 
         // in the rules panel instead of in the notice area where it would be too prominent.
-        <?php 
+        <?php
         $_ao_ccss_review_notice_id   = 'autoptimize-ccss-review-rules-notice-30';
         // Translators: before the 1st word a number + a space will be displayed, as in e.g. "2 of above rules".
-        $_ao_ccss_review_notice_copy = __('of the above rules got flagged by criticalcss.com as to be reviewed. This is often due to font-related issues which can be safely ignored, but you can log in to your account at https://criticalcss.com and compare screenshots for rules by clicking the red exclamation mark to confirm if all is OK.', 'autoptimize');
+        $_ao_ccss_review_notice_copy = __( 'of the above rules got flagged by criticalcss.com as to be reviewed. This is often due to font-related issues which can be safely ignored, but you can log in to your account at https://criticalcss.com and compare screenshots for rules by clicking the red exclamation mark to confirm if all is OK.', 'autoptimize' );
         if ( PAnD::is_admin_notice_active( $_ao_ccss_review_notice_id ) ) {
-        ?>
+            ?>
             jQuery("#rules-notices").append( "&nbsp;<div class='rnotice notice notice-info is-dismissible hidden' data-dismissible='<?php echo $_ao_ccss_review_notice_id; ?>'><p>" + rnotice + " <?php echo $_ao_ccss_review_notice_copy; ?>" + "</p></div>");
             jQuery( document ).ready(function() {
                 jQuery("div.rnotice").detach().appendTo('#rules-notices');
                 jQuery("div.rnotice").show();
             });
-        <?php
+            <?php
         } else if ( $ao_ccss_debug ) {
-        ?>
+            ?>
             console.log( "Autoptimize: " + rnotice + " <?php echo $_ao_ccss_review_notice_copy; ?>" );
-        <?php
+            <?php
         }
         ?>
     }
@@ -403,7 +403,7 @@ function updateAfterChange() {
     <?php
     // autosave rules is on by default, but can be disabled with a filter.
     if ( apply_filters( 'autoptimize_filter_ccss_settings_rules_autosave', true ) ) {
-    ?>
+        ?>
     var data = {
         'action': 'ao_ccss_saverules',
         'ao_ccss_saverules_nonce': '<?php echo wp_create_nonce( 'ao_ccss_saverules_nonce' ); ?>',

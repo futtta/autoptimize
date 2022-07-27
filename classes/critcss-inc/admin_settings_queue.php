@@ -17,7 +17,7 @@ function ao_ccss_render_queue() {
     } else {
         $ao_ccss_queue = json_encode( $ao_ccss_queue );
     }
-?>
+    ?>
 
     <ul id="queue-panel">
         <li class="itemDetail">
@@ -92,5 +92,5 @@ function ao_ccss_render_queue() {
             <!-- END Queue UI -->
         </li>
     </ul>
-<?php
+    <?php
 }

@@ -59,5 +59,5 @@ function ao_ccss_render_key( $key, $status, $status_msg, $message, $color ) {
             </div>
         </li>
     </ul>
-<?php
+    <?php
 }

@@ -26,7 +26,7 @@ function ao_ccss_render_adv() {
 
     // Get viewport size.
     $viewport = $criticalcss->viewport();
-?>
+    ?>
     <ul id="adv-panel">
         <li class="itemDetail">
             <h2 class="itemTitle fleft"><?php _e( 'Advanced Settings', 'autoptimize' ); ?></h2>
