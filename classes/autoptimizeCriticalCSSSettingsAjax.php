@@ -88,11 +88,13 @@ class autoptimizeCriticalCSSSettingsAjax {
                 $status      = file_put_contents( $critcssfile, $critcsscontents, LOCK_EX );
                 // Or set as error.
             } else {
-                $error = true;
+                $error       = true;
+                $critcssfile = 'CCSS content not acceptable.';
             }
             // Or just set an error.
         } else {
-            $error = true;
+            $error       = true;
+            $critcssfile = 'Not allowed or problem with CCSS filename.';
         }
 
         // Prepare response.
@@ -104,7 +106,7 @@ class autoptimizeCriticalCSSSettingsAjax {
             if ( $critcssfile ) {
                 $response['string'] = 'File ' . $critcssfile . ' saved.';
             } else {
-                $response['string'] = 'Empty content do not need to be saved.';
+                $response['string'] = 'Empty content does not need to be saved.';
             }
         }
 
