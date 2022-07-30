@@ -9,7 +9,7 @@
 function ao_ccss_render_rules() {
     // Attach required arrays.
     $criticalcss = autoptimize()->criticalcss();
-    $ao_ccss_rules = $criticalcss->get_option( 'rules' );
+    $ao_ccss_rules = sanitize_rules( $criticalcss->get_option( 'rules' ) );
     $ao_ccss_types = $criticalcss->get_types();
 
     if ( empty( $ao_ccss_types ) || ! is_array( $ao_ccss_types ) ) {
@@ -205,5 +205,25 @@ function ao_ccss_render_rules() {
         </li>
     </ul>
     <?php
+}
+
+/**
+ * Sanitize rules before rendering.
+ *
+ * @param array $rules Array with rules to be sanitized.
+ */
+function sanitize_rules( $rules ) {
+    if ( array_key_exists( 'paths', $rules ) ) {
+        foreach ( $rules['paths'] as $key => $value ) {
+            if ( 0 === $value['hash'] ) {
+                $newkey = str_replace( array( '"', "'", '<', '>' ), array( '%22', '%27', '%3C', '%3E' ), $key );
+                if ( $newkey !== $key ) {
+                    unset( $rules['paths'][ $key ] );
+                    $rules['paths'][ $newkey ] = $value;
+                }
+            }
+        }
+    }
+    return $rules;
 }
 ?>
