@@ -84,7 +84,17 @@ function drawTable(critCssArray) {
                 }
             }
             if ( k == "paths" ) {
-                target = '<a href="<?php echo AUTOPTIMIZE_WP_SITE_URL; ?>' + i + '" target="_blank">' + i + '</a>';
+                <?php
+                if ( apply_filters( 'autoptimize_filter_ccss_paths_clickable', true ) ) {
+                    ?>
+                    target = '<a href="<?php echo AUTOPTIMIZE_WP_SITE_URL; ?>' + i + '" target="_blank">' + i + '</a>';
+                    <?php
+                } else {
+                    ?>
+                    target = i;
+                    <?php
+                }
+                ?>
             } else {
                 target = i.replace(/(woo_|template_|custom_post_|edd_|bp_|bbp_)/,'');
             }

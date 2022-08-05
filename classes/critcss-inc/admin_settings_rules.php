@@ -213,12 +213,14 @@ function ao_ccss_render_rules() {
  * @param array $rules Array with rules to be sanitized.
  */
 function sanitize_rules( $rules ) {
-    if ( array_key_exists( 'paths', $rules ) ) {
-        foreach ( $rules['paths'] as $key => $value ) {
-            $newkey = str_replace( array( '"', "'", '<', '>' ), array( '%22', '%27', '%3C', '%3E' ), $key );
-            if ( $newkey !== $key ) {
-                unset( $rules['paths'][ $key ] );
-                $rules['paths'][ $newkey ] = $value;
+    if ( apply_filters( 'autoptimize_filter_ccss_paths_clickable', true ) ) {
+        if ( array_key_exists( 'paths', $rules ) ) {
+            foreach ( $rules['paths'] as $key => $value ) {
+                $newkey = esc_url( $key );
+                if ( $newkey !== $key ) {
+                    unset( $rules['paths'][ $key ] );
+                    $rules['paths'][ $newkey ] = $value;
+                }
             }
         }
     }
