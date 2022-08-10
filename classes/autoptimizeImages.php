@@ -1220,12 +1220,12 @@ class autoptimizeImages
     <form id='ao_settings_form' action='<?php echo admin_url( 'options.php' ); ?>' method='post'>
         <?php settings_fields( 'autoptimize_imgopt_settings' ); ?>
         <h2><?php _e( 'Image optimization', 'autoptimize' ); ?></h2>
-        <span id='autoptimize_imgopt_descr'><?php _e( 'Make your site significantly faster by just ticking a couple of checkboxes to optimize and lazy load your images, WebP and AVIF support included!', 'autoptimize' ); ?></span>
+        <span id='autoptimize_imgopt_descr'><?php echo apply_filters( 'autoptimize_filter_imgopt_intro_copy', __( 'Make your site significantly faster by just ticking a couple of checkboxes to optimize and lazy load your images, modern image format support included!', 'autoptimize' ) ); ?></span>
         <table class="form-table">
             <tr>
                 <th scope="row"><?php _e( 'Optimize Images', 'autoptimize' ); ?></th>
                 <td>
-                    <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_1]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_1'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Optimize images on the fly and serve them from Shortpixel\'s global CDN.', 'autoptimize' ); ?></label>
+                    <label><input id='autoptimize_imgopt_checkbox' type='checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_1]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_1'] ) { echo 'checked="checked"'; } ?> value='1'><?php echo apply_filters( 'autoptimize_filter_imgopt_main_setting_copy', __( 'Optimize images on the fly and serve them from Shortpixel\'s global CDN.', 'autoptimize' ) ); ?></label>
                     <?php
                     // show shortpixel status.
                     $_notice = autoptimizeImages::instance()->get_imgopt_status_notice();
@@ -1255,14 +1255,14 @@ class autoptimizeImages
                             // translators: link points to shortpixel.
                             $upsell_msg_2 = sprintf( __( '%1$sSign-up now%2$s to receive x2 more CDN traffic or image optimization credits for free! This offer also applies to any future plan that you\'ll choose to purchase.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
                         }
-                        echo apply_filters( 'autoptimize_imgopt_imgopt_settings_copy', $upsell_msg_1 . ' ' . $upsell_msg_2 . '</p>' );
+                        echo apply_filters( 'autoptimize_filter_imgopt_settings_copy', $upsell_msg_1 . ' ' . $upsell_msg_2 . '</p>' );
                     }
                     // translators: link points to shortpixel FAQ.
                     $faqcopy = sprintf( __( '<strong>Questions</strong>? Have a look at the %1$sAutoptimize + ShortPixel FAQ%2$s!', 'autoptimize' ), '<strong><a href="https://help.shortpixel.com/category/405-autoptimize" target="_blank">', '</strong></a>' );
                     $faqcopy = $faqcopy . ' ' . __( 'Only works for websites and images that are publicly available.', 'autoptimize' );
                     // translators: links points to shortpixel TOS & Privacy Policy.
                     $toscopy = sprintf( __( 'Usage of this feature is subject to Shortpixel\'s %1$sTerms of Use%2$s and %3$sPrivacy policy%4$s.', 'autoptimize' ), '<a href="https://shortpixel.com/tos' . $sp_url_suffix . '" target="_blank">', '</a>', '<a href="https://shortpixel.com/pp' . $sp_url_suffix . '" target="_blank">', '</a>' );
-                    echo apply_filters( 'autoptimize_imgopt_imgopt_settings_tos', '<p>' . $faqcopy . ' ' . $toscopy . '</p>' );
+                    echo apply_filters( 'autoptimize_filter_imgopt_settings_tos', '<p>' . $faqcopy . ' ' . $toscopy . '</p>' );
                     ?>
                 </td>
             </tr>
@@ -1295,17 +1295,27 @@ class autoptimizeImages
                     <p>
                         <?php
                             // translators: link points to shortpixel image test page.
-                            echo apply_filters( 'autoptimize_imgopt_imgopt_quality_copy', sprintf( __( 'You can %1$stest compression levels here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/oic' . $sp_url_suffix . '" target="_blank">', '</a>' ) );
+                            echo apply_filters( 'autoptimize_filter_imgopt_quality_copy', sprintf( __( 'You can %1$stest compression levels here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/oic' . $sp_url_suffix . '" target="_blank">', '</a>' ) );
                         ?>
                     </p>
                 </td>
             </tr>
-            <tr id='autoptimize_imgopt_ngimg' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
-                <th scope="row"><?php _e( 'Load AVIF in supported browsers?', 'autoptimize' ); ?></th>
-                <td>
-                    <label><input type='checkbox' id='autoptimize_imgopt_ngimg_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_4'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Automatically serve AVIF image format to any browser that supports it.', 'autoptimize' ); ?></label>
-                </td>
-            </tr>
+            <?php
+            if ( apply_filters( 'autoptimize_filter_imgopt_settings_show_avif', true ) ) {
+                ?>
+                <tr id='autoptimize_imgopt_ngimg' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
+                    <th scope="row"><?php _e( 'Load AVIF in supported browsers?', 'autoptimize' ); ?></th>
+                    <td>
+                        <label><input type='checkbox' id='autoptimize_imgopt_ngimg_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_4'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Automatically serve AVIF image format to any browser that supports it.', 'autoptimize' ); ?></label>
+                    </td>
+                </tr>
+                <?php
+            } else {
+                ?>
+                <input type='hidden' id='autoptimize_imgopt_ngimg_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' value='0'>
+                <?php
+            }
+            ?>
             <tr>
                 <th scope="row"><?php _e( 'Lazy-load images?', 'autoptimize' ); ?></th>
                 <td>
@@ -1356,7 +1366,7 @@ class autoptimizeImages
      * Ïmg opt status as used on dashboard.
      */
     public function get_imgopt_status_notice() {
-        if ( $this->imgopt_active() ) {
+        if ( $this->imgopt_active() && apply_filters( 'autoptimize_filter_imgopt_status_shortpixel', true ) ) {
             $_imgopt_notice  = '';
             $_stat           = autoptimizeOptionWrapper::get_option( 'autoptimize_imgopt_provider_stat', '' );
             $_site_host      = AUTOPTIMIZE_SITE_DOMAIN;
@@ -1425,7 +1435,7 @@ class autoptimizeImages
      * @param bool $_refresh Should the stats be forcefully refreshed or not.
      */
     public function query_img_provider_stats( $_refresh = false ) {
-        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_1'] ) ) {
+        if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_1'] ) && apply_filters( 'autoptimize_filter_imgopt_status_shortpixel', true ) ) {
             $url      = '';
             $stat_dom = 'https://no-cdn.shortpixel.ai/';
             $endpoint = $stat_dom . 'read-domain/';
