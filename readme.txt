@@ -316,8 +316,9 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 3.1.1 =
-* security: further improvements to critical CSS settings page
-* some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta)
+* security: further improvements to critical CSS settings page.
+* images: when optimizing images and lazyloading by default do not set an LQIP (low quality image placeholder), can be re-enabled with a filter. 
+* some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 3.1.0 =
 * new HTML sub-option: "minify inline CSS/ JS" (off by default).
