@@ -2679,6 +2679,8 @@ MARKUP;
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '1';
         $opts['autoptimize_imgopt_number_field_7']   = '1';
+        
+        add_filter( 'autoptimize_filter_imgopt_lazyload_dolqip', '__return_true');
 
         $markup = <<<MARKUP
 <picture><source srcset="$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><img src="$siteurl/wp-content/image.jpg"/></picture>
@@ -2706,6 +2708,8 @@ MARKUP;
         $opts                                        = autoptimizeImages::fetch_options();
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '1';
+        
+        add_filter( 'autoptimize_filter_imgopt_lazyload_dolqip', '__return_true');
 
         $markup = <<<MARKUP
 <img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
