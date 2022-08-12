@@ -316,8 +316,8 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 3.1.1 =
-* security: further improvements to critical CSS settings page.
-* images: when optimizing images and lazyloading by default do not set an LQIP (low quality image placeholder), can be re-enabled with a filter. 
+* images: when optimizing images and lazyloading is on, then by default do not set an LQIP (low quality image placeholder) any more (reason: it might *look* nice but it comes with a small-ish perf. penalty). This can be re-enabled by returning true to the `autoptimize_filter_imgopt_lazyload_dolqip` filter.
+* security: further improvements to critical CSS settings page (again with the great assistance of WPScan Security).
 * some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 3.1.0 =
