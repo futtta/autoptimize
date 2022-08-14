@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
