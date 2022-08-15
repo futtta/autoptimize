@@ -76,7 +76,7 @@ function autoptimize_autoload( $class_name ) {
     }
 
     // If we didn't match one of our rules, bail!
-    if ( ! isset( $filepath ) ) {
+    if ( ! isset( $filepath ) || ! is_readable( $filepath ) ) {
         return;
     }
 
