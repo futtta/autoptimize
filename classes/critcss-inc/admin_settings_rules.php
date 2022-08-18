@@ -8,7 +8,7 @@
  */
 function ao_ccss_render_rules() {
     // Attach required arrays.
-    $criticalcss = autoptimize()->criticalcss();
+    $criticalcss   = autoptimize()->criticalcss();
     $ao_ccss_rules = sanitize_rules( $criticalcss->get_option( 'rules' ) );
     $ao_ccss_types = $criticalcss->get_types();
 
@@ -109,9 +109,9 @@ function ao_ccss_render_rules() {
                                                 $_type = str_replace( 'custom_post_', '', $type );
                                             } elseif ( substr( $type, 0, 9 ) === 'template_' ) {
                                                 $_type = str_replace( 'template_', '', $type );
-                                            } elseif ( 'bbp_is_bbpress' == $type ) {
+                                            } elseif ( 'bbp_is_bbpress' === $type ) {
                                                 $_type = str_replace( 'bbp_', '', $type );
-                                            } elseif ( 'bp_is_buddypress' == $type ) {
+                                            } elseif ( 'bp_is_buddypress' === $type ) {
                                                 $_type = str_replace( 'bp_', '', $type );
                                             } elseif ( substr( $type, 0, 4 ) === 'woo_' ) {
                                                 $_type = str_replace( 'woo_', '', $type );
