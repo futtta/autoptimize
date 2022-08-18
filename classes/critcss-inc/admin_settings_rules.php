@@ -218,6 +218,12 @@ function sanitize_rules( $rules ) {
             foreach ( $rules['paths'] as $key => $value ) {
                 $newkey = esc_url( $key );
                 if ( $newkey !== $key ) {
+                    if ( 0 === strpos( $newkey, 'http://' ) && 0 !== strpos( $key, 'http://' ) ) {
+                        // esc_url adds "http://" to any string that does not start with either a protocol or a
+                        // slash, see https://developer.wordpress.org/reference/functions/esc_url/#more-information
+                        // this removes that unneeded protocol again.
+                        $newkey = substr_replace( $newkey, '', 0, 7 );
+                    }
                     unset( $rules['paths'][ $key ] );
                     $rules['paths'][ $newkey ] = $value;
                 }
