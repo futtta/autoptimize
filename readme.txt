@@ -298,6 +298,7 @@ The following great open source projects are used in Autoptimize in some form or
 * [jQuery unslider](https://github.com/idiot/unslider/) for the mini-slider in the top right corner on the main settings page (repo gone)
 * [JavaScript-md5](https://github.com/blueimp/JavaScript-MD5) for critical CSS rules editing
 * [Speed Booster Pack](https://wordpress.org/plugins/speed-booster-pack/) for advanced JS deferring
+* [Disable Remove Google Fonts](https://wordpress.org/plugins/disable-remove-google-fonts/) for additional Google Font removal
 
 = Where can I get help? =
 
