@@ -392,7 +392,7 @@ class autoptimizeCache
             }
         }
 
-        if ( ! self::cacheavail() ) {
+        if ( ! self::cacheavail() || true === apply_filters( 'autoptimize_filter_cache_clearall_disabled', false ) ) {
             return false;
         }
 
