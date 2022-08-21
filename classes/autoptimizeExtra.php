@@ -117,7 +117,7 @@ class autoptimizeExtra
     {
         if ( strpos( $src, '?ver=' ) ) {
             $src = remove_query_arg( 'ver', $src );
-        } else if ( strpos( $src, '?v=' ) ) {
+        } elseif ( strpos( $src, '?v=' ) ) {
             $src = remove_query_arg( 'v', $src );
         }
 
@@ -178,7 +178,7 @@ class autoptimizeExtra
             add_filter( 'wp_resource_hints', array( $this, 'filter_remove_gfonts_dnsprefetch' ), 10, 2 );
             add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_google_fonts' ), 10, 1 );
             add_filter( 'autoptimize_extra_filter_tobepreconn', array( $this, 'filter_preconnect_google_fonts' ), 10, 1 );
-            
+
             if ( '2' === $options['autoptimize_extra_radio_field_4'] ) {
                 // remove Google Fonts, adding filters to also remove Google Fonts from 3rd party themes/ plugins.
                 // inspired by https://wordpress.org/plugins/disable-remove-google-fonts/.
