@@ -178,6 +178,15 @@ class autoptimizeExtra
             add_filter( 'wp_resource_hints', array( $this, 'filter_remove_gfonts_dnsprefetch' ), 10, 2 );
             add_filter( 'autoptimize_html_after_minify', array( $this, 'filter_optimize_google_fonts' ), 10, 1 );
             add_filter( 'autoptimize_extra_filter_tobepreconn', array( $this, 'filter_preconnect_google_fonts' ), 10, 1 );
+            
+            if ( '2' === $options['autoptimize_extra_radio_field_4'] ) {
+                // remove Google Fonts, adding filters to also remove Google Fonts from 3rd party themes/ plugins.
+                // inspired by https://wordpress.org/plugins/disable-remove-google-fonts/.
+                remove_action( 'wp_footer', 'et_builder_print_font' ); // Divi.
+                remove_action( 'wp_footer', array( 'RevSliderFront', 'load_google_fonts' ) ); // Revslider.
+                add_filter( 'elementor/frontend/print_google_fonts', '__return_false' ); // Elementor.
+                add_filter( 'fl_builder_google_fonts_pre_enqueue', '__return_empty_array' ); // Beaver Builder.
+            }
         }
 
         // Preconnect!
