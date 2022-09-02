@@ -299,7 +299,7 @@ class autoptimizeCriticalCSSSettings {
                         </ul>
                         <?php
                     } else {
-                        if ( 'valid' == $key['status'] ) {
+                        if ( 'valid' == $key['status'] || ( defined( 'AO_PRO_VERSION' ) && has_filter( 'autoptimize_filter_ccss_key' ) ) ) {
                             // If key status is valid, render other panels.
                             // Render rules section.
                             ao_ccss_render_rules();
