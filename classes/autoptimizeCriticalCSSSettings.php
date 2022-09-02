@@ -49,7 +49,7 @@ class autoptimizeCriticalCSSSettings {
 
     public function add_critcss_tabs( $in )
     {
-        $in = array_merge( $in, array( 'ao_critcss' => '⚡ ' . __( 'Critical CSS', 'autoptimize' ) ) );
+        $in = array_merge( $in, array( 'ao_critcss' => apply_filters( 'autoptimize_filter_ccss_tab_text', '⚡ ' . __( 'Critical CSS', 'autoptimize' ) ) ) );
 
         return $in;
     }

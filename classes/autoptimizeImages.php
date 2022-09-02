@@ -1166,7 +1166,7 @@ class autoptimizeImages
     public function add_imgopt_tab( $in )
     {
         if ( autoptimizeConfig::should_show_menu_tabs() ) {
-            $in = array_merge( $in, array( 'autoptimize_imgopt' => __( 'Images', 'autoptimize' ) ) );
+            $in = array_merge( $in, array( 'autoptimize_imgopt' => apply_filters( 'autoptimize_filter_imgopt_tab_text', __( 'Images', 'autoptimize' ) ) ) );
         }
 
         return $in;
