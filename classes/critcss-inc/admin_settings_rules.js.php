@@ -113,7 +113,7 @@ function drawTable(critCssArray) {
         <?php
         $_ao_ccss_review_notice_id   = 'autoptimize-ccss-review-rules-notice-30';
         // Translators: before the 1st word a number + a space will be displayed, as in e.g. "2 of above rules".
-        $_ao_ccss_review_notice_copy = __( 'of the above rules got flagged by criticalcss.com as possibly needing review. This is often due to font-related issues which can be safely ignored, but in case of doubt do a visual test or check for "Cumulative Layout Shift" issues in e.g. Pagespeed Insights.', 'autoptimize' );
+        $_ao_ccss_review_notice_copy = __( 'of the above rules got flagged by criticalcss.com as possibly needing review. This is often due to font-related issues which can be safely ignored, but in case of doubt do a visual test or check for Cumulative Layout Shift issues in e.g. Pagespeed Insights.', 'autoptimize' );
         if ( PAnD::is_admin_notice_active( $_ao_ccss_review_notice_id ) ) {
             ?>
             jQuery("#rules-notices").append( "&nbsp;<div class='rnotice notice notice-info is-dismissible hidden' data-dismissible='<?php echo $_ao_ccss_review_notice_id; ?>'><p>" + rnotice + " <?php echo $_ao_ccss_review_notice_copy; ?>" + "</p></div>");
