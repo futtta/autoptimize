@@ -266,6 +266,12 @@ class autoptimizeExtra
         if ( '2' === $options['autoptimize_extra_radio_field_4'] ) {
             // Remove Google Fonts.
             unset( $fonts_collection );
+            
+            // Real Cookie Banner compatibility: Do not show this markup as Google Font result in the scanner
+            if (isset($_GET['rcb-scan'])) {
+                return str_replace('<link', '<link consent-scanner-skip', $in, 1);
+            }
+            
             return $in;
         } elseif ( '3' === $options['autoptimize_extra_radio_field_4'] || '5' === $options['autoptimize_extra_radio_field_4'] ) {
             // Aggregate & link!
