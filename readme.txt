@@ -318,6 +318,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 = 3.1.2 =
 * Google Fonts: some more removal logic
+* fix for 404 fallback bug (hat tip to Asif for finding & reporting)
 * Some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 3.1.1.1 =
