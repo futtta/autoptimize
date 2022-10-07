@@ -559,7 +559,7 @@ class autoptimizeUtils
             } elseif ( 0 === strpos( $_domain, '127.' ) || 0 === strpos( $_domain, '192.168.' ) || 0 === strpos( $_domain, 'fd' ) ) {
                 // private ranges so unreachable for imgopt/ CCSS.
                 $_is_local_server = true;
-            } elseif ( autoptimizeUtil::str_ends_in( $_domain, '.local') ) {
+            } elseif ( autoptimizeUtils::str_ends_in( $_domain, '.local') ) {
                 // matches 'whatever.local'.
                 $_is_local_server = true;
             } else {
