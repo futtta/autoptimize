@@ -132,6 +132,14 @@ class autoptimizeCriticalCSSSettings {
                 // Print AO settings tabs.
                 echo autoptimizeConfig::ao_admin_tabs();
 
+                if ( autoptimizeUtils::is_local_server() && isset( $ao_ccss_key ) ) { ?>
+                    <div class="notice-warning notice"><p>
+                    <?php
+                    echo __( 'The Critical CSS service does not work on locally hosted sites or when the server is on a private network.', 'autoptimize' );
+                    ?>
+                    </p></div>
+                <?php }
+
                 $mkdirresult = $this->criticalcss->create_ao_ccss_dir();
 
                 // Warn if we could not create those files.

@@ -539,4 +539,36 @@ class autoptimizeUtils
 
         return false;
     }
+    
+    /**
+     * Returns true if false if on a local dev environment, true if not.
+     * Used to disallow image opt/ critcss for local dev environments.
+     *
+     * @return bool
+     */
+    public static function is_local_server( $_domain = AUTOPTIMIZE_SITE_DOMAIN ) {
+        static $_is_local_server = null;
+
+        if ( null === $_is_local_server ) {
+            if ( false === strpos( $_domain, '.' ) && false === strpos( $_domain, ':' ) ) {
+                // no dots in domain or colon (ipv6 address), so impossible to reach, this also matches 'localhost' or any other single-word domain.
+                $_is_local_server = true;
+            } elseif ( in_array( $_domain, array( '127.0.0.1', '0000:0000:0000:0000:0000:0000:0000:0001', '0:0:0:0:0:0:0:1', '::1' ) ) ) {
+                // localhost IPv4/ IPv6.
+                $_is_local_server = true;
+            } elseif ( 0 === strpos( $_domain, '127.' ) || 0 === strpos( $_domain, '192.168.' ) || 0 === strpos( $_domain, 'fd' ) ) {
+                // private ranges so unreachable for imgopt/ CCSS.
+                $_is_local_server = true;
+            } elseif ( autoptimizeUtil::str_ends_in( $_domain, '.local') ) {
+                // matches 'whatever.local'.
+                $_is_local_server = true;
+            } else {
+                // likely OK.
+                $_is_local_server = false;
+            }
+        }
+
+        // filter to override result for testing purposes.
+        return apply_filters( 'autoptimize_filter_utils_is_local_server', $_is_local_server );
+    }
 }

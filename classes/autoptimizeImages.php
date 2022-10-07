@@ -469,6 +469,8 @@ class autoptimizeImages
 
         if ( array_key_exists( 'host', $url_parsed ) && $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
             return false;
+        } elseif ( autoptimizeUtils::is_local_server() ) {
+            return false;
         } elseif ( ! empty( $cdn_url ) && strpos( $url, $cdn_url ) === false && array_key_exists( 'host', $url_parsed ) && $url_parsed['host'] !== $site_host ) {
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
@@ -1194,6 +1196,13 @@ class autoptimizeImages
     <div class="wrap">
     <h1><?php apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? _e( 'Autoptimize Pro Settings', 'autoptimize' ) : _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php echo autoptimizeConfig::ao_admin_tabs(); ?>
+        <?php if ( autoptimizeUtils::is_local_server() ) { ?>
+            <div class="notice-warning notice"><p>
+            <?php
+            echo __( 'The image optimization service does not work on locally hosted sites or when the server is on a private network.', 'autoptimize' );
+            ?>
+            </p></div>
+        <?php } ?>
         <?php if ( 'down' === $options['availabilities']['extra_imgopt']['status'] ) { ?>
             <div class="notice-warning notice"><p>
             <?php

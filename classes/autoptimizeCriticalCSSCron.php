@@ -477,103 +477,109 @@ class autoptimizeCriticalCSSCron {
 
         $src_url = apply_filters( 'autoptimize_filter_ccss_cron_srcurl', $src_url );
 
-        // Initialize request body.
-        $body           = array();
-        $body['url']    = $src_url;
-        $body['aff']    = 1;
-        $body['aocssv'] = AO_CCSS_VER;
+        if ( true !== autoptimizeUtils::is_local_server( parse_url( $src_url, PHP_URL_HOST ) ) ) {
+            // Initialize request body.
+            $body           = array();
+            $body['url']    = $src_url;
+            $body['aff']    = 1;
+            $body['aocssv'] = AO_CCSS_VER;
 
-        // Prepare and add viewport size to the body if available.
-        $viewport = $this->criticalcss->viewport();
-        if ( ! empty( $viewport['w'] ) && ! empty( $viewport['h'] ) ) {
-            $body['width']  = $viewport['w'];
-            $body['height'] = $viewport['h'];
-        }
+            // Prepare and add viewport size to the body if available.
+            $viewport = $this->criticalcss->viewport();
+            if ( ! empty( $viewport['w'] ) && ! empty( $viewport['h'] ) ) {
+                $body['width']  = $viewport['w'];
+                $body['height'] = $viewport['h'];
+            }
 
-        // Prepare and add forceInclude to the body if available.
-        $finclude = $this->criticalcss->get_option( 'finclude' );
-        $finclude = $this->ao_ccss_finclude( $finclude );
-        if ( ! empty( $finclude ) ) {
-            $body['forceInclude'] = $finclude;
-        }
+            // Prepare and add forceInclude to the body if available.
+            $finclude = $this->criticalcss->get_option( 'finclude' );
+            $finclude = $this->ao_ccss_finclude( $finclude );
+            if ( ! empty( $finclude ) ) {
+                $body['forceInclude'] = $finclude;
+            }
 
-        // Add filter to allow the body array to be altered (e.g. to add customPageHeaders).
-        $body = apply_filters( 'autoptimize_ccss_cron_api_generate_body', $body );
+            // Add filter to allow the body array to be altered (e.g. to add customPageHeaders).
+            $body = apply_filters( 'autoptimize_ccss_cron_api_generate_body', $body );
 
-        // Body must be json and log it.
-        $body = json_encode( $body, JSON_UNESCAPED_SLASHES );
-        $this->criticalcss->log( 'criticalcss.com: POST generate request body is ' . $body, 3 );
+            // Body must be json and log it.
+            $body = json_encode( $body, JSON_UNESCAPED_SLASHES );
+            $this->criticalcss->log( 'criticalcss.com: POST generate request body is ' . $body, 3 );
 
-        // Prepare the request.
-        $url  = esc_url_raw( AO_CCSS_API . 'generate?aover=' . AO_CCSS_VER );
-        $args = array(
-            'headers' => apply_filters(
-                'autoptimize_ccss_cron_api_generate_headers',
-                array(
-                    'User-Agent'    => 'Autoptimize v' . AO_CCSS_VER,
-                    'Content-type'  => 'application/json; charset=utf-8',
-                    'Authorization' => 'JWT ' . $key,
-                    'Connection'    => 'close',
-                )
-            ),
-            'body'    => $body,
-        );
+            // Prepare the request.
+            $url  = esc_url_raw( AO_CCSS_API . 'generate?aover=' . AO_CCSS_VER );
+            $args = array(
+                'headers' => apply_filters(
+                    'autoptimize_ccss_cron_api_generate_headers',
+                    array(
+                        'User-Agent'    => 'Autoptimize v' . AO_CCSS_VER,
+                        'Content-type'  => 'application/json; charset=utf-8',
+                        'Authorization' => 'JWT ' . $key,
+                        'Connection'    => 'close',
+                    )
+                ),
+                'body'    => $body,
+            );
 
-        // Dispatch the request and store its response code.
-        $req  = wp_safe_remote_post( $url, $args );
-        $code = wp_remote_retrieve_response_code( $req );
-        $body = json_decode( wp_remote_retrieve_body( $req ), true );
+            // Dispatch the request and store its response code.
+            $req  = wp_safe_remote_post( $url, $args );
+            $code = wp_remote_retrieve_response_code( $req );
+            $body = json_decode( wp_remote_retrieve_body( $req ), true );
 
-        if ( $debug && $dcode ) {
-            // If queue debug is active, change response code.
-            $code = $dcode;
-        }
+            if ( $debug && $dcode ) {
+                // If queue debug is active, change response code.
+                $code = $dcode;
+            }
 
-        if ( 200 == $code ) {
-            // Response code is OK.
-            // Workaround criticalcss.com non-RESTful reponses.
-            if ( 'JOB_QUEUED' == $body['job']['status'] || 'JOB_ONGOING' == $body['job']['status'] || 'STATUS_JOB_BAD' == $body['job']['status'] ) {
-                // Log successful and return encoded request body.
-                $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied successfully', 3 );
+            if ( 200 == $code ) {
+                // Response code is OK.
+                // Workaround criticalcss.com non-RESTful reponses.
+                if ( 'JOB_QUEUED' == $body['job']['status'] || 'JOB_ONGOING' == $body['job']['status'] || 'STATUS_JOB_BAD' == $body['job']['status'] ) {
+                    // Log successful and return encoded request body.
+                    $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied successfully', 3 );
 
-                // This code also means the key is valid, so cache key status for 24h if not already cached.
-                if ( ( ! $key_status || 2 != $key_status ) && $key ) {
-                    update_option( 'autoptimize_ccss_keyst', 2 );
-                    $this->criticalcss->log( 'criticalcss.com: API key is valid, updating key status', 3 );
+                    // This code also means the key is valid, so cache key status for 24h if not already cached.
+                    if ( ( ! $key_status || 2 != $key_status ) && $key ) {
+                        update_option( 'autoptimize_ccss_keyst', 2 );
+                        $this->criticalcss->log( 'criticalcss.com: API key is valid, updating key status', 3 );
+                    }
+
+                    // Return the request body.
+                    return $body;
+                } else {
+                    // Log successful requests with invalid reponses.
+                    $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied with code <' . $code . '> and an UNKNOWN error condition, body follows...', 2 );
+                    $this->criticalcss->log( print_r( $body, true ), 2 );
+                    return $body;
                 }
-
-                // Return the request body.
-                return $body;
             } else {
-                // Log successful requests with invalid reponses.
-                $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied with code <' . $code . '> and an UNKNOWN error condition, body follows...', 2 );
-                $this->criticalcss->log( print_r( $body, true ), 2 );
-                return $body;
+                // Response code is anything else.
+                // Log failed request with a valid response code and return body.
+                if ( $code ) {
+                    $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied with error code <' . $code . '>, body follows...', 2 );
+                    $this->criticalcss->log( print_r( $body, true ), 2 );
+
+                    if ( 401 == $code ) {
+                        // If request is unauthorized, also clear key status.
+                        update_option( 'autoptimize_ccss_keyst', 1 );
+                        $this->criticalcss->log( 'criticalcss.com: API key is invalid, updating key status', 3 );
+                    }
+
+                    // Return the request body.
+                    return $body;
+                } else {
+                    // Log failed request with no response and return false.
+                    $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> has no response, this could be a service timeout', 2 );
+                    if ( is_wp_error( $req ) ) {
+                        $this->criticalcss->log( $req->get_error_message(), 2 );
+                    }
+
+                    return false;
+                }
             }
         } else {
-            // Response code is anything else.
-            // Log failed request with a valid response code and return body.
-            if ( $code ) {
-                $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> replied with error code <' . $code . '>, body follows...', 2 );
-                $this->criticalcss->log( print_r( $body, true ), 2 );
-
-                if ( 401 == $code ) {
-                    // If request is unauthorized, also clear key status.
-                    update_option( 'autoptimize_ccss_keyst', 1 );
-                    $this->criticalcss->log( 'criticalcss.com: API key is invalid, updating key status', 3 );
-                }
-
-                // Return the request body.
-                return $body;
-            } else {
-                // Log failed request with no response and return false.
-                $this->criticalcss->log( 'criticalcss.com: POST generate request for path <' . $src_url . '> has no response, this could be a service timeout', 2 );
-                if ( is_wp_error( $req ) ) {
-                    $this->criticalcss->log( $req->get_error_message(), 2 );
-                }
-
-                return false;
-            }
+            // localhost/ private network server, no CCSS possible.
+            $this->criticalcss->log( 'ccss cron: job not created at ccss.com as for local server', 3 );
+            return false;
         }
     }
 
