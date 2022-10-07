@@ -2595,6 +2595,8 @@ MARKUP;
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
 
+        add_filter( 'autoptimize_filter_utils_is_local_server', '__return_false' );
+
         $markup = <<<MARKUP
 <img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
@@ -2622,6 +2624,8 @@ MARKUP;
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
         $opts['autoptimize_imgopt_text_field_6']     = 'excluded.jpg';
+
+        add_filter( 'autoptimize_filter_utils_is_local_server', '__return_false' );
 
         $markup = <<<MARKUP
 <img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
@@ -2652,6 +2656,8 @@ MARKUP;
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
 
+        add_filter( 'autoptimize_filter_utils_is_local_server', '__return_false' );
+
         $markup = <<<MARKUP
 <picture><source srcset="$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><img src="$siteurl/wp-content/image.jpg"/></picture>
 MARKUP;
@@ -2681,6 +2687,7 @@ MARKUP;
         $opts['autoptimize_imgopt_number_field_7']   = '1';
         
         add_filter( 'autoptimize_filter_imgopt_lazyload_dolqip', '__return_true');
+        add_filter( 'autoptimize_filter_utils_is_local_server', '__return_false' );
 
         $markup = <<<MARKUP
 <picture><source srcset="$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><img src="$siteurl/wp-content/image.jpg"/></picture>
@@ -2710,6 +2717,7 @@ MARKUP;
         $opts['autoptimize_imgopt_checkbox_field_3'] = '1';
         
         add_filter( 'autoptimize_filter_imgopt_lazyload_dolqip', '__return_true');
+        add_filter( 'autoptimize_filter_utils_is_local_server', '__return_false' );
 
         $markup = <<<MARKUP
 <img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
@@ -2738,6 +2746,8 @@ MARKUP;
         $opts                                        = autoptimizeImages::fetch_options();
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
+
+        add_filter( 'autoptimize_filter_utils_is_local_server', '__return_false' );
 
         $markup = <<<MARKUP
 <div class="textwidget custom-html-widget"><div class="et_parallax_bg et_pb_parallax_css" style="height:200px; background-image: url($siteurl/wp-content/uploads/2018/05/DSC_1615-300x201.jpg);"></div>
@@ -2916,6 +2926,8 @@ MARKUP;
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
 
+        add_filter( 'autoptimize_filter_utils_is_local_server', '__return_false' );
+
         $markup = <<<MARKUP
 <img src="data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=" data-lazy-src='$siteurl/wp-content/image.jpg' width='400' height='200' data-lazy-srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
@@ -2945,6 +2957,8 @@ MARKUP;
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
 
+        add_filter( 'autoptimize_filter_utils_is_local_server', '__return_false' );
+
         $markup = <<<MARKUP
 <img src='/wp-content/image.jpg' width='400' height='200' srcset="/wp-content/image-300X150.jpg 300w, /wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
@@ -2972,6 +2986,8 @@ MARKUP;
         $opts                                        = autoptimizeImages::fetch_options();
         $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
         $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
+
+        add_filter( 'autoptimize_filter_utils_is_local_server', '__return_false' );
 
         $markup = <<<MARKUP
 <img src='$prsiteurl/wp-content/image.jpg' width='400' height='200' srcset="$prsiteurl/wp-content/image-300X150.jpg 300w, $prsiteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" />
