@@ -55,7 +55,7 @@ class autoptimizeCompatibility
             add_filter(
                 'autoptimize_filter_js_removables',
                 function( $to_remove = '', $html = '' ) {
-                    if ( ! empty( $html ) && false === strpos( $html, '<rs-slides>' ) ) {
+                    if ( ! empty( $html ) && false === strpos( $html, '<rs-slides' ) ) {
                         $to_remove .= 'plugins/revslider, setREVStartSize, window.RSIW, window.RS_MODULES';
                     }
 
