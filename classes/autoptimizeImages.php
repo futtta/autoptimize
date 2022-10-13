@@ -979,6 +979,11 @@ class autoptimizeImages
 
         // clean up; remove tabs/ linebreaks/ spaces.
         $tag = preg_replace( '/\s+/', ' ', $tag );
+        
+        // remove noscript.
+        if ( false !== strpos( $tag, 'noscript' ) ) {
+            $tag = preg_replace( '/<noscript.*<\/noscript>/mU', '', $tag );
+        }
 
         // rewrite img tag to link preload img.
         $_from = array( '<img ', ' src=', ' sizes=', ' srcset=' );
@@ -986,10 +991,10 @@ class autoptimizeImages
         $tag   = str_replace( $_from, $_to, $tag );
 
         // and remove title, alt, class and id.
-        $tag = preg_replace( '/ ((?:title|alt|class|id|loading)=".*")/Um', '', $tag );
-        if ( str_replace( array( ' title=', ' class=', ' alt=', ' id=' ), '', $tag ) !== $tag ) {
+        $tag = preg_replace( '/ ((?:title|alt|class|id|loading|fetchpriority|decoding)=".*")/Um', '', $tag );
+        if ( str_replace( array( ' title=', ' class=', ' alt=', ' id=', ' fetchpriority=', ' decoding=' ), '', $tag ) !== $tag ) {
             // 2nd regex pass if still title/ class/ alt in case single quotes were used iso doubles.
-            $tag = preg_replace( '/ ((?:title|alt|class|id|loading)=\'.*\')/Um', '', $tag );
+            $tag = preg_replace( '/ ((?:title|alt|class|id|loading|fetchpriority|decoding)=\'.*\')/Um', '', $tag );
         }
 
         return $tag;
