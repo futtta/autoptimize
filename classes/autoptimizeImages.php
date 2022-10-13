@@ -981,7 +981,7 @@ class autoptimizeImages
         $tag = preg_replace( '/\s+/', ' ', $tag );
         
         // remove noscript.
-        if ( false !== strpos( $tag, 'noscript' ) ) {
+        if ( false !== strpos( $tag, '<noscript' ) ) {
             $tag = preg_replace( '/<noscript.*<\/noscript>/mU', '', $tag );
         }
 
