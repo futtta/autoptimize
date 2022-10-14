@@ -641,6 +641,11 @@ class autoptimizeImages
                     }
                 }
 
+                // check if the image needs to be prelaoded.
+                if ( ! empty( $metabox_preloads ) && is_array( $metabox_preloads ) && str_replace( $metabox_preloads, '', $tag ) !== $tag ) {
+                    $to_preload .= $this->create_img_preload_tag( $tag );
+                }
+
                 // do lazyload stuff.
                 if ( $this->should_lazyload( $in ) && ! empty( $url ) ) {
                     // first do lpiq placeholder logic.
@@ -680,11 +685,6 @@ class autoptimizeImages
                 // and add tag to array for later replacement.
                 if ( $tag !== $orig_tag ) {
                     $to_replace[ $orig_tag ] = $tag;
-                }
-
-                // and check if image needs to be prelaoded.
-                if ( ! empty( $metabox_preloads ) && is_array( $metabox_preloads ) && str_replace( $metabox_preloads, '', $tag ) !== $tag ) {
-                    $to_preload .= $this->create_img_preload_tag( $tag );
                 }
             }
         }
@@ -844,13 +844,14 @@ class autoptimizeImages
         // extract img tags and add lazyload attribs/ add preloads.
         if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $out, $matches ) ) {
             foreach ( $matches[0] as $tag ) {
-                if ( $this->should_lazyload( $out ) ) {
-                    $to_replace[ $tag ] = $this->add_lazyload( $tag );
-                }
-
-                // and check if image needs to be prelaoded.
+                // check if image needs to be preloaded.
                 if ( ! empty( $metabox_preloads ) && is_array( $metabox_preloads ) && str_replace( $metabox_preloads, '', $tag ) !== $tag ) {
                     $to_preload .= $this->create_img_preload_tag( $tag );
+                }
+
+                // and lazyloaded.
+                if ( $this->should_lazyload( $out ) ) {
+                    $to_replace[ $tag ] = $this->add_lazyload( $tag );
                 }
             }
             $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $out );
@@ -991,10 +992,10 @@ class autoptimizeImages
         $tag   = str_replace( $_from, $_to, $tag );
 
         // and remove title, alt, class and id.
-        $tag = preg_replace( '/ ((?:title|alt|class|id|loading|fetchpriority|decoding)=".*")/Um', '', $tag );
-        if ( str_replace( array( ' title=', ' class=', ' alt=', ' id=', ' fetchpriority=', ' decoding=' ), '', $tag ) !== $tag ) {
+        $tag = preg_replace( '/ ((?:title|alt|class|id|loading|fetchpriority|decoding|data-no-lazy)=".*")/Um', '', $tag );
+        if ( str_replace( array( ' title=', ' class=', ' alt=', ' id=', ' fetchpriority=', ' decoding=', ' data-no-lazy=' ), '', $tag ) !== $tag ) {
             // 2nd regex pass if still title/ class/ alt in case single quotes were used iso doubles.
-            $tag = preg_replace( '/ ((?:title|alt|class|id|loading|fetchpriority|decoding)=\'.*\')/Um', '', $tag );
+            $tag = preg_replace( '/ ((?:title|alt|class|id|loading|fetchpriority|decoding|data-no-lazy)=\'.*\')/Um', '', $tag );
         }
 
         return $tag;
