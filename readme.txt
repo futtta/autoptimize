@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 3.1.1.1
+Stable tag: 3.1.2
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -315,6 +315,12 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 3.1.3 =
+* Multiple fixes for metabox LCP image preloads (thanks [Kishorchand](https://foxscribbler.com/) for notifying & providing a staging environment to debug on).
+* Fix in revslider compatibility (hat tip [Waqar Ahmed for reporting & helping out](https://wordpress.org/support/topic/issue-with-latest-version-of-slider-revolution/) ).
+* No image optimization or criticalcss attempts on localhost installations any more + notification of that fact if localhost detected.
+* Some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 3.1.2 =
 * Google Fonts: some more removal logic
