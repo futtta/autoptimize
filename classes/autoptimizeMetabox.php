@@ -117,12 +117,18 @@ class autoptimizeMetabox
                  <?php _e( 'Lazyload images?', 'autoptimize' ); ?>
             </label>
         </p>
-        <p class="ao_meta_sub" style="<?php echo $_ao_meta_sub_opacity; ?>">
+        <?php
+        $_ao_meta_preload_style = '';
+        if ( false === autoptimizeImages::should_lazyload_wrapper() && false === autoptimizeImages::imgopt_active() ) {
+            // img preload requires imgopt and/ or lazyload to be active.
+            $_ao_meta_preload_style = 'opacity:.33;';
+        }
+        ?>
+        <p class="ao_meta_sub ao_meta_preload" style="<?php echo $_ao_meta_sub_opacity . $_ao_meta_preload_style; ?>">
             <label for="autoptimize_post_preload">
                  <?php _e( 'LCP Image to preload', 'autoptimize' ); ?>
             </label>
             <?php
-            // fixme: needs lazyload or imgopt
             if ( is_array( $ao_opt_value ) && array_key_exists( 'ao_post_preload', $ao_opt_value ) ) {
                 $_preload_img = esc_attr( $ao_opt_value['ao_post_preload'] );
             } else {
@@ -180,6 +186,19 @@ class autoptimizeMetabox
                         jQuery("#generateccss:visible").fadeTo("fast",.33);
                     }
                 });
+                <?php
+                if ( true === autoptimizeImages::should_lazyload_wrapper() && false === autoptimizeImages::imgopt_active() ) {
+                ?>
+                    jQuery( "#autoptimize_post_lazyload" ).change(function() {
+                        if (this.checked) {
+                            jQuery(".ao_meta_preload:visible").fadeTo("fast",1);
+                        } else {
+                            jQuery(".ao_meta_preload:visible").fadeTo("fast",.33);
+                        }                    
+                    });
+                <?php
+                }
+                ?>
                 jQuery("#generateccss").click(function(e){
                     e.preventDefault();
                     // disable button to avoid it being clicked several times.
