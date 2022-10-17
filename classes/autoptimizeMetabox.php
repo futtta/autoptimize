@@ -122,6 +122,7 @@ class autoptimizeMetabox
                  <?php _e( 'LCP Image to preload', 'autoptimize' ); ?>
             </label>
             <?php
+            // fixme: needs lazyload or imgopt
             if ( is_array( $ao_opt_value ) && array_key_exists( 'ao_post_preload', $ao_opt_value ) ) {
                 $_preload_img = esc_attr( $ao_opt_value['ao_post_preload'] );
             } else {

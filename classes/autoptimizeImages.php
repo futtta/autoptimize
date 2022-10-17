@@ -590,8 +590,9 @@ class autoptimizeImages
             );
         }
 
-        // get img preloads as set in post metabox.
-        $metabox_preloads = array_filter( array_map( 'trim', explode( ',', wp_strip_all_tags( autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_preload' ) ) ) ) );
+        // get img preloads as set in post metabox, exploding ", " instead of "," because LCP preload 
+        // could be a shortpixel URL, which has comma's and results in way too many preloads.
+        $metabox_preloads = array_filter( array_map( 'trim', explode( ', ', wp_strip_all_tags( autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_preload' ) ) ) ) );
 
         // extract img tags.
         if ( preg_match_all( '#<img[^>]*src[^>]*>#Usmi', $in, $matches ) ) {
