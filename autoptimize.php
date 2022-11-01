@@ -5,7 +5,7 @@
  * Description: Makes your site faster by optimizing CSS, JS, Images, Google fonts and more.
  * Version: 3.1.4-beta-0
  * Author: Frank Goossens (futtta)
- * Author URI: https://autoptimize.com/
+ * Author URI: https://autoptimize.com/pro/
  * Text Domain: autoptimize
  * License: GPLv2
  * Released under the GNU General Public License (GPL)
