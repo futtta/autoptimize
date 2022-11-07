@@ -763,7 +763,7 @@ class autoptimizeMain
         $_ao_imgopt_active           = autoptimizeImages::imgopt_active();
         $_is_ao_settings_page        = autoptimizeUtils::is_ao_settings();
 
-        if ( current_user_can( 'manage_options' ) && $_is_ao_settings_page && '' !== $_ao_imgopt_plug_notice && ! $_ao_imgopt_active && $_ao_imgopt_launch_ok && PAnD::is_admin_notice_active( $_ao_imgopt_plug_dismissible ) ) {
+        if ( current_user_can( 'manage_options' ) && ! defined( 'AO_PRO_VERSION' ) && $_is_ao_settings_page && '' !== $_ao_imgopt_plug_notice && ! $_ao_imgopt_active && $_ao_imgopt_launch_ok && PAnD::is_admin_notice_active( $_ao_imgopt_plug_dismissible ) ) {
             echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_imgopt_plug_dismissible . '"><p>';
             echo $_ao_imgopt_plug_notice;
             echo '</p></div>';
