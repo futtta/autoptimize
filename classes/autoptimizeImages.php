@@ -1269,8 +1269,8 @@ class autoptimizeImages
                         if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] ) {
                             $upsell_msg_2 = __( 'For a limited time only, this service is offered free for all Autoptimize users, <b>don\'t miss the chance to test it</b> and see how much it could improve your site\'s speed.', 'autoptimize' );
                         } else {
-                            // translators: link points to shortpixel.
-                            $upsell_msg_2 = sprintf( __( '%1$sSign-up now%2$s to receive x2 more CDN traffic or image optimization credits for free! This offer also applies to any future plan that you\'ll choose to purchase.', 'autoptimize' ), '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
+                            // translators: 1st link points to autoptimize.com.pro, 2nd to shortpixel.
+                            $upsell_msg_2 = sprintf( __( 'For <strong>unlimited image optimizations %1$sbuy Autoptimize Pro%2$s</strong> which also includes Critical CSS and extra "booster" options or %3$ssign up at Shortpixel%4$s where you will receive x2 more CDN traffic or image optimization credits for free.', 'autoptimize' ), '<a href="https://autoptimize.com/pro/" target="_blank">', '</a>', '<a href="https://shortpixel.com/aospai' . $sp_url_suffix . '" target="_blank">', '</a>' );
                         }
                         echo apply_filters( 'autoptimize_filter_imgopt_settings_copy', $upsell_msg_1 . ' ' . $upsell_msg_2 . '</p>' );
                     }
@@ -1394,10 +1394,10 @@ class autoptimizeImages
             if ( is_array( $_stat ) ) {
                 if ( 1 == $_stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota is almost used, make sure you %1$sadd more credits%2$s to avoid slowing down your website <strong>or consider using %3$sAutoptimize Pro%2$s which comes with (nearly) unlimited image optimization</strong> but also automated critical CSS and extra booster options.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>', '<a href="https://autoptimize.com/pro/" target="_blank">' );
                 } elseif ( -1 == $_stat['Status'] || -2 == $_stat['Status'] ) {
                     // translators: "add more credits" will appear in a "a href".
-                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>' );
+                    $_imgopt_notice = sprintf( __( 'Your ShortPixel image optimization and CDN quota was used, %1$sadd more credits%2$s to keep fast serving optimized images on your site <strong>or consider using %3$sAutoptimize Pro%2$s which comes with (nearly) unlimited image optimization</strong> but also automated critical CSS and extra booster options.', 'autoptimize' ), '<a href="' . $_imgopt_upsell . '" target="_blank">', '</a>', '<a href="https://autoptimize.com/pro/" target="_blank">' );
                     // translators: "associate your domain" will appear in a "a href".
                     $_imgopt_notice = $_imgopt_notice . ' ' . sprintf( __( 'If you have enough CDN quota remaining, then you may need to %1$sassociate your domain%2$s to your Shortpixel account.', 'autoptimize' ), '<a rel="noopener noreferrer" href="' . $_imgopt_assoc . '" target="_blank">', '</a>' );
                 } elseif ( -3 == $_stat['Status'] ) {
