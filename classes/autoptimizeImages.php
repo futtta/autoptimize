@@ -934,6 +934,8 @@ class autoptimizeImages
             // add the noscript-tag from earlier.
             $tag = $noscript_tag . $tag;
             $tag = apply_filters( 'autoptimize_filter_imgopt_lazyloaded_img', $tag );
+        } else {
+            $tag = apply_filters( 'autoptimize_filter_imgopt_not_lazyloaded_img', $tag );
         }
 
         return $tag;
