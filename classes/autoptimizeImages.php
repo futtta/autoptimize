@@ -444,6 +444,11 @@ class autoptimizeImages
         return $imgopt_base_url;
     }
 
+    public static function can_optimize_image_wrapper( $url, $tag = '', $testing = false ) {
+        $self = new self();
+        return $self->can_optimize_image( $url, $tag = '', $testing = false );
+    }
+
     private function can_optimize_image( $url, $tag = '', $testing = false )
     {
         static $cdn_url      = null;
@@ -487,6 +492,12 @@ class autoptimizeImages
             }
         }
         return true;
+    }
+
+    // wrapper for reuse in AOPro.
+    public static function build_imgopt_url_wrapper( $orig_url, $width = 0, $height = 0 ) {
+        $self = new self();
+        return $self->build_imgopt_url( $orig_url, $width = 0, $height = 0 );
     }
 
     private function build_imgopt_url( $orig_url, $width = 0, $height = 0 )
