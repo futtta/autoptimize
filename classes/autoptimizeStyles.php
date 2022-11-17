@@ -1006,7 +1006,7 @@ class autoptimizeStyles extends autoptimizeBase
         // Inject the new stylesheets, if possible after SEO stuff, but we need to
         // already restore script to be able to inject before ld+json instead of title
         // this should be safe here as all has been extracted  already but behind a filter anyway.
-        if ( true === apply_filters( 'autoptimize_filter_css_restore_js_early', true ) ) {
+        if ( $this->inline && true === apply_filters( 'autoptimize_filter_css_restore_js_early', true ) ) {
             $this->content = $this->restore_marked_content( 'SCRIPT', $this->content );
         }
         if ( false !== strpos( $this->content, '<script type="application/ld+json"' ) ) {
@@ -1086,9 +1086,7 @@ class autoptimizeStyles extends autoptimizeBase
         $this->content = $this->restore_iehacks( $this->content );
 
         // restore (no)script.
-        if ( true !== apply_filters( 'autoptimize_filter_css_restore_js_early', true ) ) {
-            $this->content = $this->restore_marked_content( 'SCRIPT', $this->content );
-        }
+        $this->content = $this->restore_marked_content( 'SCRIPT', $this->content );
 
         // Restore noptimize.
         $this->content = $this->restore_noptimize( $this->content );
