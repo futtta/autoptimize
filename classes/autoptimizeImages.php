@@ -705,13 +705,19 @@ class autoptimizeImages
         // and replace all.
         $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
 
-        // img thumbnails in e.g. woocommerce.
-        if ( strpos( $out, 'data-thumb' ) !== false && apply_filters( 'autoptimize_filter_imgopt_datathumbs', true ) ) {
-            $out = preg_replace_callback(
-                '/\<div(?:[^>]?)\sdata-thumb\=(?:\"|\')(.+?)(?:\"|\')(?:[^>]*)?\>/s',
-                array( $this, 'replace_data_thumbs' ),
-                $out
-            );
+        // misc. node attributes that might hold image url's (incl. the previously separate data-thumb).
+        $extra_attr_with_img = apply_filters( 'autoptimize_filter_imgopt_attr_with_img', array( array( 'div', 'data-thumb'), array( 'div', 'data-background' ) ) );
+        if ( ! empty( $extra_attr_with_img ) && is_array( $extra_attr_with_img ) ) {
+            foreach ( $extra_attr_with_img as $candidate ) {
+                if ( is_array( $candidate ) && strpos( $out, $candidate[1] ) !== false ) {
+                    $_regex = '/\<' . $candidate[0] . '(?:[^>]*)?\s' . $candidate[1] . '=(?:"|\')(.+?)(?:"|\')(?:[^>]*)?>/s';
+                    $out = preg_replace_callback(
+                        $_regex,
+                        array( $this, 'replace_img_callback' ),
+                        $out
+                    );
+                }
+            }
         }
 
         // background-image in inline style.
