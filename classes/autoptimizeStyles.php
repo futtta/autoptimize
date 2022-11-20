@@ -1009,7 +1009,8 @@ class autoptimizeStyles extends autoptimizeBase
         if ( $this->inline && true === apply_filters( 'autoptimize_filter_css_restore_js_early', true ) ) {
             $this->content = $this->restore_marked_content( 'SCRIPT', $this->content );
         }
-        if ( false !== strpos( $this->content, '<script type="application/ld+json"' ) ) {
+        $_strpos_ldjson = strpos( $this->content, '<script type="application/ld+json"' );
+        if ( false !== $_strpos_ldjson  ) {
             $replace_tag = array( '<script type="application/ld+json"', 'before' );            
         } else {
             $replace_tag = array( '<title', 'before' );
