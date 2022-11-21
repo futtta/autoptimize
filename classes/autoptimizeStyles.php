@@ -1010,7 +1010,7 @@ class autoptimizeStyles extends autoptimizeBase
             $this->content = $this->restore_marked_content( 'SCRIPT', $this->content );
         }
         $_strpos_ldjson = strpos( $this->content, '<script type="application/ld+json"' );
-        if ( false !== $_strpos_ldjson  ) {
+        if ( false !== $_strpos_ldjson && $_strpos_ldjson < strpos( $this->content, '</head' ) ) {
             $replace_tag = array( '<script type="application/ld+json"', 'before' );            
         } else {
             $replace_tag = array( '<title', 'before' );
