@@ -706,7 +706,7 @@ class autoptimizeImages
         $out = str_replace( array_keys( $to_replace ), array_values( $to_replace ), $in );
 
         // misc. node attributes that might hold image url's (incl. the previously separate data-thumb).
-        $extra_attr_with_img = apply_filters( 'autoptimize_filter_imgopt_attr_with_img', array( array( 'div', 'data-thumb'), array( 'div', 'data-background' ) ) );
+        $extra_attr_with_img = apply_filters( 'autoptimize_filter_imgopt_attr_with_img', array( array( 'div', 'data-thumb'), array( 'div', 'data-background' ), array( 'img', 'data-retina' ) ) );
         if ( ! empty( $extra_attr_with_img ) && is_array( $extra_attr_with_img ) ) {
             foreach ( $extra_attr_with_img as $candidate ) {
                 if ( is_array( $candidate ) && strpos( $out, $candidate[1] ) !== false ) {
