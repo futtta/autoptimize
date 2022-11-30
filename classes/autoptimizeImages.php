@@ -1331,7 +1331,7 @@ class autoptimizeImages
                     <p>
                         <?php
                             // translators: link points to shortpixel image test page.
-                            echo apply_filters( 'autoptimize_filter_imgopt_quality_copy', sprintf( __( 'You can %1$stest compression levels here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/oic' . $sp_url_suffix . '" target="_blank">', '</a>' ) );
+                            echo apply_filters( 'autoptimize_filter_imgopt_quality_copy', sprintf( __( 'You can %1$stest compression levels here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/online-image-compression' . $sp_url_suffix . '" target="_blank">', '</a>' ) );
                         ?>
                     </p>
                 </td>
