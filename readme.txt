@@ -321,7 +321,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 = 3.1.4 =
 * Improvement: when all CSS is inlined, try doing so after SEO meta-tags (just before ld+json script tag which most SEO plugins add as last item on their list).
-* Img opt: also optimize data-background images (+ filter to easily add other attributes)
+* Img opt: also optimize images set in data-background and data-retina attributes (+ filter to easily add other attributes)
 * CSS opt: filter to enable AO to skip minification of calc formulas in CSS (as the CSS minifier on rare occasions breaks those)
 * Multiple other filters added
 * Some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
