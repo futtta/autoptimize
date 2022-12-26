@@ -209,13 +209,21 @@ class autoptimizeCriticalCSSCron {
                         }
                     }
 
-                    if ( 'JOB_QUEUED' == $apireq['status'] || 'JOB_ONGOING' == $apireq['status'] ) {
+                    if ( empty( $apireq ) ) {
+                        // ERROR: no response
+                        // Update job properties.
+                        $jprops['jqstat'] = 'NO_RESPONSE';
+                        $jprops['jrstat'] = 'NONE';
+                        $jprops['jvstat'] = 'NONE';
+                        $jprops['jftime'] = microtime( true );
+                        $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> request has no response, status now is <' . $jprops['jqstat'] . '>', 3 );
+                    } elseif ( array_key_exists( 'status', $apireq ) && 'JOB_QUEUED' == $apireq['status'] || 'JOB_ONGOING' == $apireq['status'] ) {
                         // SUCCESS: request has a valid result
                         // Process a PENDING job
                         // Update job properties.
                         $jprops['jqstat'] = $apireq['status'];
                         $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful, remote id <' . $jprops['jid'] . '>, status <' . $jprops['jqstat'] . '> unchanged', 3 );
-                    } elseif ( 'JOB_DONE' == $apireq['status'] ) {
+                    } elseif ( array_key_exists( 'status', $apireq ) && 'JOB_DONE' == $apireq['status'] ) {
                         // Process a DONE job
                         // New resultStatus from ccss.com "HTML_404", consider as "GOOD" for now.
                         if ( 'HTML_404' == $apireq['resultStatus'] ) {
@@ -269,7 +277,7 @@ class autoptimizeCriticalCSSCron {
                             $apireq['css'] = '/* critical css removed for DEBUG logging purposes */';
                             $this->criticalcss->log( 'Job response was: ' . json_encode( $apireq ), 3 );
                         }
-                    } elseif ( 'JOB_FAILED' == $apireq['job']['status'] || 'STATUS_JOB_BAD' == $apireq['job']['status'] ) {
+                    } elseif ( array_key_exists( 'job', $apireq ) && array_key_exists( 'status', $apireq['job'] ) && 'JOB_FAILED' == $apireq['job']['status'] || 'STATUS_JOB_BAD' == $apireq['job']['status'] ) {
                         // ERROR: failed job
                         // Update job properties.
                         $jprops['jqstat'] = $apireq['job']['status'];
@@ -281,7 +289,7 @@ class autoptimizeCriticalCSSCron {
                         $jprops['jvstat'] = 'NONE';
                         $jprops['jftime'] = microtime( true );
                         $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful but job FAILED, status now is <' . $jprops['jqstat'] . '>', 3 );
-                    } elseif ( 'This css no longer exists. Please re-generate it.' == $apireq['error'] ) {
+                    } elseif ( array_key_exists( 'error', $apireq ) && 'This css no longer exists. Please re-generate it.' == $apireq['error'] ) {
                         // ERROR: CSS doesn't exist
                         // Update job properties.
                         $jprops['jqstat'] = 'NO_CSS';
@@ -289,14 +297,6 @@ class autoptimizeCriticalCSSCron {
                         $jprops['jvstat'] = 'NONE';
                         $jprops['jftime'] = microtime( true );
                         $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> result request successful but job FAILED, status now is <' . $jprops['jqstat'] . '>', 3 );
-                    } elseif ( empty( $apireq ) ) {
-                        // ERROR: no response
-                        // Update job properties.
-                        $jprops['jqstat'] = 'NO_RESPONSE';
-                        $jprops['jrstat'] = 'NONE';
-                        $jprops['jvstat'] = 'NONE';
-                        $jprops['jftime'] = microtime( true );
-                        $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> request has no response, status now is <' . $jprops['jqstat'] . '>', 3 );
                     } else {
                         // UNKNOWN: unhandled results exception
                         // Update job properties.
@@ -721,18 +721,18 @@ class autoptimizeCriticalCSSCron {
         $action = false;
         $rtype  = '';
 
-        if ( is_array( $rule ) && 0 === $rule['hash'] && 0 !== $rule['file'] ) {
+        if ( is_array( $rule ) && array_key_exists( 'hash', $rule ) && 0 === $rule['hash'] && array_key_exists( 'file', $rule ) && 0 !== $rule['file'] ) {
             // manual rule, don't ever overwrite.
             $action = 'NOT UPDATED';
             $rtype  = 'MANUAL';
-        } elseif ( is_array( $rule ) && 0 === $rule['hash'] && 0 === $rule['file'] ) {
+        } elseif ( is_array( $rule ) && array_key_exists( 'hash', $rule ) && 0 === $rule['hash'] && array_key_exists( 'file', $rule ) && 0 === $rule['file'] ) {
             // If this is an user created AUTO rule with no hash and file yet, update its hash and filename
             // Set rule hash, file and action flag.
             $rule['hash'] = $hash;
             $rule['file'] = $file;
             $action       = 'UPDATED';
             $rtype        = 'AUTO';
-        } elseif ( is_array( $rule ) && 0 !== $rule['hash'] && ctype_alnum( $rule['hash'] ) ) {
+        } elseif ( is_array( $rule ) && array_key_exists( 'hash', $rule ) && 0 !== $rule['hash'] && ctype_alnum( $rule['hash'] ) ) {
             // If this is an genuine AUTO rule, update its hash and filename
             // Set rule hash, file and action flag.
             $rule['hash'] = $hash;
