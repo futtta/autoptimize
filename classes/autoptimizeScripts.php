@@ -766,7 +766,6 @@ class autoptimizeScripts extends autoptimizeBase
      * Determines wheter a <script> $tag can be excluded from minification (as already minified) based on:
      * - inject_min_late being active
      * - filename ending in `min.js`
-     * - filename matching `js/jquery/jquery.js` (WordPress core jquery, is minified)
      * - filename matching one passed in the consider minified filter
      *
      * @param string $js_path Path to JS file.
@@ -777,7 +776,7 @@ class autoptimizeScripts extends autoptimizeBase
         if ( true !== $this->inject_min_late ) {
             // late-inject turned off.
             return false;
-        } elseif ( ( false === strpos( $js_path, 'min.js' ) ) && ( false === strpos( $js_path, 'wp-includes/js/jquery/jquery.js' ) ) && ( str_replace( $consider_minified_array, '', $js_path ) === $js_path ) ) {
+        } elseif ( ( false === strpos( $js_path, 'min.js' ) ) && ( str_replace( $consider_minified_array, '', $js_path ) === $js_path ) ) {
             // file not minified based on filename & filter.
             return false;
         } else {

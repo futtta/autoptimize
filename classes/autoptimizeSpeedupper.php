@@ -34,7 +34,7 @@ class autoptimizeSpeedupper
         if ( $ccheck->check() ) {
             $scriptsrc = $ccheck->retrieve();
         } else {
-            if ( false === ( strpos( $jsfilename, 'min.js' ) ) && ( false === strpos( $jsfilename, 'js/jquery/jquery.js' ) ) && ( str_replace( apply_filters( 'autoptimize_filter_js_consider_minified', false ), '', $jsfilename ) === $jsfilename ) ) {
+            if ( false === ( strpos( $jsfilename, 'min.js' ) ) && ( str_replace( apply_filters( 'autoptimize_filter_js_consider_minified', false ), '', $jsfilename ) === $jsfilename ) ) {
                 $tmp_jscode = trim( JSMin::minify( $jsin ) );
                 if ( ! empty( $tmp_jscode ) ) {
                     $scriptsrc = $tmp_jscode;
