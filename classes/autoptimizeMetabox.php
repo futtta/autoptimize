@@ -137,6 +137,9 @@ class autoptimizeMetabox
             ?>
             <input type="text" id="autoptimize_post_preload" name="ao_post_preload" value="<?php echo $_preload_img; ?>">
         </p>
+        <?php
+            echo apply_filters( 'autoptimize_filter_metabox_extra_ui', '');
+        ?>
         <p>&nbsp;</p>
         <p>
             <?php
@@ -267,14 +270,18 @@ class autoptimizeMetabox
 
         // OK, we can have a look at the actual data now.
         // Sanitize user input.
-        foreach ( array( 'ao_post_optimize', 'ao_post_js_optimize', 'ao_post_css_optimize', 'ao_post_ccss', 'ao_post_lazyload', 'ao_post_preload' ) as $opti_type ) {
-            if ( ! isset( $_POST[ $opti_type ] ) ) {
+        foreach ( apply_filters( 'autoptimize_filter_meta_valid_optims', array( 'ao_post_optimize', 'ao_post_js_optimize', 'ao_post_css_optimize', 'ao_post_ccss', 'ao_post_lazyload', 'ao_post_preload' ) ) as $opti_type ) {
+            if ( in_array( $opti_type, apply_filters( 'autoptimize_filter_meta_optim_nonbool', array( 'ao_post_preload' ) ) ) ) {
+                if ( isset( $_POST[ $opti_type ] ) ) {
+                    $ao_meta_result[ $opti_type ] = $_POST[ $opti_type ];
+                } else {
+                    $ao_meta_result[ $opti_type ] = false;
+                }
+            } else if ( ! isset( $_POST[ $opti_type ] ) ) {
                 $ao_meta_result[ $opti_type ] = '';
             } else if ( 'on' === $_POST[ $opti_type ] ) {
                 $ao_meta_result[ $opti_type ] = 'on';
-            } else if ( in_array( $opti_type, array( 'ao_post_preload' ) ) ) {
-                $ao_meta_result[ $opti_type ] = $_POST[ $opti_type ];
-            }
+            } 
         }
 
         // Update the meta field in the database.

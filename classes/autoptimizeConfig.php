@@ -1033,7 +1033,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     public static function get_post_meta_ao_settings( $optim ) {
         if ( ! autoptimizeConfig::is_ao_meta_settings_active() ) {
             // Per page/post settings not active, so always return true (as in; can be optimized).
-            if ( in_array( $optim, array( 'ao_post_preload' ) ) ) {
+            if ( in_array( $optim, apply_filters( 'autoptimize_filter_meta_inactive_return_false_for', array( 'ao_post_preload' ) ) ) ) {
                 // but make sure to return false for text input.
                 return false;
             }
@@ -1043,9 +1043,9 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         static $_meta_value = null;
         if ( null === $_meta_value ) {
             global $wp_query;
-            if ( isset( $wp_query ) && ( is_page() || is_single() ) ) {
+            if ( isset( $wp_query ) ) {
                 $_meta_value = get_post_meta( get_the_ID(), 'ao_post_optimize', true );
-            } else if ( isset( $wp_query ) ) {
+            } else {
                 $_meta_value = false;
             }
         }
@@ -1062,6 +1062,9 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         } else if ( array_key_exists( 'ao_post_optimize', $_meta_value ) && 'on' !== $_meta_value['ao_post_optimize'] ) {
             // ao entirely off for this page.
             return false;
+        } else if ( in_array( $optim, apply_filters( 'autoptimize_filter_meta_optim_with_filters', array() ) ) ) {
+            // if an $optim is registered as having a filter, apply filter and return that (default false).
+            return apply_filters( 'autoptimize_filter_meta_filtered_optim', false, $optim, $_meta_value );
         } else if ( array_key_exists( $optim, $_meta_value ) && empty( $_meta_value[ $optim ] ) ) {
             // sub-optimization off for this page.
             return false;
