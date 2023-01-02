@@ -319,6 +319,13 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.1.5 =
+* JSMin improvements by Robert Ehrenleitner (big thanks Robert!).
+* do not treast jquery.js as minified any more (WordPress now uses jquery.min.js by default and jquery.js is the unminified version).
+* "undefined arry key" fixes in autoptimizeCriticalCSSCron.php
+* small improvement to responsive image preload
+* some extra hooks/ filters.
+
 = 3.1.4 =
 * Improvement: when all CSS is inlined, try doing so after SEO meta-tags (just before ld+json script tag which most SEO plugins add as last item on their list).
 * Img opt: also optimize images set in data-background and data-retina attributes (+ filter to easily add other attributes)
