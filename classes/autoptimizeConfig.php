@@ -1054,7 +1054,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         // fixme: need unit tests to ensure below logic is sane!
         if ( empty( $_meta_value ) || ! is_array( $_meta_value ) ) {
             // no metabox values so all optimizations are a go.
-            if ( in_array( $optim, array( 'ao_post_preload' ) ) ) {
+            if ( in_array( $optim, apply_filters( 'autoptimize_filter_meta_optim_nonbool', array( 'ao_post_preload' ) ) ) ) {
                 // but make sure to return false for text input.
                 return false;
             }
