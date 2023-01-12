@@ -107,7 +107,7 @@ class autoptimizeMetabox
         </p>
         <?php
         $_ao_meta_lazyload_style = '';
-        if ( false === autoptimizeImages::should_lazyload_wrapper() ) {
+        if ( false === autoptimizeImages::should_lazyload_wrapper( true ) ) {
             $_ao_meta_lazyload_style = 'display:none;';
         }
         echo '<p class="ao_meta_sub" style="' . $_ao_meta_sub_opacity . $_ao_meta_lazyload_style . '">';

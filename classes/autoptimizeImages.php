@@ -812,13 +812,13 @@ class autoptimizeImages
     /**
      * Lazyload functions
      */
-    public static function should_lazyload_wrapper() {
+    public static function should_lazyload_wrapper( $no_meta = false ) {
         // needed in autoptimizeMain.php.
         $self = new self();
-        return $self->should_lazyload();
+        return $self->should_lazyload( '', $no_meta );
     }
 
-    public function should_lazyload( $context = '' ) {
+    public function should_lazyload( $context = '', $no_meta = false ) {
         if ( ! empty( $this->options['autoptimize_imgopt_checkbox_field_3'] ) && false === $this->check_nolazy() ) {
             $lazyload_return = true;
         } else {
@@ -826,7 +826,7 @@ class autoptimizeImages
         }
 
         // If page/ post check post_meta to see if lazyload is off for page.
-        if ( false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_lazyload' ) ) {
+        if ( false === $no_meta && false === autoptimizeConfig::get_post_meta_ao_settings( 'ao_post_lazyload' ) ) {
               $lazyload_return = false;
         }
 
