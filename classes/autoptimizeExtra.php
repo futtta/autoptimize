@@ -101,7 +101,7 @@ class autoptimizeExtra
         add_filter( 'tiny_mce_plugins', array( $this, 'filter_disable_emojis_tinymce' ) );
 
         // Removes emoji dns-preftech.
-        add_filter( 'wp_resource_hints', array( $this, 'filter_remove_emoji_dns_prefetch' ), 10, 2 );
+        add_filter( 'emoji_svg_url', '__return_false' );
     }
 
     public function filter_disable_emojis_tinymce( $plugins )
@@ -203,13 +203,6 @@ class autoptimizeExtra
         if ( ! empty( $options['autoptimize_extra_checkbox_field_8'] ) ) {
             $this->disable_global_styles();
         }
-    }
-
-    public function filter_remove_emoji_dns_prefetch( $urls, $relation_type )
-    {
-        $emoji_svg_url = apply_filters( 'emoji_svg_url', 'https://s.w.org/images/core/emoji/' );
-
-        return $this->filter_remove_dns_prefetch( $urls, $relation_type, $emoji_svg_url );
     }
 
     public function filter_remove_gfonts_dnsprefetch( $urls, $relation_type )
