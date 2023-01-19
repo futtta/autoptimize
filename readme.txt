@@ -323,7 +323,6 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * improvements to JSMin by Robert Ehrenleitner (big thanks Robert!).
 * do not consider jquery.js as minified any more (WordPress now uses jquery.min.js by default and jquery.js is the unminified version).
 * fix for "undefined array key" PHP errors in autoptimizeCriticalCSSCron.php
-* improvement to responsive image preload.
 * some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 3.1.4 =
