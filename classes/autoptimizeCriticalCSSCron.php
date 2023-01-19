@@ -147,13 +147,13 @@ class autoptimizeCriticalCSSCron {
                             $jprops['jvstat'] = 'NONE';
                             $jprops['jftime'] = microtime( true );
                             $this->criticalcss->log( 'API key validation error when processing job id <' . $jprops['ljid'] . '>, job status is now <' . $jprops['jqstat'] . '>', 3 );
-                        } elseif ( array_key_exists( 'job', $apireq ) && 'JOB_QUEUED' == $apireq['job']['status'] || 'JOB_ONGOING' == $apireq['job']['status'] ) {
+                        } elseif ( array_key_exists( 'job', $apireq ) && array_key_exists( 'status', $apireq['job'] ) && 'JOB_QUEUED' == $apireq['job']['status'] || 'JOB_ONGOING' == $apireq['job']['status'] ) {
                             // SUCCESS: request has a valid result.
                             // Update job properties.
                             $jprops['jid']    = $apireq['job']['id'];
                             $jprops['jqstat'] = $apireq['job']['status'];
                             $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> generate request successful, remote id <' . $jprops['jid'] . '>, status now is <' . $jprops['jqstat'] . '>', 3 );
-                        } elseif ( 'STATUS_JOB_BAD' == $apireq['job']['status'] ) {
+                        } elseif ( array_key_exists( 'job', $apireq ) && array_key_exists( 'status', $apireq['job'] ) && 'STATUS_JOB_BAD' == $apireq['job']['status'] ) {
                             // ERROR: concurrent requests
                             // Update job properties.
                             $jprops['jid']    = $apireq['job']['id'];
