@@ -167,6 +167,9 @@ class autoptimizeImages
         }
 
         if ( apply_filters( 'autoptimize_filter_imgopt_do_css', true ) ) {
+            // fixme; does not act on inline CSS yet?
+            // fixme; also check CCSS?
+            // fixme: also act on already minified CSS!
             add_filter(
                 'autoptimize_filter_base_replace_cdn',
                 array( $this, 'filter_optimize_css_images' ),
