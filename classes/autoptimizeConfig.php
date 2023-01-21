@@ -740,7 +740,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
 
     public function autoptimize_admin_scripts()
     {
-        wp_enqueue_script( 'unslider', plugins_url( '/external/js/unslider-min.js', __FILE__ ), array( 'jquery' ), null, true );
+        wp_enqueue_script( 'unslider', plugins_url( '/external/js/unslider.min.js', __FILE__ ), array( 'jquery' ), null, true );
     }
 
     public function autoptimize_admin_styles()
