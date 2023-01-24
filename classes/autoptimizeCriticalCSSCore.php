@@ -15,6 +15,13 @@ class autoptimizeCriticalCSSCore {
      * @var array
      */
     protected $_types = null;
+    
+    /**
+     * Critical CSS object.
+     *
+     * @var object
+     */
+    protected $criticalcss;
 
     public function __construct() {
         $this->criticalcss = autoptimize()->criticalcss();

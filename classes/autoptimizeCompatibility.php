@@ -10,6 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 class autoptimizeCompatibility
 {
     /**
+     * Options.
+     *
+     * @var array
+     */
+    protected $conf = array();
+
+    /**
      * Constructor.
      */
     public function __construct()

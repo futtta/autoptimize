@@ -22,6 +22,13 @@ class autoptimizeImages
      * @var self|null
      */
     protected static $instance = null;
+    
+    /**
+     * lazyload counter.
+     * 
+     * @var int
+     */
+    protected $lazyload_counter = 0;
 
     public function __construct( array $options = array() )
     {
@@ -31,7 +38,6 @@ class autoptimizeImages
         }
 
         $this->set_options( $options );
-        $this->lazyload_counter = 0;
     }
 
     public function set_options( array $options )
