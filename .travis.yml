@@ -30,7 +30,7 @@ matrix:
       env: WP_MULTISITE=1 CUSTOM_CONSTANTS=1
     - dist: focal
       php: 8.1
-    - dist: focal
+    - dist: jammy
       php: 8.2
 
 before_install:
