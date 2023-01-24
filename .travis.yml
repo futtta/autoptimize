@@ -32,17 +32,17 @@ matrix:
       php: 8.1
     - dist: focal
       php: 8.2
+      env: LIBONIG_INSTALL=1
 
 before_install:
   - '[[ "$TRAVIS_PHP_VERSION" != "7.2" ]] || export PHPUNIT_UPGRADE=1'
-  - '[[ "$TRAVIS_PHP_VERSION" == "8.2" ]] || export LIBONIG_INSTALL=1'
 
 install:
   # flags to pass to install
   - flags="--ansi --prefer-dist --no-interaction --optimize-autoloader --no-progress"
 
   # for PHP 8.2 install libonig
-  - if [ -n "$LIBONIG_INSTALL" ]; then sudo apt-get install libonig5; fi
+  - if [ -z "$LIBONIG_INSTALL" ]; then sudo apt-get install libonig5; fi
 
   # Upgrade phpunit for php 7.3 and higher
   - if [ -z "$PHPUNIT_UPGRADE" ]; then rm composer.lock; fi
