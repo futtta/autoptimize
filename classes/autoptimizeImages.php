@@ -173,8 +173,6 @@ class autoptimizeImages
         }
 
         if ( apply_filters( 'autoptimize_filter_imgopt_do_css', true ) ) {
-            // fixme; does not act on inline CSS yet?
-            // fixme; also check CCSS?
             // fixme: also act on already minified CSS!
             add_filter(
                 'autoptimize_filter_base_replace_cdn',
@@ -182,6 +180,14 @@ class autoptimizeImages
                 10,
                 1
             );
+
+            add_filter(
+                'autoptimize_html_after_minify',
+                array( $this, 'filter_optimize_inline_css_images' ),
+                10,
+                1
+            );
+
             $active = true;
         }
 
@@ -430,6 +436,32 @@ class autoptimizeImages
         } else {
             return $in;
         }
+    }
+    
+    public function filter_optimize_inline_css_images( $html ) {
+        preg_match_all( '#<style[^>]*>([^<]*)</style>#Um', $html, $inline_css_blocks, PREG_SET_ORDER );
+        foreach ( $inline_css_blocks as $inline_css_block ) {
+            if ( false !== strpos( $inline_css_block[0], 'background' ) ) { 
+                $inline_css_block_new = $this->replace_background_img_css( $inline_css_block[0] );
+                if ( $inline_css_block_new !== $inline_css_block[0] ) {
+                    $html = str_replace( $inline_css_block[0], $inline_css_block_new, $html );
+                }
+            }
+        }
+        return $html;
+    }
+
+    public static function replace_background_img_css( $css ) {
+        // fixme; can/ should we cache these?
+        preg_match_all( '#background[^;}]*url\((.*)\)#Ui', $css, $backgrounds, PREG_SET_ORDER );
+        if ( is_array( $backgrounds ) && ! empty( $backgrounds ) ) {
+            foreach ( $backgrounds as $background ) {
+                if ( autoptimizeImages::can_optimize_image_wrapper( $background[1] ) ) {
+                    $css = str_replace( $background[1], autoptimizeImages::build_imgopt_url_wrapper( $background[1] ), $css );
+                }
+            }
+        }
+        return $css;
     }
 
     private function get_imgopt_base_url()
