@@ -136,10 +136,10 @@ class autoptimizeToolbar
     public function enqueue_scripts()
     {
         // Autoptimize Toolbar Styles.
-        wp_enqueue_style( 'autoptimize-toolbar', plugins_url( '/static/toolbar.css', __FILE__ ), array(), AUTOPTIMIZE_PLUGIN_VERSION, 'all' );
+        wp_enqueue_style( 'autoptimize-toolbar', plugins_url( '/static/toolbar.min.css', __FILE__ ), array(), AUTOPTIMIZE_PLUGIN_VERSION, 'all' );
 
         // Autoptimize Toolbar Javascript.
-        wp_enqueue_script( 'autoptimize-toolbar', plugins_url( '/static/toolbar.js', __FILE__ ), array( 'jquery' ), AUTOPTIMIZE_PLUGIN_VERSION, true );
+        wp_enqueue_script( 'autoptimize-toolbar', plugins_url( '/static/toolbar.min.js', __FILE__ ), array( 'jquery' ), AUTOPTIMIZE_PLUGIN_VERSION, true );
 
         // Localizes a registered script with data for a JavaScript variable.
         // Needed for the AJAX to work properly on the frontend.
