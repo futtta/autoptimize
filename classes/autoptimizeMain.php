@@ -214,6 +214,7 @@ class autoptimizeMain
 
             // And show the imgopt notice.
             add_action( 'admin_notices', 'autoptimizeMain::notice_plug_imgopt' );
+            add_action( 'admin_notices', 'autoptimizeMain::notice_imgopt_issue' );
         }
     }
 
@@ -769,6 +770,30 @@ class autoptimizeMain
             echo '</p></div>';
         }
     }
+
+    public static function notice_imgopt_issue()
+    {
+        // Translators: the URL added points to the Autopmize Extra settings.
+        $_ao_imgopt_issue_notice      = sprintf( __( 'Shortpixel reports not being able to reach your site, resulting in your images not being optimized. You can %1$sread more about why this happens and how you can fix that problem here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/knowledge-base/article/469-i-received-an-e-mail-that-says-some-of-my-images-are-not-accessible-what-should-i-do#fullarticle" target="_blank">', '</a>' );
+        $_ao_imgopt_issue_notice      = apply_filters( 'autoptimize_filter_main_imgopt_issue_notice', $_ao_imgopt_issue_notice );
+        $_ao_imgopt_issue_dismissible = 'ao-img-opt-issue-14';
+        $_ao_imgopt_active            = autoptimizeImages::imgopt_active();
+        $_ao_imgopt_status            = autoptimizeOptionWrapper::get_option( 'autoptimize_imgopt_provider_stat', '' );
+
+        // fixme; TemporaryRedirectOrigin is a real bool at the moment as opposed to some other paramaters, have to make sure it stays that way!
+        if ( is_array( $_ao_imgopt_status ) && array_key_exists( 'TemporaryRedirectOrigin', $_ao_imgopt_status ) && $_ao_imgopt_status['TemporaryRedirectOrigin'] === true ) {
+            $_ao_imgopt_status_redirect_warning = true;            
+        } else {
+            $_ao_imgopt_status_redirect_warning = false;
+        }
+
+        if ( current_user_can( 'manage_options' ) && $_ao_imgopt_active && $_ao_imgopt_status_redirect_warning && '' !== $_ao_imgopt_issue_notice && PAnD::is_admin_notice_active( $_ao_imgopt_issue_dismissible ) ) {
+            echo '<div class="notice notice-info is-dismissible" data-dismissible="' . $_ao_imgopt_issue_dismissible . '"><p>';
+            echo $_ao_imgopt_issue_notice;
+            echo '</p></div>';
+        }
+    }
+
 
     public static function notice_nopagecache()
     {
