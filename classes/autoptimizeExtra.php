@@ -486,6 +486,15 @@ class autoptimizeExtra
                 }
             );
         }
+
+        if ( true === apply_filters( 'autoptimize_filter_extra_remove_woocommerce_block_css', true ) ) {
+            add_action(
+                'wp_enqueue_scripts',
+                function() {
+                    wp_dequeue_style( 'wc-blocks-style' );
+                }
+            );
+        }
     }
 
     public function admin_menu()
