@@ -209,7 +209,7 @@ class autoptimizeCriticalCSSCron {
                         }
                     }
 
-                    if ( empty( $apireq ) ) {
+                    if ( empty( $apireq ) || ! is_array( $apireq ) ) {
                         // ERROR: no response
                         // Update job properties.
                         $jprops['jqstat'] = 'NO_RESPONSE';
@@ -277,7 +277,7 @@ class autoptimizeCriticalCSSCron {
                             $apireq['css'] = '/* critical css removed for DEBUG logging purposes */';
                             $this->criticalcss->log( 'Job response was: ' . json_encode( $apireq ), 3 );
                         }
-                    } elseif ( array_key_exists( 'job', $apireq ) && array_key_exists( 'status', $apireq['job'] ) && 'JOB_FAILED' == $apireq['job']['status'] || 'STATUS_JOB_BAD' == $apireq['job']['status'] ) {
+                    } elseif ( array_key_exists( 'job', $apireq ) && is_array( $apireq['job'] ) && array_key_exists( 'status', $apireq['job'] ) && 'JOB_FAILED' == $apireq['job']['status'] || 'STATUS_JOB_BAD' == $apireq['job']['status'] ) {
                         // ERROR: failed job
                         // Update job properties.
                         $jprops['jqstat'] = $apireq['job']['status'];
