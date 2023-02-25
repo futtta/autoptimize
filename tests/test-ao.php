@@ -278,7 +278,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<link media="all" href="${cdnurl}/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<link media="all" href="${cdnurl}/${subfolder}${csspart}${csshash}.css" rel="stylesheet"><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -347,7 +347,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet"><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -416,7 +416,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/${subfolder}${csspart}{$csshash}.css" onload="this.onload=null;this.media='all';" /><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/${subfolder}${csspart}{$csshash}.css" onload="this.onload=null;this.media='all';"><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -485,7 +485,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/${subfolder}${csspart}${csshash}.css" onload="this.onload=null;this.media='all';" /><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/${subfolder}${csspart}${csshash}.css" onload="this.onload=null;this.media='all';"><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet" /></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -3165,7 +3165,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<link rel="stylesheet" media="print" onload="this.onload=null;this.media='all';" id="ao_optimized_gfonts" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600%7CCrimson+Pro:700,italic400&#038;subset=latin%2Ccyrillic-ext%2Cgreek-ext%2Cgreek%2Cvietnamese%2Clatin-ext%2Ccyrillic&amp;display=swap" /><link rel="dummy">
+<link rel="stylesheet" media="print" onload="this.onload=null;this.media='all';" id="ao_optimized_gfonts" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600%7CCrimson+Pro:700,italic400&#038;subset=latin%2Ccyrillic-ext%2Cgreek-ext%2Cgreek%2Cvietnamese%2Clatin-ext%2Ccyrillic&amp;display=swap"><link rel="dummy">
 MARKUP;
 
         $instance = autoptimizeExtra::instance();
