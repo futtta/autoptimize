@@ -304,7 +304,7 @@ class autoptimizeExtra
                 } else {
                     $rel_string = 'rel="stylesheet"';
                 }
-                $fonts_markup = '<link ' . $rel_string . ' id="ao_optimized_gfonts" href="https://fonts.googleapis.com/css?family=' . $fonts_string . '" />';
+                $fonts_markup = '<link ' . $rel_string . ' id="ao_optimized_gfonts" href="https://fonts.googleapis.com/css?family=' . $fonts_string . '">';
             }
         } elseif ( '4' === $options['autoptimize_extra_radio_field_4'] ) {
             // Aggregate & load async (webfont.js impl.)!
