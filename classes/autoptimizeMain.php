@@ -428,6 +428,12 @@ class autoptimizeMain
             if ( function_exists( 'is_customize_preview' ) && is_customize_preview() ) {
                 $is_customize_preview = is_customize_preview();
             }
+            
+            // explicitly disable when is_login exists and is true.
+            $is_login = false;
+            if ( function_exists( 'is_login' ) && is_login() ) {
+                $is_login = is_login();
+            }
 
             /**
              * We only buffer the frontend requests (and then only if not a feed
