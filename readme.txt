@@ -319,6 +319,15 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.1.6 =
+* CSS: removing trailing slashes in <link tags for more W3 HTML validation love
+* Extra: also dequeue WooCommerce block CSS if "remove WordPress block CSS" option is active
+* imgopt: also act on non-aggregated inline CSS
+* imgopt: added logic to warn users if Shortpixel can't reach their site
+* backend: AO toolbar JS/ CSS is finally minified as well.
+* explicitly disable optimization of login pages
+* some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
+
 = 3.1.5 =
 * improvements to JSMin by Robert Ehrenleitner (big thanks Robert!).
 * do not consider jquery.js as minified any more (WordPress now uses jquery.min.js by default and jquery.js is the unminified version).
