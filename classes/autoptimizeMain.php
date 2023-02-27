@@ -431,8 +431,8 @@ class autoptimizeMain
             
             // explicitly disable when is_login exists and is true but don't use it direclty because older versions of WordPress don't have that yet.
             $is_login = false;
-            if ( function_exists( 'is_login' ) && is_login() ) {
-                $is_login = is_login();
+            if ( function_exists( 'is_login' ) && true === is_login() ) {
+                $is_login = true;
             }
 
             /**
