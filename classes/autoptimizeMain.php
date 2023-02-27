@@ -429,7 +429,7 @@ class autoptimizeMain
                 $is_customize_preview = is_customize_preview();
             }
             
-            // explicitly disable when is_login exists and is true.
+            // explicitly disable when is_login exists and is true but don't use it direclty because older versions of WordPress don't have that yet.
             $is_login = false;
             if ( function_exists( 'is_login' ) && is_login() ) {
                 $is_login = is_login();
@@ -442,7 +442,7 @@ class autoptimizeMain
              * while the main query hasn't been ran yet. Thats why we use
              * AUTOPTIMIZE_INIT_EARLIER in tests.
              */
-            $do_buffering = ( ! is_admin() && ! is_feed() && ! is_embed() && ! $ao_noptimize && ! $is_customize_preview );
+            $do_buffering = ( ! is_admin() && ! is_feed() && ! is_embed() && ! $is_login && ! $is_customize_preview && ! $ao_noptimize );
         }
 
         return $do_buffering;
