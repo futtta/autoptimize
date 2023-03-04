@@ -217,7 +217,7 @@ class autoptimizeCriticalCSSCron {
                         $jprops['jvstat'] = 'NONE';
                         $jprops['jftime'] = microtime( true );
                         $this->criticalcss->log( 'Job id <' . $jprops['ljid'] . '> request has no response, status now is <' . $jprops['jqstat'] . '>', 3 );
-                    } elseif ( array_key_exists( 'status', $apireq ) && 'JOB_QUEUED' == $apireq['status'] || 'JOB_ONGOING' == $apireq['status'] ) {
+                    } elseif ( array_key_exists( 'status', $apireq ) && ( 'JOB_QUEUED' == $apireq['status'] || 'JOB_ONGOING' == $apireq['status'] ) ) {
                         // SUCCESS: request has a valid result
                         // Process a PENDING job
                         // Update job properties.
@@ -277,7 +277,7 @@ class autoptimizeCriticalCSSCron {
                             $apireq['css'] = '/* critical css removed for DEBUG logging purposes */';
                             $this->criticalcss->log( 'Job response was: ' . json_encode( $apireq ), 3 );
                         }
-                    } elseif ( array_key_exists( 'job', $apireq ) && is_array( $apireq['job'] ) && array_key_exists( 'status', $apireq['job'] ) && 'JOB_FAILED' == $apireq['job']['status'] || 'STATUS_JOB_BAD' == $apireq['job']['status'] ) {
+                    } elseif ( array_key_exists( 'job', $apireq ) && is_array( $apireq['job'] ) && array_key_exists( 'status', $apireq['job'] ) && ( 'JOB_FAILED' == $apireq['job']['status'] || 'STATUS_JOB_BAD' == $apireq['job']['status'] ) ) {
                         // ERROR: failed job
                         // Update job properties.
                         $jprops['jqstat'] = $apireq['job']['status'];
