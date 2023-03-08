@@ -780,7 +780,7 @@ class autoptimizeMain
     public static function notice_imgopt_issue()
     {
         // Translators: the URL added points to the Autopmize Extra settings.
-        $_ao_imgopt_issue_notice      = sprintf( __( 'Shortpixel reports not being able to reach your site, resulting in your images not being optimized. You can %1$sread more about why this happens and how you can fix that problem here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/knowledge-base/article/469-i-received-an-e-mail-that-says-some-of-my-images-are-not-accessible-what-should-i-do#fullarticle" target="_blank">', '</a>' );
+        $_ao_imgopt_issue_notice      = sprintf( __( 'Shortpixel reports it cannot always reach your site, which might mean some images are not optimized. You can %1$sread more about why this happens and how you can fix that problem here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/knowledge-base/article/469-i-received-an-e-mail-that-says-some-of-my-images-are-not-accessible-what-should-i-do#fullarticle" target="_blank">', '</a>' );
         $_ao_imgopt_issue_notice      = apply_filters( 'autoptimize_filter_main_imgopt_issue_notice', $_ao_imgopt_issue_notice );
         $_ao_imgopt_issue_dismissible = 'ao-img-opt-issue-14';
         $_ao_imgopt_active            = autoptimizeImages::imgopt_active();
