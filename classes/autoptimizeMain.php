@@ -786,7 +786,7 @@ class autoptimizeMain
         $_ao_imgopt_active            = autoptimizeImages::imgopt_active();
         $_ao_imgopt_status            = autoptimizeOptionWrapper::get_option( 'autoptimize_imgopt_provider_stat', '' );
 
-        if ( is_array( $_ao_imgopt_status ) && array_key_exists( 'TemporaryRedirectOrigin', $_ao_imgopt_status ) && $_ao_imgopt_status['TemporaryRedirectOrigin'] === "true" ) {
+        if ( is_array( $_ao_imgopt_status ) && array_key_exists( 'TemporaryRedirectOrigin', $_ao_imgopt_status ) && ( $_ao_imgopt_status['TemporaryRedirectOrigin'] === "true" || $_ao_imgopt_status['TemporaryRedirectOrigin'] === true ) ) {
             $_ao_imgopt_status_redirect_warning = true;            
         } else {
             $_ao_imgopt_status_redirect_warning = false;
