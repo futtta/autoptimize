@@ -8,6 +8,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class autoptimizeCriticalCSSSettingsAjax {
+    /**
+     * Critical CSS object.
+     *
+     * @var object
+     */
+    protected $criticalcss;
+    
     public function __construct() {
         $this->criticalcss = autoptimize()->criticalcss();
         $this->run();

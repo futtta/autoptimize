@@ -15,6 +15,13 @@ class autoptimizeCriticalCSSSettings {
      */
     private $settings_screen_do_remote_http = true;
 
+    /**
+     * Critical CSS object.
+     *
+     * @var object
+     */
+    protected $criticalcss;
+
     public function __construct() {
         $this->criticalcss = autoptimize()->criticalcss();
         $this->settings_screen_do_remote_http = apply_filters( 'autoptimize_settingsscreen_remotehttp', $this->settings_screen_do_remote_http );
