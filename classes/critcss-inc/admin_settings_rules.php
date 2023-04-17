@@ -230,6 +230,9 @@ function sanitize_rules( $rules ) {
             }
         }
     }
+    
+    $rules = autoptimizeUtils::strip_tags_array( $rules );
     return $rules;
 }
+
 ?>

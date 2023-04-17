@@ -571,4 +571,24 @@ class autoptimizeUtils
         // filter to override result for testing purposes.
         return apply_filters( 'autoptimize_filter_utils_is_local_server', $_is_local_server );
     }
+
+    public static function strip_tags_array( $array ) {
+        // strip all tags in an array (use case: avoid XSS in CCSS rules both when importing and when outputting).
+        // based on https://stackoverflow.com/a/44732196/237449 but heavily tweaked.
+        if ( is_array( $array ) ) {
+            $result = array();
+            foreach ( $array as $key => $value ){
+                if ( is_array( $value ) ) {
+                    $result[$key] = autoptimizeUtils::strip_tags_array( $value );
+                } else if ( is_string( $value ) ) {
+                    $result[$key] = wp_strip_all_tags( $value );
+                } else {
+                    $result[$key] = $value;
+                }
+            }
+        } else {
+            $result = wp_strip_all_tags( $array );
+        }
+        return $result;
+    }
 }
