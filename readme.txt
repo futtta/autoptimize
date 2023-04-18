@@ -319,6 +319,9 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.1.7 =
+* improve validation of critical CSS rules when imported.
+
 = 3.1.6 =
 * CSS: removing trailing slashes in <link tags for more W3 HTML validation love
 * Extra: also dequeue WooCommerce block CSS if "remove WordPress block CSS" option is active
