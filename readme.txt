@@ -5,7 +5,7 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 4.9
 Tested up to: 6.2
 Requires PHP: 5.6
-Stable tag: 3.1.6
+Stable tag: 3.1.7
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -320,7 +320,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 3.1.7 =
-* improve validation of critical CSS rules when imported.
+* security: improve validation and sanitization of critical CSS rules, to fix a medium severity Admin+ Stored Cross-Site Scripting vulnerability as reported by WP Scan Security.
 
 = 3.1.6 =
 * CSS: removing trailing slashes in <link tags for more W3 HTML validation love
