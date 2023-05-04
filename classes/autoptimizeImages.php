@@ -1200,7 +1200,7 @@ class autoptimizeImages
 
     public function fix_silly_bgimg_quotes( $tag_in ) {
         // some themes/ pagebuilders wrap backgroundimages in HTML-encoded quotes (or linebreaks) which breaks imgopt/ lazyloading, this removes them.
-        return trim( str_replace( array( "\r\n", '&quot;', '&#034;', '&apos;', '&#039;' ), '', $tag_in ) );
+        return trim( str_replace( array( "\r\n", '"', '&quot;', '&#034;', '&apos;', '&#039;' ), '', $tag_in ) );
     }
 
     public function maybe_fix_missing_quotes( $tag_in ) {
