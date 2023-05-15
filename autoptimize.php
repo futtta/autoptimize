@@ -90,6 +90,10 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
     require AUTOPTIMIZE_PLUGIN_DIR . 'classes/autoptimizeCLI.php';
 }
 
+if ( apply_filters( 'autoptimize_filter_disable_plugin', false ) ) {
+    return;
+}
+
 /**
  * Retrieve the instance of the main plugin class.
  *
