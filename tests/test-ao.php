@@ -2736,7 +2736,7 @@ MARKUP;
     /**
      * Test image optimization in autoptimizeImages.php.
      *
-     * case: background image in a style attribute
+     * case: background image in a style attribute (background-image variation)
      */
     public function test_imgopt_bgimg()
     {
@@ -2755,6 +2755,36 @@ MARKUP;
 
         $expected = <<<MARKUP
 <div class="textwidget custom-html-widget"><div class="et_parallax_bg et_pb_parallax_css" style="height:200px; background-image: url($imgopthost/client/to_webp,q_glossy,ret_img/$siteurl/wp-content/uploads/2018/05/DSC_1615-300x201.jpg);"></div>
+MARKUP;
+
+        $instance = autoptimizeImages::instance();
+        $instance->set_options( $opts );
+        $actual = $instance->filter_optimize_images( $markup );
+        $this->assertEquals( $expected, $actual );
+    }
+
+    /**
+     * Test image optimization in autoptimizeImages.php.
+     *
+     * case: background image in a style attribute (background variation)
+     */
+    public function test_imgopt_background()
+    {
+        $urls                                        = $this->get_urls();
+        $siteurl                                     = $urls['siteurl'];
+        $imgopthost                                  = $urls['imgopthost'];
+        $opts                                        = autoptimizeImages::fetch_options();
+        $opts['autoptimize_imgopt_checkbox_field_1'] = '1';
+        $opts['autoptimize_imgopt_checkbox_field_3'] = '0';
+
+        add_filter( 'autoptimize_filter_utils_is_local_server', '__return_false' );
+
+        $markup = <<<MARKUP
+<div class="textwidget custom-html-widget"><div class="et_parallax_bg et_pb_parallax_css" style="height:200px; background: center / contain no-repeat url($siteurl/wp-content/uploads/2018/05/DSC_1615-300x201.jpg);"></div>
+MARKUP;
+
+        $expected = <<<MARKUP
+<div class="textwidget custom-html-widget"><div class="et_parallax_bg et_pb_parallax_css" style="height:200px; background: center / contain no-repeat url($imgopthost/client/to_webp,q_glossy,ret_img/$siteurl/wp-content/uploads/2018/05/DSC_1615-300x201.jpg);"></div>
 MARKUP;
 
         $instance = autoptimizeImages::instance();
