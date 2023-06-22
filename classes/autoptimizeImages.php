@@ -261,7 +261,7 @@ class autoptimizeImages
         return false;
     }
 
-    public static function get_imgopt_host()
+    public function get_imgopt_host()
     {
         static $imgopt_host = null;
 
