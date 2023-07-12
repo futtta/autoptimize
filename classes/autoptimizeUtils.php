@@ -409,7 +409,7 @@ class autoptimizeUtils
         if ( null === $_found_pagecache ) {
             $_page_cache_constants = array(
                 'NgInx' => 'NGINX_HELPER_BASENAME',
-                'Kinsta' => 'KINSTA_CACHE_ZONE',
+                'Kinsta' => 'KINSTAMU_VERSION',
                 'Presslabs' => 'PL_INSTANCE_REF',
                 'Cache Enabler' => 'CACHE_ENABLER_VERSION',
                 'Speed Booster Pack' => 'SBP_PLUGIN_NAME',
@@ -558,6 +558,7 @@ class autoptimizeUtils
                 $_is_local_server = true;
             } elseif ( 0 === strpos( $_domain, '127.' ) || 0 === strpos( $_domain, '192.168.' ) || 0 === strpos( $_domain, 'fd' ) ) {
                 // private ranges so unreachable for imgopt/ CCSS.
+                // fixme; 10-range + 172 iso 127??
                 $_is_local_server = true;
             } elseif ( autoptimizeUtils::str_ends_in( $_domain, '.local') ) {
                 // matches 'whatever.local'.
