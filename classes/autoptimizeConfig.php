@@ -816,11 +816,11 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     public static function get_defaults()
     {
         static $config = array(
-            'autoptimize_html'                           => 0,
+            'autoptimize_html'                           => 1,
             'autoptimize_html_keepcomments'              => 0,
             'autoptimize_html_minify_inline'             => 0,
             'autoptimize_enable_site_config'             => 1,
-            'autoptimize_js'                             => 0,
+            'autoptimize_js'                             => 1,
             'autoptimize_js_aggregate'                   => 0,
             'autoptimize_js_defer_not_aggregate'         => 1,
             'autoptimize_js_defer_inline'                => 1,
@@ -829,7 +829,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             'autoptimize_js_justhead'                    => 0,
             'autoptimize_js_include_inline'              => 0,
             'autoptimize_js_forcehead'                   => 0,
-            'autoptimize_css'                            => 0,
+            'autoptimize_css'                            => 1,
             'autoptimize_css_aggregate'                  => 0,
             'autoptimize_css_exclude'                    => '',
             'autoptimize_css_justhead'                   => 0,
