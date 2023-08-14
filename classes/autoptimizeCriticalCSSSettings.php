@@ -189,7 +189,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     <div data-dismissible="i-know-about-disable-cron-forever" class="notice-warning notice is-dismissible"><p>
                     <?php
-                    _e( 'WordPress cron (for task scheduling) seems to be disabled. Have a look at <a href="https://wordpress.org/plugins/autoptimize-criticalcss/faq/" target="_blank">the FAQ</a> or the info in the Job Queue instructions if all jobs remain in "N" status and no rules are created.', 'autoptimize' );
+                    _e( 'WordPress cron (for task scheduling) seems to be disabled. Have a look at <a href="https://blog.futtta.be/2023/03/17/how-to-fix-autoptimize-critical-css-cron-issue/" target="_blank">the FAQ</a> or the info in the Job Queue instructions if all jobs remain in "N" status and no rules are created.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
