@@ -387,7 +387,9 @@ class autoptimizeCache
             $dbt    = debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS, 2 );
             $caller = isset( $dbt[1]['function'] ) ? $dbt[1]['function'] : null;
             if ( 'et_core_clear_wp_cache' === $caller ) {
-                _doing_it_wrong( 'autoptimizeCache::clearall', 'Divi devs: please don\'t clear Autoptimize\'s cache, it is unneeded and can break sites. You can contact me at futtta@gmail.com to discuss.', 'Autoptimize 2.9.6' );
+                if ( apply_filters( 'autoptimize_filter_cache_divi_wrong_complain', true ) ) {
+                    _doing_it_wrong( 'autoptimizeCache::clearall', 'Divi devs: please don\'t clear Autoptimize\'s cache, it is unneeded and can break sites. You can contact me at futtta@gmail.com to discuss.', 'Autoptimize 2.9.6' );
+                }
                 return false;
             }
         }
