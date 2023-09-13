@@ -460,7 +460,7 @@ class autoptimizeScripts extends autoptimizeBase
                             }
 
                             $new_tag       = '<script defer ' . $_id . 'src="data:text/javascript;base64,' . base64_encode( $match[3] ) . '"></script>';
-                            $this->content = str_replace( $tag, $new_tag, $this->content );
+                            $this->content = str_replace( $this->hide_comments( $tag ), $new_tag, $this->content );
                             $tag           = '';
                         } else {
                             $tag = '';
