@@ -38,6 +38,26 @@ class autoptimizeImages
         }
 
         $this->set_options( $options );
+
+        // Add filter to set WebP output when enabled.
+        if ( ! empty( $options['autoptimize_imgopt_checkbox_field_8'] ) ) {
+            add_filter( 'image_editor_output_format', array( $this, 'filter_image_editor_output_format' ) );
+            add_filter( 'wp_editor_set_quality', array( $this, 'filter_image_editor_default_quality' ), 10, 2 );
+        }
+    }
+
+    // Output uploaded JPEGs as WebP.
+    public function filter_image_editor_output_format( $mappings ){
+        $mappings[ 'image/jpeg' ] = 'image/webp';
+        return $mappings;
+    }
+
+    // Set the WebP default quality to 75.
+    public function filter_image_editor_default_quality( $quality, $mime_type ){
+        if ( 'image/webp' === $mime_type ) {
+            return 75;
+        }
+        return $quality;
     }
 
     public function set_options( array $options )
@@ -1397,6 +1417,12 @@ class autoptimizeImages
                 <th scope="row"><?php _e( 'Lazy-load images?', 'autoptimize' ); ?></th>
                 <td>
                     <label><input type='checkbox' id='autoptimize_imgopt_lazyload_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_3]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_3'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Image lazy-loading will delay the loading of non-visible images to allow the browser to optimally load all resources for the "above the fold"-page first.', 'autoptimize' ); ?></label>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e( 'Output WebP images', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='checkbox' id='autoptimize_imgopt_webp_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_8]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_8'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_8'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'WordPress will output images in the WebP format when available.', 'autoptimize' ); ?></label>
                 </td>
             </tr>
             <tr id='autoptimize_imgopt_lazyload_exclusions' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_3', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_3'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_3'] ) ) { echo 'class="autoptimize_lazyload_child hidden"'; } else { echo 'class="autoptimize_lazyload_child"'; } ?>>
