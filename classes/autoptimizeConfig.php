@@ -866,6 +866,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             'autoptimize_extra_text_field_3'     => '',
             'autoptimize_extra_text_field_7'     => '',
             'autoptimize_extra_checkbox_field_8' => '0',
+            'autoptimize_extra_checkbox_field_9' => '1',
         );
 
         return $defaults;
