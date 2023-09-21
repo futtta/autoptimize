@@ -35,6 +35,11 @@ class autoptimizeExtra
         }
 
         $this->options = $options;
+
+        // Potentially load quicklink.
+        if ( ! empty( $options['autoptimize_extra_checkbox_field_9'] ) ) {
+            require_once dirname( __FILE__ ) . '/external/php/quicklink/quicklink.php';
+        }
     }
 
     /**
@@ -563,6 +568,12 @@ class autoptimizeExtra
                     <?php // translators: "display:swap" should remain untranslated, will be shown in code tags. ?>
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="5" <?php checked( 5, $gfonts, true ); ?> ><?php echo __( 'Combine and link deferred in head (fonts load late, but are not render-blocking)', 'autoptimize' ) . ', ' . sprintf( __( 'includes %1$sdisplay:swap%2$s.', 'autoptimize' ), '<code>', '</code>' ); ?><br/>
                     <input type="radio" name="autoptimize_extra_settings[autoptimize_extra_radio_field_4]" value="4" <?php checked( 4, $gfonts, true ); ?> ><?php echo __( 'Combine and load fonts asynchronously with <a href="https://github.com/typekit/webfontloader#readme" target="_blank">webfont.js</a>', 'autoptimize' ) . ' ' . __( '(deprecated)', 'autoptimize' ); ?><br/>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php _e( 'Prefetch links', 'autoptimize' ); ?></th>
+                <td>
+                    <label><input type='checkbox' name='autoptimize_extra_settings[autoptimize_extra_checkbox_field_9]' <?php if ( ! empty( $options['autoptimize_extra_checkbox_field_9'] ) && '1' === $options['autoptimize_extra_checkbox_field_9'] ) { echo 'checked="checked"'; } ?> value='1'><?php _e( 'Detects links in the viewport, waits until the browser is idle and prefetches the URLs for these links.', 'autoptimize' ); ?></label>
                 </td>
             </tr>
             <tr>

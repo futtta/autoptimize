@@ -85,10 +85,6 @@ function autoptimize_autoload( $class_name ) {
 
 spl_autoload_register( 'autoptimize_autoload' );
 
-// Load the quicklink feature.
-$path = dirname( __FILE__ ) . '/classes/external/php/quicklink/quicklink.php';
-require_once $path;
-
 // Load WP CLI command(s) on demand.
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
     require AUTOPTIMIZE_PLUGIN_DIR . 'classes/autoptimizeCLI.php';
