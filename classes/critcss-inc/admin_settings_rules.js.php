@@ -232,6 +232,7 @@ function addEditRow(idToEdit) {
         jQuery("#critcss_addedit_type").val(crit_type);
         jQuery("#critcss_addedit_file").val(crit_file);
         jQuery("#critcss_addedit_css").attr("placeholder", "<?php _e( 'Loading critical CSS...', 'autoptimize' ); ?>");
+        jQuery("#critcss_addedit_css").attr("spellcheck",false);
         jQuery("#critcss_addedit_type").attr("disabled",true);
 
         if (crit_type==="paths") {
@@ -264,6 +265,7 @@ function addEditRow(idToEdit) {
 
         // default: paths, hide content type field
         jQuery("#critcss_addedit_type").val("paths");
+        jQuery("#critcss_addedit_css").attr("spellcheck",false);
         jQuery("#critcss_addedit_pagetype_wrapper").hide();
 
         // event handler on type to switch display
