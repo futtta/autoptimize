@@ -317,6 +317,7 @@ function addEditRow(idToEdit) {
 
 function editDefaultCritCss(){
     document.getElementById("dummyDefault").value=document.getElementById("autoptimize_css_defer_inline").value;
+    jQuery("#dummyDefault").attr("spellcheck",false);
     jQuery("#default_critcss_wrapper").dialog({
         autoOpen: true,
         height: 505,
@@ -338,6 +339,7 @@ function editDefaultCritCss(){
 
 function editAdditionalCritCss(){
     document.getElementById("dummyAdditional").value=document.getElementById("autoptimize_ccss_additional").value;
+    jQuery("#dummyAdditional").attr("spellcheck",false);
     jQuery("#additional_critcss_wrapper").dialog({
         autoOpen: true,
         height: 505,
