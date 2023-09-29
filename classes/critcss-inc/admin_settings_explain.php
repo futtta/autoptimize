@@ -34,7 +34,7 @@ function ao_ccss_render_explain() {
                     if ( ! is_wp_error( $ccss_expl_resp ) ) {
                         if ( '200' == wp_remote_retrieve_response_code( $ccss_expl_resp ) ) {
                             $ccss_explanation = wp_kses_post( wp_remote_retrieve_body( $ccss_expl_resp ) );
-                            set_transient( 'ao3_ccss_explain', $ccss_explanation, WEEK_IN_SECONDS );
+                            set_transient( $_transient, $ccss_explanation, WEEK_IN_SECONDS );
                         }
                     }
                 }
