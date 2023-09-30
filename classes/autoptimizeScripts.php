@@ -377,8 +377,20 @@ class autoptimizeScripts extends autoptimizeBase
                         }
 
                         // not aggregating but deferring?
-                        if ( $this->defer_not_aggregate && false === $this->aggregate && ( str_replace( $this->dontmove, '', $path ) === $path || ( apply_filters( 'autoptimize_filter_js_defer_external', true ) && str_replace( $this->dontmove, '', $orig_tag ) === $orig_tag ) ) && strpos( $new_tag, ' defer' ) === false && strpos( $new_tag, ' async' ) === false ) {
-                            $new_tag = str_replace( '<script ', '<script defer ', $new_tag );
+                        if ( $this->defer_not_aggregate && false === $this->aggregate && ( str_replace( $this->dontmove, '', $path ) === $path || ( apply_filters( 'autoptimize_filter_js_defer_external', true ) && str_replace( $this->dontmove, '', $orig_tag ) === $orig_tag ) ) && strpos( $new_tag, ' defer' ) === false ) {
+                            if ( false !== strpos( $new_tag, ' async' ) && true === apply_filters( 'autoptimize_filter_js_defer_trumps_async', true ) ) {
+                                // remove async flag to ensure JS is properly deferred, otherwise the asynced JS might fire 
+                                // before deferred inlined JS is executed, off course except filter is set to false which
+                                // re-institutes previous behavior.
+                                $new_tag = str_replace( array( " async='async'", ' async="async"', ' async=async', ' async' ), '', $new_tag );
+                            }
+                            
+                            if ( false === strpos( $new_tag, ' async' ) ) {
+                                // either async wasn't there to begin with or it was removed.
+                                // if async is there, the autoptimize_filter_js_defer_trumps_async
+                                // filter was set to false and in that case defer should not be added.
+                                $new_tag = str_replace( '<script ', '<script defer ', $new_tag );
+                            }
                         }
 
                         // Should we minify the non-aggregated script?
