@@ -225,6 +225,7 @@ class autoptimizeMain
         if ( autoptimizeConfig::is_admin_and_not_ajax() ) {
             new autoptimizePartners();
             new autoptimizeExitSurvey();
+            new autoptimizeProTab();
         }
     }
 
