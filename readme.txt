@@ -323,6 +323,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * improvement: activate JS, CSS & HTML optimization upon plugin activation (hat tip to Adam Silverstein (developer relations engineer at Google))
 * improvement: also defer asynced JS (to ensure execution order remains intact; asynced JS should not execute before deferred inline JS which it might depend upon)
 * bugfix: disable spellcheck on CSS textarea's (above the fold CSS/ critical CSS) which in some cases caused browser issues
+* add tab to explain Autoptimize Pro.
 * some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 3.1.8.1 =
