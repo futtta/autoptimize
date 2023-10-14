@@ -556,9 +556,9 @@ class autoptimizeUtils
             } elseif ( in_array( $_domain, array( '127.0.0.1', '0000:0000:0000:0000:0000:0000:0000:0001', '0:0:0:0:0:0:0:1', '::1' ) ) ) {
                 // localhost IPv4/ IPv6.
                 $_is_local_server = true;
-            } elseif ( 0 === strpos( $_domain, '127.' ) || 0 === strpos( $_domain, '192.168.' ) || 0 === strpos( $_domain, 'fd' ) ) {
+            } elseif ( 0 === strpos( $_domain, '127.' ) || 0 === strpos( $_domain, '192.168.' ) || 0 === strpos( $_domain, '10.' ) || 0 === strpos( $_domain, 'fd' ) ) {
                 // private ranges so unreachable for imgopt/ CCSS.
-                // fixme; 10-range + 172 iso 127??
+                // fixme; 172.16.0.0–172.31.255.255 also private.
                 $_is_local_server = true;
             } elseif ( autoptimizeUtils::str_ends_in( $_domain, '.local') ) {
                 // matches 'whatever.local'.
