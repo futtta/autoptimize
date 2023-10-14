@@ -329,7 +329,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 3.1.8.1 =
-* quick fix for critical error.
+* urgent fix for PHP error, sorry about that!
 
 = 3.1.8 =
 * Images: improve optmization logic for background images
@@ -337,7 +337,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 3.1.7 =
-* security: improve validation and sanitization of critical CSS rules, to fix a medium severity Admin+ Stored Cross-Site Scripting vulnerability as reported by WP Scan Security.
+* security: improve validation (import) and sanitization (output) of critical CSS rules, to fix a medium severity Admin+ Stored Cross-Site Scripting vulnerability as reported by WP Scan Security.
 
 = 3.1.6 =
 * CSS: removing trailing slashes in <link tags for more W3 HTML validation love
