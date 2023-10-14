@@ -3,7 +3,7 @@ Contributors: futtta, optimizingmatters, zytzagoo, turl
 Tags: optimize, minify, performance, images, core web vitals, lazy-load, pagespeed, google fonts
 Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 Requires at least: 5.3
-Tested up to: 6.3
+Tested up to: 6.4
 Requires PHP: 5.6
 Stable tag: 3.1.8.1
 
@@ -325,6 +325,7 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 * improvement: exclude images from being lazyloaded if they have fetchpriority attribute set to high (as done by WordPress core since 6.3)
 * bugfix: disable spellcheck on CSS textarea's (above the fold CSS/ critical CSS) which in some cases caused browser issues
 * add tab to explain Autoptimize Pro.
+* confirmed working with WordPress 6.4 (beta 3)
 * some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 3.1.8.1 =
