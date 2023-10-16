@@ -193,7 +193,10 @@ class autoptimizeMain
                 // And disable Jetpack's site accelerator if JS or CSS opt. are active.
                 if ( class_exists( 'Jetpack' ) && apply_filters( 'autoptimize_filter_main_disable_jetpack_cdn', true ) && ( $conf->get( 'autoptimize_js' ) || $conf->get( 'autoptimize_css' ) || autoptimizeImages::imgopt_active() ) ) {
                     add_filter( 'jetpack_force_disable_site_accelerator', '__return_true' ); // this does not seemt to work any more?
-                    add_filter( 'jetpack_photon_skip_for_url', '__return_true' );
+                    if ( true === autoptimizeImages::imgopt_active() ) {
+                        // only disable photon if AO is optimizing images.
+                        add_filter( 'jetpack_photon_skip_for_url', '__return_true' );
+                    }
                 }
 
                 // Add "no cache found" notice.
