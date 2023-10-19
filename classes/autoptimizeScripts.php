@@ -471,7 +471,18 @@ class autoptimizeScripts extends autoptimizeBase
                                 $_id = '';
                             }
 
-                            $new_tag       = '<script defer ' . $_id . 'src="data:text/javascript;base64,' . base64_encode( $match[3] ) . '"></script>';
+                            // if "minify inline" is on and if more then 9 spaces or 4 line breaks are found 
+                            // in the inline JS then it is likely not minified, so minify before base64-encoding.
+                            $_script_contents = $match[3];
+                            if ( 'on' === autoptimizeOptionWrapper::get_option( 'autoptimize_html_minify_inline', 'off' ) && substr_count( $_script_contents, ' ' ) > 9 && substr_count( $_script_contents, "\n" ) > 4 && true === apply_filters( 'autoptimize_filter_script_defer_inline_minify', true ) ) {
+                                $_tmp_script_contents = trim( JSMin::minify( $_script_contents ) );
+                                if ( ! empty( $_tmp_script_contents ) ) {
+                                    $_script_contents = $_tmp_script_contents;
+                                }
+                            }
+
+                            // base64 and defer the lot already.
+                            $new_tag       = '<script defer ' . $_id . 'src="data:text/javascript;base64,' . base64_encode( $_script_contents ) . '"></script>';
                             $this->content = str_replace( $this->hide_comments( $tag ), $new_tag, $this->content );
                             $tag           = '';
                         } else {
