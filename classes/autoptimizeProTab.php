@@ -10,6 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class autoptimizeProTab
 {
+    /**
+     * Random title string.
+     *
+     * @var string
+     */
+    protected $rnd_title = null;
+
     public function __construct()
     {
         // alternate between tab title every 5 minutes.
