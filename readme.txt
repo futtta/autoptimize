@@ -319,6 +319,12 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.1.10 =
+* improvement: with "don't aggregate but defer" and "also defer inline JS" on, also defer JS that had the async flag to avoid the (previously) asynced JS from executing before the inline JS has ran.
+* fix for regression which caused JetPack Image optimization not working even if image optimization was off in AO.
+* API: some extra hooks in critical CSS to enable others (and AOPro) to act on changes in critical CSS rules
+* some other minor changes/ improvements/ filters, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
+
 = 3.1.9 =
 * improvement: activate JS, CSS & HTML optimization upon plugin activation (hat tip to Adam Silverstein (developer relations engineer at Google))
 * improvement: also defer asynced JS (to ensure execution order remains intact; asynced JS should not execute before deferred inline JS which it might depend upon)
