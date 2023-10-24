@@ -112,6 +112,13 @@ class autoptimizeCriticalCSSSettingsAjax {
             $response['code'] = '200';
             if ( $critcssfile ) {
                 $response['string'] = 'File ' . $critcssfile . ' saved.';
+
+                if ( true === apply_filters( 'autoptimize_filter_ccss_ajax_do_actions', true ) ) {
+                    $rule_identifiers = $this->fetch_rule_from_ccssfile( $critcssfile );
+                    if ( ! empty( $rule_identifiers ) && is_array( $rule_identifiers ) ) {
+                        do_action( 'autoptimize_action_ccss_ajax_css_changed', $rule_identifiers[0], $critcssfile, $rule_identifiers[1] );
+                    }
+                }
             } else {
                 $response['string'] = 'Empty content does not need to be saved.';
             }
@@ -154,6 +161,13 @@ class autoptimizeCriticalCSSSettingsAjax {
             $response['code'] = '200';
             if ( $status ) {
                 $response['string'] = 'File ' . $critcssfile . ' removed.';
+
+                if ( true === apply_filters( 'autoptimize_filter_ccss_ajax_do_actions', true ) ) {
+                    $rule_identifiers = $this->fetch_rule_from_ccssfile( $critcssfile );
+                    if ( ! empty( $rule_identifiers ) && is_array( $rule_identifiers ) ) {
+                        do_action( 'autoptimize_action_ccss_ajax_css_removed', $rule_identifiers[0], $critcssfile, $rule_identifiers[1] );
+                    }
+                }
             } else {
                 $response['string'] = 'No file to be removed.';
             }
@@ -181,6 +195,10 @@ class autoptimizeCriticalCSSSettingsAjax {
                 array_map( 'unlink', glob( AO_CCSS_DIR . 'ccss_*.css', GLOB_BRACE ) );
                 $error  = false;
                 $status = true;
+
+                if ( true === apply_filters( 'autoptimize_filter_ccss_ajax_do_actions', true ) ) {
+                    do_action( 'autoptimize_action_ccss_ajax_all_css_removed' );
+                }
             }
         }
 
@@ -552,5 +570,28 @@ class autoptimizeCriticalCSSSettingsAjax {
         rmdir( $path );
 
         return;
+    }
+    
+    public function fetch_rule_from_ccssfile( $ccss_file = '' ) {
+        if ( empty( $ccss_file ) ) {
+            return false;   
+        }
+
+        $ccss_file = str_replace( AO_CCSS_DIR, '', $ccss_file );
+        
+        static $rules = null;
+        if ( null === $rules ) {
+            $rules = $this->criticalcss->get_option( 'rules' );
+        }
+
+        foreach ( $rules as $ruletype => $rulechilds ) {
+            foreach ( $rulechilds as $identifier => $properties ) {
+                if ( $properties['file'] === $ccss_file ) {
+                    return array( $ruletype, $identifier );
+                }
+            }
+        }
+        
+        return false;
     }
 }

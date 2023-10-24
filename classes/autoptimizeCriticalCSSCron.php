@@ -761,6 +761,9 @@ class autoptimizeCriticalCSSCron {
             update_option( 'autoptimize_ccss_rules', $rules_raw );
             $this->criticalcss->flush_options();
             $this->criticalcss->log( 'Target rule <' . $srule . '> of type <' . $rtype . '> was ' . $action . ' for job id <' . $ljid . '>', 3 );
+            
+            // and trigger action for whoever needs to be aware.
+            do_action( 'autoptimize_action_ccss_cron_rule_updated', $srule, $file, '' );
         } else {
             $this->criticalcss->log( 'No rule action required', 3 );
         }
