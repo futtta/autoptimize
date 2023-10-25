@@ -80,6 +80,13 @@ class autoptimizeCriticalCSSCron {
             $queue = $this->criticalcss->get_option( 'queue' );
             $rtimelimit = $this->criticalcss->get_option( 'rtimelimit' );
 
+            // make sure we have the queue and bail if not.
+            if ( empty( $queue ) || ! is_array( $queue ) ) {
+                $this->criticalcss->log( 'Job processing cannot work on an empty queue, aborting.', 3 );
+                unlink( AO_CCSS_LOCK );
+                return;
+            }
+
             // Initialize counters.
             if ( 0 == $rtimelimit ) {
                 // no time limit set, let's go with 1000 seconds.
