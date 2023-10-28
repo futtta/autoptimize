@@ -493,13 +493,11 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     <?php _e( 'Add a "metabox" to the post/ page edit screen allowing different optimizations to be turned off on a per post/ page level?', 'autoptimize' ); ?></label></td>
     </tr>
     <?php } ?>
-    <?php if ( false !== (bool) autoptimizeOptionWrapper::get_option( 'autoptimize_installed_before_compatibility', false ) ) { ?>
     <tr valign="top">
     <th scope="row"><?php _e( 'Disable extra compatibilty logic?', 'autoptimize' ); ?></th>
-    <td><label class="cb_label"><input type="checkbox" name="autoptimize_installed_before_compatibility" checked="checked" />
-    <?php _e( 'In Autoptimize 3.0 extra compatibiity logic was added (e.g. for Gutenberg blocks, Revolution Slider, jQuery-heavy plugins, ...), but if you had Autoptimize installed already before the update to 3.0, this compatibility code was disabled. <strong>Untick this option to permanently enable the compatibility logic</strong>.', 'autoptimize' ); ?></label></td>
+    <td><label class="cb_label"><input type="checkbox" name="autoptimize_installed_before_compatibility" <?php echo $conf->get( 'autoptimize_installed_before_compatibility' ) ? 'checked="checked" ' : ''; ?>/>
+    <?php _e( 'Autoptimize applies extra "compatibiity logic" to prevent issues with JS optimization (for e.g. Gutenberg blocks, Revolution Slider, jQuery-heavy plugins, ...) but may sometimes be a bit too careful. If you have render-blocking JS issues, you can try disabling this logic here. Make sure to test your site thoroughly though!', 'autoptimize' ); ?></label></td>
     </tr>
-    <?php } ?>
 </table>
 </li>
 

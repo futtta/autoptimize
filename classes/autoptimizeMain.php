@@ -260,10 +260,12 @@ class autoptimizeMain
 
     public function maybe_run_ao_compat()
     {
+        $conf = autoptimizeConfig::instance();
+
         // Condtionally loads the compatibility-class to ensure more out-of-the-box compatibility with big players.
         $_run_compat = true;
 
-        if ( autoptimizeOptionWrapper::get_option( 'autoptimize_installed_before_compatibility', false ) ) {
+        if ( 'on' === $conf->get( 'autoptimize_installed_before_compatibility' ) ) {
             // If AO was already running before Compatibility logic was added, don't run compat by default
             // because it can be assumed everything works and we want to avoid (perf) regressions that
             // could occur due to compatibility code.
