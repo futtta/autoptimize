@@ -706,8 +706,9 @@ class autoptimizeMain
 
         // Remove AO CCSS cached files and directory.
         $ao_ccss_dir = WP_CONTENT_DIR . '/uploads/ao_ccss/';
-        if ( file_exists( $ao_ccss_dir ) && is_dir( $ao_ccss_dir ) ) {
+        if ( file_exists( $ao_ccss_dir ) && is_dir( $ao_ccss_dir ) && defined( 'GLOB_BRACE' ) ) {
             // fixme: should check for subdirs when in multisite and remove contents of those as well.
+            // fixme: if GLOB_BRACE is not avaible we need to remove AO_CCSS_DIR differently?
             array_map( 'unlink', glob( $ao_ccss_dir . '*.{css,html,json,log,zip,lock}', GLOB_BRACE ) );
             rmdir( $ao_ccss_dir );
         }
