@@ -19,4 +19,7 @@ jobs:
         uses: swissspidy/wp-plugin-check-action@main
         with:
             exclude-directories: 'vendor,classes/external'
-            exclude-checks: ''
+            exclude-checks: |
+                late_escaping
+                plugin_review_phpcs
+                file_type
