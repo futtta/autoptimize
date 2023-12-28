@@ -93,7 +93,7 @@ class autoptimizeConfig
         <div class="wrap">
             <h1><?php esc_html_e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
             <?php echo $this->ao_admin_tabs(); ?>
-            <p style="font-size:120%;"><?php echo apply_filters( 'autoptimize_filter_settingsscreen_multisite_network_message', __( 'Autoptimize is enabled and configured on a WordPress network level. Please contact your network administrator if you need Autoptimize settings changed.', 'autoptimize' ) ); ?></p>
+            <p style="font-size:120%;"><?php echo apply_filters( 'autoptimize_filter_settingsscreen_multisite_network_message', esc_html__( 'Autoptimize is enabled and configured on a WordPress network level. Please contact your network administrator if you need Autoptimize settings changed.', 'autoptimize' ) ); ?></p>
         </div>
         <?php
     }
@@ -200,7 +200,7 @@ input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weig
 <div class="notice-info notice"><p>
 <?php
     // translators: link to Github issue list.
-    printf( __( 'Thanks for testing Autoptimize Beta! Please report any issues you might encounter in the %s.', 'autoptimize' ), '<a href="https://github.com/futtta/autoptimize/issues" target="_blank">GitHub Issues</a>' );
+    printf( esc_html__( 'Thanks for testing Autoptimize Beta! Please report any issues you might encounter in the %s.', 'autoptimize' ), '<a href="https://github.com/futtta/autoptimize/issues" target="_blank">GitHub Issues</a>' );
 ?>
 </p></div>
 
@@ -273,7 +273,7 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <th scope="row">
 <?php
     esc_html_e( 'Look for scripts only in &lt;head&gt;?', 'autoptimize' );
-    echo ' <i>' . __( '(deprecated)', 'autoptimize' ) . '</i>';
+    echo ' <i>' . esc_html__( '(deprecated)', 'autoptimize' ) . '</i>';
 ?>
 </th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_js_justhead" <?php echo $conf->get( 'autoptimize_js_justhead' ) ? 'checked="checked" ' : ''; ?>/>
@@ -284,7 +284,7 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <th scope="row"><?php esc_html_e( 'Exclude scripts from Autoptimize:', 'autoptimize' ); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo esc_attr( autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude', '' ) ); ?>"/><br />
 <?php
-echo __( 'A comma-separated list of scripts you do not want optimized, for example \'whatever.js, my_var\' (without the quotes).', 'autoptimize' ) . ' ' . __( 'Important: when "aggregate JS-files" is on, excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
+echo esc_html__( 'A comma-separated list of scripts you do not want optimized, for example \'whatever.js, my_var\' (without the quotes).', 'autoptimize' ) . ' ' . esc_html__( 'Important: when "aggregate JS-files" is on, excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
 ?>
 </label></td>
 </tr>
@@ -321,8 +321,8 @@ echo __( 'A comma-separated list of scripts you do not want optimized, for examp
 <tr valign="top" class="css_sub css_aggregate">
 <th scope="row">
 <?php
-_e( 'Look for styles only in &lt;head&gt;?', 'autoptimize' );
-echo ' <i>' . __( '(deprecated)', 'autoptimize' ) . '</i>';
+esc_html_e( 'Look for styles only in &lt;head&gt;?', 'autoptimize' );
+echo ' <i>' . esc_html__( '(deprecated)', 'autoptimize' ) . '</i>';
 ?>
 </th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_justhead" <?php echo $conf->get( 'autoptimize_css_justhead' ) ? 'checked="checked" ' : ''; ?>/>
@@ -337,7 +337,7 @@ _e( 'Inline "above the fold CSS" while loading the main autoptimized CSS only af
 echo ' ';
 $critcss_settings_url = get_admin_url( null, 'options-general.php?page=ao_critcss' );
 // translators: links "autoptimize critical CSS" tab.
-echo sprintf( __( 'You can manually create rules for different types of pages or have this done fully automated on the %s tab.', 'autoptimize' ), '<a href="' . $critcss_settings_url . '">CriticalCSS</a>' );
+echo sprintf( esc_html__( 'You can manually create rules for different types of pages or have this done fully automated on the %s tab.', 'autoptimize' ), '<a href="' . $critcss_settings_url . '">CriticalCSS</a>' );
 ?>
 </label></td>
 </tr>
@@ -354,7 +354,7 @@ echo sprintf( __( 'You can manually create rules for different types of pages or
 <th scope="row"><?php esc_html_e( 'Exclude CSS from Autoptimize:', 'autoptimize' ); ?></th>
 <td><label><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo esc_attr( $conf->get( 'autoptimize_css_exclude', '' ) ); ?>"/><br />
 <?php
-echo __( 'A comma-separated list of CSS you want to exclude from being optimized.', 'autoptimize' ) . ' ' . __( 'Important: excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
+echo esc_html__( 'A comma-separated list of CSS you want to exclude from being optimized.', 'autoptimize' ) . ' ' . esc_html__( 'Important: excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
 ?>
 </label></td>
 </tr>
@@ -364,7 +364,7 @@ echo __( 'A comma-separated list of CSS you want to exclude from being optimized
 <?php
 $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssettings&partner=rapidload';
 ?>
-<td><?php echo sprintf( __( 'If Google Pagespeed Insights detects unused CSS, consider using %s to <strong>reduce your site\'s CSS size to up to 90&#37;</strong>, resulting in a slimmer, faster site!', 'autoptimize' ), '<a href="' . $_rapidload_link . '" target="_blank">the premium Rapidload service</a>' ); ?></td>
+<td><?php echo sprintf( esc_html__( 'If Google Pagespeed Insights detects unused CSS, consider using %s to <strong>reduce your site\'s CSS size to up to 90&#37;</strong>, resulting in a slimmer, faster site!', 'autoptimize' ), '<a href="' . $_rapidload_link . '" target="_blank">the premium Rapidload service</a>' ); ?></td>
 </tr>
 <?php } ?>
 </table>
@@ -399,12 +399,12 @@ $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssetting
 if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'autoptimize_filter_cdn_set_by_imgopt', false ) ) {
     // cdn set by imgopt, not to be changealbe in the settings.
     $cdn_editable    = 'disabled';
-    $cdn_placeholder = 'placeholder="' . __( 'The CDN has automatically been set to make use of the image optimization CDN.', 'autoptimize' ) . ' "';
+    $cdn_placeholder = 'placeholder="' . esc_html__( 'The CDN has automatically been set to make use of the image optimization CDN.', 'autoptimize' ) . ' "';
     $cdn_description = '';
 } else {
     $cdn_editable    = '';
-    $cdn_placeholder = 'placeholder="' . __( 'example: //cdn.yoursite.com/', 'autoptimize' ) . ' "';
-    $cdn_description = __( 'Enter your CDN root URL to enable CDN for Autoptimized files. The URL can be http, https or protocol-relative. This is not needed for Cloudflare.', 'autoptimize' );
+    $cdn_placeholder = 'placeholder="' . esc_html__( 'example: //cdn.yoursite.com/', 'autoptimize' ) . ' "';
+    $cdn_description = esc_html__( 'Enter your CDN root URL to enable CDN for Autoptimized files. The URL can be http, https or protocol-relative. This is not needed for Cloudflare.', 'autoptimize' );
 }
 ?>
 <td><label><input id="cdn_url" type="text" name="autoptimize_cdn_url" pattern="^(https?:)?\/\/([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\w \.-]*)*(:\d{2,5})?\/?$" style="width:100%" <?php echo $cdn_placeholder . $cdn_editable; ?> value="<?php echo esc_url( autoptimizeOptionWrapper::get_option( 'autoptimize_cdn_url', '' ), array( 'http', 'https' ) ); ?>" /><br />
@@ -423,7 +423,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
 </tr>
 <tr valign="top" >
 <th scope="row"><?php esc_html_e( 'Can we write?', 'autoptimize' ); ?></th>
-<td><?php echo ( autoptimizeCache::cacheavail() ? __( 'Yes', 'autoptimize' ) : __( 'No', 'autoptimize' ) ); ?></td>
+<td><?php echo ( autoptimizeCache::cacheavail() ? esc_html__( 'Yes', 'autoptimize' ) : esc_html__( 'No', 'autoptimize' ) ); ?></td>
 </tr>
 <tr valign="top" >
 <th scope="row"><?php esc_html_e( 'Cached styles and scripts', 'autoptimize' ); ?></th>
@@ -437,7 +437,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             $details = ', ~' . $ao_cache_size . ' total';
         }
         // translators: Kilobytes + timestamp shown.
-        printf( __( '%1$s files, totalling %2$s (calculated at %3$s)', 'autoptimize' ), $ao_stat_arr[0], $ao_cache_size, wp_date( 'H:i', $ao_stat_arr[2] ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+        printf( esc_html__( '%1$s files, totalling %2$s (calculated at %3$s)', 'autoptimize' ), $ao_stat_arr[0], $ao_cache_size, wp_date( 'H:i', $ao_stat_arr[2] ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
     }
     ?>
 </td>
@@ -720,16 +720,16 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
 
     public function addmenu()
     {
-        $_my_name = apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? __( 'Autoptimize Pro', 'autoptimize' ) : __( 'Autoptimize', 'autoptimize' );
+        $_my_name = apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? esc_html__( 'Autoptimize Pro', 'autoptimize' ) : esc_html__( 'Autoptimize', 'autoptimize' );
         if ( is_multisite() && is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() ) {
             // multisite, network admin, ao network activated: add normal settings page at network level.
-            $hook = add_submenu_page( 'settings.php', __( 'Autoptimize Options', 'autoptimize' ), $_my_name, 'manage_network_options', 'autoptimize', array( $this, 'show_config' ) );
+            $hook = add_submenu_page( 'settings.php', esc_html__( 'Autoptimize Options', 'autoptimize' ), $_my_name, 'manage_network_options', 'autoptimize', array( $this, 'show_config' ) );
         } elseif ( is_multisite() && ! is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() && 'on' !== autoptimizeOptionWrapper::get_option( 'autoptimize_enable_site_config' ) ) {
             // multisite, ao network activated, not network admin so site specific settings, but "autoptimize_enable_site_config" is off: show "sorry, ask network admin" message iso options.
-            $hook = add_options_page( __( 'Autoptimize Options', 'autoptimize' ), $_my_name, 'manage_options', 'autoptimize', array( $this, 'show_network_message' ) );
+            $hook = add_options_page( esc_html__( 'Autoptimize Options', 'autoptimize' ), $_my_name, 'manage_options', 'autoptimize', array( $this, 'show_network_message' ) );
         } else {
             // default: show normal options page if not multisite, if multisite but not network activated, if multisite and network activated and "autoptimize_enable_site_config" is on.
-            $hook = add_options_page( __( 'Autoptimize Options', 'autoptimize' ), $_my_name, 'manage_options', 'autoptimize', array( $this, 'show_config' ) );
+            $hook = add_options_page( esc_html__( 'Autoptimize Options', 'autoptimize' ), $_my_name, 'manage_options', 'autoptimize', array( $this, 'show_config' ) );
         }
 
         add_action( 'admin_print_scripts-' . $hook, array( $this, 'autoptimize_admin_scripts' ) );
@@ -792,13 +792,13 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
 
         if ( null === $file ) {
             // 2.7 and lower.
-            $settings_link = sprintf( '<a href="options-general.php?page=autoptimize">%s</a>', __( 'Settings' ) );
+            $settings_link = sprintf( '<a href="options-general.php?page=autoptimize">%s</a>', esc_html__( 'Settings' ) );
             array_unshift( $links, $settings_link );
         } else {
             // 2.8 and higher.
             // If it's us, add the link.
             if ( $file === $plugin ) {
-                $newlink = array( sprintf( '<a href="options-general.php?page=autoptimize">%s</a>', __( 'Settings' ) ) );
+                $newlink = array( sprintf( '<a href="options-general.php?page=autoptimize">%s</a>', esc_html__( 'Settings' ) ) );
                 $links   = array_merge( $links, $newlink );
             }
         }
@@ -945,7 +945,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
                         <li>
                             <a href="<?php echo esc_url( $item->get_permalink() ); ?>"
                                 <?php // translators: the variable contains a date. ?>
-                                title="<?php printf( __( 'Posted %s', 'autoptimize' ), $item->get_date( 'j F Y | g:i a' ) ); ?>">
+                                title="<?php printf( esc_html__( 'Posted %s', 'autoptimize' ), $item->get_date( 'j F Y | g:i a' ) ); ?>">
                                 <?php echo esc_html( $item->get_title() ); ?>
                             </a>
                         </li>
@@ -959,7 +959,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     static function ao_admin_tabs()
     {
         // based on http://wordpress.stackexchange.com/a/58826 .
-        $tabs        = apply_filters( 'autoptimize_filter_settingsscreen_tabs', array( 'autoptimize' => __( 'JS, CSS  &amp; HTML', 'autoptimize' ) ) );
+        $tabs        = apply_filters( 'autoptimize_filter_settingsscreen_tabs', array( 'autoptimize' => esc_html__( 'JS, CSS  &amp; HTML', 'autoptimize' ) ) );
         $tab_content = '';
         $tabs_count  = count( $tabs );
         if ( $tabs_count > 1 ) {
