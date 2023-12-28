@@ -43,7 +43,7 @@ function ao_ccss_render_adv() {
                             <label for="autoptimize_ccss_vw"><?php esc_html_e( 'Width', 'autoptimize' ); ?>:</label> <input type="number" id="autoptimize_ccss_vw" name="autoptimize_ccss_viewport[w]" min="800" max="4096" placeholder="1400" value="<?php echo $viewport['w']; ?>" />&nbsp;&nbsp;
                             <label for="autoptimize_ccss_vh"><?php esc_html_e( 'Height', 'autoptimize' ); ?>:</label> <input type="number" id="autoptimize_ccss_vh" name="autoptimize_ccss_viewport[h]" min="600" max="2160" placeholder="1080" value="<?php echo $viewport['h']; ?>" />
                             <p class="notes">
-                                <?php esc_html_e( '<a href="https://criticalcss.com/account/api-keys?aff=1" target="_blank">criticalcss.com</a> default viewport size is 1400x1080 pixels (width x height). You can change this size by typing a desired width and height values above. Allowed value ranges are from 800 to 4096 for width and from 600 to 2160 for height.', 'autoptimize' ); ?>
+                                <?php _e( '<a href="https://criticalcss.com/account/api-keys?aff=1" target="_blank">criticalcss.com</a> default viewport size is 1400x1080 pixels (width x height). You can change this size by typing a desired width and height values above. Allowed value ranges are from 800 to 4096 for width and from 600 to 2160 for height.', 'autoptimize' ); ?>
                             </p>
                         </td>
                     </tr>
@@ -54,7 +54,7 @@ function ao_ccss_render_adv() {
                         <td>
                             <textarea id="autoptimize_ccss_finclude" name="autoptimize_ccss_finclude" rows='3' maxlenght='500' style="width:100%;" placeholder="<?php esc_html_e( '.button-special,//#footer', 'autoptimize' ); ?>"><?php echo trim( esc_textarea( $ao_ccss_finclude ) ); ?></textarea>
                             <p class="notes">
-                                <?php esc_html_e( 'Force include CSS selectors can be used to style dynamic content that is not part of the HTML that is seen during the Critical CSS generation. To use this feature, add comma separated values with both simple strings and/or regular expressions to match the desired selectors. Regular expressions must be preceeded by two forward slashes. For instance: <code>.button-special,//#footer</code>. In this example <code>.button-special</code> will match <code>.button-special</code> selector only, while <code>//#footer</code> will match <code>#footer</code>, <code>#footer-address</code> and <code>#footer-phone</code> selectors in case they exist.<br />Do take into account that changing this setting will only affect new/ updated rules, so you might want to remove old rules and clear your page cache to expedite the forceIncludes becoming used.', 'autoptimize' ); ?>
+                                <?php _e( 'Force include CSS selectors can be used to style dynamic content that is not part of the HTML that is seen during the Critical CSS generation. To use this feature, add comma separated values with both simple strings and/or regular expressions to match the desired selectors. Regular expressions must be preceeded by two forward slashes. For instance: <code>.button-special,//#footer</code>. In this example <code>.button-special</code> will match <code>.button-special</code> selector only, while <code>//#footer</code> will match <code>#footer</code>, <code>#footer-address</code> and <code>#footer-phone</code> selectors in case they exist.<br />Do take into account that changing this setting will only affect new/ updated rules, so you might want to remove old rules and clear your page cache to expedite the forceIncludes becoming used.', 'autoptimize' ); ?>
                             </p>
                         </td>
                     </tr>
@@ -146,7 +146,7 @@ function ao_ccss_render_adv() {
                             <input type="checkbox" id="autoptimize_ccss_debug" name="autoptimize_ccss_debug" value="1" <?php checked( 1 == $ao_ccss_debug ); ?>>
                             <p class="notes">
                                 <?php
-                                esc_html_e( '<strong>CAUTION! Only use debug mode on production/live environments for ad-hoc troubleshooting and remember to turn it back off after</strong>, as this generates a lot of log-data.<br />Check the box above to enable Autoptimize CriticalCSS Power-Up debug mode. It provides debug facilities in this screen, to the browser console and to this file: ', 'autoptimize' );
+                                _e( '<strong>CAUTION! Only use debug mode on production/live environments for ad-hoc troubleshooting and remember to turn it back off after</strong>, as this generates a lot of log-data.<br />Check the box above to enable Autoptimize CriticalCSS Power-Up debug mode. It provides debug facilities in this screen, to the browser console and to this file: ', 'autoptimize' );
                                 echo '<code>' . AO_CCSS_LOG . '</code>';
                                 ?>
                             </p>
