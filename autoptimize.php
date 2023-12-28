@@ -41,7 +41,7 @@ if ( is_admin() ) {
 // Bail early if attempting to run on non-supported php versions.
 if ( version_compare( PHP_VERSION, '5.6', '<' ) ) {
     function autoptimize_incompatible_admin_notice() {
-        echo '<div class="error"><p>' . __( 'Autoptimize requires PHP 5.6 (or higher) to function properly. Please upgrade PHP. The Plugin has been auto-deactivated.', 'autoptimize' ) . '</p></div>';
+        echo '<div class="error"><p>' . esc_html__( 'Autoptimize requires PHP 5.6 (or higher) to function properly. Please upgrade PHP. The Plugin has been auto-deactivated.', 'autoptimize' ) . '</p></div>';
         if ( isset( $_GET['activate'] ) ) {
             unset( $_GET['activate'] );
         }

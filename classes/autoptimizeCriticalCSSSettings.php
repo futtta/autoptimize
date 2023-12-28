@@ -56,7 +56,7 @@ class autoptimizeCriticalCSSSettings {
 
     public function add_critcss_tabs( $in )
     {
-        $in = array_merge( $in, array( 'ao_critcss' => apply_filters( 'autoptimize_filter_ccss_tab_text', '⚡ ' . __( 'Critical CSS', 'autoptimize' ) ) ) );
+        $in = array_merge( $in, array( 'ao_critcss' => apply_filters( 'autoptimize_filter_ccss_tab_text', '⚡ ' . esc_html__( 'Critical CSS', 'autoptimize' ) ) ) );
 
         return $in;
     }
@@ -128,11 +128,11 @@ class autoptimizeCriticalCSSSettings {
         $ao_ccss_forcepath     = $this->criticalcss->get_option( 'forcepath' );
         $ao_ccss_domain        = $this->criticalcss->get_option( 'domain' );
         ?>
-        <script>document.title = "Autoptimize: <?php _e( 'Critical CSS', 'autoptimize' ); ?> " + document.title;</script>
+        <script>document.title = "Autoptimize: <?php esc_html_e( 'Critical CSS', 'autoptimize' ); ?> " + document.title;</script>
         <div class="wrap">
             <div id="autoptimize_main">
                 <div id="ao_title_and_button">
-                    <h1><?php apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? _e( 'Autoptimize Pro Settings', 'autoptimize' ) : _e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
+                    <h1><?php apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? esc_html_e( 'Autoptimize Pro Settings', 'autoptimize' ) : esc_html_e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
                 </div>
 
                 <?php
@@ -142,7 +142,7 @@ class autoptimizeCriticalCSSSettings {
                 if ( autoptimizeUtils::is_local_server() && isset( $ao_ccss_key ) ) { ?>
                     <div class="notice-warning notice"><p>
                     <?php
-                    echo __( 'The Critical CSS service does not work on locally hosted sites or when the server is on a private network.', 'autoptimize' );
+                    echo esc_html__( 'The Critical CSS service does not work on locally hosted sites or when the server is on a private network.', 'autoptimize' );
                     ?>
                     </p></div>
                 <?php }
@@ -154,7 +154,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     <div class="notice-error notice"><p>
                     <?php
-                    _e( 'Could not create the required directory. Make sure the webserver can write to the wp-content/uploads directory.', 'autoptimize' );
+                    esc_html_e( 'Could not create the required directory. Make sure the webserver can write to the wp-content/uploads directory.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
@@ -165,7 +165,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     <div class="notice-info notice"><p>
                     <?php
-                    _e( 'To be able to use Critical CSS you will have to enable CSS optimization and make sure "eliminate render-blocking CSS" is active on the main Autoptimize settings page.', 'autoptimize' );
+                    esc_html_e( 'To be able to use Critical CSS you will have to enable CSS optimization and make sure "eliminate render-blocking CSS" is active on the main Autoptimize settings page.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
@@ -178,7 +178,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                         <div class="notice-info notice"><p>
                         <?php
-                        _e( 'The "Eliminate render-blocking CSS" option was activated to allow critical CSS to be used.', 'autoptimize' );
+                        esc_html_e( 'The "Eliminate render-blocking CSS" option was activated to allow critical CSS to be used.', 'autoptimize' );
                         ?>
                         </p></div>
                         <?php
@@ -189,7 +189,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     <div data-dismissible="i-know-about-disable-cron-forever" class="notice-warning notice is-dismissible"><p>
                     <?php
-                    _e( 'WordPress cron (for task scheduling) seems to be disabled. Have a look at <a href="https://blog.futtta.be/2023/03/17/how-to-fix-autoptimize-critical-css-cron-issue/" target="_blank">the FAQ</a> or the info in the Job Queue instructions if all jobs remain in "N" status and no rules are created.', 'autoptimize' );
+                    esc_html_e( 'WordPress cron (for task scheduling) seems to be disabled. Have a look at <a href="https://blog.futtta.be/2023/03/17/how-to-fix-autoptimize-critical-css-cron-issue/" target="_blank">the FAQ</a> or the info in the Job Queue instructions if all jobs remain in "N" status and no rules are created.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
@@ -200,7 +200,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     <div data-dismissible="i-know-about-defer-inline-forever" class="notice-warning notice is-dismissible"><p>
                     <?php
-                    _e( 'You have "defer jQuery and other non-aggregated JS-files" active (under Advanced Settings), but that functionality is deprecated and will be removed in the next major version of Autoptimize. Consider using the new "Do not aggregate but defer" and "Also defer inline JS" options on the main settings page instead.', 'autoptimize' );
+                    esc_html_e( 'You have "defer jQuery and other non-aggregated JS-files" active (under Advanced Settings), but that functionality is deprecated and will be removed in the next major version of Autoptimize. Consider using the new "Do not aggregate but defer" and "Also defer inline JS" options on the main settings page instead.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
@@ -253,7 +253,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     <div data-dismissible="i-know-about-cron-1" class="notice-warning notice is-dismissible"><p>
                     <?php
-                    _e( 'It looks like there might be a problem with WordPress cron (task scheduling). Have a look at <a href="https://blog.futtta.be/2023/03/17/how-to-fix-autoptimize-critical-css-cron-issue/" target="_blank">the FAQ</a> or the info in the Job Queue instructions if all jobs remain in "N" status and no rules are created.', 'autoptimize' );
+                    esc_html_e( 'It looks like there might be a problem with WordPress cron (task scheduling). Have a look at <a href="https://blog.futtta.be/2023/03/17/how-to-fix-autoptimize-critical-css-cron-issue/" target="_blank">the FAQ</a> or the info in the Job Queue instructions if all jobs remain in "N" status and no rules are created.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
@@ -261,9 +261,9 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     <div class="notice-success notice"><p>
                     <?php
-                    _e( 'Great, Autoptimize will now automatically start creating new critical CSS rules, you should see those appearing below in the next couple of hours.', 'autoptimize' );
+                    esc_html_e( 'Great, Autoptimize will now automatically start creating new critical CSS rules, you should see those appearing below in the next couple of hours.', 'autoptimize' );
                     echo ' ';
-                    _e( 'In the meantime you might want to <strong>edit default rule CSS now</strong>, to avoid all CSS being inlined when no (applicable) rules are found.', 'autoptimize' );
+                    esc_html_e( 'In the meantime you might want to <strong>edit default rule CSS now</strong>, to avoid all CSS being inlined when no (applicable) rules are found.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
@@ -274,7 +274,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     <div class="notice-warning notice"><p>
                     <?php
-                    _e( 'The critical CSS service has been reported to be down. Although no new rules will be created for now, this does not prevent existing rules from being applied.', 'autoptimize' );
+                    esc_html_e( 'The critical CSS service has been reported to be down. Although no new rules will be created for now, this does not prevent existing rules from being applied.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
@@ -287,7 +287,7 @@ class autoptimizeCriticalCSSSettings {
                     ?>
                     <div class="notice-warning notice"><p>
                     <?php
-                    _e( 'It looks like the amount of Critical CSS rules is very high, it is recommended to reconfigure Autoptimize (e.g. by manually creating broader rules) to ensure less rules are created.', 'autoptimize' );
+                    esc_html_e( 'It looks like the amount of Critical CSS rules is very high, it is recommended to reconfigure Autoptimize (e.g. by manually creating broader rules) to ensure less rules are created.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
@@ -308,7 +308,7 @@ class autoptimizeCriticalCSSSettings {
                             <li class="itemDetail">
                             <?php
                                 // translators: the placesholder is for a line of code in wp-config.php.
-                                echo sprintf( __( '<p>Critical CSS settings cannot be set at network level as critical CSS is specific to each sub-site.</p><p>You can however provide the critical CSS API key for use by all sites by adding this your wp-config.php as %s</p>', 'autoptimize' ), '<br/><code>define(\'AUTOPTIMIZE_CRITICALCSS_API_KEY\', \'eyJhbGmorestringsherexHa7MkOQFtDFkZgLmBLe-LpcHx4\');</code>' );
+                                echo sprintf( esc_html__( '<p>Critical CSS settings cannot be set at network level as critical CSS is specific to each sub-site.</p><p>You can however provide the critical CSS API key for use by all sites by adding this your wp-config.php as %s</p>', 'autoptimize' ), '<br/><code>define(\'AUTOPTIMIZE_CRITICALCSS_API_KEY\', \'eyJhbGmorestringsherexHa7MkOQFtDFkZgLmBLe-LpcHx4\');</code>' );
                             ?>
                             </li>
                         </ul>
@@ -354,7 +354,7 @@ class autoptimizeCriticalCSSSettings {
                         ao_ccss_render_key( $ao_ccss_key, $key['status'], $key['stmsg'], $key['msg'], $key['color'] );
                         ?>
                         <p class="submit left">
-                            <input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'autoptimize' ); ?>" />
+                            <input type="submit" class="button-primary" value="<?php esc_html_e( 'Save Changes', 'autoptimize' ); ?>" />
                         </p>
                         <?php
                     }
@@ -373,8 +373,8 @@ class autoptimizeCriticalCSSSettings {
                 }
                 </script>
                 <form id="importSettingsForm"<?php if ( $this->is_multisite_network_admin() ) { echo ' class="hidden"'; } // @codingStandardsIgnoreLine ?>>
-                    <span id="exportSettings" class="button-secondary"><?php _e( 'Export Settings', 'autoptimize' ); ?></span>
-                    <input class="button-secondary" id="importSettings" type="button" value="<?php _e( 'Import Settings', 'autoptimize' ); ?>" onclick="upload();return false;" />
+                    <span id="exportSettings" class="button-secondary"><?php esc_html_e( 'Export Settings', 'autoptimize' ); ?></span>
+                    <input class="button-secondary" id="importSettings" type="button" value="<?php esc_html_e( 'Import Settings', 'autoptimize' ); ?>" onclick="upload();return false;" />
                     <input class="button-secondary" id="settingsfile" name="settingsfile" type="file" />
                 </form>
                 <div id="importdialog"></div>

@@ -750,28 +750,28 @@ class autoptimizeMain
     {
         echo '<div class="error"><p>';
         // Translators: %s is the cache directory location.
-        printf( __( 'Autoptimize cannot write to the cache directory (%s), please fix to enable CSS/ JS optimization!', 'autoptimize' ), AUTOPTIMIZE_CACHE_DIR );
+        printf( esc_html__( 'Autoptimize cannot write to the cache directory (%s), please fix to enable CSS/ JS optimization!', 'autoptimize' ), AUTOPTIMIZE_CACHE_DIR );
         echo '</p></div>';
     }
 
     public static function notice_installed()
     {
         echo '<div class="updated"><p>';
-        printf( __( 'Thank you for installing and activating Autoptimize. Your site is being optimized immediately, please test the frontend to ensure everything still works as expected. If needed you can change JavaScript or CSS optimization settings under %1$sSettings -> Autoptimize%2$s .', 'autoptimize' ), '<a href="options-general.php?page=autoptimize">', '</a>' );
+        printf( esc_html__( 'Thank you for installing and activating Autoptimize. Your site is being optimized immediately, please test the frontend to ensure everything still works as expected. If needed you can change JavaScript or CSS optimization settings under %1$sSettings -> Autoptimize%2$s .', 'autoptimize' ), '<a href="options-general.php?page=autoptimize">', '</a>' );
         echo '</p></div>';
     }
 
     public static function notice_updated()
     {
         echo '<div class="updated"><p>';
-        _e( 'Autoptimize has just been updated. Please <strong>test your site now</strong> and adapt Autoptimize config if needed.', 'autoptimize' );
+        esc_html_e( 'Autoptimize has just been updated. Please <strong>test your site now</strong> and adapt Autoptimize config if needed.', 'autoptimize' );
         echo '</p></div>';
     }
 
     public static function notice_plug_imgopt()
     {
         // Translators: the URL added points to the Autopmize Extra settings.
-        $_ao_imgopt_plug_notice      = sprintf( __( 'Did you know that Autoptimize offers on-the-fly image optimization (with support for WebP and AVIF) and CDN via ShortPixel? Check out the %1$sAutoptimize Image settings%2$s to enable this option.', 'autoptimize' ), '<a href="options-general.php?page=autoptimize_imgopt">', '</a>' );
+        $_ao_imgopt_plug_notice      = sprintf( esc_html__( 'Did you know that Autoptimize offers on-the-fly image optimization (with support for WebP and AVIF) and CDN via ShortPixel? Check out the %1$sAutoptimize Image settings%2$s to enable this option.', 'autoptimize' ), '<a href="options-general.php?page=autoptimize_imgopt">', '</a>' );
         $_ao_imgopt_plug_notice      = apply_filters( 'autoptimize_filter_main_imgopt_plug_notice', $_ao_imgopt_plug_notice );
         $_ao_imgopt_launch_ok        = autoptimizeImages::launch_ok_wrapper();
         $_ao_imgopt_plug_dismissible = 'ao-img-opt-plug-123';
@@ -788,7 +788,7 @@ class autoptimizeMain
     public static function notice_imgopt_issue()
     {
         // Translators: the URL added points to the Autopmize Extra settings.
-        $_ao_imgopt_issue_notice      = sprintf( __( 'Shortpixel reports it cannot always reach your site, which might mean some images are not optimized. You can %1$sread more about why this happens and how you can fix that problem here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/knowledge-base/article/469-i-received-an-e-mail-that-says-some-of-my-images-are-not-accessible-what-should-i-do#fullarticle" target="_blank">', '</a>' );
+        $_ao_imgopt_issue_notice      = sprintf( esc_html__( 'Shortpixel reports it cannot always reach your site, which might mean some images are not optimized. You can %1$sread more about why this happens and how you can fix that problem here%2$s.', 'autoptimize' ), '<a href="https://shortpixel.com/knowledge-base/article/469-i-received-an-e-mail-that-says-some-of-my-images-are-not-accessible-what-should-i-do#fullarticle" target="_blank">', '</a>' );
         $_ao_imgopt_issue_notice      = apply_filters( 'autoptimize_filter_main_imgopt_issue_notice', $_ao_imgopt_issue_notice );
         $_ao_imgopt_issue_dismissible = 'ao-img-opt-issue-14';
         $_ao_imgopt_active            = autoptimizeImages::imgopt_active();
@@ -815,7 +815,7 @@ class autoptimizeMain
          *
          * uses helper function in autoptimizeUtils.php
          */
-        $_ao_nopagecache_notice      = __( 'It looks like your site might not have <strong>page caching</strong> which is a <strong>must-have for performance</strong>. If you are sure you have a page cache, you can close this notice, but when in doubt check with your host if they offer this or install a page caching plugin like for example', 'autoptimize' );
+        $_ao_nopagecache_notice      = esc_html__( 'It looks like your site might not have <strong>page caching</strong> which is a <strong>must-have for performance</strong>. If you are sure you have a page cache, you can close this notice, but when in doubt check with your host if they offer this or install a page caching plugin like for example', 'autoptimize' );
         $_ao_pagecache_install_url   = network_admin_url() . 'plugin-install.php?tab=search&type=term&s=';
         $_ao_nopagecache_notice     .= ' <a href="' . $_ao_pagecache_install_url . 'wp+super+cache' . '">WP Super Cache</a>, <a href="' . $_ao_pagecache_install_url . 'keycdn+cache+enabler' . '">KeyCDN Cache Enabler</a>, ...';
         $_ao_nopagecache_dismissible = 'ao-nopagecache-forever'; // the notice is only shown once and will not re-appear when dismissed.
@@ -836,7 +836,7 @@ class autoptimizeMain
          * Using other plugins to do CSS/ JS optimization can cause unexpected and hard to troubleshoot issues, warn users who seem to be in that situation.
          */
         // Translators: the sentence will be finished with the name of the offending plugin and a final stop.
-        $_ao_potential_conflict_notice      = __( 'It looks like you have <strong>another plugin also doing CSS and/ or JS optimization</strong>, which can result in hard to troubleshoot <strong>conflicts</strong>. For this reason it is recommended to disable this functionality in', 'autoptimize' ) . ' ';
+        $_ao_potential_conflict_notice      = esc_html__( 'It looks like you have <strong>another plugin also doing CSS and/ or JS optimization</strong>, which can result in hard to troubleshoot <strong>conflicts</strong>. For this reason it is recommended to disable this functionality in', 'autoptimize' ) . ' ';
         $_ao_potential_conflict_dismissible = 'ao-potential-conflict-forever'; // the notice is only shown once and will not re-appear when dismissed.
         $_is_ao_settings_page               = autoptimizeUtils::is_ao_settings();
 

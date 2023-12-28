@@ -32,7 +32,7 @@ function exportSettings( idToEdit ) {
             autoOpen: true,
             height: 210,
             width: 700,
-            title: "<?php _e( 'Export settings result', 'autoptimize' ); ?>",
+            title: "<?php esc_html_e( 'Export settings result', 'autoptimize' ); ?>",
             modal: true,
             buttons: {
                 OK: function() {

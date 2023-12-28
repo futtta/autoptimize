@@ -333,7 +333,7 @@ echo ' <i>' . esc_html__( '(deprecated)', 'autoptimize' ) . '</i>';
 <th scope="row"><?php esc_html_e( 'Eliminate render-blocking CSS?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_defer" id="autoptimize_css_defer" <?php echo $conf->get( 'autoptimize_css_defer' ) ? 'checked="checked" ' : ''; ?>/>
 <?php
-_e( 'Inline "above the fold CSS" while loading the main autoptimized CSS only after page load. <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank">Check the FAQ</a> for more info.', 'autoptimize' );
+esc_html_e( 'Inline "above the fold CSS" while loading the main autoptimized CSS only after page load. <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank">Check the FAQ</a> for more info.', 'autoptimize' );
 echo ' ';
 $critcss_settings_url = get_admin_url( null, 'options-general.php?page=ao_critcss' );
 // translators: links "autoptimize critical CSS" tab.

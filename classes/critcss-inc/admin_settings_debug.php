@@ -36,13 +36,13 @@ if ( $ao_options || $ao_trans ) {
 <!-- BEGIN: Settings Debug -->
 <ul>
     <li class="itemDetail">
-        <h2 class="itemTitle"><?php _e( 'Debug Information', 'autoptimize' ); ?></h2>
+        <h2 class="itemTitle"><?php esc_html_e( 'Debug Information', 'autoptimize' ); ?></h2>
 
         <?php
         // Render options.
         if ( $ao_options ) {
             ?>
-            <h4><?php _e( 'Options', 'autoptimize' ); ?>:</h4>
+            <h4><?php esc_html_e( 'Options', 'autoptimize' ); ?>:</h4>
             <table class="form-table debug">
             <?php
             foreach ( $ao_options as $option ) {
@@ -75,10 +75,10 @@ if ( $ao_options || $ao_trans ) {
         }
         // Render WP-Cron intervals and scheduled events.
         ?>
-        <h4><?php _e( 'WP-Cron Intervals', 'autoptimize' ); ?>:</h4>
+        <h4><?php esc_html_e( 'WP-Cron Intervals', 'autoptimize' ); ?>:</h4>
         <pre><?php print_r( wp_get_schedules() ); ?></pre>
         <hr />
-        <h4><?php _e( 'WP-Cron Scheduled Events', 'autoptimize' ); ?>:</h4>
+        <h4><?php esc_html_e( 'WP-Cron Scheduled Events', 'autoptimize' ); ?>:</h4>
         <pre><?php print_r( _get_cron_array() ); ?></pre>
     </li>
 </ul>
