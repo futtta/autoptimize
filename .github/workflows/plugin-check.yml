@@ -18,5 +18,5 @@ jobs:
       - name: Run plugin check
         uses: swissspidy/wp-plugin-check-action@main
         with:
-            exclude-directories: 'vendor', 'classes/external'
+            exclude-directories: 'vendor,classes/external'
             exclude-checks: ''
