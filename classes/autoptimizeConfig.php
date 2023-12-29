@@ -119,7 +119,8 @@ class autoptimizeConfig
     margin-top: 0;
 }
 
-input[type=url]:invalid {color: red; border-color:red;} .form-table th{font-weight:normal;}
+.form-table th{font-weight:normal;}
+#autoptimize_main form input:invalid {box-shadow: 0 0 1px 1px red;}
 #autoptimize_main .cb_label {display: block; padding-left: 25px; text-indent: -25px;}
 #autoptimize_main .form-table th {padding-top: 15px; padding-bottom: 15px;}
 #autoptimize_main .js_aggregate td, #autoptimize_main .js_aggregate th, #autoptimize_main .js_not_aggregate td, #autoptimize_main .js_not_aggregate th{padding-top:0px;}
@@ -282,7 +283,7 @@ if ( is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() 
 <?php } ?>
 <tr valign="top" class="js_sub">
 <th scope="row"><?php esc_html_e( 'Exclude scripts from Autoptimize:', 'autoptimize' ); ?></th>
-<td><label><input type="text" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo esc_attr( autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude', '' ) ); ?>"/><br />
+<td><label><input type="text" pattern="[^\*]*" style="width:100%;" name="autoptimize_js_exclude" value="<?php echo esc_attr( autoptimizeOptionWrapper::get_option( 'autoptimize_js_exclude', '' ) ); ?>"/><br />
 <?php
 echo esc_html__( 'A comma-separated list of scripts you do not want optimized, for example \'whatever.js, my_var\' (without the quotes).', 'autoptimize' ) . ' ' . esc_html__( 'Important: when "aggregate JS-files" is on, excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
 ?>
@@ -352,7 +353,7 @@ echo sprintf( esc_html__( 'You can manually create rules for different types of 
 </tr>
 <tr valign="top" class="css_sub">
 <th scope="row"><?php esc_html_e( 'Exclude CSS from Autoptimize:', 'autoptimize' ); ?></th>
-<td><label><input type="text" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo esc_attr( $conf->get( 'autoptimize_css_exclude', '' ) ); ?>"/><br />
+<td><label><input type="text" pattern="[^\*]*" style="width:100%;" name="autoptimize_css_exclude" value="<?php echo esc_attr( $conf->get( 'autoptimize_css_exclude', '' ) ); ?>"/><br />
 <?php
 echo esc_html__( 'A comma-separated list of CSS you want to exclude from being optimized.', 'autoptimize' ) . ' ' . esc_html__( 'Important: excluded non-minified files are still minified by Autoptimize unless that option under "misc" is disabled.', 'autoptimize' );
 ?>
