@@ -23,7 +23,7 @@ function ao_ccss_render_rules() {
             <!-- BEGIN Rule dialogs -->
             <!-- Unsaved dialog -->
             <div id="unSavedWarning" class="hidden updated settings-error notice notice-warning is-dismissible">
-                <p><?php esc_html_e( "<strong>Rules or Queue changed!</strong> Don't forget to save your changes!", 'autoptimize' ); ?></p>
+                <p><?php _e( "<strong>Rules or Queue changed!</strong> Don't forget to save your changes!", 'autoptimize' ); ?></p>
             </div>
 
             <!-- Create/edit rule dialog -->
@@ -145,12 +145,12 @@ function ao_ccss_render_rules() {
 
             <!-- Remove dialog -->
             <div id="confirm-rm" title="<?php esc_html_e( 'Delete Rule', 'autoptimize' ); ?>" class="hidden">
-                <p><?php esc_html_e( 'This Critical CSS rule will be deleted immediately and cannot be recovered.<br /><br /><strong>Are you sure?</strong>', 'autoptimize' ); ?></p>
+                <p><?php _e( 'This Critical CSS rule will be deleted immediately and cannot be recovered.<br /><br /><strong>Are you sure?</strong>', 'autoptimize' ); ?></p>
             </div>
 
             <!-- Remove All dialog -->
             <div id="confirm-rm-all" title="<?php esc_html_e( 'Delete all Rules and Jobs', 'autoptimize' ); ?>" class="hidden">
-                <p><?php esc_html_e( 'All Critical CSS rules will be deleted immediately and cannot be recovered.<br /><br /><strong>Are you sure?</strong>', 'autoptimize' ); ?></p>
+                <p><?php _e( 'All Critical CSS rules will be deleted immediately and cannot be recovered.<br /><br /><strong>Are you sure?</strong>', 'autoptimize' ); ?></p>
             </div>
 
             <!-- Add/edit default critical CSS dialog -->
