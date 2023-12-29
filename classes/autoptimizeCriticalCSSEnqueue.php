@@ -29,7 +29,7 @@ class autoptimizeCriticalCSSEnqueue {
         // ... which are not the ones below.
         if ( true === autoptimizeUtils::is_local_server() ) {
             $enqueue = false;
-            $this->criticalcss->log('cant enqueue as local/ private', 3 );
+            $this->criticalcss->log( 'cant enqueue as local/ private', 3 );
         } elseif ( 'nokey' == $key['status'] || 'invalid' == $key['status'] ) {
             $enqueue = false;
             $this->criticalcss->log( 'Job queuing is not available: no valid API key found.', 3 );
@@ -66,9 +66,15 @@ class autoptimizeCriticalCSSEnqueue {
         }
         $req_path = strtok( $req_orig, '?' );
 
+        // now that we really have the path, check if there's no garbage in there (due to some themes serving a non 404 page even if the resource does not exist resulting in all sorts of nonsense rules).
+        if ( true === apply_filters( 'autoptimize_filter_ccss_enqueue_block_garbage' , true ) && str_replace( apply_filters( 'autoptimize_filter_ccss_enqueue_blocklist', array( '.php', 'data:javascript/text;base64', '/.', '/null' ) ), '', $req_path ) !== $req_path ) {
+            $this->criticalcss->log( 'Job not enqueued looks like the path is just garbage; ' . $req_path, 3 );
+            return;
+        }
+
         // Check if we have a lang param. we need to keep as WPML can switch languages based on that
         // and that includes RTL -> LTR so diff. structure, so rules would be RTL vs LTR
-        // but this needs changes in the structur of the rule object so off by default for now
+        // but this needs changes in the structure of the rule object so off by default for now
         // as now this will simply result in conditional rules being overwritten.
         if ( apply_filters( 'autoptimize_filter_ccss_coreenqueue_honor_lang', false ) && strpos( $req_orig, 'lang=' ) !== false ) {
             $req_params = strtok( '?' );
