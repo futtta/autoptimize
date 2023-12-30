@@ -93,14 +93,14 @@ class autoptimizeCriticalCSSSettings {
 
         // Stylesheets to add.
         wp_enqueue_style( 'wp-jquery-ui-dialog' );
-        wp_enqueue_style( 'ao-tablesorter', plugins_url( 'critcss-inc/css/ao-tablesorter/style.css', __FILE__ ) );
-        wp_enqueue_style( 'ao-ccss-admin-css', plugins_url( 'critcss-inc/css/admin_styles.css', __FILE__ ) );
+        wp_enqueue_style( 'ao-tablesorter', plugins_url( 'critcss-inc/css/ao-tablesorter/style.css', __FILE__ ), null, AUTOPTIMIZE_PLUGIN_VERSION );
+        wp_enqueue_style( 'ao-ccss-admin-css', plugins_url( 'critcss-inc/css/admin_styles.css', __FILE__ ), null, AUTOPTIMIZE_PLUGIN_VERSION );
 
         // Scripts to add.
         wp_enqueue_script( 'jquery-ui-dialog', array( 'jquery' ) );
-        wp_enqueue_script( 'md5', plugins_url( 'critcss-inc/js/md5.min.js', __FILE__ ), null, null, true );
-        wp_enqueue_script( 'tablesorter', plugins_url( 'critcss-inc/js/jquery.tablesorter.min.js', __FILE__ ), array( 'jquery' ), null, true );
-        wp_enqueue_script( 'ao-ccss-admin-license', plugins_url( 'critcss-inc/js/admin_settings.js', __FILE__ ), array( 'jquery' ), null, true );
+        wp_enqueue_script( 'md5', plugins_url( 'critcss-inc/js/md5.min.js', __FILE__ ), null, AUTOPTIMIZE_PLUGIN_VERSION, true );
+        wp_enqueue_script( 'tablesorter', plugins_url( 'critcss-inc/js/jquery.tablesorter.min.js', __FILE__ ), array( 'jquery' ), AUTOPTIMIZE_PLUGIN_VERSION, true );
+        wp_enqueue_script( 'ao-ccss-admin-license', plugins_url( 'critcss-inc/js/admin_settings.js', __FILE__ ), array( 'jquery' ), AUTOPTIMIZE_PLUGIN_VERSION, true );
     }
 
     public function ao_criticalcsssettings_page()
