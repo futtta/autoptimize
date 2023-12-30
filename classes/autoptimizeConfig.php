@@ -739,13 +739,13 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
 
     public function autoptimize_admin_scripts()
     {
-        wp_enqueue_script( 'unslider', plugins_url( '/external/js/unslider.min.js', __FILE__ ), array( 'jquery' ), null, true );
+        wp_enqueue_script( 'unslider', plugins_url( '/external/js/unslider.min.js', __FILE__ ), array( 'jquery' ), AUTOPTIMIZE_PLUGIN_VERSION, true );
     }
 
     public function autoptimize_admin_styles()
     {
-        wp_enqueue_style( 'unslider', plugins_url( '/external/js/unslider.css', __FILE__ ) );
-        wp_enqueue_style( 'unslider-dots', plugins_url( '/external/js/unslider-dots.css', __FILE__ ) );
+        wp_enqueue_style( 'unslider', plugins_url( '/external/js/unslider.css', __FILE__ ), null, AUTOPTIMIZE_PLUGIN_VERSION );
+        wp_enqueue_style( 'unslider-dots', plugins_url( '/external/js/unslider-dots.css', __FILE__ ), null, AUTOPTIMIZE_PLUGIN_VERSION );
     }
 
     public function registersettings() {
