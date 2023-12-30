@@ -21,7 +21,7 @@ class autoptimizeExitSurvey
     }
 
     function enqueue_survey_scripts() {
-        wp_enqueue_script( 'ao_exit_survey', plugins_url( '/static/exit-survey/exit-survey.js', __FILE__ ), array( 'jquery' ), AUTOPTIMIZE_PLUGIN_VERSION );
+        wp_enqueue_script( 'ao_exit_survey', plugins_url( '/static/exit-survey/exit-survey.js', __FILE__ ), array( 'jquery' ), AUTOPTIMIZE_PLUGIN_VERSION, true );
         wp_enqueue_style( 'ao_exit_survey', plugins_url( '/static/exit-survey/exit-survey.css', __FILE__ ), null, AUTOPTIMIZE_PLUGIN_VERSION );
     }
 
@@ -46,14 +46,14 @@ class autoptimizeExitSurvey
                         <label for="ao_feedback5">
                             <?php esc_html_e( 'I don\'t see a performance improvement.', 'autoptimize' ); ?>
                         </label>
-                        <p class="last-attempt"><?php esc_html_e( 'As Autoptimize does not do page caching, you might have to install e.g. KeyCDN Cache Enabler or WP Super Cache as well. Feel free to create a topic on <a href="https://wordpress.org/support/plugin/autoptimize/#new-topic-0" target="_blank">the support forum here</a> to get pointers on how get the most out of Autoptimize!', 'autoptimize' ); ?></p>
+                        <p class="last-attempt"><?php _e( 'As Autoptimize does not do page caching, you might have to install e.g. KeyCDN Cache Enabler or WP Super Cache as well. Feel free to create a topic on <a href="https://wordpress.org/support/plugin/autoptimize/#new-topic-0" target="_blank">the support forum here</a> to get pointers on how get the most out of Autoptimize!', 'autoptimize' ); ?></p>
                     </li>
                     <li ao-option-id="6">
                         <input type="radio" name="ao-deactivate-option" id="ao_feedback6">
                         <label for="ao_feedback6" data-reason="broke site">
                             <?php esc_html_e( 'It broke my site.', 'autoptimize' ); ?>
                         </label>
-                        <p class="last-attempt"><?php esc_html_e( 'Ouch, sorry about that! But almost all problems can be fixed with the right configuration, have a look at <a href="https://blog.futtta.be/2022/05/05/what-to-do-when-autoptimize-breaks-your-site/" target="_blank">this short troubleshooting howto</a> or create a topic on <a href="https://wordpress.org/support/plugin/autoptimize/#new-topic-0" target="_blank">the support forum here</a>!', 'autoptimize' ); ?></p>
+                        <p class="last-attempt"><?php _e( 'Ouch, sorry about that! But almost all problems can be fixed with the right configuration, have a look at <a href="https://blog.futtta.be/2022/05/05/what-to-do-when-autoptimize-breaks-your-site/" target="_blank">this short troubleshooting howto</a> or create a topic on <a href="https://wordpress.org/support/plugin/autoptimize/#new-topic-0" target="_blank">the support forum here</a>!', 'autoptimize' ); ?></p>
                     <li ao-option-id="4">
                         <input type="radio" name="ao-deactivate-option" id="ao_feedback4">
                         <label for="ao_feedback4" data-reason="found better">
