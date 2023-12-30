@@ -757,6 +757,7 @@ class autoptimizeMain
     public static function notice_installed()
     {
         echo '<div class="updated"><p>';
+        // translators: the variables contain opening and closing <a> tags to link to the settings page.
         printf( esc_html__( 'Thank you for installing and activating Autoptimize. Your site is being optimized immediately, please test the frontend to ensure everything still works as expected. If needed you can change JavaScript or CSS optimization settings under %1$sSettings -> Autoptimize%2$s .', 'autoptimize' ), '<a href="options-general.php?page=autoptimize">', '</a>' );
         echo '</p></div>';
     }

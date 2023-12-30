@@ -365,7 +365,9 @@ echo esc_html__( 'A comma-separated list of CSS you want to exclude from being o
 <?php
 $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssettings&partner=rapidload';
 ?>
-<td><?php echo sprintf( __( 'If Google Pagespeed Insights detects unused CSS, consider using %s to <strong>reduce your site\'s CSS size to up to 90&#37;</strong>, resulting in a slimmer, faster site!', 'autoptimize' ), '<a href="' . $_rapidload_link . '" target="_blank">the premium Rapidload service</a>' ); ?></td>
+<td><?php 
+// translators: the variable contains a link to rapidload.
+echo sprintf( __( 'If Google Pagespeed Insights detects unused CSS, consider using %s to <strong>reduce your site\'s CSS size to up to 90&#37;</strong>, resulting in a slimmer, faster site!', 'autoptimize' ), '<a href="' . $_rapidload_link . '" target="_blank">the premium Rapidload service</a>' ); ?></td>
 </tr>
 <?php } ?>
 </table>
