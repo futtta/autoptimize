@@ -252,7 +252,7 @@ class autoptimizeCriticalCSSSettings {
                     <?php
                     esc_html_e( 'Great, Autoptimize will now automatically start creating new critical CSS rules, you should see those appearing below in the next couple of hours.', 'autoptimize' );
                     echo ' ';
-                    esc_html_e( 'In the meantime you might want to <strong>edit default rule CSS now</strong>, to avoid all CSS being inlined when no (applicable) rules are found.', 'autoptimize' );
+                    _e( 'In the meantime you might want to <strong>edit default rule CSS now</strong>, to avoid all CSS being inlined when no (applicable) rules are found.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php

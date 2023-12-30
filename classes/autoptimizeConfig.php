@@ -532,7 +532,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         echo $ao_banner;
     }
     ?>
-        <li><?php esc_html_e( "Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ here</a>.", 'autoptimize' ); ?></li>
+        <li><?php _e( "Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ here</a>.", 'autoptimize' ); ?></li>
         <li><?php esc_html_e( 'Happy with Autoptimize?', 'autoptimize' ); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php esc_html_e( 'Try my other plugins!', 'autoptimize' ); ?></a></li>
     </ul>
     </div>

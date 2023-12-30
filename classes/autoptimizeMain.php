@@ -765,7 +765,7 @@ class autoptimizeMain
     public static function notice_updated()
     {
         echo '<div class="updated"><p>';
-        esc_html_e( 'Autoptimize has just been updated. Please <strong>test your site now</strong> and adapt Autoptimize config if needed.', 'autoptimize' );
+        _e( 'Autoptimize has just been updated. Please <strong>test your site now</strong> and adapt Autoptimize config if needed.', 'autoptimize' );
         echo '</p></div>';
     }
 
@@ -816,7 +816,7 @@ class autoptimizeMain
          *
          * uses helper function in autoptimizeUtils.php
          */
-        $_ao_nopagecache_notice      = esc_html__( 'It looks like your site might not have <strong>page caching</strong> which is a <strong>must-have for performance</strong>. If you are sure you have a page cache, you can close this notice, but when in doubt check with your host if they offer this or install a page caching plugin like for example', 'autoptimize' );
+        $_ao_nopagecache_notice      = __( 'It looks like your site might not have <strong>page caching</strong> which is a <strong>must-have for performance</strong>. If you are sure you have a page cache, you can close this notice, but when in doubt check with your host if they offer this or install a page caching plugin like for example', 'autoptimize' );
         $_ao_pagecache_install_url   = network_admin_url() . 'plugin-install.php?tab=search&type=term&s=';
         $_ao_nopagecache_notice     .= ' <a href="' . $_ao_pagecache_install_url . 'wp+super+cache' . '">WP Super Cache</a>, <a href="' . $_ao_pagecache_install_url . 'keycdn+cache+enabler' . '">KeyCDN Cache Enabler</a>, ...';
         $_ao_nopagecache_dismissible = 'ao-nopagecache-forever'; // the notice is only shown once and will not re-appear when dismissed.
@@ -837,7 +837,7 @@ class autoptimizeMain
          * Using other plugins to do CSS/ JS optimization can cause unexpected and hard to troubleshoot issues, warn users who seem to be in that situation.
          */
         // Translators: the sentence will be finished with the name of the offending plugin and a final stop.
-        $_ao_potential_conflict_notice      = esc_html__( 'It looks like you have <strong>another plugin also doing CSS and/ or JS optimization</strong>, which can result in hard to troubleshoot <strong>conflicts</strong>. For this reason it is recommended to disable this functionality in', 'autoptimize' ) . ' ';
+        $_ao_potential_conflict_notice      = __( 'It looks like you have <strong>another plugin also doing CSS and/ or JS optimization</strong>, which can result in hard to troubleshoot <strong>conflicts</strong>. For this reason it is recommended to disable this functionality in', 'autoptimize' ) . ' ';
         $_ao_potential_conflict_dismissible = 'ao-potential-conflict-forever'; // the notice is only shown once and will not re-appear when dismissed.
         $_is_ao_settings_page               = autoptimizeUtils::is_ao_settings();
 

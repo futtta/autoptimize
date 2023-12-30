@@ -53,7 +53,7 @@ class autoptimizePartners
 
     protected function get_ao_partner_feed_markup()
     {
-        $no_feed_text = esc_html__( 'Have a look at <a href="http://optimizingmatters.com/">optimizingmatters.com</a> for Autoptimize power-ups!', 'autoptimize' );
+        $no_feed_text = __( 'Have a look at <a href="http://optimizingmatters.com/">optimizingmatters.com</a> for Autoptimize power-ups!', 'autoptimize' );
         $output       = '';
         if ( apply_filters( 'autoptimize_settingsscreen_remotehttp', true ) ) {
             $rss      = fetch_feed( 'http://feeds.feedburner.com/OptimizingMattersDownloads' );

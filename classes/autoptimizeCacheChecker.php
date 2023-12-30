@@ -64,7 +64,7 @@ class autoptimizeCacheChecker
                 $ao_mailto = apply_filters( 'autoptimize_filter_cachecheck_mailto', autoptimizeOptionWrapper::get_option( 'admin_email', '' ) );
 
                 $ao_mailsubject = esc_html__( 'Autoptimize cache size warning', 'autoptimize' ) . ' (' . $home_url . ')';
-                $ao_mailbody    = esc_html__( 'Autoptimize\'s cache size is getting big, consider purging the cache. Have a look at https://wordpress.org/plugins/autoptimize/faq/ to see how you can keep the cache size under control.', 'autoptimize' ) . ' (site: ' . $home_url . ')';
+                $ao_mailbody    = __( 'Autoptimize\'s cache size is getting big, consider purging the cache. Have a look at https://wordpress.org/plugins/autoptimize/faq/ to see how you can keep the cache size under control.', 'autoptimize' ) . ' (site: ' . $home_url . ')';
 
                 if ( ! empty( $ao_mailto ) ) {
                     $ao_mailresult = wp_mail( $ao_mailto, $ao_mailsubject, $ao_mailbody );
@@ -89,7 +89,7 @@ class autoptimizeCacheChecker
     {
         if ( (bool) autoptimizeOptionWrapper::get_option( 'autoptimize_cachesize_notice', false ) && current_user_can( 'manage_options' ) ) {
             echo '<div class="notice notice-warning"><p>';
-            esc_html_e( '<strong>Autoptimize\'s cache size is getting big</strong>, consider purging the cache. Have a look at <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank" rel="noopener noreferrer">the Autoptimize FAQ</a> to see how you can keep the cache size under control.', 'autoptimize' );
+            _e( '<strong>Autoptimize\'s cache size is getting big</strong>, consider purging the cache. Have a look at <a href="https://wordpress.org/plugins/autoptimize/faq/" target="_blank" rel="noopener noreferrer">the Autoptimize FAQ</a> to see how you can keep the cache size under control.', 'autoptimize' );
             echo '</p></div>';
             autoptimizeOptionWrapper::update_option( 'autoptimize_cachesize_notice', false );
         }
