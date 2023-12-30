@@ -184,17 +184,6 @@ class autoptimizeCriticalCSSSettings {
                         <?php
                 }
 
-                // check if WordPress cron is disabled and warn if so.
-                if ( ! empty( $ao_ccss_key ) && defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON && PAnD::is_admin_notice_active( 'i-know-about-disable-cron-forever' ) ) {
-                    ?>
-                    <div data-dismissible="i-know-about-disable-cron-forever" class="notice-warning notice is-dismissible"><p>
-                    <?php
-                    esc_html_e( 'WordPress cron (for task scheduling) seems to be disabled. Have a look at <a href="https://blog.futtta.be/2023/03/17/how-to-fix-autoptimize-critical-css-cron-issue/" target="_blank">the FAQ</a> or the info in the Job Queue instructions if all jobs remain in "N" status and no rules are created.', 'autoptimize' );
-                    ?>
-                    </p></div>
-                    <?php
-                }
-
                 // check if defer jQuery is active and warn if so.
                 if ( 1 == $ao_ccss_deferjquery && PAnD::is_admin_notice_active( 'i-know-about-defer-inline-forever' ) ) {
                     ?>
@@ -249,11 +238,11 @@ class autoptimizeCriticalCSSSettings {
                     set_transient( 'ao_ccss_cronwarning', $_warn_cron, $_transient_multiplier * HOUR_IN_SECONDS );
                 }
 
-                if ( ! empty( $ao_ccss_key ) && 'on' == $_warn_cron && PAnD::is_admin_notice_active( 'i-know-about-cron-1' ) ) {
+                if ( ! empty( $ao_ccss_key ) && 'on' == $_warn_cron && PAnD::is_admin_notice_active( 'i-know-about-cron-30' ) ) {
                     ?>
-                    <div data-dismissible="i-know-about-cron-1" class="notice-warning notice is-dismissible"><p>
+                    <div data-dismissible="i-know-about-cron-30" class="notice-warning notice is-dismissible"><p>
                     <?php
-                    esc_html_e( 'It looks like there might be a problem with WordPress cron (task scheduling). Have a look at <a href="https://blog.futtta.be/2023/03/17/how-to-fix-autoptimize-critical-css-cron-issue/" target="_blank">the FAQ</a> or the info in the Job Queue instructions if all jobs remain in "N" status and no rules are created.', 'autoptimize' );
+                    _e( 'It looks like there might be a problem with WordPress cron (task scheduling). Have a look at <a href="https://blog.futtta.be/2023/03/17/how-to-fix-autoptimize-critical-css-cron-issue/" target="_blank">the FAQ</a> or the info in the Job Queue instructions if all jobs remain in "N" status and no rules are created.', 'autoptimize' );
                     ?>
                     </p></div>
                     <?php
