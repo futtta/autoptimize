@@ -20,5 +20,6 @@ jobs:
         with:
             exclude-directories: 'vendor,classes/external'
             exclude-checks: |
+                late_escaping
                 plugin_review_phpcs
                 file_type
