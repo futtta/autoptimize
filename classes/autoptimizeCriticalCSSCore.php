@@ -421,16 +421,17 @@ class autoptimizeCriticalCSSCore {
             // Key exists and its status is valid.
             // Set valid key status.
             $status     = 'valid';
-            $status_msg = __( 'Valid' );
+            $status_msg = esc_html__( 'Valid' );
             $color      = '#46b450'; // Green.
             $message    = null;
         } elseif ( $key && 1 == $key_status ) {
             // Key exists but its validation has failed.
             // Set invalid key status.
             $status     = 'invalid';
-            $status_msg = __( 'Invalid' );
+            $status_msg = esc_html__( 'Invalid' );
             $color      = '#dc3232'; // Red.
-            $message    = __( 'Your API key is invalid. Please enter a valid <a href="https://criticalcss.com/?aff=1" target="_blank">criticalcss.com</a> key.', 'autoptimize' );
+            // Translators: link to criticalcss.com page.
+            $message    = sprintf( esc_html__( 'Your API key is invalid. Please enter a valid %1$scriticalcss.com%2$s key.', 'autoptimize' ), '<a href="https://criticalcss.com/?aff=1" target="_blank">', '</a>' );
         } elseif ( $key && ! $key_status ) {
             // Key exists but it has no valid status yet
             // Perform key validation.
@@ -439,27 +440,29 @@ class autoptimizeCriticalCSSCore {
             // Key is valid, set valid status.
             if ( $key_check ) {
                 $status     = 'valid';
-                $status_msg = __( 'Valid' );
+                $status_msg = esc_html__( 'Valid' );
                 $color      = '#46b450'; // Green.
                 $message    = null;
             } else {
                 // Key is invalid, set invalid status.
                 $status     = 'invalid';
-                $status_msg = __( 'Invalid' );
+                $status_msg = esc_html__( 'Invalid' );
                 $color      = '#dc3232'; // Red.
                 if ( get_option( 'autoptimize_ccss_keyst' ) == 1 ) {
-                    $message = __( 'Your API key is invalid. Please enter a valid <a href="https://criticalcss.com/?aff=1" target="_blank">criticalcss.com</a> key.', 'autoptimize' );
+                    // Translators: link to criticalcss.com page.
+                    $message = sprintf( esc_html__( 'Your API key is invalid. Please enter a valid %1$scriticalcss.com%2$s key.', 'autoptimize' ), '<a href="https://criticalcss.com/?aff=1" target="_blank">', '</a>' );
                 } else {
-                    $message = __( 'Something went wrong when checking your API key, make sure you server can communicate with https://criticalcss.com and/ or try again later.', 'autoptimize' );
+                    $message = esc_html__( 'Something went wrong when checking your API key, make sure you server can communicate with https://criticalcss.com and/ or try again later.', 'autoptimize' );
                 }
             }
         } else {
             // No key nor status
             // Set no key status.
             $status     = 'nokey';
-            $status_msg = __( 'None' );
+            $status_msg = esc_html__( 'None' );
             $color      = '#ffb900'; // Yellow.
-            $message    = __( 'Please enter a valid <a href="https://criticalcss.com/?aff=1" target="_blank">criticalcss.com</a> API key to start.', 'autoptimize' );
+            // Translators: link to criticalcss.com page.
+            $message    = sprintf( esc_html__( 'Please enter a valid %1$scriticalcss.com%2$s API key to start.', 'autoptimize' ), '<a href="https://criticalcss.com/?aff=1" target="_blank">', '</a>' );
         }
 
         // Fill returned values.
@@ -486,7 +489,7 @@ class autoptimizeCriticalCSSCore {
         if ( ! empty( $noptimize ) ) {
             $src_url .= '/?ao_noptirocket=1';
         } elseif ( class_exists( 'autoptimizeImages', false ) && autoptimizeImages::should_lazyload_wrapper() ) {
-            $src_url .= '/?ao_nolazy=1';
+            $src_url .= '/?ao_nolazy=1';    
         }
 
         $src_url = apply_filters( 'autoptimize_filter_ccss_cron_srcurl', $src_url );

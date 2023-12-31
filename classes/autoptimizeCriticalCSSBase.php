@@ -360,7 +360,7 @@ class autoptimizeCriticalCSSBase {
         $schedules['ao_ccss'] = array(
             'interval' => $intsec,
             // translators: the variable contains a string describing the insterval.
-            'display'  => sprintf( __( 'Every %s (Autoptimize Crit. CSS)', 'autoptimize' ), $inttxt ),
+            'display'  => sprintf( esc_html__( 'Every %s (Autoptimize Crit. CSS)', 'autoptimize' ), $inttxt ),
         );
         return $schedules;
     }

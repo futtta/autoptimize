@@ -366,8 +366,8 @@ echo esc_html__( 'A comma-separated list of CSS you want to exclude from being o
 $_rapidload_link = 'https://misc.optimizingmatters.com/partners/?from=csssettings&partner=rapidload';
 ?>
 <td><?php 
-// translators: the variable contains a link to rapidload.
-echo sprintf( __( 'If Google Pagespeed Insights detects unused CSS, consider using %s to <strong>reduce your site\'s CSS size to up to 90&#37;</strong>, resulting in a slimmer, faster site!', 'autoptimize' ), '<a href="' . $_rapidload_link . '" target="_blank">the premium Rapidload service</a>' ); ?></td>
+// translators: a link to rapidload + strong tags
+echo sprintf( esc_html__( 'If Google Pagespeed Insights detects unused CSS, consider using %1$sthe premium Rapidload service%2$s to %3$sreduce your site\'s CSS size to up to 90&#37;%4$s, resulting in a slimmer, faster site!', 'autoptimize' ), '<a href="' . $_rapidload_link . '" target="_blank">', '</a>', '<strong>', '</strong>' ); ?></td>
 </tr>
 <?php } ?>
 </table>
@@ -470,7 +470,11 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     <tr valign="top">
         <th scope="row"><?php esc_html_e( 'Enable 404 fallbacks?', 'autoptimize' ); ?></th>
         <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_fallback" <?php echo $conf->get( 'autoptimize_cache_fallback' ) ? 'checked="checked" ' : ''; ?>/>
-        <?php _e( 'Sometimes Autoptimized JS/ CSS is referenced in cached HTML but is already removed, resulting in broken sites. With this option on, Autoptimize will try to redirect those not-found files to "fallback"-versions, keeping the page/ site somewhat intact. In some cases this will require extra web-server level configuration to ensure <code>wp-content/autoptimize_404_handler.php</code> is set to handle 404\'s in <code>wp-content/cache/autoptimize</code>.', 'autoptimize' ); ?></label></td>
+        <?php
+        // translators; just 2 opening and closing <code> tags.
+        printf( esc_html__( 'Sometimes Autoptimized JS/ CSS is referenced in cached HTML but is already removed, resulting in broken sites. With this option on, Autoptimize will try to redirect those not-found files to "fallback"-versions, keeping the page/ site somewhat intact. In some cases this will require extra web-server level configuration to ensure %1$swp-content/autoptimize_404_handler.php%2$s is set to handle 404\'s in %1$swp-content/cache/autoptimize%2$s.', 'autoptimize' ), '<code>', '</code>' );
+        ?>
+        </label></td>
     </tr>
     <tr valign="top">
     <th scope="row"><?php esc_html_e( 'Also optimize for logged in editors/ administrators?', 'autoptimize' ); ?></th>
@@ -532,7 +536,12 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         echo $ao_banner;
     }
     ?>
-        <li><?php _e( "Need help? <a href='https://wordpress.org/plugins/autoptimize/faq/'>Check out the FAQ here</a>.", 'autoptimize' ); ?></li>
+        <li>
+        <?php
+            // translators: link to the AO FAQ.
+            printf( esc_html__( 'Need help? %1$sCheck out the FAQ here%2$s.', 'autoptimize' ), '<a href=\'https://wordpress.org/plugins/autoptimize/faq/\'>', '</a>' );
+        ?>
+        </li>
         <li><?php esc_html_e( 'Happy with Autoptimize?', 'autoptimize' ); ?><br /><a href="<?php echo network_admin_url(); ?>plugin-install.php?tab=search&type=author&s=optimizingmatters"><?php esc_html_e( 'Try my other plugins!', 'autoptimize' ); ?></a></li>
     </ul>
     </div>
