@@ -584,6 +584,7 @@ class autoptimizeImages
         }
 
         $url = $imgopt_base_url . $imgopt_size . '/' . $normalized_url;
+        $url = apply_filters( 'autoptimize_filter_imgopt_after_build_imgopt_url', $url );
 
         return $url;
     }
