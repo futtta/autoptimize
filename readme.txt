@@ -18,7 +18,7 @@ If you think performance indeed is important, you should at least consider one o
 > [Autoptimize Pro is a premium Power-Up](https://misc.optimizingmatters.com/partners/?from=partnertab&partner=aopro), adding image optimization, CDN, page caching, automatic critical CSS rules and extra “booster” options, all in one handy subscription to [make your site even faster!](https://misc.optimizingmatters.com/partners/?from=partnertab&partner=aopro)!
 
 > <strong>Premium Support</strong><br>
-> We provide great [Premium Support and Web Performance Optimization services](https://misc.optimizingmatters.com/partners/?from=partnertab&partner=autoptimizepro), check out our offering on [https://accelera.site/](https://misc.optimizingmatters.com/partners/?from=partnertab&partner=autoptimizepro)!
+> We provide great [Premium Support and Web Performance Optimization services](https://misc.optimizingmatters.com/partners/?from=partnertab&partner=autoptimizepro) with Accelera, check out our offering on [https://accelerawp.com/](https://misc.optimizingmatters.com/partners/?from=partnertab&partner=autoptimizepro)!
 
 (Speed-surfing image under creative commons [by LL Twistiti](https://www.flickr.com/photos/twistiti/818552808/))
 
