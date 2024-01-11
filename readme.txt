@@ -319,6 +319,9 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.1.11 =
+* code quality improvements see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
+
 = 3.1.10 =
 * improvement: with "don't aggregate but defer" and "also defer inline JS" on, also defer JS that had the async flag to avoid the (previously) asynced JS from executing before the inline JS has ran.
 * improvement: show option to disable the default on "compatibility logic".
