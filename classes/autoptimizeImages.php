@@ -1331,7 +1331,7 @@ class autoptimizeImages
                             $upsell_msg_2 = sprintf( esc_html__( 'For a limited time only, this service is offered free for all Autoptimize users, %1$sdon\'t miss the chance to test it%2$s and see how much it could improve your site\'s speed.', 'autoptimize' ), '<strong>', '</strong>' );
                         } else {
                             // translators: 1st link points to autoptimize.com.pro, 2nd to shortpixel.
-                            $upsell_msg_2 = sprintf( esc_html__( 'For (nearly) %5$sunlimited image optimizations %1$sbuy Autoptimize Pro%2$s%6$s which also includes Critical CSS and extra "booster" options or %3$ssign up at Shortpixel%4$s.', 'autoptimize' ), '<a href="https://autoptimize.com/pro/" target="_blank">', '</a>', '<a href="https://autoptimize.shortpixel.com/' . $sp_url_suffix . '" target="_blank">', '</a>', '<strong>', '</strong>' );
+                            $upsell_msg_2 = sprintf( esc_html__( 'For (nearly) %5$sunlimited image optimizations %1$sbuy Autoptimize Pro%2$s%6$s which also includes Critical CSS and extra "booster" options or %3$ssign up at Shortpixel%4$s.', 'autoptimize' ), '<a href="https://autoptimize.com/pro/" target="_blank">', '</a>', '<a href="https://misc.optimizingmatters.com/partners/?from=aofree&partner=shortpixelupsell" target="_blank">', '</a>', '<strong>', '</strong>' );
                         }
                         echo apply_filters( 'autoptimize_filter_imgopt_settings_copy', $upsell_msg_1 . ' ' . $upsell_msg_2 . '</p>' );
                     }
