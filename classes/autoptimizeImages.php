@@ -513,7 +513,9 @@ class autoptimizeImages
         $url        = $this->normalize_img_url( $url );
         $url_parsed = parse_url( $url );
 
-        if ( array_key_exists( 'host', $url_parsed ) && $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
+        if ( false === is_array( $url_parsed ) ) {
+            return false;
+        } elseif ( array_key_exists( 'host', $url_parsed ) && $url_parsed['host'] !== $site_host && empty( $cdn_url ) ) {
             return false;
         } elseif ( autoptimizeUtils::is_local_server() ) {
             return false;
@@ -521,7 +523,7 @@ class autoptimizeImages
             return false;
         } elseif ( strpos( $url, '.php' ) !== false ) {
             return false;
-        } elseif ( str_ireplace( array( '.png', '.gif', '.jpg', '.jpeg', '.webp', '.avif' ), '', $url_parsed['path'] ) === $url_parsed['path'] ) {
+        } elseif ( false === array_key_exists( 'path', $url_parsed ) || str_ireplace( array( '.png', '.gif', '.jpg', '.jpeg', '.webp', '.avif' ), '', $url_parsed['path'] ) === $url_parsed['path'] ) {
             // fixme: better check against end of string.
             return false;
         } elseif ( ! empty( $nopti_images ) ) {
