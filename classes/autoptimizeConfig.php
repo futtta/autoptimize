@@ -733,6 +733,12 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     public function addmenu()
     {
         $_my_name = apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? esc_html__( 'Autoptimize Pro', 'autoptimize' ) : esc_html__( 'Autoptimize', 'autoptimize' );
+
+        global $title;
+        if ( empty( $title ) && true === autoptimizeUtils::is_ao_settings() ) {
+            $title = $_my_name;
+        }
+
         if ( is_multisite() && is_network_admin() && autoptimizeOptionWrapper::is_ao_active_for_network() ) {
             // multisite, network admin, ao network activated: add normal settings page at network level.
             $hook = add_submenu_page( 'settings.php', esc_html__( 'Autoptimize Options', 'autoptimize' ), $_my_name, 'manage_network_options', 'autoptimize', array( $this, 'show_config' ) );
