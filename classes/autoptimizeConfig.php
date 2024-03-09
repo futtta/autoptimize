@@ -190,13 +190,6 @@ class autoptimizeConfig
 
 <div class="wrap">
 
-<!-- Temporary nudge to disable aoccss power-up. -->
-<?php if ( autoptimizeUtils::is_plugin_active( 'autoptimize-criticalcss/ao_criticss_aas.php' ) ) { ?>
-    <div class="notice-info notice"><p>
-        <?php esc_html_e( 'Autoptimize now includes the criticalcss.com integration that was previously part of the separate power-up. If you want you can simply disable the power-up and Autoptimize will take over immediately.', 'autoptimize' ); ?>
-    </p></div>
-<?php } ?>
-
 <!-- AO beta only. -->
 <div class="notice-info notice"><p>
 <?php
