@@ -115,10 +115,12 @@ class autoptimizeExtra
 
     public function filter_remove_qs( $src )
     {
-        if ( strpos( $src, '?ver=' ) ) {
-            $src = remove_query_arg( 'ver', $src );
-        } elseif ( strpos( $src, '?v=' ) ) {
-            $src = remove_query_arg( 'v', $src );
+        if ( ! empty( $src ) ) {
+            if ( strpos( $src, '?ver=' ) ) {
+                $src = remove_query_arg( 'ver', $src );
+            } elseif ( strpos( $src, '?v=' ) ) {
+                $src = remove_query_arg( 'v', $src );
+            }
         }
 
         return $src;
