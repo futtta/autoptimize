@@ -1152,8 +1152,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
             array(
                 // Input.
                 'input { width: calc(33.33333% - ((0.75em*2)/3)); }',
-                // Expected output (ancient version of CSSmin returns 0.75, newer versions drop the 0).
-                'input{width:calc(33.33333% - ((.75em*2)/3))}',
+                // Expected output was .75 (so no 0) but we're not minifying CSS inside calc (and co) any more to prevent spaces being removed around + and - in some cases.
+                'input{width:calc(33.33333% - ((0.75em*2)/3))}',
             ),
             // Actual examples from above, but original wasn't really valid
             // css input fully, but these tests used to work and we'd like to
