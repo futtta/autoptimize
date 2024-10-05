@@ -37,6 +37,7 @@ class autoptimizeCSSmin
     public function run( $css )
     {
         // hide calc() if filter says yes (as YUI CSS compressor PHP port has problems retaining spaces around + and - operators).
+        // regex see tests at https://regex101.com/r/ofGQG9/1
         if ( apply_filters( 'autoptimize_filter_css_hide_calc', true ) ) {
             $css = autoptimizeBase::replace_contents_with_marker_if_exists( 'CALC', 'calc(', '#(calc|min|max|clamp)\([^;]*\)#m', $css );
         }
