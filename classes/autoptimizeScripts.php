@@ -534,7 +534,7 @@ class autoptimizeScripts extends autoptimizeBase
             $tag_without_contents = $tag_parts[1];
         }
 
-        $has_type = ( strpos( $tag_without_contents, 'type' ) !== false );
+        $has_type = ( strpos( $tag_without_contents, ' type' ) !== false );
 
         $type_valid = false;
         if ( $has_type ) {
