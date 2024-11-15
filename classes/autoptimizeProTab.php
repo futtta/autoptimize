@@ -19,14 +19,7 @@ class autoptimizeProTab
 
     public function __construct()
     {
-        // alternate between tab title every 5 minutes.
-        if ( floor( date( "i", time() ) / 5 ) %2 === 0 ) {
-            $this->rnd_title = esc_html__( 'Page Cache', 'autoptimize' );
-        } else {
-            $this->rnd_title = esc_html__( 'Pro Boosters', 'autoptimize' );
-        }
-
-        $this->run();
+         $this->run();
     }
 
     public function run()
@@ -51,7 +44,7 @@ class autoptimizeProTab
         $in = array_merge(
             $in,
             array(
-                'ao_protab' => '&#x1F680; ' . $this->rnd_title
+                'ao_protab' => '&#x1F680; ' . $this->get_rnd_title()
             )
         );
 
@@ -85,7 +78,7 @@ class autoptimizeProTab
             #aoprobuy{font-size:70%;}
         }
     </style>
-    <script>document.title = "Autoptimize: <?php echo $this->rnd_title ?> " + document.title;</script>
+    <script>document.title = "Autoptimize: <?php echo $this->get_rnd_title() ?> " + document.title;</script>
     <div class="wrap">
         <h1><?php apply_filters( 'autoptimize_filter_settings_is_pro', false ) ? esc_html_e( 'Autoptimize Pro Settings', 'autoptimize' ) : esc_html_e( 'Autoptimize Settings', 'autoptimize' ); ?></h1>
         <?php
@@ -126,5 +119,15 @@ class autoptimizeProTab
             </div>
     </div>
         <?php
+    }
+    
+    public function get_rnd_title() {
+        // alternate between tab title every 5 minutes.
+        if ( floor( date( "i", time() ) / 5 ) %2 === 0 ) {
+            $this->rnd_title = esc_html__( 'Page Cache', 'autoptimize' );
+        } else {
+            $this->rnd_title = esc_html__( 'Pro Boosters', 'autoptimize' );
+        }
+        return $this->rnd_title;
     }
 }
