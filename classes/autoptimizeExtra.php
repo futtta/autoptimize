@@ -219,7 +219,16 @@ class autoptimizeExtra
         if ( ! empty( $url_to_remove ) && 'dns-prefetch' === $relation_type ) {
             $cnt = 0;
             foreach ( $urls as $url ) {
-                if ( false !== strpos( $url, $url_to_remove ) ) {
+                // $url can be an array, in which case we need to fetch the value of the href key.
+                if ( is_array( $url ) ) {
+                    if ( isset( $url['href'] ) ) {
+                        $url = $url['href'];
+                    } else {
+                        continue;
+                    }
+                }
+
+                if ( is_string( $url ) && false !== strpos( $url, $url_to_remove ) ) {
                     unset( $urls[ $cnt ] );
                 }
                 $cnt++;
