@@ -1262,6 +1262,7 @@ class autoptimizeImages
         #ao_settings_form {background: white;border: 1px solid #ccc;padding: 1px 15px;margin: 15px 10px 10px 0;}
         #ao_settings_form .form-table th {font-weight: normal;}
         #autoptimize_imgopt_descr{font-size: 120%;}
+        #ao_settings_form td p.condition-warning {color: orange;}
     </style>
     <script>document.title = "Autoptimize: <?php esc_html_e( 'Images', 'autoptimize' ); ?> " + document.title;</script>
     <div class="wrap">
@@ -1300,7 +1301,7 @@ class autoptimizeImages
     <form id='ao_settings_form' action='<?php echo admin_url( 'options.php' ); ?>' method='post'>
         <?php settings_fields( 'autoptimize_imgopt_settings' ); ?>
         <h2><?php esc_html_e( 'Image optimization', 'autoptimize' ); ?></h2>
-        <span id='autoptimize_imgopt_descr'><?php echo apply_filters( 'autoptimize_filter_imgopt_intro_copy', esc_html__( 'Make your site significantly faster by simply ticking a few boxes and start serving CDN powered, optimized images in next-get formats like WebP and AVIF! No additional plugins or services needed.', 'autoptimize' ) ); ?></span>
+        <span id='autoptimize_imgopt_descr'><?php echo apply_filters( 'autoptimize_filter_imgopt_intro_copy', esc_html__( 'Make your site significantly faster by simply ticking a few boxes and start serving CDN powered, optimized images in the next-gen WebP image format! No additional plugins or services needed.', 'autoptimize' ) ); ?></span>
         <table class="form-table">
             <tr>
                 <th scope="row"><?php esc_html_e( 'Image optimization & CDN', 'autoptimize' ); ?></th>
@@ -1328,7 +1329,7 @@ class autoptimizeImages
                         echo apply_filters( 'autoptimize_filter_imgopt_settings_status', '<p><strong><span style="color:' . $_notice_color . ';">' . esc_html__( 'Shortpixel status: ', 'autoptimize' ) . '</span></strong>' . $_notice['notice'] . '</p>' );
                     } else {
                         // translators: link points to shortpixel.
-                        $upsell_msg_1 = '<p>' . sprintf( esc_html__( 'Get more Google love by speeding up your website. Start serving on-the-fly optimized images (also in the "next-gen" %4$sWebP%5$s and %4$sAVIF%5$s image formats) by %1$sShortPixel%2$s. No additional image optimization plugins are needed: your images are optimized, cached and served from %3$sShortPixel\'s global CDN%2$s.', 'autoptimize' ), '<a href="https://misc.optimizingmatters.com/partners/?from=aofree&partner=shortpixelupsell" target="_blank">', '</a>', '<a href="https://help.shortpixel.com/article/62-where-does-the-cdn-has-pops" target="_blank">', '<strong>', '</strong>' );
+                        $upsell_msg_1 = '<p>' . sprintf( esc_html__( 'Get more Google love by speeding up your website. Start serving on-the-fly optimized images (also in the "next-gen" %4$sWebP%5$s image format) by %1$sShortPixel%2$s. No additional image optimization plugins are needed: your images are optimized, cached and served from %3$sShortPixel\'s global CDN%2$s.', 'autoptimize' ), '<a href="https://misc.optimizingmatters.com/partners/?from=aofree&partner=shortpixelupsell" target="_blank">', '</a>', '<a href="https://help.shortpixel.com/article/62-where-does-the-cdn-has-pops" target="_blank">', '<strong>', '</strong>' );
                         if ( 'launch' === $options['availabilities']['extra_imgopt']['status'] ) {
                             $upsell_msg_2 = sprintf( esc_html__( 'For a limited time only, this service is offered free for all Autoptimize users, %1$sdon\'t miss the chance to test it%2$s and see how much it could improve your site\'s speed.', 'autoptimize' ), '<strong>', '</strong>' );
                         } else {
@@ -1381,12 +1382,23 @@ class autoptimizeImages
                 </td>
             </tr>
             <?php
-            if ( apply_filters( 'autoptimize_filter_imgopt_settings_show_avif', true ) ) {
+            if ( apply_filters( 'autoptimize_filter_imgopt_settings_show_avif', false ) || $this->should_ngimg() ) {
                 ?>
                 <tr id='autoptimize_imgopt_ngimg' <?php if ( ! array_key_exists( 'autoptimize_imgopt_checkbox_field_1', $options ) || ( isset( $options['autoptimize_imgopt_checkbox_field_1'] ) && '1' !== $options['autoptimize_imgopt_checkbox_field_1'] ) ) { echo 'class="hidden"'; } ?>>
-                    <th scope="row"><?php esc_html_e( 'Load AVIF in supported browsers?', 'autoptimize' ); ?></th>
+                    <th scope="row">
+                        <?php esc_html_e( 'Load AVIF in supported browsers?', 'autoptimize' ); ?>
+                    </th>
                     <td>
-                        <label><input type='checkbox' id='autoptimize_imgopt_ngimg_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_4'] ) { echo 'checked="checked"'; } ?> value='1'><?php esc_html_e( 'Automatically serve AVIF image format to any browser that supports it.', 'autoptimize' ); ?></label>
+                        <p class="condition-warning">
+                            <?php 
+                            if ( '3' === autoptimizeImages::instance()->get_img_quality_setting() && $this->should_ngimg() ) {
+                                _e( 'Your Image optimization quality is set to "lossless", but AVIF files can end up being bigger than jpeg or webp for lossless images, so consider choosing a different quality or disable the AVIF option.', 'autoptimize' );
+                            }
+                            ?>
+                        </p>
+                        <label><input type='checkbox' id='autoptimize_imgopt_ngimg_checkbox' name='autoptimize_imgopt_settings[autoptimize_imgopt_checkbox_field_4]' <?php if ( ! empty( $options['autoptimize_imgopt_checkbox_field_4'] ) && '1' === $options['autoptimize_imgopt_checkbox_field_4'] ) { echo 'checked="checked"'; } ?> value='1'>
+                            <?php esc_html_e( 'Automatically serve AVIF image format to any browser that supports it.', 'autoptimize' ); ?> <?php printf( esc_html__( '%1$sImportant caveat%2$s; although it %5$scan result in even smaller image sizes for lossy images%4$s it should be taken into account that %3$s%1$sAVIF can require more resources%2$s to decode/ display%4$s and as such %1$smight be slower%2$s on low-end (mobile) devices.', 'autoptimize' ), '<strong>', '</strong>', '<a href="https://storage.googleapis.com/avif-comparison/decode-timing.html" target="_blank">', '</a>', '<a href="https://tsev.dev/posts/2023-11-10-should-avif-be-the-dominant-image-format/" target="_blank">' ); ?>
+                        </label>
                     </td>
                 </tr>
                 <?php

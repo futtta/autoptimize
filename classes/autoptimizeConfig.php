@@ -903,7 +903,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             'autoptimize_imgopt_checkbox_field_1' => '0', // imgopt off.
             'autoptimize_imgopt_select_field_2'   => '2', // quality glossy.
             'autoptimize_imgopt_checkbox_field_3' => '0', // lazy load off.
-            'autoptimize_imgopt_checkbox_field_4' => '0', // webp off (might be removed).
+            'autoptimize_imgopt_checkbox_field_4' => '0', // avif off (might be removed).
             'autoptimize_imgopt_text_field_5'     => '',  // lazy load exclusions empty.
             'autoptimize_imgopt_text_field_6'     => '',  // optimization exclusions empty.
             'autoptimize_imgopt_number_field_7'   => '2', // lazy load from nth image (0 = lazyload all).
