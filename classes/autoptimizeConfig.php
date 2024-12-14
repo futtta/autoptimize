@@ -284,7 +284,7 @@ echo esc_html__( 'A comma-separated list of scripts you do not want optimized, f
 </tr>
 <tr valign="top">
 <th scope="row"><?php esc_html_e( 'Remove Unused JavaScript?', 'autoptimize' ); ?></th>
-<td><?php esc_html_e( 'Autoptimize combines your theme & plugins\' JavaScript, but does not know what is used and what not. If Google Pagespeed Insights detects unused JavaScript, consider using a plugin like "Plugin Organizer" or similar to manage what JavaScript is added where.', 'autoptimize' ); ?></td>
+<td><?php esc_html_e( 'Autoptimize combines your theme & plugins\' JavaScript, but does not know what is used and what is not. If Google Pagespeed Insights detects unused JavaScript, consider using a plugin like "Plugin Organizer" or similar to manage what JavaScript is added where.', 'autoptimize' ); ?></td>
 </tr>
 </table>
 </li>
@@ -309,7 +309,7 @@ echo esc_html__( 'A comma-separated list of scripts you do not want optimized, f
 <tr class="css_sub css_aggregate" valign="top">
 <th scope="row"><?php esc_html_e( 'Generate data: URIs for images?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" name="autoptimize_css_datauris" <?php echo $conf->get( 'autoptimize_css_datauris' ) ? 'checked="checked" ' : ''; ?>/>
-<?php esc_html_e( 'Enable this to include small background-images in the CSS itself instead of as separate downloads.', 'autoptimize' ); ?></label></td>
+<?php esc_html_e( 'Enable this to include small background images in the CSS itself instead of as separate downloads.', 'autoptimize' ); ?></label></td>
 </tr>
 <?php if ( autoptimizeOptionWrapper::get_option( 'autoptimize_css_justhead' ) ) { ?>
 <tr valign="top" class="css_sub css_aggregate">
@@ -342,7 +342,7 @@ echo sprintf( esc_html__( 'You can manually create rules for different types of 
 <tr valign="top" class="css_sub css_aggregate">
 <th scope="row"><?php esc_html_e( 'Inline all CSS?', 'autoptimize' ); ?></th>
 <td><label class="cb_label"><input type="checkbox" id="autoptimize_css_inline" name="autoptimize_css_inline" <?php echo $conf->get( 'autoptimize_css_inline' ) ? 'checked="checked" ' : ''; ?>/>
-<?php esc_html_e( 'Inlining all CSS is an easy way to stop the CSS from being render-blocking, but is generally not recommended because the size of the HTML increases significantly. Additionally it might push meta-tags down to a position where e.g. Facebook and Whatsapp will not find them any more, breaking thumbnails when sharing.', 'autoptimize' ); ?></label></td>
+<?php esc_html_e( 'Inlining all CSS is an easy way to stop the CSS from being render-blocking, but is generally not recommended because the size of the HTML increases significantly. Additionally, it might push meta-tags down to a position where e.g. Facebook and Whatsapp will not find them anymore, breaking thumbnails when sharing.', 'autoptimize' ); ?></label></td>
 </tr>
 <tr valign="top" class="css_sub">
 <th scope="row"><?php esc_html_e( 'Exclude CSS from Autoptimize:', 'autoptimize' ); ?></th>
@@ -445,7 +445,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
             $details = ', ~' . $ao_cache_size . ' total';
         }
         // translators: Kilobytes + timestamp shown.
-        printf( esc_html__( '%1$s files, totalling %2$s (calculated at %3$s)', 'autoptimize' ), $ao_stat_arr[0], $ao_cache_size, wp_date( 'H:i', $ao_stat_arr[2] ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+        printf( esc_html__( '%1$s files, totaling %2$s (calculated at %3$s)', 'autoptimize' ), $ao_stat_arr[0], $ao_cache_size, wp_date( 'H:i', $ao_stat_arr[2] ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
     }
     ?>
 </td>
@@ -477,14 +477,14 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         <td><label class="cb_label"><input type="checkbox" name="autoptimize_cache_fallback" <?php echo $conf->get( 'autoptimize_cache_fallback' ) ? 'checked="checked" ' : ''; ?>/>
         <?php
         // translators; just 2 opening and closing <code> tags.
-        printf( esc_html__( 'Sometimes Autoptimized JS/ CSS is referenced in cached HTML but is already removed, resulting in broken sites. With this option on, Autoptimize will try to redirect those not-found files to "fallback"-versions, keeping the page/ site somewhat intact. In some cases this will require extra web-server level configuration to ensure %1$swp-content/autoptimize_404_handler.php%2$s is set to handle 404\'s in %1$swp-content/cache/autoptimize%2$s.', 'autoptimize' ), '<code>', '</code>' );
+        printf( esc_html__( 'Sometimes Autoptimized JS/ CSS is referenced in cached HTML but is already removed, resulting in broken sites. With this option on, Autoptimize will try to redirect those not-found files to "fallback"-versions, keeping the page/ site somewhat intact. In some cases, this will require extra web-server level configuration to ensure %1$swp-content/autoptimize_404_handler.php%2$s is set to handle 404\'s in %1$swp-content/cache/autoptimize%2$s.', 'autoptimize' ), '<code>', '</code>' );
         ?>
         </label></td>
     </tr>
     <tr valign="top">
     <th scope="row"><?php esc_html_e( 'Also optimize for logged in editors/ administrators?', 'autoptimize' ); ?></th>
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_optimize_logged" <?php echo $conf->get( 'autoptimize_optimize_logged' ) ? 'checked="checked" ' : ''; ?>/>
-    <?php esc_html_e( 'By default Autoptimize is also active for logged on editors/ administrators, uncheck this option if you don\'t want Autoptimize to optimize when logged in e.g. to use a pagebuilder.', 'autoptimize' ); ?></label></td>
+    <?php esc_html_e( 'By default Autoptimize is also active for logged-on editors/ administrators, uncheck this option if you don\'t want Autoptimize to optimize when logged in e.g. to use a page builder.', 'autoptimize' ); ?></label></td>
     </tr>
     <?php
     if ( function_exists( 'is_checkout' ) || function_exists( 'is_cart' ) || function_exists( 'edd_is_checkout' ) || function_exists( 'wpsc_is_cart' ) || function_exists( 'wpsc_is_checkout' ) ) {
@@ -502,13 +502,13 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
     <tr valign="top">
     <th scope="row"><?php esc_html_e( 'Enable configuration per post/ page?', 'autoptimize' ); ?></th>
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_enable_meta_ao_settings" <?php echo $conf->get( 'autoptimize_enable_meta_ao_settings' ) ? 'checked="checked" ' : ''; ?>/>
-    <?php esc_html_e( 'Add a "metabox" to the post/ page edit screen allowing different optimizations to be turned off on a per post/ page level?', 'autoptimize' ); ?></label></td>
+    <?php esc_html_e( 'Add a "meta box" to the post/ page edit screen allowing different optimizations to be turned off on a per post/ page level?', 'autoptimize' ); ?></label></td>
     </tr>
     <?php } ?>
     <tr valign="top">
-    <th scope="row"><?php esc_html_e( 'Disable extra compatibilty logic?', 'autoptimize' ); ?></th>
+    <th scope="row"><?php esc_html_e( 'Disable extra compatibility logic?', 'autoptimize' ); ?></th>
     <td><label class="cb_label"><input type="checkbox" name="autoptimize_installed_before_compatibility" <?php echo $conf->get( 'autoptimize_installed_before_compatibility' ) ? 'checked="checked" ' : ''; ?>/>
-    <?php esc_html_e( 'Autoptimize applies extra "compatibiity logic" to prevent issues with JS optimization (for e.g. Gutenberg blocks, Revolution Slider, jQuery-heavy plugins, ...) but may sometimes be a bit too careful. If you have render-blocking JS issues, you can try disabling this logic here. Make sure to test your site thoroughly though!', 'autoptimize' ); ?></label></td>
+    <?php esc_html_e( 'Autoptimize applies extra "compatibility logic" to prevent issues with JS optimization (for e.g. Gutenberg blocks, Revolution Slider, jQuery-heavy plugins, ...) but may sometimes be a bit too careful. If you have render-blocking JS issues, you can try disabling this logic here. Make sure to test your site thoroughly though!', 'autoptimize' ); ?></label></td>
     </tr>
 </table>
 </li>
@@ -1101,7 +1101,7 @@ if ( true === autoptimizeImages::imgopt_active() && true === apply_filters( 'aut
         } else {
             // when in doubt "go" for optimization, but this should never happen?
             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log( 'AO metabox logic fallback; well, how did I get here? Maybe this helps: looking for ' . $optim . ' in ' . json_encode( $_meta_value ) );
+                error_log( 'AO meta box logic fallback; well, how did I get here? Maybe this helps: looking for ' . $optim . ' in ' . json_encode( $_meta_value ) );
             }
             return true;
         }
