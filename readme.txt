@@ -7,7 +7,7 @@ License URI: [https://www.gnu.org/licenses/gpl-3.0.html](https://www.gnu.org/lic
 Requires at least: 5.3
 Tested up to: 6.6
 Requires PHP: 5.6
-Stable tag: 3.1.12
+Stable tag: 3.1.13
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
