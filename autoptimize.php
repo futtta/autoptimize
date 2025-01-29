@@ -90,11 +90,6 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
     require AUTOPTIMIZE_PLUGIN_DIR . 'classes/autoptimizeCLI.php';
 }
 
-// filter to disable AO both on front- and backend.
-if ( apply_filters( 'autoptimize_filter_disable_plugin', false ) ) {
-    return;
-}
-
 /**
  * Retrieve the instance of the main plugin class.
  *
@@ -110,4 +105,14 @@ function autoptimize() {
     return $plugin;
 }
 
-autoptimize()->run();
+add_action(
+    'init',
+    function() {
+        // filter to disable AO both on front- and backend.
+        if ( ! apply_filters( 'autoptimize_filter_disable_plugin', false ) ) {
+            autoptimize()->run();
+        }
+    },
+    1000,
+    0
+);
