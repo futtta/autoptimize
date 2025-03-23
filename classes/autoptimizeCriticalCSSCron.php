@@ -95,11 +95,11 @@ class autoptimizeCriticalCSSCron {
             }
 
             // Initialize counters.
-            if ( 0 == $rtimelimit ) {
+            if ( empty( $rtimelimit ) || 0 == $rtimelimit || ) {
                 // no time limit set, let's go with 1000 seconds.
                 $rtimelimit = 1000;
             }
-            $mt = time() + $rtimelimit; // maxtime queue processing can run.
+            $mt = time() + (int) $rtimelimit; // maxtime queue processing can run.
             $jc = 1; // job count number.
             $jr = 1; // jobs requests number.
             $jt = count( $queue ); // number of jobs in queue.
