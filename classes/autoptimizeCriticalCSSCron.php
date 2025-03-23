@@ -95,7 +95,7 @@ class autoptimizeCriticalCSSCron {
             }
 
             // Initialize counters.
-            if ( empty( $rtimelimit ) || 0 == $rtimelimit || ) {
+            if ( empty( $rtimelimit ) || 0 == $rtimelimit ) {
                 // no time limit set, let's go with 1000 seconds.
                 $rtimelimit = 1000;
             }
