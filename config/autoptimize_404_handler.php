@@ -42,7 +42,7 @@ $fallback_path = $ao_cache_dir . $js_or_css . '/<!--ao-cachefile-prefix-->fallba
 
 if ( $original_request !== $fallback_target && file_exists( $fallback_path ) ) {
     // error_log( 'Autoptimize file ' . $original_request . ' not found, using fallback instead.' );
-    header( 'HTTP/1.1 301 Moved Permanently' );
+    header( 'HTTP/1.1 302 Found' );
     header( 'Location: ' . $fallback_target );
 } else {
     // error_log( 'Autoptimize file ' . $original_request . ' not found, sending 410 gone response.' );
