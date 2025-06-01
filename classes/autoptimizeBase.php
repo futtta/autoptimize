@@ -599,6 +599,15 @@ abstract class autoptimizeBase
                 },
                 $content
             );
+
+            // Check for error (for example, an error can occur if $content is very large).
+            if ( null === $content ) {
+                $error_message = 'Autoptimize: preg_replace_callback() failed';
+                if ( function_exists( 'preg_last_error_msg' ) ) {
+                    $error_message .= ': ' . preg_last_error_msg();
+                }
+                error_log( $error_message );
+            }
         }
 
         return $content;
