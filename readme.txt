@@ -321,9 +321,11 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
-= 3.1.13 =
+= 3.1.14 =
 * multiple minor changes/ improvements/ bugfixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
+= 3.1.13 =
+* multiple minor changes/ improvements/ bugfixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
 
 = 3.1.12 =
 * image optimization: improvements to the favicon regex
