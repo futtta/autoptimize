@@ -35,6 +35,9 @@ matrix:
     - dist: jammy
       php: 8.3
       env: LIBONIG_INSTALL=1
+    - dist: noble
+      php: 8.4
+      env: LIBONIG_INSTALL=1
 
 
 before_install:
