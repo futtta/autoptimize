@@ -58,7 +58,7 @@ install:
   # Upgrade phpunit for php 7.3 and higher
   - if [ -z "$PHPUNIT_12" ]; then rm composer.lock; fi
   - if [ -z "$PHPUNIT_12" ]; then composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true; fi
-  - if [ -z "$PHPUNIT_12" ]; then composer require --no-interaction --dev phpunit/phpunit:12.3; fi
+  - if [ -z "$PHPUNIT_12" ]; then composer require --no-interaction --dev phpunit/phpunit:12.x; fi
 
   # install dependencies using system provided composer binary
   - composer install $flags
