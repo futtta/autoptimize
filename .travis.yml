@@ -34,10 +34,10 @@ matrix:
       env: LIBONIG_INSTALL=1
     - dist: jammy
       php: 8.3
-      env: LIBONIG_INSTALL=1
+      env: LIBONIG_INSTALL=1 PHPUNIT_12=1
     - dist: noble
       php: 8.4
-      env: LIBONIG_INSTALL=1
+      env: LIBONIG_INSTALL=1 PHPUNIT_12=1
 
 
 before_install:
@@ -54,6 +54,11 @@ install:
   - if [ -z "$PHPUNIT_UPGRADE" ]; then rm composer.lock; fi
   - if [ -z "$PHPUNIT_UPGRADE" ]; then composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true; fi
   - if [ -z "$PHPUNIT_UPGRADE" ]; then composer require --no-interaction --dev phpunit/phpunit:9.3; fi
+
+  # Upgrade phpunit for php 7.3 and higher
+  - if [ -z "$PHPUNIT_12" ]; then rm composer.lock; fi
+  - if [ -z "$PHPUNIT_12" ]; then composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true; fi
+  - if [ -z "$PHPUNIT_12" ]; then composer require --no-interaction --dev phpunit/phpunit:12.3; fi
 
   # install dependencies using system provided composer binary
   - composer install $flags
