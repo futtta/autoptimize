@@ -1056,13 +1056,21 @@ class autoptimizeImages
         $_to   = array( '<link rel="preload" as="image" ', ' href=', ' imagesizes=', ' imagesrcset=' );
         $tag   = str_replace( $_from, $_to, $tag );
 
-        // and remove title, alt, class and id.
-        $tag = preg_replace( '/ ((?:title|alt|class|id|loading|fetchpriority|decoding|data-no-lazy|width|height)=".*")/Um', '', $tag );
-        if ( str_replace( array( ' title=', ' class=', ' alt=', ' id=', ' fetchpriority=', ' decoding=', ' data-no-lazy=' ), '', $tag ) !== $tag ) {
-            // 2nd regex pass if still title/ class/ alt in case single quotes were used iso doubles.
-            $tag = preg_replace( '/ ((?:title|alt|class|id|loading|fetchpriority|decoding|data-no-lazy)=\'.*\')/Um', '', $tag );
-        }
-
+        // and using kses, remove all unneeded attributes
+        // keeping only those we *know* are OK and/ or needed
+        $allowed_html = array(
+                'link' => array(
+                    'rel'           => true,
+                    'as'            => true,
+                    'href'          => true,
+                    'imagesizes'    => true,
+                    'imagesrcset'   => true,
+                    'type'          => true,
+                    'media'         => true,
+                ),
+            );
+        $tag = wp_kses( $tag, $allowed_html );
+        
         return $tag;
     }
 
