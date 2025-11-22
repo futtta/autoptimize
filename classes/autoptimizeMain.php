@@ -765,7 +765,7 @@ class autoptimizeMain
     public static function notice_updated()
     {
         echo '<div class="updated"><p>';
-        printf( esc_html_e( 'Autoptimize has just been updated. Please %1$stest your site now%2$s and adapt Autoptimize config if needed.', 'autoptimize' ), '<strong>', '</strong>' );
+        printf( esc_html__( 'Autoptimize has just been updated. Please %1$stest your site now%2$s and adapt Autoptimize config if needed.', 'autoptimize' ), '<strong>', '</strong>' );
         echo '</p></div>';
     }
 
