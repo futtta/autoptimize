@@ -5,9 +5,9 @@ Donate link: http://blog.futtta.be/2013/10/21/do-not-donate-to-me/
 License: GPLv3
 License URI: [https://www.gnu.org/licenses/gpl-3.0.html](https://www.gnu.org/licenses/gpl-3.0.html)
 Requires at least: 5.3
-Tested up to: 6.6
-Requires PHP: 5.6
-Stable tag: 3.1.13
+Tested up to: 6.9
+Requires PHP: 7.1
+Stable tag: 3.1.14
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -322,7 +322,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 3.1.14 =
+* improve output for <link rel="preload" images
+* fix bug in "domain binding" in critical CSS advanced options
 * multiple minor changes/ improvements/ bugfixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta) again.
+* confirm OK with WordPress 6.9
 
 = 3.1.13 =
 * multiple minor changes/ improvements/ bugfixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
