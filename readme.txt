@@ -322,10 +322,12 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 == Changelog ==
 
 = 3.1.14 =
-* improve output for <link rel="preload" images
-* fix bug in "domain binding" in critical CSS advanced options
-* multiple minor changes/ improvements/ bugfixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta) again.
-* confirm OK with WordPress 6.9
+* improve HTML output for <link rel="preload" images (based on report by Muhammad)
+* let the 404-handler issue a 302 iso 301 HTTP response (as mentioned by thefitrv)
+* small improvement in critical CSS cron job handling in case of an empty "time limit" (thanks for the help Jason)
+* fix bug in "domain binding" in critical CSS advanced options (reported by Hazel)
+* catch and report (exceptional) JS optimization issues causing preg_replace_callback to crash out (in case of a huge amount of JS code), thanks siliconforks
+* confirmed OK with WordPress 6.9
 
 = 3.1.13 =
 * multiple minor changes/ improvements/ bugfixes, see the [GitHub commit log](https://github.com/futtta/autoptimize/commits/beta).
