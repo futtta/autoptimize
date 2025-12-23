@@ -801,7 +801,7 @@ class autoptimizeImages
         if ( ! empty( $metabox_preloads ) && is_array( $metabox_preloads ) && empty( $to_preload ) && false !== apply_filters( 'autoptimize_filter_imgopt_dopreloads', true ) ) {
             // the preload was not in an img tag, so adding a non-responsive preload instead.
             foreach ( $metabox_preloads as $img_preload ) {
-                $to_preload .= '<link rel="preload" href="' . $img_preload . '" as="image">';
+                $to_preload .= apply_filters( 'autoptimize_filter_imgopt_preload_tag_result', '<link fetchpriority="high" rel="preload" href="' . $img_preload . '" as="image">' );
             }
         }
 
@@ -935,7 +935,7 @@ class autoptimizeImages
         if ( ! empty( $metabox_preloads ) && is_array( $metabox_preloads ) && empty( $to_preload ) && false !== apply_filters( 'autoptimize_filter_imgopt_dopreloads', true ) ) {
             // the preload was not in an img tag, so adding a non-responsive preload instead.
             foreach ( $metabox_preloads as $img_preload ) {
-                $to_preload .= '<link rel="preload" href="' . $img_preload . '" as="image">';
+                $to_preload .= apply_filters( 'autoptimize_filter_imgopt_preload_tag_result', '<link fetchpriority="high" rel="preload" href="' . $img_preload . '" as="image">' );
             }
         }
 
@@ -1053,11 +1053,11 @@ class autoptimizeImages
 
         // rewrite img tag to link preload img.
         $_from = array( '<img ', ' src=', ' sizes=', ' srcset=' );
-        $_to   = array( '<link rel="preload" as="image" ', ' href=', ' imagesizes=', ' imagesrcset=' );
+        $_to   = array( '<link fetchpriority="high" rel="preload" as="image" ', ' href=', ' imagesizes=', ' imagesrcset=' );
         $tag   = str_replace( $_from, $_to, $tag );
 
         // and using kses, remove all unneeded attributes
-        // keeping only those we *know* are OK and/ or needed
+        // keeping only those we *know* are OK and/ or needed.
         $allowed_html = array(
                 'link' => array(
                     'rel'           => true,
@@ -1067,9 +1067,13 @@ class autoptimizeImages
                     'imagesrcset'   => true,
                     'type'          => true,
                     'media'         => true,
+                    'fetchpriority' => true,
                 ),
             );
         $tag = wp_kses( $tag, $allowed_html );
+        
+        // and provide filter for late changes.
+        $tag = apply_filters( 'autoptimize_filter_imgopt_preload_tag_result', $tag );
         
         return $tag;
     }
