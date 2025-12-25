@@ -195,8 +195,18 @@ body.ao-feedback-open .ao-feedback-overlay {
     position: fixed;
 }
 
+.rtl .ao-plugin-uninstall-feedback-popup {
+    left: -500px;
+}
+.rtl .ao-feedback .popup--header h5 {
+    text-align: right;
+}
+.rtl .ao-plugin-uninstall-feedback-popup .popup--header:before {
+    display:none;
+}
+
 @media (max-width: 768px) {
-    .ao-plugin-uninstall-feedback-popup {
+    .ao-plugin-uninstall-feedback-popup, .rtl .ao-plugin-uninstall-feedback-popup {
         position: fixed;
         max-width: 100%;
         margin: 0 auto;

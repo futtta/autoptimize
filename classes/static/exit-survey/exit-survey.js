@@ -1,6 +1,6 @@
 (function ($) {
     $(document).ready(function () {
-        var targetElement = 'tr[data-plugin="autoptimize/autoptimize.php"] span.deactivate a';
+        var targetElement = 'tr[data-slug="autoptimize"] span.deactivate a';
         var redirectUrl = $(targetElement).attr('href');
         if ($('.ao-feedback-overlay').length === 0) {
             $('body').prepend('<div class="ao-feedback-overlay"></div>');
