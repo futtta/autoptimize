@@ -467,7 +467,7 @@ class autoptimizeExtra
                 $preload_as = 'other';
             }
 
-            $preload_output .= '<link rel="preload" href="' . $preload . '" as="' . $preload_as . '"' . $mime_type . $crossorigin . '>';
+            $preload_output .= '<link rel="preload" fetchpriority="high" href="' . $preload . '" as="' . $preload_as . '"' . $mime_type . $crossorigin . '>';
         }
         $preload_output = apply_filters( 'autoptimize_filter_extra_preload_output', $preload_output );
 
