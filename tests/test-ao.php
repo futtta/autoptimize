@@ -3151,7 +3151,7 @@ break`+`he  llo`;foo`hel( \'\');lo`;`he\nl\`lo`;(`he${one + two}`)';
 MARKUP;
 
         $expected = <<<MARKUP
-<html><link rel="preload" href="https://whatever.com/fonts/openfuttta.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="https://whatever.com/css/openfuttta.css" as="style"><link rel="stylesheet" href="xyz.css">
+<html><link rel="preload" fetchpriority="high" href="https://whatever.com/fonts/openfuttta.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" fetchpriority="high" href="https://whatever.com/css/openfuttta.css" as="style"><link rel="stylesheet" href="xyz.css">
 MARKUP;
 
         $instance = autoptimizeExtra::instance();
@@ -3173,7 +3173,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<html><link rel="preload" href="https://whatever.com/fonts/openfuttta.woff2?123#abc" as="font" type="font/woff2" crossorigin><link rel="preload" href="https://whatever.com/css/openfuttta.css?v=124" as="style"><link rel="stylesheet" href="xyz.css">
+<html><link rel="preload" fetchpriority="high" href="https://whatever.com/fonts/openfuttta.woff2?123#abc" as="font" type="font/woff2" crossorigin><link rel="preload" fetchpriority="high" href="https://whatever.com/css/openfuttta.css?v=124" as="style"><link rel="stylesheet" href="xyz.css">
 MARKUP;
 
         $instance = autoptimizeExtra::instance();
