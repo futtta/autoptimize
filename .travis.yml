@@ -44,9 +44,9 @@ install:
   - flags="--ansi --prefer-dist --no-interaction --optimize-autoloader --no-progress"
 
   # Upgrade phpunit for php 7.3 and higher
-  - if [ -z "$PHPUNIT_UPGRADE" ]; then rm composer.lock; fi
-  - if [ -z "$PHPUNIT_UPGRADE" ]; then composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true; fi
-  - if [ -z "$PHPUNIT_UPGRADE" ]; then composer require --no-interaction --dev phpunit/phpunit:9.3; fi
+  #- if [ -z "$PHPUNIT_UPGRADE" ]; then rm composer.lock; fi
+  #- if [ -z "$PHPUNIT_UPGRADE" ]; then composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true; fi
+  #- if [ -z "$PHPUNIT_UPGRADE" ]; then composer require --no-interaction --dev phpunit/phpunit:9.3; fi
 
   # install dependencies using system provided composer binary
   - composer install $flags
