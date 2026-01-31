@@ -38,5 +38,10 @@
         "phpunit": "phpunit --no-coverage",
         "phpunit-coverage": "phpunit --coverage-html=./coverage/ --coverage-clover=./coverage/clover.xml",
         "phpcs": "phpcs"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false
+        }
     }
 }
