@@ -278,7 +278,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<link media="all" href="${cdnurl}/${subfolder}${csspart}${csshash}.css" rel="stylesheet"><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<link media="all" href="{$cdnurl}/{$subfolder}{$csspart}{$csshash}.css" rel="stylesheet"><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -303,16 +303,16 @@ MARKUP;
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}f4688afb6daf6703fe6676295770f43a.js"></script></body>
+<script defer src="$cdnurl/{$subfolder}{$jspart}f4688afb6daf6703fe6676295770f43a.js"></script></body>
 </html>
 MARKUP;
 
@@ -347,7 +347,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet"><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<link media="all" href="$cdnurl/{$subfolder}{$csspart}{$csshash}.css" rel="stylesheet"><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -372,16 +372,16 @@ MARKUP;
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}f4688afb6daf6703fe6676295770f43a.js"></script></body>
+<script defer src="$cdnurl/{$subfolder}{$jspart}f4688afb6daf6703fe6676295770f43a.js"></script></body>
 </html>
 MARKUP;
 
@@ -416,7 +416,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/${subfolder}${csspart}{$csshash}.css" onload="this.onload=null;this.media='all';"><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet"></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/{$subfolder}{$csspart}{$csshash}.css" onload="this.onload=null;this.media='all';"><noscript id="aonoscrcss"><link media="all" href="$cdnurl/{$subfolder}{$csspart}{$csshash}.css" rel="stylesheet"></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -441,16 +441,16 @@ MARKUP;
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}f4688afb6daf6703fe6676295770f43a.js"></script></body>
+<script defer src="$cdnurl/{$subfolder}{$jspart}f4688afb6daf6703fe6676295770f43a.js"></script></body>
 </html>
 MARKUP;
 
@@ -485,7 +485,7 @@ MARKUP;
 <!--[if gt IE 8]><!--> <html class="no-svg no-js"  xmlns:fb="https://www.facebook.com/2008/fbml"  xmlns:og="http://ogp.me/ns#" lang="hr"> <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/${subfolder}${csspart}${csshash}.css" onload="this.onload=null;this.media='all';"><noscript id="aonoscrcss"><link media="all" href="$cdnurl/${subfolder}${csspart}${csshash}.css" rel="stylesheet"></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
+<style id="aoatfcss" media="all">1</style><link rel="stylesheet" media="print" href="$cdnurl/{$subfolder}{$csspart}{$csshash}.css" onload="this.onload=null;this.media='all';"><noscript id="aonoscrcss"><link media="all" href="$cdnurl/{$subfolder}{$csspart}{$csshash}.css" rel="stylesheet"></noscript><title>Mliječna juha od brokule &#9832; Kuhaj.hr</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
     <!--[if lt IE 9]>
@@ -510,16 +510,16 @@ MARKUP;
     }(document, 'script', 'facebook-jssdk'));</script>
     </script>
 
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
-<script type='text/javascript' src='$cdnurl/${subfolder}wp-content/themes/my-theme/js/main.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/plugins/ajax-load-more/core/js/ajax-load-more.min.js?ver=1.1'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/plugins/wp-ga-social-tracking-js/ga-social-tracking.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/alm-seo.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/jquery.placeholder-2.1.1.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/typeahead.bundle.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/vendor/bootstrap-tagsinput.min.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/m-mobilemenu.js'></script>
+<script type='text/javascript' src='$cdnurl/{$subfolder}wp-content/themes/my-theme/js/main.js'></script>
 
-<script defer src="$cdnurl/${subfolder}${jspart}f4688afb6daf6703fe6676295770f43a.js"></script></body>
+<script defer src="$cdnurl/{$subfolder}{$jspart}f4688afb6daf6703fe6676295770f43a.js"></script></body>
 </html>
 MARKUP;
 
@@ -596,7 +596,7 @@ CSS;
 
 .whitespaces { background : url   (  ../../somewhere-else/svg.svg) ; }
 
-.host-relative { background: url(${cdnurl}/${sub}img/something.svg); }
+.host-relative { background: url({$cdnurl}/{$sub}img/something.svg); }
 .protocol-relative { background: url(//something/somewhere/example.png); }
 
 @font-face {
@@ -1559,25 +1559,25 @@ CSS;
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 100;
-  src: url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
+  src: url({$cdnurl}/{$sub}fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
   src: local('Roboto Thin'), local('Roboto-Thin'),
-       url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
-       url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
-       url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
-       url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
-       url(${cdnurl}/${sub}fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
+       url({$cdnurl}/{$sub}fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
+       url({$cdnurl}/{$sub}fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
+       url({$cdnurl}/{$sub}fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
+       url({$cdnurl}/{$sub}fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
+       url({$cdnurl}/{$sub}fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
 }
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 100;
-  src: url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
+  src: url({$cdnurl}/{$sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot); /* IE9 Compat Modes */
   src: local('Roboto Thin'), local('Roboto-Thin'),
-       url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
-       url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
-       url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
-       url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
-       url(${cdnurl}/${sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
+       url({$cdnurl}/{$sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.eot?#iefix) format('embedded-opentype'), /* IE6-IE8 */
+       url({$cdnurl}/{$sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff2) format('woff2'), /* Super Modern Browsers */
+       url({$cdnurl}/{$sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.woff) format('woff'), /* Modern Browsers */
+       url({$cdnurl}/{$sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.ttf) format('truetype'), /* Safari, Android, iOS */
+       url({$cdnurl}/{$sub}wp-content/themes/mytheme/fonts/roboto-v15-latin-ext_latin-100.svg#Roboto) format('svg'); /* Legacy iOS */
 }
 CSS;
 
@@ -1725,7 +1725,7 @@ CSS;
 
         $expected = <<<CSS
 body:after {
-  content: url($cdnurl/${sub}img/close.png) url($cdnurl/${sub}img/loading.gif) url($cdnurl/${sub}img/prev.png) url($cdnurl/${sub}img/next.png);
+  content: url($cdnurl/{$sub}img/close.png) url($cdnurl/{$sub}img/loading.gif) url($cdnurl/{$sub}img/prev.png) url($cdnurl/{$sub}img/next.png);
 }
 CSS;
 
@@ -3128,11 +3128,11 @@ MARKUP;
         $js = '
 // comment
 `line
-break` + `he  llo`; foo`hel( \'\');lo`; `he\nl\`lo`; (`he${one + two}`)
+break` + `he  llo`; foo`hel( \'\');lo`; `he\nl\`lo`; (`he{$one + two}`)
 ';
 
         $expected = '`line
-break`+`he  llo`;foo`hel( \'\');lo`;`he\nl\`lo`;(`he${one + two}`)';
+break`+`he  llo`;foo`hel( \'\');lo`;`he\nl\`lo`;(`he{$one + two}`)';
 
         $actual = JSMin::minify( $js );
         $this->assertEquals( $expected, $actual );
