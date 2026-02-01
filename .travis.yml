@@ -34,8 +34,6 @@ matrix:
     - php: 8.2
       dist: focal
       env: LIBONIG_INSTALL=1
-    - php: 8.5
-      dist: noble
 
 install:
   # for PHP 8.2 install libonig
