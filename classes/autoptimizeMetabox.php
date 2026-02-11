@@ -273,7 +273,7 @@ class autoptimizeMetabox
         foreach ( apply_filters( 'autoptimize_filter_meta_valid_optims', array( 'ao_post_optimize', 'ao_post_js_optimize', 'ao_post_css_optimize', 'ao_post_ccss', 'ao_post_lazyload', 'ao_post_preload' ) ) as $opti_type ) {
             if ( in_array( $opti_type, apply_filters( 'autoptimize_filter_meta_optim_nonbool', array( 'ao_post_preload' ) ) ) ) {
                 if ( isset( $_POST[ $opti_type ] ) ) {
-                    $ao_meta_result[ $opti_type ] = $_POST[ $opti_type ];
+                    $ao_meta_result[ $opti_type ] = sanitize_text_field( $_POST[ $opti_type ] );
                 } else {
                     $ao_meta_result[ $opti_type ] = false;
                 }
