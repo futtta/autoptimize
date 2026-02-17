@@ -984,8 +984,9 @@ class autoptimizeImages
                 $placeholder = apply_filters( 'autoptimize_filter_imgopt_lazyload_placeholder', $this->get_default_lazyload_placeholder( $width, $height ) );
             }
 
-            $tag = preg_replace( '/(\s)src=/', ' src=\'' . $placeholder . '\' data-src=', $tag, 1 );
-            $tag = preg_replace( '/(\s)srcset=/', ' data-srcset=', $tag, 1 );
+            $tag = str_replace( ' src=', ' data-src=', $tag );
+            $tag = str_replace( ' srcset=', ' data-srcset=', $tag );
+            $tag = str_replace( '<img ', '<img src="' . $placeholder . '" ', $tag );
 
             // move sizes to data-sizes unless filter says no.
             if ( apply_filters( 'autoptimize_filter_imgopt_lazyload_move_sizes', true ) ) {
