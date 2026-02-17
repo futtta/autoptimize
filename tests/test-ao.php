@@ -2694,7 +2694,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<picture><source data-srcset="$imgopthost/client/to_webp,q_glossy,ret_img/$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img decoding="async" src="$imgopthost/client/to_webp,q_glossy,ret_img/$siteurl/wp-content/image.jpg"/></noscript><img decoding="async" class="lazyload" src='$imgopthost/client/q_lqip,ret_wait/$siteurl/wp-content/image.jpg' data-src="$imgopthost/client/to_webp,q_glossy,ret_img/$siteurl/wp-content/image.jpg"/></picture>
+<picture><source data-srcset="$imgopthost/client/to_webp,q_glossy,ret_img/$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img decoding="async" src="$imgopthost/client/to_webp,q_glossy,ret_img/$siteurl/wp-content/image.jpg"/></noscript><img decoding="async" src='$imgopthost/client/q_lqip,ret_wait/$siteurl/wp-content/image.jpg' class="lazyload" data-src="$imgopthost/client/to_webp,q_glossy,ret_img/$siteurl/wp-content/image.jpg"/></picture>
 MARKUP;
         $instance = autoptimizeImages::instance();
         $instance->set_options( $opts );
@@ -2724,7 +2724,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<noscript><img decoding="async" src='$imgopthost/client/to_webp,q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/to_webp,q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/to_webp,q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" /></noscript><img decoding="async" class="lazyload" src='$imgopthost/client/q_lqip,ret_wait,w_400,h_200/$siteurl/wp-content/image.jpg' data-src='$imgopthost/client/to_webp,q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-srcset="$imgopthost/client/to_webp,q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/to_webp,q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" data-sizes="(max-width: 300px) 100vw, 300px" />
+<noscript><img decoding="async" src='$imgopthost/client/to_webp,q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$imgopthost/client/to_webp,q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/to_webp,q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" /></noscript><img decoding="async" src='$imgopthost/client/q_lqip,ret_wait,w_400,h_200/$siteurl/wp-content/image.jpg' class="lazyload" data-src='$imgopthost/client/to_webp,q_glossy,ret_img,w_400,h_200/$siteurl/wp-content/image.jpg' width='400' height='200' data-srcset="$imgopthost/client/to_webp,q_glossy,ret_img,w_300/$siteurl/wp-content/image-300X150.jpg 300w, $imgopthost/client/to_webp,q_glossy,ret_img,w_600/$siteurl/wp-content/image-600X300.jpg 600w" data-sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
         $instance = autoptimizeImages::instance();
@@ -2811,7 +2811,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<noscript><img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" /></noscript><img class="lazyload" src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20400%20200%22%3E%3C/svg%3E' data-src='$siteurl/wp-content/image.jpg' width='400' height='200' data-srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" data-sizes="(max-width: 300px) 100vw, 300px" />
+<noscript><img src='$siteurl/wp-content/image.jpg' width='400' height='200' srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" sizes="(max-width: 300px) 100vw, 300px" /></noscript><img src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20400%20200%22%3E%3C/svg%3E' class="lazyload" data-src='$siteurl/wp-content/image.jpg' width='400' height='200' data-srcset="$siteurl/wp-content/image-300X150.jpg 300w, $siteurl/wp-content/image-600X300.jpg 600w" data-sizes="(max-width: 300px) 100vw, 300px" />
 MARKUP;
 
         $instance = autoptimizeImages::instance();
@@ -2838,7 +2838,7 @@ MARKUP;
 MARKUP;
 
         $expected = <<<MARKUP
-<picture><source data-srcset="$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img src="$siteurl/wp-content/image.jpg"/></noscript><img class="lazyload" src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20210%20140%22%3E%3C/svg%3E' data-src="$siteurl/wp-content/image.jpg"/></picture>
+<picture><source data-srcset="$siteurl/wp-content/image.jpg" media="(min-width: 800px)"><noscript><img src="$siteurl/wp-content/image.jpg"/></noscript><img src='data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20210%20140%22%3E%3C/svg%3E' class="lazyload" data-src="$siteurl/wp-content/image.jpg"/></picture>
 MARKUP;
 
         $instance = autoptimizeImages::instance();
