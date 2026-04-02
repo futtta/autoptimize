@@ -1039,7 +1039,7 @@ class autoptimizeImages
         echo apply_filters( 'autoptimize_filter_imgopt_lazyload_js', '<script async' . $type_js . $noptimize_flag . ' src=\'' . $lazysizes_js . '\'></script>' );
     }
 
-    public static function create_img_preload_tag( $tag ) {
+    public function create_img_preload_tag( $tag ) {
         if ( false === apply_filters( 'autoptimize_filter_imgopt_dopreloads', true ) ) {
             return '';
         }
@@ -1066,7 +1066,7 @@ class autoptimizeImages
         return $tag;
     }
 
-    public static function kses_preload_link( $_preload ) {
+    public function kses_preload_link( $_preload ) {
         // using kses, remove all unneeded attributes
         // keeping only those we *know* are OK and/ or needed.
         $allowed_html = array(
