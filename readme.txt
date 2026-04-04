@@ -321,6 +321,9 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.1.15.1 =
+* fix for “Uncaught Error: Using $this when not in object context” when preloads are set
+
 = 3.1.15 =
 * also add fetchpriority=high to preload set on Extra tab
 * improve exit survey display in RTL languages
