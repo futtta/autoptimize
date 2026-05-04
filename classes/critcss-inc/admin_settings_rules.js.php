@@ -261,7 +261,7 @@ function addEditRow(idToEdit) {
             }
         });
     } else {
-        dialogTitle="<?php esc_html_e( 'Add Critical CSS Rule', 'autotimize' ); ?>";
+        dialogTitle="<?php esc_html_e( 'Add Critical CSS Rule', 'autoptimize' ); ?>";
 
         // default: paths, hide content type field
         jQuery("#critcss_addedit_type").val("paths");
