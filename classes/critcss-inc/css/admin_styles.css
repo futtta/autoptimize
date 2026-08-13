@@ -148,6 +148,9 @@ p.rules-btn {
   margin: 20px 0 0;
   padding: 0;
 }
+.submit.rules-btn {
+  margin-bottom: 20px !important;
+}
 .queue {
   table-layout: fixed;
   border-collapse: collapse;
