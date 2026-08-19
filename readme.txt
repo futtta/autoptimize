@@ -321,6 +321,10 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.1.16 =
+* Critical CSS: improvements to job queueing and settings page tweaks
+* confrimed OK with WordPress 7.1
+
 = 3.1.15.1 =
 * fix for “Uncaught Error: Using $this when not in object context” when preloads are set
 

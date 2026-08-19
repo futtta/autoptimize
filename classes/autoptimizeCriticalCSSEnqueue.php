@@ -33,7 +33,7 @@ class autoptimizeCriticalCSSEnqueue {
         } elseif ( 'nokey' == $key['status'] || 'invalid' == $key['status'] ) {
             $enqueue = false;
             $this->criticalcss->log( 'Job queuing is not available: no valid API key found.', 3 );
-        } elseif ( ! empty( $hash ) && ( is_user_logged_in() || is_feed() || is_404() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $this->ao_ccss_ua() || false === apply_filters( 'autoptimize_filter_ccss_enqueue_should_enqueue', true ) ) ) {
+        } elseif ( ! empty( $hash ) && ( is_user_logged_in() || is_feed() || is_404() || is_search() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || $this->ao_ccss_ua() || false === apply_filters( 'autoptimize_filter_ccss_enqueue_should_enqueue', true ) ) ) {
             $enqueue = false;
             $this->criticalcss->log( 'Job queuing is not available for WordPress\'s logged in users, feeds, error pages, ajax calls or calls from criticalcss.com itself.', 3 );
         } elseif ( empty( $hash ) && empty( $path ) || ( ( 'is_single' !== $type ) && ( 'is_page' !== $type ) ) ) {
@@ -64,11 +64,17 @@ class autoptimizeCriticalCSSEnqueue {
                 $req_type = $type;
             }
         }
-        $req_path = strtok( $req_orig, '?' );
+        $req_path = strtok( $req_orig, '?#' ); // remove querystring and fragment
 
         // now that we really have the path, check if there's no garbage in there (due to some themes serving a non 404 page even if the resource does not exist resulting in all sorts of nonsense rules).
         if ( true === apply_filters( 'autoptimize_filter_ccss_enqueue_block_garbage' , true ) && str_ireplace( apply_filters( 'autoptimize_filter_ccss_enqueue_blocklist', array( '.php', 'data:text/javascript;base64', '/.', '/null', '.jpeg', '.jpg', '.png' ) ), '', $req_path ) !== $req_path ) {
             $this->criticalcss->log( 'Job not enqueued looks like the path is just garbage; ' . $req_path, 3 );
+            return;
+        }
+
+        // ensure the path does not contain a potentially malicious payload
+         if ( $req_path !== esc_url( $req_path ) ) {
+            $this->criticalcss->log( 'Job not enqueued looks like the path contains malicious ; ' . esc_url( $req_path ), 3 );
             return;
         }
 
