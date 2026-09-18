@@ -605,8 +605,11 @@ class Minifier
         // Shorten colors from rgb(51,102,153) to #336699, rgb(100%,0%,0%) to #ff0000 (sRGB color space)
         // Shorten colors from hsl(0, 100%, 50%) to #ff0000 (sRGB color space)
         // This makes it more likely that it'll get further compressed in the next step.
+        // Only the plain three-component form is converted (comma- or space-separated).
+        // Colors with an alpha channel, i.e. rgb(0, 0, 0, .5) and rgb(0 0 0 / 50%), are
+        // left alone just like rgba()/hsla(): a 6-digit hex cannot carry the alpha.
         $body = preg_replace_callback(
-            '/(rgb|hsl)\(([0-9,.% -]+)\)(.|$)/Si',
+            '/(rgb|hsl)\(\s*(-?[0-9.]+%?)\s*[, ]\s*(-?[0-9.]+%?)\s*[, ]\s*(-?[0-9.]+%?)\s*\)(.|$)/Si',
             array($this, 'shortenHslAndRgbToHexCallback'),
             $body
         );
@@ -871,8 +874,8 @@ class Minifier
     private function shortenHslAndRgbToHexCallback($matches)
     {
         $type = $matches[1];
-        $values = explode(',', $matches[2]);
-        $terminator = $matches[3];
+        $values = array($matches[2], $matches[3], $matches[4]);
+        $terminator = $matches[5];
 
         if ($type === 'hsl') {
             $values = Utils::hslToRgb($values);

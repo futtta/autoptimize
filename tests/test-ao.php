@@ -1175,6 +1175,43 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
                 '.px { flex: 1 1 0px; }, .percent {flex: 1 1 0%}',
                 '.px{flex:1 1 0px},.percent{flex:1 1 0%}',
             ),
+            // @link https://wordpress.org/support/topic/rgba-to-hex-conversion-removes-alpha/
+            // rgb()/hsl() with an alpha channel must not be turned into a 6-digit hex
+            // (the alpha used to be hex-encoded as a fourth byte, e.g. #00000001).
+            array(
+                '.a { color: rgb(0, 0, 0, 0.5); }',
+                '.a{color:rgb(0,0,0,.5)}',
+            ),
+            array(
+                '.a { color: rgb(0 0 0 / 50%); }',
+                '.a{color:rgb(0 0 0/50%)}',
+            ),
+            array(
+                '.a { box-shadow: 0 0 50px rgb(238, 238, 238, 1); }',
+                '.a{box-shadow:0 0 50px rgb(238,238,238,1)}',
+            ),
+            array(
+                '.a { color: hsl(0, 100%, 50%, 0.5); }',
+                '.a{color:hsl(0,100%,50%,.5)}',
+            ),
+            // The space-separated three-component form used to collapse to a single byte (#33).
+            array(
+                '.a { color: rgb(51 102 153); }',
+                '.a{color:#369}',
+            ),
+            array(
+                '.a { color: hsl(0 100% 50%); }',
+                '.a{color:red}',
+            ),
+            // The comma-separated form keeps converting, terminator handling included.
+            array(
+                '.a { color: rgb(51, 102, 153); }',
+                '.a{color:#369}',
+            ),
+            array(
+                '.a { background-image: linear-gradient(to bottom, rgb(210,180,140) 10%, rgb(255,0,0) 90%); }',
+                '.a{background-image:linear-gradient(to bottom,tan 10%,red 90%)}',
+            ),
         );
     }
 
