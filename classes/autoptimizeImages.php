@@ -1235,7 +1235,7 @@ class autoptimizeImages
     public function maybe_fix_missing_quotes( $tag_in ) {
         // W3TC's Minify_HTML class removes quotes around attribute value, this re-adds them for the class and width/height attributes so we can lazyload properly.
         if ( ( file_exists( WP_PLUGIN_DIR . '/w3-total-cache/w3-total-cache.php' ) && class_exists( 'Minify_HTML' ) && apply_filters( 'autoptimize_filter_imgopt_fixquotes', true ) ) ) {
-            $tag_out = autoptimizeAttributeParser::rebuild( $tag_in );
+            $tag_out = autoptimizeAttributeParser::rebuild( $tag_in, 'img' );
             return $tag_out;
         } else {
             return $tag_in;
