@@ -7,7 +7,7 @@ License URI: [https://www.gnu.org/licenses/gpl-3.0.html](https://www.gnu.org/lic
 Requires at least: 5.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.1.16
+Stable tag: 3.1.17
 
 Autoptimize (Beta) speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.
 
@@ -320,6 +320,10 @@ You can get help on the [wordpress.org support forum](http://wordpress.org/suppo
 Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and code away!
 
 == Changelog ==
+
+= 3.1.17 =
+* fix regression with image optimization when W3 Total Cache is active, thanks to Andy for reporting & confirming fix
+* security improvement for Google Font optimization, thanks to Shinya (@4n86rakam1) for reporting & confirming fix
 
 = 3.1.16 =
 * Overall hardening of Autoptimize, e.g. replacing some regular expressions with a more modern, safer approach.
