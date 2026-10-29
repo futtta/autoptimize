@@ -664,19 +664,30 @@ class autoptimizeCriticalCSSCore {
     }
     
     public function ao_ccss_file_get_contents( $critcssfile ) {
-        // Resolve the path to collapse any traversal attempts like '../'
+        // Resolve paths to collapse traversal and symlinks.
+        $base_dir       = realpath( AO_CCSS_DIR );
         $requested_path = realpath( $critcssfile );
 
         // Validate: path must exist, must be a .css file, and must remain inside AO_CCSS_DIR
-        if ( $requested_path && str_starts_with( $requested_path, AO_CCSS_DIR ) && pathinfo( $requested_path, PATHINFO_EXTENSION ) === 'css' ) {
+        if (
+            $base_dir !== false
+            && $requested_path !== false
+            && is_file( $requested_path )
+            && str_starts_with( $requested_path, trailingslashit( $base_dir ) )
+            && pathinfo( $requested_path, PATHINFO_EXTENSION ) === 'css'
+        ) {
             $_ccss_contents = file_get_contents( $requested_path );
 
             // Sanitize: if contents looks fishy, strip all tags.
             if ( false === $this->criticalcss->check_contents( $_ccss_contents ) ) {
+                $this->ao_ccss_log( 'Critical CSS contents looked fishy, sanitizing CSS from ' . $requested_path, 2 );
                 $_ccss_contents = autoptimizeStyles::sanitize_css( $_ccss_contents );
             }
 
             return $_ccss_contents;
         }
+
+        $this->ao_ccss_log( 'Could not get contents of ' . $critcssfile . ' so returning "none".', 2 );
+        return 'none';
     }
 }
