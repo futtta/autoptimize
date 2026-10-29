@@ -321,6 +321,9 @@ Just [fork Autoptimize on Github](https://github.com/futtta/autoptimize) and cod
 
 == Changelog ==
 
+= 3.1.18 =
+* improve CCSS file content fetching to ensure it also works in setups like e.g. Pantheon, hat tip to Corky for helping out!
+
 = 3.1.17 =
 * fix regression with image optimization when W3 Total Cache is active, thanks to Andy for reporting & confirming fix
 * security improvement for Google Font optimization, thanks to Shinya (@4n86rakam1) for reporting & confirming fix
